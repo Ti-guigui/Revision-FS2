@@ -81,7 +81,7 @@ REV.add({
       html: `
 <ul><li>La pompe d’injection garantit : pression de pulvérisation, quantité (charge + demande), moment de l’injection.</li>
 <li>Basse pression : préfiltre décanteur (eau, grosses impuretés), filtre principal, pompe d’alimentation. La <b>pré-pompe alimente la pompe au démarrage</b>.</li>
-<li><b>Indice de cétane</b> : carburéacteur ≈ 40 · gasoil 51 · Extélium ≈ 52-53 (additif S-1750 pour relever celui du carburéacteur). Un cétane faible <b>augmente le délai d’auto-inflammation</b> → cognements, démarrage difficile, fumées.</li>
+<li><b>Indice de cétane</b> : carburéacteur ≈ 42 · gasoil ≥ 51 · Extélium ≈ 52-53 (additif S-1750 pour relever celui du carburéacteur). Un cétane faible <b>augmente le délai d’auto-inflammation</b> → cognements, démarrage difficile, fumées.</li>
 <li>Température limite : le gasoil se trouble puis bouche le filtre (limite de filtrabilité, point d’écoulement).</li>
 <li>Aide au démarrage : bougies de préchauffage ou dispositif <b>Flamstart</b>.</li></ul>
 <div class="tw"><table><tr><th>Pompe en ligne</th><th>Pompe rotative (VE Bosch)</th></tr>
@@ -106,6 +106,111 @@ REV.add({
       memo: { cle: 'QUANTITÉ = TEMPS D’OUVERTURE + PRESSION', flow: ['Pompe HP', 'Rampe commune', 'Calculateur règle la pression', 'Injecteurs pilotés électriquement'], points: ['Bosch CP1 : régulateur HP', 'Delphi : régulateur de débit IMV', 'Cétane faible → délai ↑ → cognements', 'Flamstart = aide au démarrage'], astuce: 'Phase = Premier cylindre ; PMH = cylindres 1 et 4.' }
     },
     {
+      id: 'commonrail', title: 'Common rail Bosch et Delphi',
+      html: `
+<p>Source : tes fiches de révision « Common rail » et « Motorisation ».</p>
+<h3>Système d’injection directe Bosch</h3>
+<ul><li><b>Pompe d’alimentation basse pression</b> : 150 à 200 L/h, clapet de sécurité à <b>7 bar</b>.</li>
+<li><b>Filtre à carburant</b> : pouvoir de filtration de 5 à 3 microns, élément thermostatique, refroidisseur.</li>
+<li><b>Pompe haute pression</b> : clapet de sécurité — pression <b>inférieure à 0,8 bar = graissage</b> de la pompe ; <b>supérieure à 0,8 bar = alimentation</b> de la pompe. <b>3 éléments de pompage</b>, avec un <b>désactivateur du 3ᵉ piston</b> (évite la surchauffe du gazole). Régulateur HP.</li>
+<li><b>Rampe commune haute pression</b> : capteur de pression du gazole, capteur de température du gazole, <b>limiteur de débit</b> (protège le moteur) : il coupe le débit de gazole en cas de grippage ouvert d’un injecteur ou de rupture de canalisation.</li></ul>
+<h3>Débit injecté : 3 paramètres</h3>
+<p><b>Débit injecté = temps d’ouverture de l’injecteur + pression dans la rampe + somme des sections des trous.</b></p>
+<h3>L’injection pilote (pré-injection)</h3>
+<ul><li><b>Principe</b> : injecter une petite quantité de carburant avant l’injection principale.</li>
+<li><b>Rôle</b> : faire monter la température dans la chambre de combustion avant l’injection principale.</li>
+<li><b>But</b> : réduire le délai d’auto-inflammation de l’injection principale, réduire les HC, la consommation et le bruit ; augmenter le couple et la puissance.</li>
+<li>Au-delà de <b>2 000 tr/min</b>, il n’y a plus de pré-injection.</li></ul>
+<h3>Les injecteurs</h3>
+<div class="tw"><table><tr><th>Type</th><th>Contrôles</th><th>À savoir</th></tr>
+<tr><td><b>Électromagnétique</b> (2 fils)</td><td>Résistance ≈ <b>0,5 Ω</b> ; continuité du faisceau</td><td>Codage en classes 1, 2, 3 (ou A, B, C ; jaune, rouge, bleu) : les injecteurs d’un même moteur doivent être de la même classe. Recodage = rentrer le <b>code IMA</b> dans le calculateur. Le temps d’alimentation électrique s’adapte à l’injecteur.</td></tr>
+<tr><td><b>Piézo-électrique</b></td><td>Résistance ≈ <b>200 kΩ</b> ; capacité ≈ <b>4 µF</b> ; continuité du faisceau</td><td>10 bar dans l’injecteur pour gaver le circuit de l’actionneur piézo.</td></tr></table></div>
+<h3>Common rail Delphi</h3>
+<ul><li><b>Rail sphérique</b>.</li>
+<li>Contrôle rapide : capteur de pression à <b>0,5 V contact mis</b> et <b>1 V au démarrage</b>, injecteurs à 0,5 Ω → HP bonne, circuit hydraulique bon.</li>
+<li>Pas de régulateur HP : la HP se règle par le <b>régulateur de débit (IMV)</b> ; pour la faire chuter, <b>impulsions courtes sur les injecteurs vers le retour</b>.</li>
+<li><b>Accéléromètre</b> (piézo, entre les cylindres 2 et 3) : repère le cylindre qui fait trop de bruit et permet au calculateur de modifier son débit → recale la pré-injection périodiquement.</li>
+<li><b>Électrovanne régulateur de débit</b>, pilotée par signal <b>RCO</b> : normalement ouverte (bobine parallèle au connecteur) ou normalement fermée (connecteur incliné par rapport à la bobine). Contrôles : résistance <b>2,5 à 3,5 Ω</b>, continuité du faisceau, signal de commande à l’oscilloscope.</li></ul>
+<div class="tw"><table><tr><th>Système</th><th>Monter la HP</th><th>Baisser la HP</th><th>Particularité</th></tr>
+<tr><td>Bosch 1ʳᵉ gén.</td><td>Régulateur HP (sur la pompe)</td><td>Ouverture du régulateur HP</td><td>La pompe débite toujours au maxi</td></tr>
+<tr><td>Bosch 2ᵉ gén.</td><td>Régulateur de débit (entrée pompe)</td><td>Fermeture du régulateur de débit</td><td>Moins d’échauffement</td></tr>
+<tr><td>Bosch 3ᵉ gén.</td><td>Régulateur de débit + régulateur HP</td><td>Les deux</td><td>Régulation fine</td></tr>
+<tr><td>Delphi</td><td>Régulateur de débit</td><td>Retours injecteurs (impulsions courtes)</td><td>Pas de régulateur HP, accéléromètre</td></tr></table></div>
+<p><b>Pré-pompe</b> : garantit l’alimentation de la pompe HP au démarrage.</p>`,
+      retenir: ['Débit injecté = temps d’ouverture + pression de rampe + sections des trous.', 'Pré-injection : chauffer la chambre → délai d’auto-inflammation, bruit, HC et conso en baisse ; plus de pré-injection au-delà de 2 000 tr/min.', 'Injecteur électromagnétique ≈ 0,5 Ω ; piézo ≈ 200 kΩ et 4 µF.', 'Limiteur de débit de la rampe : coupe le débit si un injecteur reste ouvert ou si une canalisation casse.', 'Clapet de la pompe HP Bosch : < 0,8 bar = graissage ; > 0,8 bar = alimentation.'],
+      pieges: ['Delphi n’a pas de régulateur HP.', 'Injecteurs électromagnétiques d’un même moteur : même classe, sinon recodage IMA.'],
+      memo: { cle: 'DÉBIT = TEMPS + PRESSION + TROUS', flow: ['Pompe BP (150–200 L/h, 7 bar)', 'Filtre 5 à 3 µm', 'Pompe HP (3 pistons)', 'Rampe (capteur P, capteur T°, limiteur de débit)', 'Injecteurs'], points: ['Électromagnétique 0,5 Ω · piézo 200 kΩ / 4 µF', 'Delphi : IMV + retours injecteurs', 'IMV : 2,5 à 3,5 Ω, pilotée en RCO'], astuce: 'La pré-injection, c’est allumer le barbecue avant d’y mettre la viande.' }
+    },
+    {
+      id: 'capteurs-cr', title: 'Capteurs du common rail',
+      html: `
+<div class="tw"><table><tr><th>Capteur</th><th>Type</th><th>Signal</th><th>Contrôle</th></tr>
+<tr><td><b>Régime / PMH</b> (vilebrequin)</td><td><b>Inductif, actif</b>, 2 fils</td><td>Sinusoïde de fréquence <b>et</b> d’amplitude variables avec la vitesse</td><td>Il génère son propre courant : on mesure sa <b>résistance</b> et celle du faisceau</td></tr>
+<tr><td><b>Phase</b> (arbre à cames)</td><td><b>Effet Hall, passif</b>, 3 fils</td><td>Signal <b>carré</b> de fréquence variable, amplitude fixe (5 V), directement exploitable par le calculateur</td><td>Faisceau débranché : 5 V alim, 5 V signal, masse. Branché : signal 0 ou 5 V selon la cible. Continuité du faisceau</td></tr>
+<tr><td><b>Pression de rail</b></td><td><b>Piézo-résistif, passif</b>, 3 fils</td><td>Tension proportionnelle à la pression : <b>0,5 à 4,5 V</b></td><td>Alim 5 V ; <b>0,5 V contact mis</b> ; <b>1 à 1,5 V au démarrage</b></td></tr>
+<tr><td><b>Température (CTN)</b></td><td>Passif</td><td>T° ↑ → R ↓</td><td>Résistance élevée à basse température, faible à haute température ; continuité du faisceau</td></tr></table></div>
+<ul><li>Capteur de régime Bosch : couronne du vilebrequin à <b>60 dents moins 2</b> ; le « top » est à 114° volant avant le PMH.</li>
+<li>Capteur de phase : 2 cibles larges suivies de 2 cibles étroites ; <b>entrefer à respecter</b> (1,2 mm, tolérance +0 / +0,1 mm).</li>
+<li>Élément piézo-résistif : stable au repos ; soumis à une pression, il se déséquilibre et génère une tension à ses bornes.</li>
+<li><b>Actionneur en RCO</b> (rapport cyclique d’ouverture) : ex. 15 ms alimenté / 5 ms coupé = 75 % → le multimètre lit la moyenne : <b>75 % de 12 V = 9 V</b>.</li></ul>`,
+      retenir: ['Régime : inductif, actif, sinusoïde (fréquence et amplitude variables) → mesurer sa résistance.', 'Phase : effet Hall, passif, carré 5 V.', 'Pression de rail : piézo-résistif, 0,5 V contact mis, 1 à 1,5 V au démarrage.', 'RCO 75 % sous 12 V → 9 V moyens.'],
+      pieges: ['Le capteur inductif n’est pas alimenté : on ne cherche pas de 5 V dessus.'],
+      memo: { cle: 'INDUCTIF = SINUS · HALL = CARRÉ · PIÉZO-RÉSISTIF = PRESSION', points: ['PMH : 60 − 2 dents', 'Phase : entrefer 1,2 mm', 'Rail : 0,5 V → 1–1,5 V au démarreur', 'CTN : chaud = R faible'], astuce: 'Le capteur inductif fabrique son courant ; les autres attendent leur 5 V.' }
+    },
+    {
+      id: 'diag-hp', title: 'Diagnostic haute pression (Delphi DFP1, Bosch CP1)',
+      html: `
+<p>Logigrammes de diagnostic « le moteur ne démarre pas ». On commence toujours par les <b>contrôles préliminaires</b>.</p>
+<h3>Delphi, pompe DFP1</h3>
+<ol><li><b>Filtre à gazole</b> colmaté → le changer.</li>
+<li><b>Tension du capteur HP contact mis</b> : 0,5 V = capteur et ligne bons ; <b>&gt; 1 V</b> = capteur HS ou ligne en court-circuit.</li>
+<li><b>Tension du capteur HP pendant l’action du démarreur</b> :
+<ul><li><b>1 à 1,5 V</b> → circuits basse et haute pression bons → contrôler les capteurs PMH et d’arbre à cames.</li>
+<li><b>Largement &gt; 1,5 V</b> → dysfonctionnement du régulateur de débit (<b>IMV</b>) → contrôler sa résistance, sa tension et son grippage.</li>
+<li><b>0,5 à 0,9 V</b> (pression insuffisante) → suite ci-dessous.</li></ul></li>
+<li>Contrôler l’<b>étanchéité des retours d’injecteurs</b> pendant le démarreur → fuite = injecteur(s) HS.</li>
+<li>Pas de fuite → <b>étanchéité des aiguilles</b> d’injecteurs (bougies déposées) → fuite = injecteur(s) HS.</li>
+<li>Pas de fuite → contrôler l’<b>IMV grippé fermé</b>.</li>
+<li>IMV bon → contrôler le <b>clapet de sécurité HP</b> : grippé ouvert → le changer.</li>
+<li>Tout est bon → <b>échange de la pompe haute pression</b>.</li></ol>
+<h3>Bosch, pompe CP1</h3>
+<ol><li><b>Signal du capteur HP contact mis</b> : 0,5 V = bon ; pas de tension ou largement &gt; 0,5 V → contrôler la ligne et le capteur.</li>
+<li><b>Pendant le démarreur</b> : <b>U ≥ 1 V</b> → circuits BP et HP bons → vérifier le capteur PMH (résistance, entrefer, limaille, continuité du faisceau) puis le capteur de phase (alimentation, cible).</li>
+<li><b>U &lt; 1 V</b> → vérifier la <b>pompe d’alimentation</b> et la pression avant/après le filtre : <b>ΔP maxi 0,3 bar</b> (≥ 0,3 bar → changer le filtre) ; pompe à l’arrêt → contrôler sa résistance et son alimentation.</li>
+<li>Pompe et filtre bons → vérifier le <b>clapet de sécurité à l’entrée de la pompe HP</b> (grippé ?).</li>
+<li>Contrôler l’<b>étanchéité des retours des porte-injecteurs</b> (non étanches → les changer tous), puis des injecteurs (bougies de préchauffage retirées).</li>
+<li>Contrôler le <b>régulateur HP</b> : résistance ≈ <b>2 Ω</b>, alimentation, grippage.</li>
+<li>Tout est bon → <b>test d’étanchéité de la pompe HP avec un rail bouché</b> → changer la pompe HP.</li></ol>`,
+      images: [{ src: 'diag-delphi-dfp1.jpg', cap: 'Logigramme : diagnostic haute pression Delphi, pompe DFP1' }, { src: 'diag-bosch-cp1.jpg', cap: 'Logigramme : diagnostic rampe commune Bosch, pompe CP1' }],
+      retenir: ['Toujours commencer par les contrôles préliminaires (filtre).', 'Capteur HP contact mis = 0,5 V.', 'Delphi au démarreur : 1–1,5 V = HP bonne ; > 1,5 V = IMV ; 0,5–0,9 V = fuite (retours, aiguilles), IMV, clapet HP, puis pompe.', 'Bosch au démarreur : ≥ 1 V = HP bonne → capteurs PMH/phase ; < 1 V = alimentation, filtre (ΔP 0,3 bar), clapet, fuites, régulateur HP (≈ 2 Ω), pompe.'],
+      pieges: ['On ne change la pompe HP qu’en dernier, quand tout le reste est bon.'],
+      memo: { cle: 'DU PLUS SIMPLE AU PLUS CHER', flow: ['Filtre', 'Capteur HP contact mis (0,5 V)', 'Capteur HP au démarreur', 'Fuites retours / injecteurs', 'Régulateur (IMV / HP)', 'Clapet de sécurité', 'Pompe HP'], points: ['Delphi : > 1,5 V → IMV', 'Bosch : ΔP filtre ≤ 0,3 bar', 'Régulateur HP Bosch ≈ 2 Ω'], astuce: 'Pas assez de pression au démarreur ? Cherche d’abord où elle s’échappe.' }
+    },
+    {
+      id: 'carburants', title: 'Carburants et comportement à froid',
+      html: `
+<h3>Les hydrocarbures (CnH2n+2)</h3>
+<ul><li>État gazeux : méthane, propane C3H8, butane C4H10.</li>
+<li>Essences : heptane C7H16, octane C8H18.</li>
+<li>Gazole : cétane C16H34, pour sa faculté à s’auto-enflammer.</li></ul>
+<h3>Indice de cétane</h3>
+<p>Le gazole est défini par son <b>indice de cétane</b> : son aptitude à s’auto-enflammer. Il doit être <b>≥ 51</b>. En dessous : délai d’allumage allongé → <b>difficulté de démarrage à froid, cognements, fumées</b>.</p>
+<h3>Comportement en basse température</h3>
+<ul><li><b>Point de trouble (PT)</b> : les premiers cristaux de paraffine apparaissent.</li>
+<li><b>Température limite de filtrabilité (TLF)</b> : les cristaux bouchent le filtre.</li>
+<li><b>Point d’écoulement (PE)</b> : le gazole est figé.</li>
+<li>Ordre : <b>PE &lt; TLF &lt; PT</b> (en refroidissant, on passe d’abord le point de trouble).</li></ul>
+<h3>Le carburéacteur utilisé dans un diesel</h3>
+<ul><li>TLF = −50 °C · indice de cétane ≈ 42 · viscosité 1,35 mm²/s (2,4 pour le gazole) → plus de fuites dans les pompes.</li>
+<li>Pouvoir lubrifiant très mauvais ; pouvoir détergent très élevé (« nettoyage » des tuyauteries).</li>
+<li>Problèmes : usure du système d’injection, démarrage difficile ou instabilité. (L’additif S-1750 relève son indice de cétane.)</li></ul>
+<h3>La boucle de régulation</h3>
+<p>3 paramètres : la vitesse du moteur, la charge à vaincre, le débit de la pompe d’injection. Le conducteur agit sur l’accélérateur → le régulateur adapte le débit selon la surcharge, les vitesses mini/maxi, la correction de débit, la pression d’admission…</p>`,
+      retenir: ['Cétane ≥ 51 ; en dessous : démarrage difficile, cognements, fumées.', 'PT : premiers cristaux ; TLF : filtre bouché ; PE : gazole figé ; PE < TLF < PT.', 'Carburéacteur : TLF −50 °C, cétane ≈ 42, faible viscosité et mauvais pouvoir lubrifiant → usure de l’injection.'],
+      pieges: ['Le point de trouble arrive en premier quand la température baisse, le point d’écoulement en dernier.'],
+      memo: { cle: 'PE < TLF < PT', flow: ['Point de trouble : cristaux', 'TLF : filtre bouché', 'Point d’écoulement : figé'], points: ['Cétane ≥ 51', 'Carburéacteur : cétane 42, TLF −50 °C', 'Gazole = cétane C16H34'], astuce: 'Trouble → Filtre → Figé : ça se Trouble, ça Filtre mal, puis ça Fige.' }
+    },
+    {
       id: 'depollution', title: 'Dépollution',
       html: `
 <div class="tw"><table><tr><th>Organe</th><th>Rôle</th></tr>
@@ -114,7 +219,12 @@ REV.add({
 <tr><td>FAP</td><td>Filtre puis brûle les suies ; régénération par élévation de la température des gaz (≈ 550 °C)</td></tr>
 <tr><td>EGR</td><td>Diminue les NOx en abaissant la température de combustion</td></tr>
 <tr><td>SCR (AdBlue)</td><td>NOx ; actif si T° catalyseur &gt; 180 °C, couple &gt; 5 %, T° moteur &gt; 40 °C, régime &gt; 400 tr/min</td></tr></table></div>
-<ul><li>CO et HC plus importants avec un <b>dosage riche</b> (manque d’air pour tout brûler).</li>
+<ul><li><b>4 principaux polluants</b> : CO (mortel), HC (cancérigènes), NOx (irritants), particules de carbone (cancérigènes).</li>
+<li><b>Pot catalytique</b> : 2 réactions chimiques — réduction des NOx et oxydation du CO et des HC. Diesel (oxydation) : CO et HC ; essence (3 voies) : CO, HC et NOx.</li>
+<li><b>EGR</b> : les NOx se forment à partir de ≈ 1 300 °C ; on fait recirculer une partie des gaz d’échappement dans l’admission.</li>
+<li><b>FAP</b> : filtre les particules (tamis de 1 micron) puis les brûle.</li>
+<li><b>SCR / AdBlue</b> : urée 32,5 % + eau déminéralisée 67,5 % ; libère de l’ammoniac (NH3) qui réduit les NOx. Durée de vie du catalyseur ≈ 1 million de km, capteur NOx ≈ 500 000 km.</li>
+<li>CO et HC plus importants avec un <b>dosage riche</b> (manque d’air pour tout brûler).</li>
 <li>Le diesel rejette plus d’oxydes d’azote qu’un moteur essence.</li></ul>`,
       retenir: ['FAP : régénération à ≈ 550 °C par élévation de la température des gaz.', 'EGR : moins de NOx en baissant la température de combustion.', 'SCR : 180 °C cata, 5 % couple, 40 °C moteur, 400 tr/min.'],
       pieges: ['Catalyseur d’oxydation diesel = HC et CO seulement ; le 3 voies traite aussi les NOx.'],
@@ -161,6 +271,45 @@ REV.add({
     { l: 'depollution', q: 'L’EGR diminue les NOx…', c: ['En diminuant la température de combustion', 'En augmentant la température de combustion', 'En injectant de l’AdBlue', 'En filtrant les suies'], e: 'Les NOx se forment à haute température : réintroduire des gaz brûlés refroidit la combustion.', src: 'QCM moteur Q3' },
     { l: 'depollution', q: 'CO et HC sont plus importants avec…', c: ['Un dosage riche', 'Un dosage pauvre', 'Un moteur chaud', 'Un EGR ouvert'], e: 'Mélange riche = manque d’air pour brûler tout le carburant.', src: 'QCM moteur Q5' },
     { l: 'depollution', q: 'Laquelle n’est PAS une condition d’activation du SCR (AdBlue) ?', c: ['Régime moteur > 2 000 tr/min', 'Température du catalyseur > 180 °C', 'Couple > 5 %', 'Température moteur > 40 °C'], e: 'Conditions : T° cata > 180 °C, couple > 5 %, T° moteur > 40 °C, régime > 400 tr/min.' },
-    { l: 'depollution', q: 'Un catalyseur d’oxydation diesel traite :', c: ['HC et CO', 'HC, CO et NOx', 'Les suies', 'Uniquement les NOx'], e: 'Le 3 voies (essence) traite aussi les NOx ; l’oxydation diesel seulement HC et CO.', src: 'Corrigé UV2 Q36' }
+    { l: 'depollution', q: 'Un catalyseur d’oxydation diesel traite :', c: ['HC et CO', 'HC, CO et NOx', 'Les suies', 'Uniquement les NOx'], e: 'Le 3 voies (essence) traite aussi les NOx ; l’oxydation diesel seulement HC et CO.', src: 'Corrigé UV2 Q36' },
+    { l: 'commonrail', q: 'Les 3 paramètres qui déterminent le débit injecté ?', c: ['Temps d’ouverture de l’injecteur, pression dans la rampe, somme des sections des trous', 'Régime, charge, température', 'Pression de gavage, cétane, température', 'Temps d’ouverture seulement'], e: 'Débit injecté = temps d’ouverture + pression de rampe + sections des trous.' },
+    { l: 'commonrail', q: 'Rôle de l’injection pilote (pré-injection) ?', c: ['Faire monter la température de la chambre avant l’injection principale', 'Refroidir la chambre de combustion', 'Nettoyer les injecteurs', 'Augmenter la pression de rampe'], e: 'But : réduire le délai d’auto-inflammation de l’injection principale, le bruit, les HC et la consommation ; plus de couple et de puissance.' },
+    { l: 'commonrail', q: 'Au-delà de quel régime n’y a-t-il plus de pré-injection ?', c: ['2 000 tr/min', '800 tr/min', '4 500 tr/min', 'Il y en a toujours'], e: 'Selon ta fiche common rail.' },
+    { l: 'commonrail', q: 'Rôle du limiteur de débit sur la rampe commune ?', c: ['Couper le débit si un injecteur reste grippé ouvert ou si une canalisation casse (protège le moteur)', 'Réguler la haute pression', 'Mesurer la température du gazole', 'Alimenter la pompe au démarrage'], e: 'La rampe porte aussi le capteur de pression et le capteur de température du gazole.' },
+    { l: 'commonrail', q: 'Clapet de sécurité de la pompe HP Bosch : que se passe-t-il sous 0,8 bar ?', c: ['Le gazole sert seulement au graissage de la pompe', 'La pompe est alimentée', 'Le moteur s’arrête', 'La rampe se vide'], e: 'Sous 0,8 bar : graissage ; au-dessus de 0,8 bar : alimentation de la pompe.' },
+    { l: 'commonrail', q: 'Pompe HP Bosch : à quoi sert le désactivateur du 3ᵉ piston ?', c: ['Éviter la surchauffe du gazole quand on n’a pas besoin de tout le débit', 'Augmenter la pression maxi', 'Démarrer à froid', 'Alimenter la pré-pompe'], e: 'La pompe a 3 éléments de pompage ; couper le 3ᵉ limite le débit inutile qui chauffe le gazole.' },
+    { l: 'commonrail', q: 'Résistance d’un injecteur électromagnétique ?', c: ['≈ 0,5 Ω', '≈ 200 kΩ', '≈ 2,5 à 3,5 Ω', '≈ 60 Ω'], e: 'Piézo : ≈ 200 kΩ et 4 µF ; électrovanne de débit Delphi : 2,5 à 3,5 Ω.' },
+    { l: 'commonrail', q: 'Contrôles d’un injecteur piézo-électrique ?', c: ['Résistance ≈ 200 kΩ, capacité ≈ 4 µF, continuité du faisceau', 'Résistance ≈ 0,5 Ω seulement', 'Tension de 5 V sur le signal', 'Pression de tarage à la pompe à tarer seulement'], e: 'Un élément piézo se comporte comme un condensateur : on contrôle aussi sa capacité.' },
+    { l: 'commonrail', q: 'Injecteurs électromagnétiques codés en classes (1, 2, 3 / A, B, C). Règle ?', c: ['Les injecteurs d’un même moteur doivent être de la même classe, sinon recodage (code IMA)', 'Chaque cylindre a une classe différente', 'Les classes ne comptent pas', 'On mélange les classes pour équilibrer'], e: 'Recodage = rentrer le code IMA de l’injecteur dans le calculateur.' },
+    { l: 'commonrail', q: 'Common rail Delphi : comment se règle la haute pression ?', c: ['Par le régulateur de débit (IMV), et on la fait chuter par des impulsions courtes vers le retour des injecteurs', 'Par un régulateur HP sur la rampe', 'Par le clapet de sécurité de 7 bar', 'Par la pré-pompe'], e: 'Delphi n’a pas de régulateur HP.' },
+    { l: 'commonrail', q: 'Rôle de l’accéléromètre Delphi ?', c: ['Repérer le cylindre qui fait trop de bruit et permettre au calculateur de corriger son débit (recalage de la pré-injection)', 'Mesurer la vitesse du véhicule', 'Mesurer la pression de rampe', 'Détecter le PMH'], e: 'Capteur piézo placé entre les cylindres 2 et 3.' },
+    { l: 'commonrail', q: 'Électrovanne régulateur de débit Delphi : contrôles ?', c: ['Résistance 2,5 à 3,5 Ω, continuité du faisceau, signal RCO à l’oscilloscope', 'Résistance 200 kΩ et capacité 4 µF', 'Tension de 5 V contact mis', 'Pression de 0,8 bar'], e: 'Elle est pilotée en RCO : le multimètre ne voit que la moyenne, l’oscilloscope montre le signal.' },
+    { l: 'commonrail', q: 'Bosch 2ᵉ génération : comment fait-on monter la HP ?', c: ['Avec le régulateur de débit en entrée de pompe', 'Avec le régulateur HP sur la pompe', 'Avec les retours injecteurs', 'Avec l’accéléromètre'], e: '1ʳᵉ gén. : régulateur HP ; 2ᵉ : régulateur de débit (moins d’échauffement) ; 3ᵉ : les deux (régulation fine) ; Delphi : régulateur de débit.' },
+    { l: 'commonrail', q: 'Bosch 1ʳᵉ génération : particularité de la pompe HP ?', c: ['Elle débite toujours au maxi (l’excédent part par le régulateur HP)', 'Elle n’a pas de régulateur', 'Elle se désactive au ralenti', 'Elle est pilotée par un accéléromètre'], e: 'D’où plus d’échauffement du gazole qu’en 2ᵉ génération.' },
+    { l: 'capteurs-cr', q: 'Capteur de régime (PMH) du common rail : type et signal ?', c: ['Inductif, actif : sinusoïde de fréquence et d’amplitude variables', 'Effet Hall, passif : signal carré 5 V', 'Piézo-résistif : 0,5 à 4,5 V', 'CTN : résistance variable'], e: 'Il génère son propre courant : on mesure sa résistance et celle du faisceau.' },
+    { l: 'capteurs-cr', q: 'Capteur de phase à effet Hall : quel signal ?', c: ['Carré, fréquence variable, amplitude fixe (5 V)', 'Sinusoïdal, amplitude variable', 'Continu proportionnel à la pression', 'Aucun signal, c’est un contacteur'], e: 'Signal directement exploitable par le calculateur ; entrefer à respecter (1,2 mm).' },
+    { l: 'capteurs-cr', q: 'Capteur de pression de rail : tension contact mis, moteur arrêté ?', c: ['≈ 0,5 V', '≈ 5 V', '≈ 12 V', '0 V'], e: 'Piézo-résistif alimenté en 5 V : signal de 0,5 V (sans pression) à 4,5 V ; 1 à 1,5 V au démarrage.' },
+    { l: 'capteurs-cr', q: 'Capteur de pression de rail : tension normale pendant l’action du démarreur ?', c: ['1 à 1,5 V', '0,5 V', '4,5 V', '12 V'], e: 'La pression monte au démarreur : la tension passe de 0,5 V à 1–1,5 V.' },
+    { l: 'capteurs-cr', q: 'Couronne du capteur de régime Bosch ?', c: ['60 dents moins 2 dents', '4 cibles', '30 dents', '120 dents'], e: 'L’absence de 2 dents donne le repère ; le top est à 114° volant avant le PMH.' },
+    { l: 'capteurs-cr', q: 'Actionneur piloté en RCO : 15 ms alimenté, 5 ms coupé, sous 12 V. Tension moyenne lue au multimètre ?', c: ['9 V', '12 V', '3 V', '6 V'], e: 'Rapport cyclique = 15 / 20 = 75 % → 75 % de 12 V = 9 V.' },
+    { l: 'capteurs-cr', q: 'Sonde CTN de température : quand la température monte…', c: ['Sa résistance baisse', 'Sa résistance monte', 'Sa tension monte', 'Rien ne change'], e: 'CTN : résistance élevée à basse température, faible à haute température.' },
+    { l: 'diag-hp', q: 'Delphi DFP1 : capteur HP contact mis, on lit plus de 1 V. Diagnostic ?', c: ['Capteur HS ou ligne en court-circuit', 'Capteur et ligne bons', 'IMV défectueux', 'Injecteur qui fuit'], e: 'Contact mis, sans pression, le capteur doit donner 0,5 V.' },
+    { l: 'diag-hp', q: 'Delphi DFP1 : pendant le démarreur, le capteur HP donne 1 à 1,5 V. Conclusion ?', c: ['Circuits basse et haute pression en bon état → contrôler les capteurs PMH et d’arbre à cames', 'Pompe HP à changer', 'IMV défectueux', 'Injecteurs qui fuient'], e: 'La pression monte : le problème de démarrage vient d’ailleurs.' },
+    { l: 'diag-hp', q: 'Delphi DFP1 : pendant le démarreur, le capteur HP donne largement plus de 1,5 V. Élément à contrôler ?', c: ['Le régulateur de débit (IMV) : résistance, tension, grippage', 'Le filtre à gazole', 'Les retours d’injecteurs', 'Le capteur de PMH'], e: 'Trop de pression au démarreur : l’IMV ne régule pas.' },
+    { l: 'diag-hp', q: 'Delphi DFP1 : 0,5 à 0,9 V au démarreur (pression insuffisante). Premier contrôle ?', c: ['L’étanchéité des retours d’injecteurs pendant l’action du démarreur', 'Changer la pompe HP', 'Changer le capteur HP', 'Contrôler le capteur de phase'], e: 'Ensuite : étanchéité des aiguilles (bougies déposées), IMV grippé fermé, clapet de sécurité HP, et en dernier la pompe HP.' },
+    { l: 'diag-hp', q: 'Bosch CP1 : pendant le démarreur, le capteur HP donne moins de 1 V. Que contrôler d’abord ?', c: ['La pompe d’alimentation et la chute de pression du filtre (ΔP maxi 0,3 bar)', 'Le capteur de phase', 'La pompe HP directement', 'Le calculateur'], e: 'Puis le clapet de sécurité d’entrée de pompe HP, les retours des porte-injecteurs, les injecteurs, le régulateur HP (≈ 2 Ω), et en dernier la pompe HP.' },
+    { l: 'diag-hp', q: 'Bosch CP1 : chute de pression à travers le filtre à gazole ≥ 0,3 bar. Que faire ?', c: ['Changer le filtre', 'Changer la pompe HP', 'Changer les injecteurs', 'Rien, c’est normal'], e: 'ΔP maxi admis : 0,3 bar.' },
+    { l: 'diag-hp', q: 'Bosch CP1 : résistance normale du régulateur HP ?', c: ['≈ 2 Ω', '≈ 0,5 Ω', '≈ 200 kΩ', '≈ 60 Ω'], e: 'On contrôle aussi son alimentation et son état mécanique (grippage).' },
+    { l: 'diag-hp', q: 'Dans les logigrammes de diagnostic HP, quand change-t-on la pompe haute pression ?', c: ['En dernier, quand tous les autres contrôles sont bons', 'En premier', 'Dès que le moteur ne démarre pas', 'Après le filtre'], e: 'On va du plus simple au plus coûteux ; chez Bosch, test d’étanchéité de la pompe avec un rail bouché avant de la changer.' },
+    { l: 'carburants', q: 'Indice de cétane minimal du gazole ?', c: ['51', '40', '95', '30'], e: 'En dessous : délai d’allumage allongé → démarrage difficile à froid, cognements, fumées.' },
+    { l: 'carburants', q: 'À quel moment apparaissent les premiers cristaux de paraffine ?', c: ['Au point de trouble (PT)', 'Au point d’écoulement (PE)', 'À la température limite de filtrabilité (TLF)', 'À 0 °C exactement'], e: 'Ordre : PE < TLF < PT. TLF = les cristaux bouchent le filtre ; PE = le gazole est figé.' },
+    { l: 'carburants', q: 'Que se passe-t-il à la température limite de filtrabilité (TLF) ?', c: ['Les cristaux bouchent le filtre', 'Le gazole est figé', 'Les premiers cristaux apparaissent', 'Le gazole s’évapore'], e: 'PT : premiers cristaux ; TLF : filtre bouché ; PE : figé.' },
+    { l: 'carburants', q: 'Classer du plus froid au moins froid : point d’écoulement (PE), TLF, point de trouble (PT).', c: ['PE < TLF < PT', 'PT < TLF < PE', 'TLF < PE < PT', 'PE < PT < TLF'], e: 'En refroidissant, on atteint d’abord le point de trouble, puis la TLF, puis le point d’écoulement.' },
+    { l: 'carburants', q: 'Carburéacteur utilisé dans un diesel : quel problème ?', c: ['Pouvoir lubrifiant très mauvais et faible viscosité → usure et fuites du système d’injection', 'Il gèle à −5 °C', 'Son indice de cétane est trop élevé', 'Il encrasse les tuyauteries'], e: 'TLF −50 °C, cétane ≈ 42, viscosité 1,35 mm²/s (2,4 pour le gazole), pouvoir détergent très élevé.' },
+    { l: 'carburants', q: 'Formule du cétane (constituant de référence du gazole) ?', c: ['C16H34', 'C8H18', 'C3H8', 'C4H10'], e: 'C8H18 = octane (essence) ; C3H8 = propane ; C4H10 = butane.' },
+    { l: 'depollution', q: 'Les 4 principaux polluants et leur effet ?', c: ['CO mortel, HC cancérigènes, NOx irritants, particules cancérigènes', 'CO irritant, HC mortels, NOx cancérigènes, particules sans danger', 'CO2 mortel, O2 irritant, H2O cancérigène, N2 toxique', 'Seulement les particules sont dangereuses'], e: 'Selon ta fiche dépollution.' },
+    { l: 'depollution', q: 'Les 2 réactions chimiques d’un pot catalytique ?', c: ['Réduction des NOx et oxydation du CO et des HC', 'Oxydation des NOx et réduction du CO', 'Combustion des particules et filtration', 'Injection d’AdBlue et réduction des HC'], e: 'Catalyseur d’oxydation diesel : CO et HC ; catalyseur 3 voies essence : CO, HC et NOx.' },
+    { l: 'depollution', q: 'Composition de l’AdBlue ?', c: ['Urée 32,5 % et eau déminéralisée 67,5 %', 'Urée 67,5 % et eau 32,5 %', 'Ammoniac pur', 'Gazole et urée'], e: 'Il libère de l’ammoniac (NH3) qui réduit les NOx dans le catalyseur SCR.' },
+    { l: 'depollution', q: 'Maille du tamis d’un FAP ?', c: ['1 micron', '1 mm', '10 microns', '0,1 mm'], e: 'Le FAP filtre les particules puis les brûle lors de la régénération.' }
   ]
 });
