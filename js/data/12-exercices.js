@@ -4,9 +4,19 @@ REV.add({
   desc: 'Sujets complets sur schéma, corrigés pas à pas. Chaque réponse a été recalculée à partir du cours (pas recopiée du corrigé).',
   lessons: [
     {
-      id: 'microtracteur', title: 'Microtracteur tondeuse (schéma « 8. Moto »)',
+      id: 'microtracteur', title: 'Microtracteur tondeuse',
       images: [{ src: 'exo-microtracteur.jpg', cap: 'Schéma du microtracteur tondeuse (p. 24) : entrées A à E, portes logiques F à M, démarreur (Q1, K1) et électro-aimant des lames (Q2, K2)' }],
       html: `
+<h3>Énoncé</h3>
+<p>Le schéma représente la <b>commande du circuit de démarreur</b> et la <b>commande de rotation des lames</b>.</p>
+<table class="tbl"><tr><th>Commande</th><th>Fonctionnement</th></tr>
+<tr><td>Contact à clé</td><td>3 positions : OFF (arrêt), ON (contact), DEM (démarrage). 12 V ApC = 12 V après contact.</td></tr>
+<tr><td>Frein à pied</td><td>Contact <b>fermé lors d’un freinage</b></td></tr>
+<tr><td>Siège</td><td>Contact <b>fermé pilote assis</b></td></tr>
+<tr><td>Frein à main</td><td>Contact <b>fermé frein à main serré</b></td></tr>
+<tr><td>Commande rotation lames</td><td>Commande un électro-aimant qui embraye une poulie sur la courroie d’entraînement des lames</td></tr>
+<tr><td>Présence panier</td><td>Contact <b>fermé panier en place</b></td></tr></table>
+<p>Logique 5 V · Dz1 à Dz6 : diodes Zener 5 V · R1 à R6 : résistances 1 kΩ.</p>
 <h3>1. Lire le schéma</h3>
 <ul>
 <li><b>Chaque entrée</b> = un contact + une résistance + une <b>Zener</b> qui limite la tension à <b>5 V</b> (niveau 1 de la logique).</li>
@@ -25,6 +35,13 @@ REV.add({
 <tr><td>K</td><td>OU (≥1)</td><td>K = F + G</td></tr>
 <tr><td>L</td><td>ET à 3 entrées</td><td>L = J·K·H</td></tr>
 <tr><td>M</td><td>OU NON à 3 entrées (D, H, E)</td><td>M = <span style="text-decoration:overline">D + H + E</span></td></tr></table>
+<h3>Ce que ça veut dire sur la machine</h3>
+<ul>
+<li><b>F = 1</b> (A = 0 et E = 0) : pédale de frein <b>enfoncée</b> et pilote <b>assis</b>.</li>
+<li><b>G = 1</b> (B = 1 et E = 1) : frein à main <b>serré</b> (contact fermé → 0 → porte NON → B = 1) et pilote <b>pas assis</b>.</li>
+<li><b>Démarreur</b> (L = 1) : clé sur <b>DEM</b>, lames <b>non commandées</b> (C = 0 → H = 1) et (assis + frein à pied OU siège vide + frein à main serré).</li>
+<li><b>Lames</b> (M = 1) : commande lames actionnée, panier en place, pilote assis.</li>
+</ul>
 <p><b>L</b> = J · C̄ · (Ā·Ē + B·E) &nbsp;·&nbsp; <b>M</b> = D̄ · <span style="text-decoration:overline">C̄</span> · Ē = <b>C · D̄ · Ē</b> (théorème de De Morgan : un OU NON = ET des entrées inversées).</p>
 <h3>3. Les sorties de puissance</h3>
 <ul>
@@ -84,5 +101,6 @@ REV.add({
     { l: 'microtracteur', img: 'exo-microtracteur.jpg', q: 'Q17 — Point M à 5 V, Vbe sat = 0,55 V. Tension aux bornes de R9 ?', c: ['UR9 = 4,45 V', 'UR9 = 5 V', 'UR9 = 0,55 V'], e: 'Loi des mailles : U M = UR9 + Vbe → UR9 = 5 − 0,55 = 4,45 V.', r: 'Loi des mailles : les tensions en série s’additionnent.', src: 'Exercice microtracteur tondeuse' },
     { l: 'microtracteur', img: 'exo-microtracteur.jpg', q: 'Q18 — UR9 = 4,45 V et IR9 = 0,006 A. Valeur de la résistance R9 ?', c: ['R9 ≈ 741,66 Ω', 'R9 ≈ 74,16 Ω', 'R9 ≈ 7 416,6 Ω'], e: 'R9 = UR9 / IR9 = 4,45 / 0,006 ≈ 741,66 Ω. (Le corrigé papier écrit « R10 = … » dans les propositions : coquille, c’est bien R9.)', r: 'Loi d’Ohm, vérifier l’ordre de grandeur.', src: 'Exercice microtracteur tondeuse' },
     { l: 'microtracteur', img: 'exo-microtracteur.jpg', q: 'Q19 — Quelles commandes faut-il actionner pour alimenter l’électro-aimant de rotation des lames ?', c: ['Rotation des lames commandée, présence du panier et assis sur le siège', 'Rotation des lames commandée, pas de panier et assis sur le siège', 'Rotation des lames commandée, présence du panier et pas assis sur le siège'], e: 'M = C·D̄·Ē doit être à 1 : C = 1 (commande des lames actionnée), D = 0 (contact panier fermé = panier présent), E = 0 (contact siège fermé = conducteur assis). M = 1 → Q2 saturé → K2 → électro-aimant.', r: 'Sécurité : lames seulement si panier en place ET conducteur assis.', src: 'Exercice microtracteur tondeuse' },
+    { l: 'microtracteur', img: 'exo-microtracteur.jpg', q: 'Bonus — Clé sur DEM, lames non commandées : dans quel cas le démarreur peut-il tourner ?', c: ['Pilote assis avec la pédale de frein enfoncée, ou siège vide avec le frein à main serré', 'Pilote assis avec le frein à main serré uniquement', 'Siège vide avec la pédale de frein enfoncée', 'Dans tous les cas dès que la clé est sur DEM'], e: 'L = J·C̄·(F + G). F = Ā·Ē = 1 : pédale enfoncée (contact fermé, A = 0) et assis (E = 0). G = B·E = 1 : frein à main serré (contact fermé → 0 → porte NON → B = 1) et siège vide (E = 1). Il suffit que F ou G soit à 1.', r: 'Déduit de l’énoncé : tous les contacts sont fermés = 0 V = état 0.', src: 'Exercice microtracteur tondeuse (question ajoutée)' },
   ]
 });
