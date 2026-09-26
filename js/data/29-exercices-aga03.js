@@ -92,5 +92,5 @@
     questions: qs
   });
 
-  REV.trancher.push({ sujet: 'AGA 03 exercice 42 : moteur 3 ch, η 80 %, cos φ 0,82, triphasé 380 V', a: 'Corrigé du livre : 4,2 A', b: 'Même méthode que l’exercice 40 (avec le rendement) : 2 760 / (380 × 0,82 × 1,732) ≈ 5,1 A', keep: 'À faire confirmer : le 4,2 A correspond au calcul sans le rendement (≈ 4,1 A).' });
+  REV.trancher.push({ sujet: 'Moteur 3 ch, rendement 80 %, cos φ 0,82, triphasé 380 V : intensité par phase', a: '4,2 A (calcul sans le rendement, ≈ 4,1 A)', b: '≈ 5,1 A (avec le rendement, même méthode que le moteur monophasé : 14,63 A)', keep: '≈ 5,1 A : on calcule la puissance absorbée = 2 208 ÷ 0,8 = 2 760 W, puis I = 2 760 ÷ (380 × 0,82 × 1,732). La question précise maintenant la méthode.' });
 })();

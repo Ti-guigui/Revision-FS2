@@ -328,7 +328,7 @@
         '<a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
         '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
         '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
-        '<a class="card mini" href="#/trancher">⚖️ Points à trancher avec le formateur</a>' +
+        '<a class="card mini" href="#/trancher">⚖️ Points tranchés</a>' +
       '</div>' +
       '<p class="muted small center">' + totalQuestions() + ' questions · ' + totalLessons() +
         ' leçons · ' + REV.subjects.length + ' matières — progression enregistrée sur cet appareil, sans compte.</p>';
@@ -352,7 +352,7 @@
       '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
       '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
       '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
-      '<a class="card mini" href="#/trancher">⚖️ Points à trancher avec le formateur</a></div>';
+      '<a class="card mini" href="#/trancher">⚖️ Points tranchés</a></div>';
   }
 
   function viewMatiere(id, tab) {
@@ -840,12 +840,12 @@
 
   function viewTrancher() {
     var t = REV.trancher || [];
-    return crumbs([['#/cours', 'Cours'], [null, 'Points à trancher']]) +
-      '<h1 class="h1">⚖️ Points à trancher avec le formateur</h1>' +
-      '<p class="muted">Ce sont les points où tes documents se contredisent. Le site retient la réponse indiquée en vert — mais c’est ton formateur qui fait le barème : fais-les valider.</p>' +
+    return crumbs([['#/cours', 'Cours'], [null, 'Points tranchés']]) +
+      '<h1 class="h1">⚖️ Points tranchés</h1>' +
+      '<p class="muted">Tes documents se contredisaient sur ces points. La réponse retenue (en vert) est celle des livres de cours ou des corrections officielles, avec la référence.</p>' +
       t.map(function (x) {
-        return '<div class="card pad trancher"><h3>' + esc(x.sujet) + '</h3><div class="tr-grid"><div><span class="muted small">Version A</span><p>' + x.a +
-          '</p></div><div><span class="muted small">Version B</span><p>' + x.b + '</p></div></div><p class="tr-keep">✅ Retenu : ' + x.keep + '</p></div>';
+        return '<div class="card pad trancher"><h3>' + esc(x.sujet) + '</h3><div class="tr-grid"><div><span class="muted small">Version écartée</span><p>' + x.a +
+          '</p></div><div><span class="muted small">Version retenue</span><p>' + x.b + '</p></div></div><p class="tr-keep">✅ Réponse retenue : ' + x.keep + '</p></div>';
       }).join('');
   }
 
