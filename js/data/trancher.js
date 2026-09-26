@@ -1,0 +1,28 @@
+/* Points où les documents de cours se contredisent (tableau « à trancher avec le formateur » du livre FS2). */
+window.REV = window.REV || {};
+REV.trancher = [
+  { sujet: 'Bornes des alternateurs 6 / 9 diodes', a: 'Fiche mémoire : 6 diodes = 1 borne L ; 9 diodes = L et +', b: 'Fiche Complet Élec + QCM OVI114 : 6 ou 12 diodes = 2 bornes L et + ; 9 diodes = 1 borne L', keep: 'Version B, validée par le QCM OVI114 (Q37, 42, 46, 78, 125, 150, 156).' },
+  { sujet: 'Capteur à effet Hall', a: 'Fiche mémoire : capteur actif', b: 'Cours + OVI114 Q3 : capteur passif (alimenté en 5 V)', keep: 'Passif (convention du cours).' },
+  { sujet: 'CAN H au niveau dominant', a: 'Une fiche : 3,2 V', b: 'Toutes les autres : 3,5 V', keep: '3,5 V.' },
+  { sujet: 'Démarreur 24 V : 24,5–25,2 V à vide, 18,6 V sous démarreur', a: 'Corrigé UV2 (PDF) : batteries déchargées', b: 'Test n°5 (Uv1), OVI114 Q75, corrigé UV2 (Word) : pas les batteries → lignes + et/ou −', keep: 'Lignes (3 sources contre 1) : à vide les batteries sont chargées.' },
+  { sujet: 'Enroulement de maintien coupé', a: 'Uv1 : « le démarreur ne fonctionne pas »', b: 'OVI114 Q80/166, UV2 Q42 : colle par intermittence (effet mitraillette)', keep: 'Colle par intermittence.' },
+  { sujet: '6 diodes régulateur incorporé, lampe témoin HS', a: 'Uv1 (banque QCM) : « ne débitera pas »', b: 'OVI114 Q54, UV2 Q46 : fonctionne correctement', keep: 'Continue de charger (6 diodes). C’est le 9 diodes qui ne charge plus.' },
+  { sujet: '6 diodes régulateur intégré, ligne + du régulateur coupée', a: 'Fiche : « on enlève le +BAT → le régulateur ne fonctionne plus »', b: 'OVI114 Q141 : « ne peut pas fonctionner » = Faux', keep: 'Question probablement mal comprise : demander au formateur.' },
+  { sujet: 'Tableau ALFA : sens de tirage', a: 'Uv1 : tire à droite', b: 'UV2 (2 corrigés) : tire à gauche', keep: 'Gauche : il tire du côté du carrossage le plus positif (−0°09′ G > −1°10′ D).' },
+  { sujet: 'Usure rugueuse intérieur pneu AV G', a: 'Uv1 : carrossage trop négatif', b: 'UV2 : trop d’ouverture (parallélisme)', keep: 'Ouverture : « rugueuse » = parallélisme ; carrossage = usure lisse.' },
+  { sujet: 'Définition de l’angle de chasse', a: 'Correction officielle du test final (Q22 = 4) : verticale / axe de pivot, plan TRANSVERSAL', b: 'Cours DSFT : plan longitudinal, vue de côté', keep: 'Au test final, cocher 4 (barème officiel). Sur le fond, le cours a raison : signaler l’erreur au formateur.' },
+  { sujet: 'Pompe en ligne : entre pré-course et course utile', a: 'Fiche mémoire : « course restante »', b: 'Correction officielle Q7 = 4 : « course de détente »', keep: 'TRANCHÉ : course de détente.' },
+  { sujet: 'La pompe VE Bosch contient…', a: 'Fiche mémoire : rampe hélicoïdale', b: 'Correction officielle Q8 = 3 : un disque à cames', keep: 'TRANCHÉ : disque à cames.' },
+  { sujet: 'Manœuvre de force', a: 'Fiche mémoire : diamètre en mètre ; 10 400 / 2 000 → 6 brins', b: 'Correction officielle : décimètre (Q53 = 3) ; 8 brins (Q58 = 4)', keep: 'TRANCHÉ par la correction officielle, et confirmé par le cours A GB 08 : diamètre en dm (Ra = Cm × d²), 5,2 → 6 (arrondi) → +2 brins car ≥ 4 = 8.' },
+  { sujet: 'Willis (fiche DSFT) : 1 200 tr/min, Zp 30, Zc 40', a: 'Fiche : 800 tr/min en sortie', b: 'Calcul : 1 200 × 30 / 40 = 900 tr/min (marche arrière)', keep: '900 tr/min, sauf si un nombre de dents est différent sur le schéma du cours.' },
+  { sujet: 'Liquide de frein : seuils', a: 'Fiche DSFT manuscrite : « inf. à 65 °C / sup. à 165 °C »', b: 'Fiche consolidée : ≥ 185 °C bon ; 165–185 °C correct ; ≤ 165 °C à remplacer', keep: 'Retenir 165 °C comme seuil de remplacement ; le 65 °C est à faire expliquer.' },
+  { sujet: 'Naissance de l’esprit maintenance', a: 'QCM Uv1 : la cavalerie', b: 'AQA 03 : l’artillerie', keep: 'Artillerie (texte officiel AQA 03).' },
+  { sujet: 'Niveaux d’emploi par ETR', a: 'QCM Uv1 : 3', b: 'Quiz FS2 : 5', keep: 'Non vérifiable dans l’AQA 03 : à confirmer.' },
+  { sujet: 'RDC : qui répartit les travaux (phase 2 du DIT) ?', a: 'Uv1 + fiche env. : le RDC', b: 'Corrigé UV2 : la CDM', keep: 'RDC (réponse cochée sur la copie).' },
+  { sujet: 'RDC : qui valide la partie 4 du DIT « dans tous les cas » ?', a: 'Uv1 : la CDM', b: 'Corrigé UV2 : le RDC', keep: 'CDM (réponse cochée sur la copie), à confirmer.' },
+  { sujet: 'Feuille NTI1 : ce qu’on ne peut pas avoir', a: 'Uv1 : potentiel km supérieur au compteur', b: 'UV2 : compteur supérieur au potentiel', keep: 'Uv1 (copie corrigée).' },
+  { sujet: 'Freinage pneumatique : temps de remplissage', a: 'Cours : 6 à 11 min', b: 'Corrigé UV2 Word : 6 à 10 min', keep: 'Cours : 6 à 11 min (proposition présente dans le QCM).' },
+  { sujet: '4 roues restent freinées (UV2 Q15)', a: 'Corrigé PDF : circuit de frein de parc', b: 'Corrigé Word : circuits de service AV + AR', keep: 'Dépend du schéma : à faire trancher.' },
+  { sujet: 'Bus CAN : niveau logique et résistance de ligne (OVI114 étendu)', a: 'Q4 : « niveau logique 1 de la ligne H = 3,5 V » ; Q6 : ligne = 60 Ω Faux', b: 'Cours : dominant = 0 = 3,5 V, récessif = 1 = 2,5 V ; Q72 : ligne = 60 Ω Vrai', keep: 'Cours : récessif = 1 = 2,5 V ; ligne = 60 Ω. Faire préciser le contexte.' },
+  { sujet: 'PMR : trois corrections par rapport au cours', a: 'Cours PMR : CCHPA / FS 4 fois par an ; FEN arrêté de 2014', b: 'AQA 03 : 2 réunions par an ; FEN arrêté du 9 octobre 2020 ; droit de retrait inapplicable en opération et à l’entraînement (décret 2012-422)', keep: 'AQA 03 (source la plus récente).' }
+];

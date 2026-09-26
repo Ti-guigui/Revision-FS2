@@ -1,0 +1,77 @@
+REV.add({
+  id: 'pmr', name: 'PMR / SST', icon: '🦺', color: '#ea580c',
+  desc: 'Cours CT1 fusionné avec le chapitre 10 de l’AQA 03 (source la plus récente).',
+  lessons: [
+    {
+      id: 'fondamentaux', title: 'Fondamentaux et principes de prévention',
+      html: `
+<div class="box trancher"><b>⚖ À trancher</b><p>Trois corrections par rapport au cours PMR : réunions CCHPA / FS <b>2 fois par an</b> (pas 4) ; FEN régie par l’<b>arrêté du 9 octobre 2020</b> (pas 2014) ; droit de retrait des militaires <b>inapplicable en opération et à l’entraînement</b> (décret 2012-422).</p></div>
+<ul><li>La <b>PMR est une prérogative de commandement</b> : préserver la ressource humaine et la préparation opérationnelle. Code du travail = texte de référence ; il s’applique aux militaires pour les activités de même nature que les civils. En OPEX : <b>PMROPS</b>.</li>
+<li><b>4 domaines</b> : SST (santé et sécurité au travail), PPCI (incendie), RTE (risques technologiques et environnementaux), PSR (sécurité routière).</li></ul>
+<h3>Les 9 principes généraux de prévention</h3>
+<ol><li>Éviter les risques</li><li>Évaluer ceux qu’on ne peut pas éviter</li><li>Les combattre à la source</li><li>Adapter le travail à l’homme</li><li>Tenir compte de l’évolution de la technique</li><li>Remplacer le dangereux par le moins dangereux</li><li>Planifier la prévention</li><li>Priorité à la protection collective sur l’individuelle</li><li>Donner les instructions appropriées</li></ol>`,
+      retenir: ['PMR = prérogative de commandement.', '4 domaines : SST, PPCI, RTE, PSR.', 'Protection collective AVANT individuelle.'],
+      pieges: ['Droit de retrait : inapplicable en opération et à l’entraînement.'],
+      memo: { cle: 'ÉVITER → ÉVALUER → COMBATTRE À LA SOURCE', points: ['4 domaines : SST · PPCI · RTE · PSR', 'Collectif avant individuel', 'OPEX : PMROPS'], astuce: 'Le meilleur risque est celui qu’on a supprimé.' }
+    },
+    {
+      id: 'acteurs', title: 'Responsabilités et acteurs',
+      html: `
+<ul><li><b>Chef d’organisme</b> : sécurité et santé physique et mentale, registre SST, DUERP, FEN, RDP ; <b>principal responsable pénal</b>. 3 niveaux : chef d’organisme → encadrement → personnel.</li>
+<li>Central : ministre, DRH-MD, EMDS, états-majors zonaux, coordonnateur central, DCSSA, inspections (ITA, IRAD, IMPA, ITPCI).</li>
+<li>Local : <b>CLP</b> (coordonnateur local, en général le <b>commandant en second</b>) ; <b>CPRP</b> (conseille le chef, <b>tient le registre SST</b>) ; préventeurs ; médecin de prévention (civil) ; médecin conseiller (militaire, membre de droit de la CCHPA) ; conseiller incendie ; CLPSR ; PCR ; encadrement ; chaque agent.</li>
+<li><b>Instances</b> : CCHPA (militaires), formation spécialisée FS (civils, obligatoire dès 50 agents) ; <b>2 réunions par an</b> ; réunions conjointes possibles depuis juillet 2024 avec 2 procès-verbaux.</li>
+<li>Contrôle interne de niveau 1 : sous la responsabilité du CFA / chef de corps.</li></ul>`,
+      retenir: ['Chef d’organisme = responsable de la PMR (et pénalement).', 'CPRP tient le registre SST.', 'CLP = commandant en second.', 'CCHPA / FS : 2 réunions par an.'],
+      pieges: ['« Le chargé de prévention est responsable de la PMR-E » est FAUX : c’est le chef d’organisme.'],
+      memo: { cle: 'CHEF D’ORGANISME = RESPONSABLE', points: ['CPRP : registre SST, conseille', 'CLP : commandant en second', 'CCHPA (militaires) / FS (civils) : 2×/an'], astuce: 'Le CPRP conseille, le chef décide et répond.' }
+    },
+    {
+      id: 'documents', title: 'Documents : DUERP, FEN, registres',
+      html: `
+<ul><li><b>RDP</b> = DUERP + organisation locale + PAPRIPACT ; dématérialisable (arrêté du 18/12/2023).</li>
+<li><b>DUERP</b> : par unité de travail, mis à jour chaque année, conservé 40 ans. La FEN ne peut citer que des risques inscrits au DUERP.</li>
+<li><b>Registre SST</b> : tenu par le CPRP, accessible à tous, examiné au moins 2 fois par an. <b>Registre spécial</b> (droit de retrait) : sous la responsabilité du chef d’organisme ; aucune sanction pour un retrait valable.</li>
+<li><b>FEN</b> (fiche emploi-nuisances) : informe les agents et le médecin de prévention des risques pour la santé. Chef d’organisme + CPRP + médecin ; 2 parties (administrative, nuisances) ; mise à jour <b>au moins tous les 5 ans</b> ; 1 exemplaire à l’agent, 1 au dossier médical, l’original au dossier administratif.</li>
+<li><b>Fiche d’exposition</b> : complète la FEN et trace les expositions (amiante, rayonnements optiques) ; FEAPERI (rayonnements ionisants).</li></ul>`,
+      retenir: ['DUERP : chaque année, conservé 40 ans.', 'FEN : mise à jour au moins tous les 5 ans, 1 exemplaire remis à l’agent.', 'Fiche d’exposition = complète la FEN, trace les expositions.'],
+      memo: { cle: 'DUERP 1 AN · FEN 5 ANS · 40 ANS D’ARCHIVE', points: ['Registre SST : CPRP, 2×/an', 'Registre spécial : droit de retrait', 'FEN : informer agents + médecin'], astuce: 'La FEN ne parle que des risques déjà inscrits au DUERP.' }
+    },
+    {
+      id: 'risques', title: 'Formation, accidents, incendie, environnement, route',
+      html: `
+<ul><li><b>Formation SST</b> : à l’arrivée, à la prise de poste à risque, après changement ou longue absence, après accident grave ou répété ; information au moins 1 fois par an. Chariots élévateurs : aptitude médicale + stage + formation sur site + autorisation du chef de corps.</li>
+<li><b>En service</b> : enceinte militaire, activité organisée, trajet de mission, sport commandé (ordre écrit). Accident de trajet : domicile-travail sans détour. <b>Imputabilité</b> : condition de temps + condition de lieu + relation avec le service.</li>
+<li>L’analyse d’un accident sert à <b>éviter un accident similaire</b>.</li>
+<li><b>Risque chimique</b> : 9 pictogrammes, FDS en 16 rubriques. Orientation SST 2020-2023 : prévention de l’exposition aux CMR.</li>
+<li><b>PPCI</b> : sécurité des personnes et des biens, faciliter les secours, <b>limiter naissance et propagation du feu</b>, faciliter l’évacuation.</li>
+<li><b>RTE</b> : eau, sols pollués, ICPE (déclaration, enregistrement, autorisation), déchets (BSD, registre).</li>
+<li><b>PSR</b> : 2ᵉ cause de mortalité au ministère ; PPRR triennal, PLPRR local.</li>
+<li>Niveaux de CIPCE : 3.</li></ul>`,
+      retenir: ['Imputabilité : temps + lieu + lien avec le service.', 'PPCI : limiter naissance et propagation du feu.', 'Analyse d’accident = éviter un accident similaire.'],
+      memo: { cle: 'IMPUTABILITÉ = TEMPS + LIEU + SERVICE', points: ['Sport commandé = ordre écrit', 'Trajet domicile-travail sans détour', 'PSR : 2ᵉ cause de mortalité'], astuce: 'Pour qu’un accident soit « de service » : au bon moment, au bon endroit, pour le service.' }
+    }
+  ],
+  questions: [
+    { l: 'fondamentaux', q: 'La PMR est avant tout :', c: ['Une prérogative de commandement', 'Une mission du médecin de prévention', 'Une obligation du seul CPRP', 'Une affaire de spécialistes civils'], e: 'Elle vise à préserver la ressource humaine et la préparation opérationnelle.' },
+    { l: 'fondamentaux', q: 'Quels sont les 4 domaines de la PMR ?', c: ['SST, PPCI, RTE, PSR', 'SST, NRBC, PSR, OPEX', 'DUERP, FEN, RDP, SST', 'PPCI, ICPE, PSR, CMR'], e: 'Santé-sécurité au travail, incendie, risques technologiques et environnementaux, sécurité routière.' },
+    { l: 'fondamentaux', q: 'Selon les principes de prévention, quelle protection est prioritaire ?', c: ['La protection collective', 'La protection individuelle', 'Les deux à égalité', 'Aucune, on forme le personnel'], e: 'Principe n°8 : priorité à la protection collective sur l’individuelle.' },
+    { l: 'fondamentaux', q: 'Le droit de retrait des militaires est-il applicable en opération et à l’entraînement ?', c: ['Non (décret 2012-422)', 'Oui, toujours', 'Oui, seulement à l’entraînement', 'Oui, sur ordre écrit'], e: 'Correction apportée par l’AQA 03 au cours PMR.' },
+    { l: 'acteurs', q: 'Affirmation FAUSSE ?', c: ['« Le chargé de prévention est responsable de la PMR-E »', '« Le chef d’organisme est le principal responsable pénal »', '« Le CPRP tient le registre SST »', '« Le CLP est en général le commandant en second »'], e: 'C’est le chef d’organisme qui est responsable, pas le chargé de prévention.', src: 'QCM Test FS2' },
+    { l: 'acteurs', q: 'Qui tient le registre SST ?', c: ['Le CPRP', 'Le chef d’organisme', 'Le médecin de prévention', 'Le commandant en second'], e: 'Le CPRP conseille le chef et tient le registre SST.', src: 'QCM Test FS2' },
+    { l: 'acteurs', q: 'Qui est en général le coordonnateur local à la prévention (CLP) ?', c: ['Le commandant en second', 'Le chef de corps', 'Le CPRP', 'Le médecin conseiller'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
+    { l: 'acteurs', q: 'Combien de réunions par an pour la CCHPA / FS (AQA 03) ?', c: ['2', '4', '1', '12'], e: 'Le cours disait 4 : l’AQA 03 (plus récente) dit 2.' },
+    { l: 'acteurs', q: 'Le contrôle interne de niveau 1 est sous la responsabilité…', c: ['Du CFA / chef de corps', 'De la MICAM', 'Du CPRP', 'Du médecin de prévention'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
+    { l: 'documents', q: 'À quoi sert la fiche emploi-nuisances (FEN) ?', c: ['Informer les agents et le médecin de prévention des risques pour la santé', 'Déclarer un accident', 'Exercer le droit de retrait', 'Suivre la vie d’un matériel'], e: 'Elle ne peut citer que des risques inscrits au DUERP.', src: 'QCM Test FS2' },
+    { l: 'documents', q: 'Mise à jour de la FEN ?', c: ['A minima 5 ans après son élaboration ou sa dernière mise à jour', 'Chaque année', 'Tous les 40 ans', 'Uniquement après un accident'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
+    { l: 'documents', q: 'Remise de la FEN :', c: ['Un exemplaire est remis à l’agent', 'Elle reste confidentielle au chef', 'Elle n’est remise qu’au médecin', 'Elle est affichée'], e: '1 exemplaire à l’agent, 1 au dossier médical, l’original au dossier administratif.', src: 'QCM Test FS2' },
+    { l: 'documents', q: 'Quel document complète la FEN et trace les expositions ?', c: ['La fiche d’exposition', 'Le DUERP', 'Le registre spécial', 'Le MAT 1017'], e: 'Fiche d’exposition annuelle (amiante, rayonnements optiques).', src: 'QCM Test FS2' },
+    { l: 'documents', q: 'Le DUERP est mis à jour…', c: ['Chaque année (et conservé 40 ans)', 'Tous les 5 ans', 'Tous les 10 ans', 'Uniquement sur demande'], e: 'Par unité de travail, mis à jour chaque année, conservé 40 ans.' },
+    { l: 'risques', q: 'Imputabilité d’un accident de service : conditions ?', c: ['Condition de temps + condition de lieu + relation avec le service', 'Un témoin + un certificat médical', 'Uniquement dans l’enceinte militaire', 'Un ordre écrit uniquement'], e: 'Les trois conditions cumulées.', src: 'QCM Test FS2' },
+    { l: 'risques', q: 'L’analyse d’un accident permet avant tout…', c: ['D’éviter un accident similaire', 'De désigner un coupable', 'De calculer une indemnité', 'De clôturer le dossier'], e: 'But : comprendre pour prévenir la récidive.', src: 'QCM Test FS2' },
+    { l: 'risques', q: 'Affirmation vraie : la PPCI…', c: ['Limite les risques de naissance du feu', 'Concerne uniquement les véhicules', 'Remplace les exercices d’évacuation', 'Est gérée par le médecin'], e: 'PPCI : limiter naissance et propagation du feu, faciliter secours et évacuation.', src: 'QCM Test FS2' },
+    { l: 'risques', q: 'Orientation SST 2020-2023 ?', c: ['Prévention de l’exposition aux CMR', 'Sécurité routière uniquement', 'Réduction du bruit', 'Ergonomie des bureaux'], e: 'CMR = cancérogènes, mutagènes, reprotoxiques.', src: 'QCM Test FS2' },
+    { l: 'risques', q: 'Combien de niveaux de CIPCE ?', c: ['3', '2', '4', '5'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
+    { l: 'risques', q: 'Un sport est « en service » s’il est :', c: ['Commandé (ordre écrit)', 'Pratiqué dans une salle civile', 'Pratiqué le week-end', 'Pratiqué seul'], e: 'Sport commandé = ordre écrit.' }
+  ]
+});

@@ -1,0 +1,783 @@
+/* ==========================================================================
+   RÉVISIONS 2026 — moteur du site (100 % statique, sans compte, sans serveur)
+   Les données (matières, leçons, questions) sont dans js/data/*.js
+   La progression est sauvegardée dans le navigateur (localStorage).
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* ---------- Registre des matières ---------- */
+  var REV = window.REV = window.REV || {};
+  REV.subjects = REV.subjects || [];
+  REV.qById = {};
+  REV.lessonById = {};
+
+  function hash(str) {
+    var h = 5381;
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
+    return h.toString(36);
+  }
+
+  REV.add = function (s) {
+    s.lessons.forEach(function (l, i) {
+      l.subject = s.id;
+      l.num = String(i + 1).padStart(2, '0');
+      l.key = s.id + '/' + l.id;
+      REV.lessonById[l.key] = l;
+    });
+    s.questions = (s.questions || []).map(function (q) {
+      if (q.a === undefined) q.a = 0; // par défaut, la bonne réponse est écrite en premier (l'ordre est mélangé à l'affichage)
+      q.subject = s.id;
+      q.lkey = s.id + '/' + q.l;
+      q.id = s.id + ':' + hash(q.q + '|' + q.c[q.a]);
+      if (!REV.lessonById[q.lkey]) console.warn('Leçon inconnue pour la question', q);
+      REV.qById[q.id] = q;
+      return q;
+    });
+    REV.subjects.push(s);
+  };
+
+  function subj(id) { return REV.subjects.find(function (s) { return s.id === id; }); }
+  function lessonQuestions(lkey) {
+    var s = subj(lkey.split('/')[0]);
+    return s ? s.questions.filter(function (q) { return q.lkey === lkey; }) : [];
+  }
+
+  /* ---------- Sauvegarde locale ---------- */
+  var KEY = 'revisions2026.progress.v1';
+  var CUR = 'revisions2026.current.v1';
+  var store = { q: {}, sessions: [], lessonsSeen: {} };
+
+  function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function safeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* stockage indisponible */ } }
+  function safeDel(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } }
+
+  function load() {
+    var raw = safeGet(KEY);
+    if (!raw) return;
+    try {
+      var d = JSON.parse(raw);
+      store.q = d.q || {};
+      store.sessions = d.sessions || [];
+      store.lessonsSeen = d.lessonsSeen || {};
+    } catch (e) { /* données corrompues : on repart de zéro */ }
+  }
+  function save() { safeSet(KEY, JSON.stringify(store)); }
+
+  function record(qid, ok) {
+    var r = store.q[qid] || (store.q[qid] = { n: 0, ok: 0, ko: 0, h: [] });
+    r.n++; if (ok) r.ok++; else r.ko++;
+    r.h.push(ok ? 1 : 0);
+    if (r.h.length > 5) r.h.shift();
+    r.t = Date.now();
+    save();
+  }
+
+  /* Score d'un ensemble de questions : moyenne des 3 dernières réponses de chaque question vue */
+  function scoreOf(questions) {
+    var got = 0, tot = 0, seen = 0;
+    questions.forEach(function (q) {
+      var r = store.q[q.id];
+      if (!r || !r.h.length) return;
+      seen++;
+      var last = r.h.slice(-3);
+      last.forEach(function (v) { got += v; tot++; });
+    });
+    return { pct: tot ? Math.round(got * 100 / tot) : null, seen: seen, total: questions.length };
+  }
+
+  function needsReview(q) {
+    var r = store.q[q.id];
+    if (!r || !r.h.length) return false;
+    var h = r.h;
+    if (h[h.length - 1] === 0) return true;
+    // ratée au moins 2 fois et pas encore réussie 2 fois de suite
+    return r.ko >= 2 && !(h.length >= 2 && h[h.length - 1] === 1 && h[h.length - 2] === 1);
+  }
+
+  /* ---------- Outils ---------- */
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function level(p) {
+    if (p === null || p === undefined) return { cls: 'none', dot: '⚪', label: 'Pas encore testé' };
+    if (p >= 80) return { cls: 'good', dot: '🟢', label: 'Maîtrisé' };
+    if (p >= 60) return { cls: 'mid', dot: '🟠', label: 'À consolider' };
+    return { cls: 'bad', dot: '🔴', label: 'À revoir' };
+  }
+  function bar(p) {
+    var v = p === null ? 0 : p;
+    return '<div class="bar ' + level(p).cls + '"><span style="width:' + v + '%"></span></div>';
+  }
+  function asciiBar(p) {
+    var n = Math.round((p || 0) / 5);
+    return '█'.repeat(n) + '░'.repeat(20 - n);
+  }
+  function fmtDate(t) {
+    var d = new Date(t);
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) + ' ' +
+      d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  }
+  var LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  /* ---------- Session de QCM en cours ---------- */
+  var session = null;
+  var timerId = null;
+  var QUIZ_SECONDS = 30;
+
+  function saveSession() { if (session) safeSet(CUR, JSON.stringify(session)); else safeDel(CUR); }
+  function loadSession() {
+    var raw = safeGet(CUR);
+    if (!raw) return;
+    try {
+      var s = JSON.parse(raw);
+      if (s && s.qids && s.qids.every(function (id) { return REV.qById[id]; })) session = s;
+    } catch (e) { /* ignore */ }
+  }
+
+  function startSession(opts) {
+    var qs = opts.questions.slice(0, opts.count || opts.questions.length);
+    if (!qs.length) { toast('Aucune question disponible pour ce choix.'); return; }
+    session = {
+      mode: opts.mode, title: opts.title, subject: opts.subject || null, lesson: opts.lesson || null,
+      timer: !!opts.timer, qids: qs.map(function (q) { return q.id; }),
+      perm: qs.map(function (q) { return shuffle(q.c.map(function (_, i) { return i; })); }),
+      answers: [], i: 0, started: Date.now()
+    };
+    saveSession();
+    go('#/session');
+  }
+
+  /* ---------- Navigation ---------- */
+  function go(h) { if (location.hash === h) render(); else location.hash = h; }
+
+  var main, toastEl;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastEl._t);
+    toastEl._t = setTimeout(function () { toastEl.classList.remove('show'); }, 2600);
+  }
+
+  function setActiveNav(route) {
+    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', trancher: 'cours',
+      qcm: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
+    var key = map[route] || 'home';
+    if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') key = 'quiz';
+    document.querySelectorAll('[data-nav]').forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('data-nav') === key);
+    });
+  }
+
+  function render() {
+    clearInterval(timerId);
+    var parts = location.hash.replace(/^#\/?/, '').replace(/#.*$/, '').split('/').map(decodeURIComponent);
+    var route = parts[0] || '';
+    setActiveNav(route);
+    var html;
+    switch (route) {
+      case '': html = viewHome(); break;
+      case 'cours': html = viewCours(); break;
+      case 'matiere': html = viewMatiere(parts[1]); break;
+      case 'lecon': html = viewLecon(parts[1] + '/' + parts[2]); break;
+      case 'qcm': html = parts[1] ? viewQcmSetup(parts[1]) : viewQcmChoice(); break;
+      case 'quiz': html = viewQuiz(); break;
+      case 'revision': html = viewRevision(); break;
+      case 'session': html = viewSession(); break;
+      case 'bilan': html = viewBilan(); break;
+      case 'resultats': html = viewResultats(); break;
+      case 'memos': html = viewMemos(parts[1]); break;
+      case 'trancher': html = viewTrancher(); break;
+      default: html = viewHome();
+    }
+    main.innerHTML = html;
+    if (route !== 'session') window.scrollTo(0, 0);
+    if (route === 'session') afterSessionRender();
+    main.focus({ preventScroll: true });
+  }
+
+  /* ---------- Vues ---------- */
+  function totalQuestions() { return REV.subjects.reduce(function (n, s) { return n + s.questions.length; }, 0); }
+  function totalLessons() { return REV.subjects.reduce(function (n, s) { return n + s.lessons.length; }, 0); }
+  function allQuestions() { return REV.subjects.reduce(function (a, s) { return a.concat(s.questions); }, []); }
+
+  function viewHome() {
+    var all = allQuestions();
+    var sc = scoreOf(all);
+    var toReview = all.filter(needsReview).length;
+    var resume = session && session.answers.length < session.qids.length
+      ? '<a class="resume" href="#/session">▶️ Reprendre : <b>' + esc(session.title) + '</b> — question ' +
+        (Math.min(session.answers.length + 1, session.qids.length)) + ' / ' + session.qids.length + '</a>' : '';
+
+    return '' +
+      '<section class="hero">' +
+        '<div class="hero-box">' +
+          '<div class="hero-title">📚 RÉVISIONS 2026</div>' +
+          '<p class="hero-sub">Bienvenue sur la plateforme de révision<br><b>FS2 / MOBTER</b></p>' +
+          '<div class="hero-grid">' +
+            tile('#/cours', '📖', 'COURS', totalLessons() + ' leçons') +
+            tile('#/qcm', '🧠', 'QCM', 'par matière') +
+            tile('#/quiz', '⚡', 'QUIZ', 'éclair chronométré') +
+            tile('#/resultats', '📊', 'MES RÉSULTATS', sc.pct === null ? 'pas encore de score' : 'niveau global ' + sc.pct + ' %') +
+          '</div>' +
+        '</div>' +
+      '</section>' +
+      resume +
+      (toReview ? '<a class="card review-cta" href="#/revision"><span class="big">🔁</span><span><b>QCM de révision</b><br>' +
+        toReview + ' question' + (toReview > 1 ? 's' : '') + ' ratée' + (toReview > 1 ? 's' : '') + ' à retravailler</span><span class="chev">›</span></a>' : '') +
+      '<h2 class="h2">📚 Matières</h2>' +
+      '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
+      '<div class="home-foot">' +
+        '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
+        '<a class="card mini" href="#/trancher">⚖️ Points à trancher avec le formateur</a>' +
+      '</div>' +
+      '<p class="muted small center">' + totalQuestions() + ' questions · ' + totalLessons() +
+        ' leçons · ' + REV.subjects.length + ' matières — progression enregistrée sur cet appareil, sans compte.</p>';
+  }
+  function tile(href, icon, label, sub) {
+    return '<a class="tile" href="' + href + '"><span class="tile-ic">' + icon + '</span><span class="tile-l">' +
+      label + '</span><span class="tile-s">' + esc(sub) + '</span></a>';
+  }
+  function subjectCard(s) {
+    var sc = scoreOf(s.questions), lv = level(sc.pct);
+    return '<a class="card subj" href="#/matiere/' + s.id + '" style="--c:' + s.color + '">' +
+      '<span class="subj-ic">' + s.icon + '</span>' +
+      '<span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">' + s.lessons.length +
+      ' leçons · ' + s.questions.length + ' questions</span>' + bar(sc.pct) + '</span>' +
+      '<span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '—' : sc.pct + ' %') + '</span></a>';
+  }
+
+  function viewCours() {
+    return '<h1 class="h1">📖 Cours</h1><p class="muted">Choisis une matière, puis une leçon : explication, schémas, à retenir, pièges et aide-mémoire.</p>' +
+      '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
+      '<div class="home-foot"><a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
+      '<a class="card mini" href="#/trancher">⚖️ Points à trancher avec le formateur</a></div>';
+  }
+
+  function viewMatiere(id) {
+    var s = subj(id);
+    if (!s) return viewCours();
+    var sc = scoreOf(s.questions);
+    return crumbs([['#/cours', 'Cours'], [null, s.name]]) +
+      '<header class="subj-head" style="--c:' + s.color + '"><span class="subj-ic xl">' + s.icon + '</span><div><h1 class="h1">' +
+        esc(s.name) + '</h1><p class="muted">' + esc(s.desc || '') + '</p></div></header>' +
+      '<div class="row-actions">' +
+        '<a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM ' + esc(s.name) + '</a>' +
+        '<a class="btn" href="#/memos/' + s.id + '">🧠 Aides-mémoires</a>' +
+        (sc.pct !== null ? '<span class="pill ' + level(sc.pct).cls + '">' + level(sc.pct).dot + ' ' + sc.pct + ' %</span>' : '') +
+      '</div>' +
+      '<ol class="lesson-list">' + s.lessons.map(function (l) {
+        var ls = scoreOf(lessonQuestions(l.key)), lv = level(ls.pct);
+        return '<li><a href="#/lecon/' + l.key + '"><span class="num">' + l.num + '</span><span class="lt">' + esc(l.title) +
+          '<span class="muted small">' + lessonQuestions(l.key).length + ' questions' + (store.lessonsSeen[l.key] ? ' · ✔ lue' : '') + '</span></span>' +
+          '<span class="lscore ' + lv.cls + '">' + (ls.pct === null ? '—' : ls.pct + ' % ' + lv.dot) + '</span></a></li>';
+      }).join('') + '</ol>';
+  }
+
+  function crumbs(items) {
+    return '<nav class="crumbs">' + items.map(function (it) {
+      return it[0] ? '<a href="' + it[0] + '">' + esc(it[1]) + '</a>' : '<span>' + esc(it[1]) + '</span>';
+    }).join(' › ') + '</nav>';
+  }
+
+  function memoHtml(l, s, withLink) {
+    var m = l.memo;
+    if (!m) return '';
+    return '<div class="memo" style="--c:' + s.color + '">' +
+      '<div class="memo-h">' + s.icon + ' ' + esc(l.title.toUpperCase()) + '</div>' +
+      (m.cle ? '<div class="memo-key">🧠 ' + m.cle + '</div>' : '') +
+      (m.flow ? '<div class="flow">' + m.flow.map(function (f) { return '<span>' + f + '</span>'; }).join('<i>↓</i>') + '</div>' : '') +
+      (m.points ? '<ul class="memo-pts">' + m.points.map(function (p) { return '<li>' + p + '</li>'; }).join('') + '</ul>' : '') +
+      (m.astuce ? '<div class="memo-tip">🎯 <b>Astuce mémoire</b><br>« ' + m.astuce + ' »</div>' : '') +
+      (withLink ? '<a class="memo-link" href="#/lecon/' + l.key + '">📖 Revoir la leçon ›</a>' : '') +
+      '</div>';
+  }
+
+  function viewLecon(key) {
+    var l = REV.lessonById[key];
+    if (!l) return viewCours();
+    var s = subj(l.subject);
+    store.lessonsSeen[key] = Date.now(); save();
+    var idx = s.lessons.indexOf(l);
+    var prev = s.lessons[idx - 1], next = s.lessons[idx + 1];
+    var qn = lessonQuestions(key).length;
+    var ls = scoreOf(lessonQuestions(key));
+    return crumbs([['#/cours', 'Cours'], ['#/matiere/' + s.id, s.name], [null, l.num + ' — ' + l.title]]) +
+      '<article class="lesson" style="--c:' + s.color + '">' +
+      '<h1 class="h1"><span class="num">' + l.num + '</span> ' + esc(l.title) + '</h1>' +
+      (ls.pct !== null ? '<p><span class="pill ' + level(ls.pct).cls + '">' + level(ls.pct).dot + ' Ton score : ' + ls.pct + ' %</span></p>' : '') +
+      '<div class="lesson-body">' + l.html + '</div>' +
+      (l.images ? l.images.map(function (im) {
+        return '<figure><a href="img/' + im.src + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + im.src + '" alt="' + esc(im.cap) + '"></a><figcaption>🖼️ ' + esc(im.cap) + ' <span class="muted">(toucher pour agrandir)</span></figcaption></figure>';
+      }).join('') : '') +
+      (l.retenir ? '<div class="box retenir"><b>★ À retenir</b><ul>' + l.retenir.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' : '') +
+      (l.pieges ? '<div class="box piege"><b>⚠️ Pièges</b><ul>' + l.pieges.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' : '') +
+      '<h2 class="h2">🧠 Aide-mémoire</h2>' + memoHtml(l, s, false) +
+      '</article>' +
+      '<div class="row-actions sticky-actions">' +
+        (qn ? '<button class="btn primary" data-action="lesson-qcm" data-key="' + key + '">🧠 QCM sur cette leçon (' + qn + ')</button>' : '') +
+        '<button class="btn" data-action="print">🖨️ Imprimer</button>' +
+      '</div>' +
+      '<div class="pager">' +
+        (prev ? '<a class="btn ghost" href="#/lecon/' + prev.key + '">‹ ' + prev.num + ' ' + esc(prev.title) + '</a>' : '<span></span>') +
+        (next ? '<a class="btn ghost" href="#/lecon/' + next.key + '">' + next.num + ' ' + esc(next.title) + ' ›</a>' : '<span></span>') +
+      '</div>';
+  }
+
+  function viewQcmChoice() {
+    var all = allQuestions();
+    var toReview = all.filter(needsReview).length;
+    return '<h1 class="h1">🧠 QCM</h1><p class="muted">Choisis une matière. Correction immédiate et explication après chaque question.</p>' +
+      '<div class="subject-grid">' + REV.subjects.map(function (s) {
+        var sc = scoreOf(s.questions), lv = level(sc.pct);
+        return '<a class="card subj" href="#/qcm/' + s.id + '" style="--c:' + s.color + '"><span class="subj-ic">' + s.icon +
+          '</span><span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">' + s.questions.length + ' questions</span>' + bar(sc.pct) +
+          '</span><span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '—' : sc.pct + ' %') + '</span></a>';
+      }).join('') + '</div>' +
+      '<div class="home-foot">' +
+        '<button class="card mini" data-action="exam">🎓 Examen blanc — 40 questions toutes matières</button>' +
+        '<a class="card mini" href="#/revision">🔁 QCM de révision' + (toReview ? ' (' + toReview + ')' : '') + '</a>' +
+      '</div>';
+  }
+
+  function viewQcmSetup(id) {
+    var s = subj(id);
+    if (!s) return viewQcmChoice();
+    var n = s.questions.length;
+    var counts = [10, 20].filter(function (c) { return c < n; });
+    return crumbs([['#/qcm', 'QCM'], [null, s.name]]) +
+      '<header class="subj-head" style="--c:' + s.color + '"><span class="subj-ic xl">' + s.icon + '</span><div><h1 class="h1">' + esc(s.name) + ' → QCM</h1>' +
+      '<p class="muted">' + n + ' questions disponibles</p></div></header>' +
+      '<form class="setup" data-subject="' + s.id + '">' +
+        '<fieldset><legend>Nombre de questions</legend><div class="seg">' +
+          counts.map(function (c, i) { return '<label><input type="radio" name="count" value="' + c + '"' + (i === counts.length - 1 ? ' checked' : '') + '><span>' + c + '</span></label>'; }).join('') +
+          '<label><input type="radio" name="count" value="' + n + '"' + (counts.length ? '' : ' checked') + '><span>Toutes (' + n + ')</span></label>' +
+        '</div></fieldset>' +
+        '<fieldset><legend>Leçons</legend><label class="chk"><input type="checkbox" name="all" checked data-action="toggle-all"> <b>Toutes les leçons</b></label>' +
+          '<div class="lesson-checks">' + s.lessons.map(function (l) {
+            var c = lessonQuestions(l.key).length;
+            if (!c) return '';
+            return '<label class="chk"><input type="checkbox" name="lesson" value="' + l.key + '" checked> ' + l.num + ' — ' + esc(l.title) + ' <span class="muted small">(' + c + ')</span></label>';
+          }).join('') + '</div></fieldset>' +
+        '<button class="btn primary big" type="submit">▶️ Commencer</button>' +
+      '</form>';
+  }
+
+  function viewQuiz() {
+    return '<h1 class="h1">⚡ Quiz éclair</h1>' +
+      '<div class="card pad"><p><b>10 questions</b> tirées au hasard dans <b>toutes les matières</b>.</p>' +
+      '<p>⏱️ <b>' + QUIZ_SECONDS + ' secondes</b> par question : si le temps est écoulé, la question compte comme ratée — et la correction s’affiche quand même.</p>' +
+      '<p class="muted">Idéal pour 5 minutes de révision dans les transports ou en pause.</p>' +
+      '<div class="row-actions"><button class="btn primary big" data-action="quiz" data-timer="1">⚡ Lancer le quiz chronométré</button>' +
+      '<button class="btn" data-action="quiz" data-timer="0">Sans chrono</button></div></div>';
+  }
+
+  function viewRevision() {
+    var list = allQuestions().filter(needsReview);
+    if (!list.length) {
+      return '<h1 class="h1">🔁 QCM de révision</h1><div class="card pad center"><p class="big">🎉</p><p>Aucune question ratée à retravailler pour l’instant.</p>' +
+        '<p class="muted">Les questions que tu rates reviennent ici automatiquement, jusqu’à ce que tu les réussisses 2 fois de suite.</p>' +
+        '<a class="btn primary" href="#/qcm">🧠 Faire un QCM</a></div>';
+    }
+    var bySubj = {};
+    list.forEach(function (q) { bySubj[q.subject] = (bySubj[q.subject] || 0) + 1; });
+    return '<h1 class="h1">🔁 QCM de révision</h1>' +
+      '<div class="card pad"><p><b>' + list.length + '</b> question' + (list.length > 1 ? 's' : '') + ' ratée' + (list.length > 1 ? 's' : '') +
+      ' à retravailler. Les plus souvent ratées passent en premier.</p>' +
+      '<ul class="plain">' + Object.keys(bySubj).map(function (k) { var s = subj(k); return '<li>' + s.icon + ' ' + esc(s.name) + ' : <b>' + bySubj[k] + '</b></li>'; }).join('') + '</ul>' +
+      '<p class="muted small">Une question sort de cette liste quand tu la réussis 2 fois de suite.</p>' +
+      '<button class="btn primary big" data-action="revision">▶️ Lancer la révision (' + Math.min(20, list.length) + ' questions)</button></div>';
+  }
+
+  /* ----- Question en cours ----- */
+  function viewSession() {
+    if (!session) {
+      return '<div class="card pad center"><p>Aucun QCM en cours.</p><a class="btn primary" href="#/qcm">🧠 Choisir un QCM</a></div>';
+    }
+    if (session.i >= session.qids.length) return viewBilan();
+    var q = REV.qById[session.qids[session.i]];
+    var s = subj(q.subject), l = REV.lessonById[q.lkey];
+    var perm = session.perm[session.i];
+    var ans = session.answers[session.i];
+    var n = session.qids.length;
+    var head = '<div class="q-head" style="--c:' + s.color + '">' +
+      '<div class="q-meta"><span>' + s.icon + ' ' + esc(s.name) + '</span><span class="muted">📖 ' + esc(l.title) + '</span></div>' +
+      '<div class="q-count"><b>Question ' + (session.i + 1) + ' / ' + n + '</b><span class="muted small">' + esc(session.title) + '</span></div>' +
+      '<div class="progress"><span style="width:' + Math.round(session.i * 100 / n) + '%"></span></div>' +
+      (session.timer && !ans ? '<div class="timer"><span id="timer-bar"></span><b id="timer-txt">' + QUIZ_SECONDS + ' s</b></div>' : '') +
+      '</div>';
+    var body = '<div class="q-card"><h1 class="q-text">' + q.q + '</h1>' +
+      (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
+      '<div class="choices" role="group" aria-label="Réponses">' + perm.map(function (orig, k) {
+        var cls = 'choice';
+        if (ans) {
+          if (orig === q.a) cls += ' correct';
+          else if (orig === ans.chosen) cls += ' wrong';
+          else cls += ' dim';
+        }
+        return '<button class="' + cls + '" data-action="answer" data-k="' + k + '"' + (ans ? ' disabled' : '') + '>' +
+          '<span class="letter">' + LETTERS[k] + '</span><span class="ct">' + q.c[orig] + '</span></button>';
+      }).join('') + '</div></div>';
+    var fb = '';
+    if (ans) {
+      var goodLetter = LETTERS[perm.indexOf(q.a)];
+      fb = '<div class="feedback ' + (ans.ok ? 'ok' : 'ko') + '" id="feedback" tabindex="-1">' +
+        '<div class="fb-title">' + (ans.ok ? '✅ Bonne réponse !' : (ans.chosen === -1 ? '⏱️ Temps écoulé' : '❌ Mauvaise réponse')) + '</div>' +
+        (ans.ok ? '' : '<p class="fb-good">La bonne réponse est : <b>' + goodLetter + '</b> — ' + q.c[q.a] + '</p>') +
+        '<div class="fb-sec"><b>💡 Explication</b><p>' + q.e + '</p></div>' +
+        (q.r ? '<div class="fb-sec retenir"><b>🧠 À retenir</b><p>' + q.r + '</p></div>' : '') +
+        (q.w ? '<div class="fb-sec attention"><b>⚠️ Attention</b><p>' + q.w + '</p></div>' : '') +
+        (q.src ? '<p class="muted small">Source : ' + esc(q.src) + '</p>' : '') +
+        '<a class="fb-lesson" href="#/lecon/' + q.lkey + '">📖 Leçon : ' + esc(l.title) + ' ›</a>' +
+        '<button class="btn primary big" data-action="next">' + (session.i + 1 < n ? '➡️ Question suivante' : '📊 Voir mon résultat') + '</button>' +
+        '</div>';
+    }
+    return head + body + fb +
+      '<div class="q-foot"><button class="btn ghost small" data-action="quit">✖ Arrêter le QCM</button></div>';
+  }
+
+  function afterSessionRender() {
+    var ans = session && session.answers[session.i];
+    if (ans) {
+      var fb = document.getElementById('feedback');
+      if (fb) fb.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    window.scrollTo(0, 0);
+    if (session && session.timer) {
+      var left = QUIZ_SECONDS, t0 = Date.now();
+      var barEl = document.getElementById('timer-bar'), txt = document.getElementById('timer-txt');
+      timerId = setInterval(function () {
+        left = QUIZ_SECONDS - (Date.now() - t0) / 1000;
+        if (barEl) barEl.style.width = Math.max(0, left * 100 / QUIZ_SECONDS) + '%';
+        if (txt) txt.textContent = Math.max(0, Math.ceil(left)) + ' s';
+        if (barEl) barEl.className = left < 8 ? 'low' : '';
+        if (left <= 0) { clearInterval(timerId); answer(-1); }
+      }, 200);
+    }
+  }
+
+  function answer(k) {
+    if (!session || session.answers[session.i]) return;
+    clearInterval(timerId);
+    var q = REV.qById[session.qids[session.i]];
+    var chosen = k === -1 ? -1 : session.perm[session.i][k];
+    var ok = chosen === q.a;
+    session.answers[session.i] = { chosen: chosen, ok: ok };
+    record(q.id, ok);
+    saveSession();
+    render();
+  }
+
+  function next() {
+    if (!session) return;
+    session.i++;
+    if (session.i >= session.qids.length) finishSession();
+    saveSession();
+    go(session && session.i >= session.qids.length ? '#/bilan' : '#/session');
+  }
+
+  function finishSession() {
+    if (session.saved) return;
+    var ok = session.answers.filter(function (a) { return a && a.ok; }).length;
+    store.sessions.unshift({ d: Date.now(), mode: session.mode, title: session.title, total: session.qids.length, ok: ok });
+    store.sessions = store.sessions.slice(0, 50);
+    session.saved = true;
+    save();
+  }
+
+  /* ----- Résultat d'un QCM ----- */
+  function viewBilan() {
+    if (!session || !session.answers.length) return viewResultats();
+    var answered = session.answers.filter(Boolean).length;
+    var ok = session.answers.filter(function (a) { return a && a.ok; }).length;
+    var pct = answered ? Math.round(ok * 100 / answered) : 0;
+    var lv = level(pct);
+    var subjTitle = session.subject ? subj(session.subject) : null;
+
+    // détail par leçon
+    var per = {};
+    session.qids.forEach(function (id, i) {
+      var a = session.answers[i]; if (!a) return;
+      var q = REV.qById[id];
+      var p = per[q.lkey] || (per[q.lkey] = { ok: 0, n: 0 });
+      p.n++; if (a.ok) p.ok++;
+    });
+    var rows = Object.keys(per).map(function (k) {
+      var p = per[k]; return { key: k, l: REV.lessonById[k], pct: Math.round(p.ok * 100 / p.n), ok: p.ok, n: p.n };
+    }).sort(function (a, b) { return b.pct - a.pct; });
+
+    var weak = rows.filter(function (r) { return r.pct < 80; }).sort(function (a, b) { return a.pct - b.pct; });
+    var strong = rows.filter(function (r) { return r.pct >= 80; });
+
+    var wrong = [];
+    session.qids.forEach(function (id, i) { var a = session.answers[i]; if (a && !a.ok) wrong.push({ q: REV.qById[id], a: a, perm: session.perm[i] }); });
+
+    return '<section class="result">' +
+      '<div class="res-head"><div class="res-title">📊 RÉSULTAT</div>' +
+      '<div class="res-subj">' + (subjTitle ? subjTitle.icon + ' ' + esc(subjTitle.name.toUpperCase()) : esc(session.title.toUpperCase())) + '</div>' +
+      '<div class="res-score">' + ok + ' / ' + answered + '</div>' +
+      '<div class="res-pct ' + lv.cls + '">' + pct + ' %</div>' +
+      '<div class="res-ascii ' + lv.cls + '" aria-hidden="true">' + asciiBar(pct) + '</div>' +
+      '<p>✅ ' + ok + ' bonne' + (ok > 1 ? 's' : '') + ' réponse' + (ok > 1 ? 's' : '') + ' &nbsp; ❌ ' + (answered - ok) + ' mauvaise' + (answered - ok > 1 ? 's' : '') + ' réponse' + (answered - ok > 1 ? 's' : '') + '</p></div>' +
+
+      '<h2 class="h2">📚 Détail des leçons</h2><div class="card"><table class="tbl">' + rows.map(function (r) {
+        var lv2 = level(r.pct);
+        return '<tr><td><a href="#/lecon/' + r.key + '">' + esc(r.l.title) + '</a></td><td class="muted small">' + r.ok + '/' + r.n + '</td><td class="num-c">' + r.pct + ' %</td><td>' + lv2.dot + '</td></tr>';
+      }).join('') + '</table></div>' +
+
+      '<h2 class="h2">🎯 Tes priorités de révision</h2>' +
+      (weak.length ? weak.map(function (r, i) {
+        var lv2 = level(r.pct);
+        return '<div class="prio ' + lv2.cls + '"><div class="prio-h">' + lv2.dot + ' Priorité ' + (i + 1) + '</div><div class="prio-t">' + esc(r.l.title) +
+          '</div><div class="muted">Score : ' + r.pct + ' %</div><div class="row-actions"><a class="btn small" href="#/lecon/' + r.key + '">➡️ Revoir la leçon</a>' +
+          '<a class="btn small ghost" href="#/memos/' + r.l.subject + '#m-' + r.l.id + '">🧠 Revoir la fiche</a></div></div>';
+      }).join('') : '<div class="card pad">🎉 Aucune leçon sous 80 % sur ce QCM. Bravo !</div>') +
+      (strong.length ? '<div class="prio good"><div class="prio-h">🟢 Maîtrisé</div>' + strong.map(function (r) {
+        return '<div>' + esc(r.l.title) + ' — ' + r.pct + ' %</div>';
+      }).join('') + '</div>' : '') +
+
+      (weak.length ? '<h2 class="h2">🧠 Aides-mémoires associés</h2>' + weak.map(function (r) {
+        return memoHtml(r.l, subj(r.l.subject), true);
+      }).join('') : '') +
+
+      (wrong.length ? '<h2 class="h2">❌ Tes erreurs</h2>' + wrong.map(function (w) {
+        return '<details class="card err"><summary>' + w.q.q + '</summary><p>✅ <b>' + w.q.c[w.q.a] + '</b></p>' +
+          (w.a.chosen >= 0 ? '<p class="muted">Ta réponse : ' + w.q.c[w.a.chosen] + '</p>' : '<p class="muted">Temps écoulé</p>') +
+          '<p>💡 ' + w.q.e + '</p>' + (w.q.r ? '<p>🧠 ' + w.q.r + '</p>' : '') + '</details>';
+      }).join('') : '') +
+
+      '<div class="row-actions center">' +
+        (wrong.length ? '<button class="btn primary" data-action="redo-wrong">🔁 Refaire mes erreurs (' + wrong.length + ')</button>' : '') +
+        '<button class="btn" data-action="redo">↻ Refaire un QCM identique</button>' +
+        '<a class="btn ghost" href="#/resultats">📈 Mon niveau général</a>' +
+      '</div></section>';
+  }
+
+  /* ----- Mon niveau ----- */
+  function viewResultats() {
+    var all = allQuestions();
+    var gs = scoreOf(all);
+    var rows = REV.subjects.map(function (s) { return { s: s, sc: scoreOf(s.questions) }; });
+    var lessons = [];
+    REV.subjects.forEach(function (s) {
+      s.lessons.forEach(function (l) {
+        var sc = scoreOf(lessonQuestions(l.key));
+        if (sc.pct !== null) lessons.push({ l: l, s: s, pct: sc.pct, seen: sc.seen });
+      });
+    });
+    var weak = lessons.filter(function (x) { return x.pct < 80; }).sort(function (a, b) { return a.pct - b.pct; });
+    var toReview = all.filter(needsReview).length;
+
+    if (gs.pct === null) {
+      return '<h1 class="h1">📊 Mon niveau</h1><div class="card pad center"><p class="big">📈</p><p>Pas encore de résultats.</p>' +
+        '<p class="muted">Fais un premier QCM : ton niveau par matière, tes points faibles et tes aides-mémoires apparaîtront ici.</p>' +
+        '<a class="btn primary" href="#/qcm">🧠 Commencer un QCM</a></div>' + dataTools();
+    }
+
+    return '<h1 class="h1">📊 Mon niveau</h1>' +
+      '<div class="card pad center"><div class="muted">Niveau global</div><div class="res-pct ' + level(gs.pct).cls + '">' + gs.pct + ' %</div>' +
+      '<div class="muted small">' + gs.seen + ' / ' + gs.total + ' questions déjà travaillées</div></div>' +
+      '<h2 class="h2">📚 Par matière</h2><div class="card"><table class="tbl">' + rows.map(function (r) {
+        var lv = level(r.sc.pct);
+        return '<tr><td><a href="#/matiere/' + r.s.id + '">' + r.s.icon + ' ' + esc(r.s.name) + '</a><div class="muted small">' + r.sc.seen + '/' + r.sc.total + ' vues</div></td>' +
+          '<td class="bar-c">' + bar(r.sc.pct) + '</td><td class="num-c">' + (r.sc.pct === null ? '—' : r.sc.pct + ' %') + '</td><td>' + lv.dot + '</td></tr>';
+      }).join('') + '</table></div>' +
+
+      '<h2 class="h2">🔥 À réviser en priorité</h2>' +
+      (weak.length ? '<ol class="card prio-list">' + weak.slice(0, 10).map(function (x) {
+        var lv = level(x.pct);
+        return '<li><a href="#/lecon/' + x.l.key + '">' + lv.dot + ' <b>' + esc(x.l.title) + '</b> <span class="muted small">' + x.s.icon + ' ' + esc(x.s.name) + '</span></a><span class="num-c">' + x.pct + ' %</span></li>';
+      }).join('') + '</ol>' : '<div class="card pad">🎉 Toutes les leçons travaillées sont au-dessus de 80 %.</div>') +
+      (toReview ? '<a class="card review-cta" href="#/revision"><span class="big">🔁</span><span><b>QCM de révision</b><br>' + toReview + ' question(s) ratée(s) à retravailler</span><span class="chev">›</span></a>' : '') +
+
+      (weak.length ? '<h2 class="h2">🧠 Tes aides-mémoires</h2><ul class="card memo-links">' + weak.slice(0, 10).map(function (x) {
+        return '<li><a href="#/memos/' + x.s.id + '#m-' + x.l.id + '">→ Mémo ' + esc(x.l.title) + '</a></li>';
+      }).join('') + '</ul>' : '') +
+
+      (store.sessions.length ? '<h2 class="h2">🕑 Historique</h2><div class="card"><table class="tbl">' + store.sessions.slice(0, 15).map(function (h) {
+        var p = Math.round(h.ok * 100 / h.total);
+        return '<tr><td class="muted small">' + fmtDate(h.d) + '</td><td>' + esc(h.title) + '</td><td class="num-c">' + h.ok + '/' + h.total + '</td><td>' + level(p).dot + '</td></tr>';
+      }).join('') + '</table></div>' : '') +
+      dataTools();
+  }
+
+  function dataTools() {
+    return '<h2 class="h2">💾 Ma progression</h2><div class="card pad"><p class="muted small">Tout est enregistré sur cet appareil uniquement (aucun compte, aucun serveur). ' +
+      'Pour passer du PC au téléphone : exporte le fichier puis importe-le sur l’autre appareil.</p><div class="row-actions">' +
+      '<button class="btn" data-action="export">⬇️ Exporter</button>' +
+      '<label class="btn">⬆️ Importer<input type="file" accept="application/json,.json" data-action="import" hidden></label>' +
+      '<button class="btn danger" data-action="reset">🗑️ Tout effacer</button></div></div>';
+  }
+
+  /* ----- Aides-mémoires ----- */
+  function viewMemos(id) {
+    var list = id ? [subj(id)].filter(Boolean) : REV.subjects;
+    var html = crumbs([['#/cours', 'Cours'], [null, 'Aides-mémoires' + (id && list[0] ? ' — ' + list[0].name : '')]]) +
+      '<h1 class="h1">🧠 Aides-mémoires</h1>' +
+      (id ? '<p><a href="#/memos">Voir toutes les matières</a></p>' : '<div class="chips">' + REV.subjects.map(function (s) {
+        return '<a class="chip" href="#/memos/' + s.id + '">' + s.icon + ' ' + esc(s.name) + '</a>';
+      }).join('') + '</div>') +
+      '<div class="row-actions"><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';
+    list.forEach(function (s) {
+      html += '<h2 class="h2">' + s.icon + ' ' + esc(s.name) + '</h2><div class="memo-grid">' +
+        s.lessons.map(function (l) { return '<div id="m-' + l.id + '">' + memoHtml(l, s, true) + '</div>'; }).join('') + '</div>';
+    });
+    setTimeout(function () {
+      var m = location.hash.match(/#m-([\w-]+)$/);
+      if (m) { var el = document.getElementById('m-' + m[1]); if (el) { el.scrollIntoView({ block: 'start' }); el.classList.add('flash'); } }
+    }, 50);
+    return html;
+  }
+
+  function viewTrancher() {
+    var t = REV.trancher || [];
+    return crumbs([['#/cours', 'Cours'], [null, 'Points à trancher']]) +
+      '<h1 class="h1">⚖️ Points à trancher avec le formateur</h1>' +
+      '<p class="muted">Ce sont les points où tes documents se contredisent. Le site retient la réponse indiquée en vert — mais c’est ton formateur qui fait le barème : fais-les valider.</p>' +
+      t.map(function (x) {
+        return '<div class="card pad trancher"><h3>' + esc(x.sujet) + '</h3><div class="tr-grid"><div><span class="muted small">Version A</span><p>' + x.a +
+          '</p></div><div><span class="muted small">Version B</span><p>' + x.b + '</p></div></div><p class="tr-keep">✅ Retenu : ' + x.keep + '</p></div>';
+      }).join('');
+  }
+
+  /* ---------- Actions ---------- */
+  function onClick(e) {
+    var el = e.target.closest('[data-action]');
+    if (!el || el.tagName === 'INPUT') return;
+    var a = el.getAttribute('data-action');
+    if (a === 'answer') answer(+el.getAttribute('data-k'));
+    else if (a === 'next') next();
+    else if (a === 'quit') {
+      if (confirm('Arrêter ce QCM ? Les réponses déjà données restent comptées.')) {
+        if (session.answers.filter(Boolean).length) { session.qids = session.qids.slice(0, session.answers.length); session.perm = session.perm.slice(0, session.answers.length); session.i = session.qids.length; finishSession(); saveSession(); go('#/bilan'); }
+        else { session = null; saveSession(); go('#/'); }
+      }
+    }
+    else if (a === 'lesson-qcm') {
+      var key = el.getAttribute('data-key'), l = REV.lessonById[key];
+      startSession({ mode: 'lecon', title: 'Leçon ' + l.title, subject: l.subject, lesson: key, questions: shuffle(lessonQuestions(key)) });
+    }
+    else if (a === 'quiz') {
+      startSession({ mode: 'quiz', title: 'Quiz éclair', timer: el.getAttribute('data-timer') === '1', questions: shuffle(allQuestions()), count: 10 });
+    }
+    else if (a === 'exam') {
+      // 40 questions réparties au prorata du nombre de questions par matière
+      var pool = [];
+      var total = totalQuestions();
+      REV.subjects.forEach(function (s) {
+        var k = Math.max(1, Math.round(40 * s.questions.length / total));
+        pool = pool.concat(shuffle(s.questions).slice(0, k));
+      });
+      startSession({ mode: 'examen', title: 'Examen blanc', questions: shuffle(pool).slice(0, 40) });
+    }
+    else if (a === 'revision') {
+      var list = allQuestions().filter(needsReview);
+      list = shuffle(list).sort(function (x, y) { return (store.q[y.id].ko || 0) - (store.q[x.id].ko || 0); });
+      startSession({ mode: 'revision', title: 'QCM de révision', questions: list, count: 20 });
+    }
+    else if (a === 'redo-wrong') {
+      var qs = [];
+      session.qids.forEach(function (id, i) { var an = session.answers[i]; if (an && !an.ok) qs.push(REV.qById[id]); });
+      startSession({ mode: 'revision', title: session.title + ' — erreurs', subject: session.subject, questions: shuffle(qs) });
+    }
+    else if (a === 'redo') {
+      var ids = session.qids.map(function (id) { return REV.qById[id]; });
+      startSession({ mode: session.mode, title: session.title, subject: session.subject, timer: session.timer, questions: shuffle(ids) });
+    }
+    else if (a === 'print') window.print();
+    else if (a === 'export') {
+      var blob = new Blob([JSON.stringify(store)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url; link.download = 'revisions2026-progression.json';
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    }
+    else if (a === 'reset') {
+      if (confirm('Effacer toute ta progression sur cet appareil ?')) {
+        store = { q: {}, sessions: [], lessonsSeen: {} }; save(); session = null; saveSession(); toast('Progression effacée.'); render();
+      }
+    }
+  }
+
+  function onChange(e) {
+    var el = e.target;
+    if (el.getAttribute('data-action') === 'import' && el.files && el.files[0]) {
+      var fr = new FileReader();
+      fr.onload = function () {
+        try {
+          var d = JSON.parse(fr.result);
+          if (!d || typeof d.q !== 'object') throw new Error('format');
+          store = { q: d.q, sessions: d.sessions || [], lessonsSeen: d.lessonsSeen || {} };
+          save(); toast('Progression importée ✔'); render();
+        } catch (err) { toast('Fichier invalide.'); }
+      };
+      fr.readAsText(el.files[0]);
+    }
+    if (el.getAttribute('data-action') === 'toggle-all') {
+      el.form.querySelectorAll('input[name=lesson]').forEach(function (c) { c.checked = el.checked; });
+    }
+    if (el.name === 'lesson') {
+      var boxes = el.form.querySelectorAll('input[name=lesson]');
+      el.form.querySelector('input[name=all]').checked = Array.prototype.every.call(boxes, function (c) { return c.checked; });
+    }
+  }
+
+  function onSubmit(e) {
+    var f = e.target.closest('form.setup');
+    if (!f) return;
+    e.preventDefault();
+    var s = subj(f.getAttribute('data-subject'));
+    var keys = Array.prototype.map.call(f.querySelectorAll('input[name=lesson]:checked'), function (c) { return c.value; });
+    if (!keys.length) { toast('Coche au moins une leçon.'); return; }
+    var count = +f.querySelector('input[name=count]:checked').value;
+    var qs = shuffle(s.questions.filter(function (q) { return keys.indexOf(q.lkey) >= 0; }));
+    var all = keys.length === f.querySelectorAll('input[name=lesson]').length;
+    startSession({ mode: 'qcm', title: s.name + (all ? '' : ' (' + keys.length + ' leçon' + (keys.length > 1 ? 's' : '') + ')'), subject: s.id, questions: qs, count: count });
+  }
+
+  function onKey(e) {
+    if (!session || !/^#\/session/.test(location.hash)) return;
+    if (e.target.tagName === 'INPUT' || e.ctrlKey || e.metaKey || e.altKey) return;
+    var ans = session.answers[session.i];
+    var k = e.key.toUpperCase();
+    if (!ans) {
+      var idx = LETTERS.indexOf(k);
+      if (idx < 0 && /^[1-6]$/.test(k)) idx = +k - 1;
+      if (idx >= 0 && idx < session.perm[session.i].length) { e.preventDefault(); answer(idx); }
+    } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+      e.preventDefault(); next();
+    }
+  }
+
+  /* ---------- Démarrage ---------- */
+  document.addEventListener('DOMContentLoaded', function () {
+    main = document.getElementById('main');
+    toastEl = document.getElementById('toast');
+    load();
+    loadSession();
+    document.getElementById('side-subjects').innerHTML = REV.subjects.map(function (s) {
+      return '<a href="#/matiere/' + s.id + '"><span>' + s.icon + '</span>' + esc(s.name) + '</a>';
+    }).join('');
+    document.addEventListener('click', onClick);
+    document.addEventListener('change', onChange);
+    document.addEventListener('submit', onSubmit);
+    document.addEventListener('keydown', onKey);
+    window.addEventListener('hashchange', render);
+    render();
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      navigator.serviceWorker.register('sw.js').catch(function () { /* hors ligne indisponible */ });
+    }
+  });
+})();
