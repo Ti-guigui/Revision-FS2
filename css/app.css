@@ -495,3 +495,8 @@ body[data-subj] .main { position: relative; }
 .fiche-exos li { margin: 6px 0; }
 .fiche .chips { margin: 10px 0; }
 @media print { .fiche .chips, .fiche-sec h2 a { display: none; } .fiche-sec { break-inside: auto; } .fiche-sym figure { break-inside: avoid; } }
+.livre-figs { margin: 18px 0; border: 1px solid var(--line, #ccc); border-radius: 12px; padding: 8px 12px; background: var(--surface-2, transparent); }
+.livre-figs summary { cursor: pointer; font-weight: 700; }
+.livre-figs .fiche-figs { margin-top: 10px; }
+.livre-figs figure img { width: 100%; height: auto; background: #fff; }
+.livre-figs figcaption { font-size: .85rem; }
