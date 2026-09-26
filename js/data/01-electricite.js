@@ -116,7 +116,7 @@ REV.add({
 <li>Redressement triphasé = <b>6 diodes</b> (2 par phase) : c’est le pont de l’alternateur.</li>
 <li>Contrôle au multimètre : position test diode, rouge sur anode, noir sur cathode → ≈ 0,6 V ; dans l’autre sens : « OL » (bloquée).</li>
 <li>Diode Zener : maintient une tension fixe (tension de Zener) à ses bornes.</li></ul>
-<h3>Transistor (B, C, E ; NPN ou PNP)</h3>
+<h3>Transistor NPN (B, C, E) — seul type vu en cours</h3>
 <ul><li><span class="formula">Ie = Ib + Ic</span> ; <span class="formula">Ic = β × Ib</span> (β souvent entre 80 et 320).</li>
 <li>Commutation : <b>bloqué</b> (Ib = Ic = 0, Vce = tension d’alimentation) ou <b>saturé</b> (Vbe ≈ 0,6 V, Vce ≈ 0 V : toute la tension est sur la charge).</li></ul>
 <p>C’est un <b>interrupteur commandé électriquement</b> : un petit courant de base Ib (quelques mA) autorise un gros courant collecteur Ic (relais, lampe). Pour dimensionner : Ic = courant de la charge → Ib = Ic/β → la résistance de base doit laisser passer Ib (plus le courant du pont base-émetteur s’il y en a un) sous la tension de commande moins Vbe (0,6 V).</p>

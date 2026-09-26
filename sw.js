@@ -1,5 +1,5 @@
 /* Service worker : permet d'utiliser le site hors connexion (réseau d'abord, cache en secours). */
-const CACHE = 'revisions2026-v25';
+const CACHE = 'revisions2026-v26';
 self.addEventListener('install', (e) => { self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
