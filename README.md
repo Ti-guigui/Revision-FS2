@@ -4,5 +4,5 @@ Plateforme de révision 100 % statique (HTML/CSS/JavaScript) : cours par matièr
 résultats par matière et par leçon, priorités de révision et aides-mémoires. Responsive PC + téléphone,
 sans compte : la progression est enregistrée dans le navigateur.
 
-- Contenu : `js/data/` (une fichier par matière)
+- Contenu : `js/data/` (un fichier par matière)
 - Moteur : `js/app.js` · Styles : `css/app.css` · Schémas : `img/`
