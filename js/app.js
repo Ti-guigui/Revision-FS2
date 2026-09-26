@@ -28,7 +28,9 @@
     if (q.a === undefined) q.a = 0; // par défaut, la bonne réponse est écrite en premier (l'ordre est mélangé à l'affichage)
     q.subject = s.id;
     q.lkey = s.id + '/' + q.l;
-    q.id = s.id + ':' + hash(q.q + '|' + q.c[q.a]);
+    q.good = Array.isArray(q.a) ? q.a : [q.a]; // plusieurs bonnes réponses possibles (« 2 rép. »)
+    q.multi = q.good.length > 1;
+    q.id = s.id + ':' + hash(q.q + '|' + q.good.map(function (i) { return q.c[i]; }).join('+'));
     if (!REV.lessonById[q.lkey]) console.warn('Leçon inconnue pour la question', q);
     REV.qById[q.id] = q;
     return q;
@@ -179,7 +181,8 @@
     session = {
       mode: opts.mode, title: opts.title, subject: opts.subject || null, lesson: opts.lesson || null,
       timer: !!opts.timer, qids: qs.map(function (q) { return q.id; }),
-      perm: qs.map(function (q) { return shuffle(q.c.map(function (_, i) { return i; })); }),
+      // q.fixed : propositions dans l'ordre exact de la copie (A, B, C…) ; sinon mélangées
+      perm: qs.map(function (q) { var p = q.c.map(function (_, i) { return i; }); return q.fixed ? p : shuffle(p); }),
       answers: [], i: 0, started: Date.now()
     };
     saveSession();
@@ -460,19 +463,23 @@
       (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
       '<h1 class="q-text">' + q.q + '</h1>' +
       (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
+      (q.multi && !ans ? '<p class="muted small">☑️ ' + q.good.length + ' réponses à cocher, puis « Valider ».</p>' : '') +
       '<div class="choices" role="group" aria-label="Réponses">' + perm.map(function (orig, k) {
         var cls = 'choice';
         if (ans) {
-          if (orig === q.a) cls += ' correct';
-          else if (orig === ans.chosen) cls += ' wrong';
+          if (q.good.indexOf(orig) >= 0) cls += ' correct';
+          else if (chosenList(ans).indexOf(orig) >= 0) cls += ' wrong';
           else cls += ' dim';
-        }
+        } else if (q.multi && (session.pick || []).indexOf(orig) >= 0) cls += ' picked';
         return '<button class="' + cls + '" data-action="answer" data-k="' + k + '"' + (ans ? ' disabled' : '') + '>' +
           '<span class="letter">' + LETTERS[k] + '</span><span class="ct">' + q.c[orig] + '</span></button>';
-      }).join('') + '</div></div>';
+      }).join('') + '</div>' +
+      (q.multi && !ans ? '<button class="btn primary big" data-action="validate"' + ((session.pick || []).length ? '' : ' disabled') + '>✔ Valider (' + (session.pick || []).length + ' / ' + q.good.length + ')</button>' : '') +
+      '</div>';
     var fb = '';
     if (ans) {
-      var goodLetter = LETTERS[perm.indexOf(q.a)];
+      var goodTxt = q.good.map(function (g) { return '<b>' + LETTERS[perm.indexOf(g)] + '</b> — ' + q.c[g]; }).join('<br>');
+      var mine = chosenList(ans);
       // exercices : on reprend le développement complet de la correction détaillée de la leçon
       var qn = l.exo && (q.q.match(/^Q\d+/) || [])[0];
       var dev = qn && (l.html.match(new RegExp('<li><b>' + qn + ' — [^<]*</b>\\s*([\\s\\S]*?)</li>')) || [])[1];
@@ -480,8 +487,8 @@
       fb = '<div class="feedback ' + (ans.ok ? 'ok' : 'ko') + '" id="feedback" tabindex="-1">' +
         '<div class="fb-title">' + (ans.ok ? '✅ Bonne réponse !' : (ans.chosen === -1 ? '⏱️ Temps écoulé' : '❌ Mauvaise réponse')) + '</div>' +
         '<div class="fb-recap"><p class="fb-q">❓ ' + q.q + '</p>' +
-          (ans.chosen >= 0 ? '<p>Ta réponse : <b>' + LETTERS[perm.indexOf(ans.chosen)] + '</b> — ' + q.c[ans.chosen] + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
-          (ans.ok ? '' : '<p class="fb-good">La bonne réponse est : <b>' + goodLetter + '</b> — ' + q.c[q.a] + '</p>') + '</div>' +
+          (mine.length ? '<p>Ta réponse : ' + mine.map(function (c) { return '<b>' + LETTERS[perm.indexOf(c)] + '</b> — ' + q.c[c]; }).join(' · ') + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
+          (ans.ok ? '' : '<p class="fb-good">' + (q.multi ? 'Les bonnes réponses sont :<br>' : 'La bonne réponse est : ') + goodTxt + '</p>') + '</div>' +
         (dev ? '<div class="fb-sec dev"><b>🧮 Développement de la réponse</b><p>' + dev + '</p></div>' : '') +
         '<div class="fb-sec' + (l.exo && !dev ? ' dev' : '') + '"><b>' + (l.exo && !dev ? '🧮 Développement de la réponse' : '💡 Explication') + '</b><p>' + q.e + '</p></div>' +
         (q.r ? '<div class="fb-sec retenir"><b>🧠 À retenir</b><p>' + q.r + '</p></div>' : '') +
@@ -516,13 +523,25 @@
     }
   }
 
+  function chosenList(ans) { return Array.isArray(ans.chosen) ? ans.chosen : (ans.chosen >= 0 ? [ans.chosen] : []); }
+
   function answer(k) {
     if (!session || session.answers[session.i]) return;
-    clearInterval(timerId);
     var q = REV.qById[session.qids[session.i]];
-    var chosen = k === -1 ? -1 : session.perm[session.i][k];
-    var ok = chosen === q.a;
+    if (q.multi && k !== -1) { // questions à plusieurs réponses : on coche / décoche, puis on valide
+      var orig = session.perm[session.i][k];
+      session.pick = session.pick || [];
+      var at = session.pick.indexOf(orig);
+      if (at >= 0) session.pick.splice(at, 1); else session.pick.push(orig);
+      saveSession(); render(); return;
+    }
+    clearInterval(timerId);
+    var chosen = k === -1 ? (q.multi ? (session.pick || []) : -1) : session.perm[session.i][k];
+    var ok = q.multi
+      ? chosen.length === q.good.length && q.good.every(function (g) { return chosen.indexOf(g) >= 0; })
+      : q.good.indexOf(chosen) >= 0;
     session.answers[session.i] = { chosen: chosen, ok: ok };
+    session.pick = [];
     record(q.id, ok);
     saveSession();
     render();
@@ -601,8 +620,8 @@
       }).join('') : '') +
 
       (wrong.length ? '<h2 class="h2">❌ Tes erreurs</h2>' + wrong.map(function (w) {
-        return '<details class="card err"><summary>' + w.q.q + '</summary><p>✅ <b>' + w.q.c[w.q.a] + '</b></p>' +
-          (w.a.chosen >= 0 ? '<p class="muted">Ta réponse : ' + w.q.c[w.a.chosen] + '</p>' : '<p class="muted">Temps écoulé</p>') +
+        return '<details class="card err"><summary>' + w.q.q + '</summary><p>✅ <b>' + w.q.good.map(function (g) { return w.q.c[g]; }).join(' + ') + '</b></p>' +
+          (chosenList(w.a).length ? '<p class="muted">Ta réponse : ' + chosenList(w.a).map(function (c) { return w.q.c[c]; }).join(' + ') + '</p>' : '<p class="muted">Temps écoulé</p>') +
           '<p>💡 ' + w.q.e + '</p>' + (w.q.r ? '<p>🧠 ' + w.q.r + '</p>' : '') + '</details>';
       }).join('') : '') +
 
@@ -706,6 +725,7 @@
     if (!el || el.tagName === 'INPUT') return;
     var a = el.getAttribute('data-action');
     if (a === 'answer') answer(+el.getAttribute('data-k'));
+    else if (a === 'validate') answer(-1);
     else if (a === 'next') next();
     else if (a === 'quit') {
       if (confirm('Arrêter ce QCM ? Les réponses déjà données restent comptées.')) {

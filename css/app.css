@@ -374,3 +374,7 @@ table.gates td { vertical-align: middle; }
 .fb-recap p { margin: 4px 0; }
 .fb-recap .fb-q { font-weight: 700; }
 .fb-sec.dev { border-left: 4px solid var(--primary); padding-left: 10px; }
+
+/* Questions à plusieurs réponses */
+.choice.picked { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 12%, var(--surface)); }
+.choice.picked .letter { background: var(--primary); color: var(--on-primary, #fff); }
