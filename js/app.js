@@ -51,6 +51,16 @@
     (x.questions || []).forEach(function (q) { s.questions.push(prepQuestion(s, q)); });
   };
 
+  // Complète une leçon de cours existante (schémas du livre, paragraphes, points à retenir).
+  REV.extendLesson = function (key, x) {
+    var l = REV.lessonById[key];
+    if (!l) return console.warn('Leçon inconnue', key);
+    if (x.images) l.images = (l.images || []).concat(x.images);
+    if (x.html) l.html += x.html;
+    if (x.retenir) l.retenir = (l.retenir || []).concat(x.retenir);
+    if (x.pieges) l.pieges = (l.pieges || []).concat(x.pieges);
+  };
+
   function subj(id) { return REV.subjects.find(function (s) { return s.id === id; }); }
   function lessonQuestions(lkey) {
     var s = subj(lkey.split('/')[0]);
