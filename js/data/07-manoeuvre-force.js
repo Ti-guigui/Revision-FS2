@@ -1,9 +1,9 @@
 REV.add({
-  id: 'mdf', name: 'Manœuvre de force', icon: '🏗️', color: '#a16207',
-  desc: 'Cours A GB 08 (ind. e) : méthode SENSESRD, résistances, EMD, brins, EMT, sécurité, points fixes, distances, commandements.',
+  id: 'mdf', name: 'Manœuvre de force', icon: '🏗️', color: '#a16207', ordered: true,
+  desc: 'Cours AGB 08 / AGB 04 (version simplifiée, ind. C 2021). Leçons et QCM rangés dans l’ordre de la méthode S-E-N-S-E-S-R-D, pour faire les calculs étape par étape.',
   lessons: [
     {
-      id: 'cadres', title: 'Analyse, rôle des cadres et sécurité',
+      id: 'cadres', title: '0 · Avant de calculer : analyse, rôle des cadres, sécurité',
       html: `
 <p><b>But</b> : déplacer ou modifier la position d’un fardeau à l’aide d’une force, par des moyens adaptés.</p>
 <h3>Analyse des facteurs</h3>
@@ -32,8 +32,9 @@ REV.add({
       memo: { cle: 'FARDEAU · TERRAIN · AMBIANCE · MOYENS · DÉLAIS', points: ['Bois 1 · roche 2,5 · métal 8 (t/m³)', 'Officier = directeur, responsable', 'Sous-officier = chef, prépare et exécute', 'Jamais sous la charge, jamais dans l’axe d’un câble tendu'], astuce: 'Un câble qui casse fouette dans son axe : ne jamais rester dans le prolongement.' }
     },
     {
-      id: 'resistances', title: 'Méthode SENSESRD et somme des résistances',
+      id: 'resistances', title: '1 · S — Somme des résistances du fardeau (ΣR)',
       html: `
+<div class="box methode"><b>✎ Toujours dans cet ordre</b><p>1 S → 2 E → 3 N → 4 S → 5 E → 6 S → 7 R → 8 D. Chaque étape utilise le résultat de la précédente : ΣR sert à calculer Nb, l’EMD sert à Nb et à l’EMT, l’EMT sert à la sécurité… Si la sécurité oblige à changer le nombre de brins, on <b>revient à l’étape 4 (schéma)</b>. Le QCM de cette matière suit aussi cet ordre ; un calcul complet résolu étape par étape est dans l’onglet « Exercices corrigés ».</p></div>
 <h3>La méthode S E N S E S R D</h3>
 <div class="tw"><table><tr><th>Lettre</th><th>Étape</th></tr>
 <tr><td>S</td><td>Somme des résistances du fardeau (ΣR)</td></tr>
@@ -57,9 +58,14 @@ REV.add({
 <li>Pente 25 % : Rp = 4 000 × 0,25 = 1 000 → <b>R = 2 200 daN</b>.</li>
 <li>Pente 84 % (sin = 0,64) : Rp = 2 560 → <b>R = 3 760 daN</b>.</li>
 <li>Descente 84 % : 1 200 − 2 560 = −1 360 → il faut <b>retenir le fardeau avec 1 360 daN</b>.</li></ul></div>
-<h3>Cas particuliers</h3>
-<ul><li><b>Retournement</b> d’un fardeau : <span class="formula">R = 2/3 × P</span> (4 000 daN → 2 667 daN ; 3 500 daN → 2 333 daN).</li>
-<li><b>Enlisement jusqu’aux essieux</b> (la boue fait ventouse) : <span class="formula">R = 2 × P</span>.</li></ul>
+<h3>Cas particuliers (AGB 04)</h3>
+<div class="tw"><table><tr><th>Situation</th><th>ΣR</th></tr>
+<tr><td>Élévation d’un fardeau</td><td><b>11/10 P</b></td></tr>
+<tr><td>Descente d’un fardeau</td><td><b>3/2 P</b></td></tr>
+<tr><td>Retournement d’un fardeau sur sol plat</td><td><b>2/3 P</b> (4 000 daN → 2 667 daN ; 3 500 daN → 2 333 daN)</td></tr>
+<tr><td>Retournement sur une pente &gt; 15 %</td><td><b>P</b></td></tr>
+<tr><td>Montée sur une pente &gt; 100 %</td><td><b>P</b></td></tr>
+<tr><td>Fardeau enlisé jusqu’aux essieux (effet ventouse)</td><td><b>2 P</b></td></tr></table></div>
 <h3>Coefficients selon le sol</h3>
 <div class="tw"><table><tr><th>Nature du sol</th><th>fg = fa (glissement / adhérence)</th><th>fr (roulement)</th></tr>
 <tr><td>Macadam</td><td>0,7</td><td>0,03</td></tr>
@@ -77,7 +83,7 @@ REV.add({
       memo: { cle: 'S-E-N-S-E-S-R-D', flow: ['Somme des résistances', 'Effort moteur disponible', 'Nombre de brins', 'Schéma', 'Effort moteur total', 'Sécurité', 'Résistance des points fixes', 'Distances'], points: ['ΣR = Rr (ou Rg) ± Rp', 'Retournement 2/3 P · enlisé aux essieux 2 P', 'Terrain meuble : fr 0,3 · boue profonde : fa 0,3'], astuce: '« SENSES » + « RD » : on sent le fardeau avant de tirer.' }
     },
     {
-      id: 'emd', title: 'Effort moteur disponible (EMD)',
+      id: 'emd', title: '2 · E — Effort moteur disponible (EMD)',
       html: `
 <h3>Traction au treuil</h3>
 <p>Le constructeur donne une force maxi (câble déroulé) et <b>mini (câble enroulé)</b> : on prend la <b>valeur mini</b>. Une longueur de sécurité reste toujours enroulée sur le tambour.</p>
@@ -97,7 +103,7 @@ REV.add({
       memo: { cle: 'LE PLUS FAIBLE COMMANDE', flow: ['Force du treuil (mini) ou force à la jante', 'Comparer à l’adhérence A = P × fa', 'On garde la plus petite', 'Crochet : − résistances du tracteur', '= EMD'], points: ['Fj = 270 × Pm / v', '1 pont moteur : A = 2/3 P × fa', 'Bêche : A = P × fa + FT'], astuce: 'Un treuil surpuissant sur un tracteur qui patine ne sert à rien : l’adhérence limite.' }
     },
     {
-      id: 'brins', title: 'Nombre de brins, schémas et mouflages',
+      id: 'brins', title: '3-4 · N — Nombre de brins, puis S — Schéma',
       html: `
 <h3>Formule et règles</h3>
 <p><span class="formula">Nb = ΣR / EMD</span></p>
@@ -123,7 +129,7 @@ REV.add({
       memo: { cle: 'ARRONDIR PUIS +1 (< 4) OU +2 (≥ 4)', flow: ['ΣR ÷ EMD', 'Arrondi supérieur', '< 4 → +1 · ≥ 4 → +2', 'Choisir le schéma (simple ≤ 5, sinon composé)'], points: ['10 400 / 2 000 → 8 brins', 'Composé : 3 × 2 = 6 · 3 × 3 = 9', '7 brins : impossible'], astuce: 'Dormant dort au point fixe, garant va au tracteur, courant court dans les poulies.' }
     },
     {
-      id: 'emt', title: 'Effort moteur total (EMT) et sécurité',
+      id: 'emt', title: '5-6 · E — Effort moteur total (EMT), puis S — Sécurité',
       html: `
 <p>Les mouflages multiplient l’EMD pour obtenir un <b>EMT supérieur à ΣR</b>. Chaque passage dans une poulie fait perdre <b>10 %</b> (on multiplie par 0,9). L’EMT est la <b>somme des efforts de tous les brins actifs</b> appliqués au fardeau.</p>
 <ul><li><b>Mouflage simple</b> (EMD 1 000 daN) : 1 000 + 900 + 810 = <b>2 710 daN</b>.</li>
@@ -142,7 +148,7 @@ REV.add({
       memo: { cle: '× 0,9 À CHAQUE POULIE', flow: ['EMD sur le garant', '× 0,9 par poulie', 'Somme des brins actifs = EMT', 'S % = (EMT − ΣR) / ΣR', '15 % ≤ S ≤ 70 %'], points: ['1 000 + 900 + 810 = 2 710', 'Composé : 5 149', 'Renversé : 2 439'], astuce: 'Sécurité « 15–70 » : ni trop juste, ni gaspillage de brins.' }
     },
     {
-      id: 'points-fixes', title: 'Points fixes, agrès et distances',
+      id: 'points-fixes', title: '7-8 · R — Résistance des points fixes et agrès, puis D — Distances',
       html: `
 <h3>Résistance des points fixes (RPF)</h3>
 <p>Un point fixe doit résister à la <b>somme des efforts qui passent par lui</b>. Ex. : 900 + 810 = 1 710 daN → chevalet + 4 piquets, poulie et manille résistant à 1 710 daN.</p>
@@ -175,7 +181,7 @@ REV.add({
       memo: { cle: 'ARBRE = Cm × d² (en dm)', points: ['Chêne 500 · hêtre 400 · châtaignier 300 · sapin 200', 'Holmès : 1 chevalet = 2 000 à 4 000 daN', 'CMU ≥ brin le plus chargé', 'D fardeau = DT / Nb'], astuce: 'Plus il y a de brins, plus c’est fort… et plus le fardeau avance lentement.' }
     },
     {
-      id: 'commandements', title: 'Commandements, nœuds, manilles et lexique',
+      id: 'commandements', title: '9 · Exécution : commandements, nœuds, manilles, lexique',
       html: `
 <h3>À la voix</h3>
 <p>Un commandement <b>préparatoire</b> puis un commandement <b>d’exécution</b>. Plusieurs commandements successifs sont précédés d’un seul signal de prise de commandement, et la fin est indiquée par un signal de fin de commandement. Tout le personnel, surtout les conducteurs, doit connaître les gestes.</p>

@@ -150,6 +150,7 @@
       d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   }
   var LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+  function lab(q, k) { return q.num ? String(k + 1) : LETTERS[k]; } // copies numérotées 1, 2, 3, 4
 
   /* ---------- Session de QCM en cours ---------- */
   var session = null;
@@ -170,7 +171,13 @@
   function isExoQ(q) { var l = REV.lessonById[q.lkey]; return !!(l && l.exo); }
   function arrange(qs, count) {
     qs = shuffle(qs);
-    if (!qs.length || !qs.every(isExoQ)) return qs;
+    if (!qs.length) return qs;
+    // matière « dans l'ordre » (ex. manœuvre de force : étapes S-E-N-S-E-S-R-D) : ordre des leçons, puis ordre du fichier
+    if (qs.every(function (q) { return subj(q.subject).ordered; })) {
+      var rank = function (q) { var s = subj(q.subject); return s.lessons.indexOf(REV.lessonById[q.lkey]) * 1000 + s.questions.indexOf(q); };
+      return qs.slice(0, count || qs.length).sort(function (x, y) { return rank(x) - rank(y); });
+    }
+    if (!qs.every(isExoQ)) return qs;
     var order = function (q) { return subj(q.subject).questions.indexOf(q); };
     return qs.slice(0, count || qs.length).sort(function (x, y) { return order(x) - order(y); });
   }
@@ -472,13 +479,13 @@
           else cls += ' dim';
         } else if (q.multi && (session.pick || []).indexOf(orig) >= 0) cls += ' picked';
         return '<button class="' + cls + '" data-action="answer" data-k="' + k + '"' + (ans ? ' disabled' : '') + '>' +
-          '<span class="letter">' + LETTERS[k] + '</span><span class="ct">' + q.c[orig] + '</span></button>';
+          '<span class="letter">' + lab(q, k) + '</span><span class="ct">' + q.c[orig] + '</span></button>';
       }).join('') + '</div>' +
       (q.multi && !ans ? '<button class="btn primary big" data-action="validate"' + ((session.pick || []).length ? '' : ' disabled') + '>✔ Valider (' + (session.pick || []).length + ' / ' + q.good.length + ')</button>' : '') +
       '</div>';
     var fb = '';
     if (ans) {
-      var goodTxt = q.good.map(function (g) { return '<b>' + LETTERS[perm.indexOf(g)] + '</b> — ' + q.c[g]; }).join('<br>');
+      var goodTxt = q.good.map(function (g) { return '<b>' + lab(q, perm.indexOf(g)) + '</b> — ' + q.c[g]; }).join('<br>');
       var mine = chosenList(ans);
       // exercices : on reprend le développement complet de la correction détaillée de la leçon
       var qn = l.exo && (q.q.match(/^Q\d+/) || [])[0];
@@ -487,7 +494,7 @@
       fb = '<div class="feedback ' + (ans.ok ? 'ok' : 'ko') + '" id="feedback" tabindex="-1">' +
         '<div class="fb-title">' + (ans.ok ? '✅ Bonne réponse !' : (ans.chosen === -1 ? '⏱️ Temps écoulé' : '❌ Mauvaise réponse')) + '</div>' +
         '<div class="fb-recap"><p class="fb-q">❓ ' + q.q + '</p>' +
-          (mine.length ? '<p>Ta réponse : ' + mine.map(function (c) { return '<b>' + LETTERS[perm.indexOf(c)] + '</b> — ' + q.c[c]; }).join(' · ') + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
+          (mine.length ? '<p>Ta réponse : ' + mine.map(function (c) { return '<b>' + lab(q, perm.indexOf(c)) + '</b> — ' + q.c[c]; }).join(' · ') + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
           (ans.ok ? '' : '<p class="fb-good">' + (q.multi ? 'Les bonnes réponses sont :<br>' : 'La bonne réponse est : ') + goodTxt + '</p>') + '</div>' +
         (dev ? '<div class="fb-sec dev"><b>🧮 Développement de la réponse</b><p>' + dev + '</p></div>' : '') +
         '<div class="fb-sec' + (l.exo && !dev ? ' dev' : '') + '"><b>' + (l.exo && !dev ? '🧮 Développement de la réponse' : '💡 Explication') + '</b><p>' + q.e + '</p></div>' +
