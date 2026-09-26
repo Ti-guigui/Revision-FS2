@@ -142,7 +142,7 @@ REV.add({
 <li><b>Opération préventive</b> contenant une vidange = écrite <b>en rouge</b> (attention au feuillet « opérations préventives »). <b>Opération corrective</b> : renseignée par le chef d’atelier (suivi détaillé, prioriser les plus importantes). <b>Vérification périodique</b> : ESP, VGP… <b>Opération en industrie privée = RIP</b>.</li>
 <li><b>Demande de nouveau matériel pour l’atelier</b> : justifier par l’augmentation de la DTO, la limitation des risques HSCT, la protection de l’environnement.</li></ul>`,
       retenir: ['7 étapes ; le RDC en prend 4.', 'DIT = 4 phases : réception, diagnostic, intervention, contrôle.', 'COS : 1 an ; sortie de remisage > 6 mois ; BSTAT Mobilité terrestre désigné au RDC.', 'Préparation = chef d’atelier.'],
-      pieges: ['Points à trancher : répartition des travaux (RDC ou CDM ?) et validation de la partie 4 du DIT (CDM ou RDC ?).'],
+      pieges: ['Le RDC répartit les travaux (phase 2 du DIT) ; la CDM valide la partie 4 du DIT.'],
       memo: { cle: 'RDC = RÉCEPTION · DIAGNOSTIC · CONTRÔLE', flow: ['Mise en réparation (RDC)', 'Diagnostic (RDC)', 'Préparation (chef d’atelier)', 'Approvisionnement', 'Réparation (atelier)', 'Contrôles (RDC)', 'Restitution (RDC)'], points: ['COS valable 1 an', 'NTI1 → station → COS'], astuce: 'Le RDC ouvre et ferme la porte : il reçoit, diagnostique, contrôle et restitue.' }
     }
   ],

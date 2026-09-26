@@ -37,8 +37,7 @@ REV.add({
 <tr><td>Angle inclus identique G/D, carrossage et pivot décalés en sens inverse</td><td>Triangle, bras, berceau</td></tr>
 <tr><td>Angle inclus différent G/D</td><td>Fusée / porte-fusée faussé</td></tr>
 <tr><td>Chasse hors tolérance d’un côté</td><td>Tirant, triangle, longeron</td></tr></table></div>
-<p>Le véhicule <b>tire du côté du carrossage le plus positif</b>, et du côté de la chasse la plus faible.</p>
-<div class="box trancher"><b>⚖ À trancher</b><p>Test final Q22 : la correction officielle donne la réponse 4 (« verticale et axe de pivot dans le plan transversal »). Sur le fond, c’est la définition de l’inclinaison de pivot : la chasse se lit de côté, plan longitudinal. Le site retient la définition du cours (plan longitudinal) : les corrections de test peuvent être fausses. Signale l’écart au formateur.</p></div>`,
+<p>Le véhicule <b>tire du côté du carrossage le plus positif</b>, et du côté de la chasse la plus faible.</p>`,
       retenir: ['Rugueuse = parallélisme ; lisse = carrossage.', 'Chasse = auto-stabilité de la direction (vue de côté).', 'Angle inclus = carrossage + pivot (diagnostic).', 'Tire du côté du carrossage le plus positif.'],
       pieges: ['Barre d’accouplement = valeur ; barre de direction = répartition.', 'Chasse = vue de côté (plan longitudinal) ; vue de face (plan transversal) = inclinaison de pivot.'],
       memo: { cle: 'RUGUEUSE = PARALLÉLISME · LISSE = CARROSSAGE', points: ['Usure rugueuse → parallélisme', 'Usure lisse → carrossage', 'Inclus faux → fusée ; inclus bon → triangle'], astuce: 'Les dents de scie « frottent » : c’est la roue qui ne roule pas droit (parallélisme).' }
@@ -154,7 +153,6 @@ REV.add({
 <tr><td><b>Y</b></td><td><b>Indice de vitesse</b> → vitesse maxi en km/h (tableau des indices)</td></tr>
 <tr><td><b>DOT</b></td><td>Sigle des manufactures américaines : <b>Department Of Transportation</b></td></tr>
 <tr><td><b>4217</b></td><td>Semaine et année de fabrication : <b>42ᵉ semaine de 2017</b></td></tr></table></div>
-<div class="box trancher"><b>⚖ Durée de vie : à trancher</b><p>La fiche imprimée « Rappels marquages pneumatique » dit <b>environ 10 ans</b> selon l’utilisation et le stockage ; ta fiche manuscrite DSFT dit <b>pneu utilisable 20 ans</b>. Fais préciser par le formateur.</p></div>
 <h3>Marquage PL : 295/80 R22.5 152/148 L DOT 2018</h3>
 <ul><li><b>295</b> = largeur en mm · <b>80</b> = hauteur du flanc, 80 % de 295 mm · <b>R</b> = radial · <b>22.5</b> = diamètre intérieur en pouces.</li>
 <li>Jante 22,5" : <b>inclinaison du talon d’accrochage à 15°</b>.</li>
@@ -172,9 +170,9 @@ REV.add({
 <tr><td><b>V CFD 19</b></td><td><b>V</b> = <b>Recreusé</b> (1ᵉʳ recreusage) ; <b>VV</b> = 2ᵉ recreusage · <b>CFD</b> = localité de l’intervention (Clermont-Ferrand) · <b>19</b> = année du recreusage (2019)</td></tr></table></div>
 <h3>Jante</h3>
 <p>5½ J 13 FH E28 : largeur 5½" · hauteur de rebord J · diamètre 13" · sécurité FH (flat hump) · déport 28 mm. REGROOVABLE = recreusable ; BRAND TIRE HERE = zone de marquage à chaud.</p>`,
-      retenir: ['Largeur (mm ou pouces) / hauteur du flanc en % · R = radial · diamètre en pouces · indice de charge · indice de vitesse.', 'Deux indices de charge (152/148) = roue solo / roue jumelée.', 'DOT 4217 = 42ᵉ semaine 2017 ; DOT 2018 = 20ᵉ semaine 2018.', '« 00 » = flanc de 100 % : pneu carré.', 'V = recreusé (VV = 2ᵉ recreusage) · R = rechapé · AR = armée.', 'Durée de vie : 10 ans (fiche imprimée) ou 20 ans (fiche manuscrite) — à trancher.'],
+      retenir: ['Largeur (mm ou pouces) / hauteur du flanc en % · R = radial · diamètre en pouces · indice de charge · indice de vitesse.', 'Deux indices de charge (152/148) = roue solo / roue jumelée.', 'DOT 4217 = 42ᵉ semaine 2017 ; DOT 2018 = 20ᵉ semaine 2018.', '« 00 » = flanc de 100 % : pneu carré.', 'V = recreusé (VV = 2ᵉ recreusage) · R = rechapé · AR = armée.'],
       pieges: ['La lettre après l’indice de charge est la VITESSE, pas la charge.', '« V » dans « V CFD 20 » signifie RECREUSÉ, pas « vérifié » (certaines corrections de test disaient « vérifié »).', 'Talon d’accrochage : 15° pour une jante 22,5" ; 5° pour une jante 20".'],
-      memo: { cle: 'LARGEUR / HAUTEUR % R DIAMÈTRE · CHARGE · VITESSE · DOT', points: ['225/40 R18 92 Y DOT 4217', '152/148 = solo / jumelé', '14.00 : 14" de large, 00 = 100 % → carré', 'AR = armée · R = rechapé · V = recreusé · VV = 2ᵉ recreusage', 'Durée de vie : 10 ou 20 ans ? à trancher'], astuce: 'Le chiffre porte (charge), la lettre court (vitesse) ; V comme « Vidé » : on a recreusé la gomme.' }
+      memo: { cle: 'LARGEUR / HAUTEUR % R DIAMÈTRE · CHARGE · VITESSE · DOT', points: ['225/40 R18 92 Y DOT 4217', '152/148 = solo / jumelé', '14.00 : 14" de large, 00 = 100 % → carré', 'AR = armée · R = rechapé · V = recreusé · VV = 2ᵉ recreusage'], astuce: 'Le chiffre porte (charge), la lettre court (vitesse) ; V comme « Vidé » : on a recreusé la gomme.' }
     },
     {
       id: 'panne', title: 'Recherche de panne freinage',

@@ -228,7 +228,7 @@
   }
 
   function setActiveNav(route) {
-    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', trancher: 'cours', fiche: 'cours', fiches: 'cours',
+    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', fiche: 'cours', fiches: 'cours',
       qcm: 'qcm', uv2: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
     var key = map[route] || 'home';
     if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') key = 'quiz';
@@ -255,7 +255,6 @@
       case 'bilan': html = viewBilan(); break;
       case 'resultats': html = viewResultats(); break;
       case 'memos': html = viewMemos(parts[1]); break;
-      case 'trancher': html = viewTrancher(); break;
       case 'fiches': html = viewFiches(); break;
       case 'fiche': html = viewFiche(parts[1]); break;
       case 'uv2': html = parts[1] === 'fiche' ? viewUV2Fiche(parts[2]) : viewUV2(); break;
@@ -330,7 +329,6 @@
         '<a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
         '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
         '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
-        '<a class="card mini" href="#/trancher">⚖️ Points tranchés</a>' +
       '</div>' +
       '<p class="muted small center">' + totalQuestions() + ' questions · ' + totalLessons() +
         ' leçons · ' + REV.subjects.length + ' matières — progression enregistrée sur cet appareil, sans compte.</p>';
@@ -353,8 +351,7 @@
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
       '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
       '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
-      '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
-      '<a class="card mini" href="#/trancher">⚖️ Points tranchés</a></div>';
+      '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' + '</div>';
   }
 
   function viewMatiere(id, tab) {
@@ -855,16 +852,6 @@
     return html + '</article><div class="row-actions sticky-actions"><a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM ' + esc(s.name) + '</a><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';
   }
 
-  function viewTrancher() {
-    var t = REV.trancher || [];
-    return crumbs([['#/cours', 'Cours'], [null, 'Points tranchés']]) +
-      '<h1 class="h1">⚖️ Points tranchés</h1>' +
-      '<p class="muted">Tes documents se contredisaient sur ces points. La réponse retenue (en vert) est celle des livres de cours ou des corrections officielles, avec la référence.</p>' +
-      t.map(function (x) {
-        return '<div class="card pad trancher"><h3>' + esc(x.sujet) + '</h3><div class="tr-grid"><div><span class="muted small">Version écartée</span><p>' + x.a +
-          '</p></div><div><span class="muted small">Version retenue</span><p>' + x.b + '</p></div></div><p class="tr-keep">✅ Réponse retenue : ' + x.keep + '</p></div>';
-      }).join('');
-  }
 
   /* ---------- Test UV2 : épreuve de 60 questions (10 par matière), 2 h, barème + 1 / − 0,5 / 0 ---------- */
   var UV2_MIN = 120, UV2_BLANCS = 6;
@@ -1045,7 +1032,7 @@
       '<h2 class="h2">🎯 Entraînement par matière</h2><div class="home-foot">' + UV2_MATS.map(function (m) {
         return '<button class="card mini" data-action="uv2-mat" data-m="' + m.id + '">' + subj(m.subj).icon + ' ' + esc(m.nom) + ' (' + (uv2Orig(m).length + uv2Autres(m).length) + ')</button>';
       }).join('') + '</div>' +
-      '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2 (corrigé du dossier)</a><a class="card mini" href="#/trancher">⚖️ Points tranchés</a></div>';
+      '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2 (corrigé du dossier)</a></div>';
   }
   function viewUV2Fiche(id) {
     var m = uv2Mat(id), F = (REV.uv2Fiches || {})[id];

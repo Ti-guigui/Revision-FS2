@@ -78,8 +78,7 @@ REV.addExercises('elec', {
 <li><b>Q17 — UR9 = 4,45 V.</b> Maille : U M = UR9 + Vbe → UR9 = 5 − 0,55 = <b>4,45 V</b>.</li>
 <li><b>Q18 — R9 ≈ 741,66 Ω.</b> R9 = UR9 / IR9 = 4,45 / 0,006 = <b>741,66 Ω</b> (coquille « R10 » sur le corrigé).</li>
 <li><b>Q19 — lames commandées + panier présent + assis.</b> Il faut M = C·D̄·Ē = 1 : C = 1 (commande actionnée), D = 0 (contact panier fermé = panier en place), E = 0 (contact siège fermé = pilote assis).</li>
-</ol>
-<div class="box trancher"><b>⚠ Coquilles du corrigé papier</b><p>Q03 : la bonne réponse est écrite « A = 0 V » alors qu’on parle du point <b>C</b> (C = 0 V). Q18 : les propositions sont notées « R10 » alors qu’on calcule <b>R9</b>. Les réponses restent justes.</p></div>`,
+</ol>`,
       retenir: [
         'Montage contact à la masse + rappel + Zener : ouvert = 5 V (1), fermé = 0 V (0).',
         'Contact relié au + (commande lames) : relâché = 0 V, actionné = 5 V.',

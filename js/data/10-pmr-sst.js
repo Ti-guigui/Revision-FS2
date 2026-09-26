@@ -5,7 +5,6 @@ REV.add({
     {
       id: 'fondamentaux', title: 'Fondamentaux et principes de prévention',
       html: `
-<div class="box trancher"><b>⚖ À trancher</b><p>Trois corrections par rapport au cours PMR : réunions CCHPA / FS <b>2 fois par an</b> (pas 4) ; FEN régie par l’<b>arrêté du 9 octobre 2020</b> (pas 2014) ; droit de retrait des militaires <b>inapplicable en opération et à l’entraînement</b> (décret 2012-422).</p></div>
 <ul><li>La <b>PMR est une prérogative de commandement</b> : préserver la ressource humaine et la préparation opérationnelle. Code du travail = texte de référence ; il s’applique aux militaires pour les activités de même nature que les civils. En OPEX : <b>PMROPS</b>.</li>
 <li><b>4 domaines</b> : SST (santé et sécurité au travail), PPCI (incendie), RTE (risques technologiques et environnementaux), PSR (sécurité routière).</li></ul>
 <h3>Les 9 principes généraux de prévention</h3>
