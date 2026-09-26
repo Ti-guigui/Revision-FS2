@@ -59,6 +59,28 @@ REV.add({
 <li><b>UR9</b> = U<sub>M</sub> − Vbe = 5 − 0,55 = <b>4,45 V</b>.</li>
 <li><b>R9</b> = 4,45 / 0,006 ≈ <b>741,66 Ω</b>.</li>
 </ol>
+<h3>5. Correction détaillée question par question</h3>
+<ol class="corr">
+<li><b>Q01 — A, pédale relâchée → 5 V.</b> Contact frein à pied = fermé seulement au freinage. Relâché → ouvert → aucun chemin vers la masse. Le 12 V ApC arrive par R2 et la Zener Dz2 (5 V) fixe la tension : <b>A = 5 V = état 1</b>.</li>
+<li><b>Q02 — A, pédale actionnée → 0 V.</b> Contact fermé → A relié directement à la masse → <b>A = 0 V = état 0</b>. R2 (1 kΩ) limite le courant : I = 12 / 1 000 = 12 mA.</li>
+<li><b>Q03 — C, commande relâchée → 0 V.</b> Le contact de C est côté <b>12 V</b>. Ouvert → aucun courant dans R5 → aucune tension apportée → <b>C = 0 V</b> (coquille « A = 0 V » sur le corrigé).</li>
+<li><b>Q04 — C, commande actionnée → 5 V.</b> Contact fermé → 12 V → R5 → Dz5 limite à 5 V → <b>C = 5 V = état 1</b>.</li>
+<li><b>Q05 — G = 1 → B = 1 et E = 1.</b> G sort d’une porte <b>ET</b> (&amp;) : G = B·E. Une ET ne vaut 1 que si <b>toutes</b> ses entrées valent 1.</li>
+<li><b>Q06 — F = 1 → A = 0 et E = 0.</b> F sort d’un <b>OU NON</b> : F = NON(A + E). Pour que la sortie inversée soit 1, il faut A + E = 0, donc A = 0 et E = 0 (freinage + pilote assis).</li>
+<li><b>Q07 — L = J·C̄·(Ā·Ē + B·E).</b> On part de la sortie : L = J·K·H. On remplace K = F + G, puis F = Ā·Ē (De Morgan), G = B·E et H = C̄. Résultat : L = J·C̄·(Ā·Ē + B·E).</li>
+<li><b>Q08 — M = C·D̄·Ē.</b> M = NON(D + H + E) = D̄·H̄·Ē (De Morgan). H = C̄ donc H̄ = C (double inversion). M = C·D̄·Ē.</li>
+<li><b>Q09 — D2 : éliminer le courant à la coupure.</b> Quand Q1 se bloque, la bobine de K1 s’oppose à la disparition du courant (auto-induction) → forte surtension. D2 (roue libre) laisse ce courant tourner dans la bobine et protège Q1.</li>
+<li><b>Q10 — Q2 saturé.</b> La bobine de K2 est entre le 12 V et le collecteur de Q2. Seul un transistor saturé (interrupteur fermé) laisse passer le courant de la bobine.</li>
+<li><b>Q11 — Vce Q1 = 12 V.</b> Clé sur ON → J = 0 → porte ET : L = 0 → pas de courant de base → Q1 bloqué → aucun courant dans K1 → aucune chute de tension dans la bobine → collecteur à 12 V, émetteur à 0 V : <b>Vce = 12 V</b>.</li>
+<li><b>Q12 — Ic = 0,1 A.</b> Ib = 500 µA = 0,0005 A. Ic = β × Ib = 200 × 0,0005 = <b>0,1 A</b>.</li>
+<li><b>Q13 — R bobine = 120 Ω.</b> Q2 saturé → Vce ≈ 0 → les 12 V sont aux bornes de la bobine. R = U / I = 12 / 0,1 = <b>120 Ω</b>.</li>
+<li><b>Q14 — IR10 = 0,0055 A.</b> IR10 = 11 × Ib = 11 × 0,0005 = <b>0,0055 A</b> (5,5 mA).</li>
+<li><b>Q15 — R10 = 100 Ω.</b> R10 est entre la base et la masse, donc en parallèle sur la jonction BE : U R10 = Vbe sat = 0,55 V. R10 = 0,55 / 0,0055 = <b>100 Ω</b>.</li>
+<li><b>Q16 — IR9 = 0,006 A.</b> Nœud de base : ce qui arrive par R9 repart dans R10 et dans la base. IR9 = IR10 + Ib = 0,0055 + 0,0005 = <b>0,006 A</b>.</li>
+<li><b>Q17 — UR9 = 4,45 V.</b> Maille : U M = UR9 + Vbe → UR9 = 5 − 0,55 = <b>4,45 V</b>.</li>
+<li><b>Q18 — R9 ≈ 741,66 Ω.</b> R9 = UR9 / IR9 = 4,45 / 0,006 = <b>741,66 Ω</b> (coquille « R10 » sur le corrigé).</li>
+<li><b>Q19 — lames commandées + panier présent + assis.</b> Il faut M = C·D̄·Ē = 1 : C = 1 (commande actionnée), D = 0 (contact panier fermé = panier en place), E = 0 (contact siège fermé = pilote assis).</li>
+</ol>
 <div class="box trancher"><b>⚠ Coquilles du corrigé papier</b><p>Q03 : la bonne réponse est écrite « A = 0 V » alors qu’on parle du point <b>C</b> (C = 0 V). Q18 : les propositions sont notées « R10 » alors qu’on calcule <b>R9</b>. Les réponses restent justes.</p></div>`,
       retenir: [
         'Montage contact à la masse + rappel + Zener : ouvert = 5 V (1), fermé = 0 V (0).',
@@ -78,6 +100,83 @@ REV.add({
         flow: ['Contact', 'Zener 5 V', 'Portes', 'Transistor', 'Relais', 'Actionneur'],
         points: ['F = Ā·Ē · G = B·E · H = C̄', 'L = J·C̄·(Ā·Ē + B·E)', 'M = C·D̄·Ē', 'Ic = 0,1 A · Rbob = 120 Ω', 'R10 = 100 Ω · R9 ≈ 741,66 Ω'],
         astuce: 'Démarrage interdit lames enclenchées (H = C̄ dans L) ; lames autorisées seulement panier en place ET assis.'
+      }
+    },
+    {
+      id: 'moto', title: 'Moto : démarreur et boîtier d’allumage',
+      images: [{ src: 'exo-moto.jpg', cap: 'Schéma « Moto » : entrées A (point mort), C (embrayage), F (béquille), portes B, D, E, G, H, démarreur (Q1, K1, K2) et boîtier d’allumage (Q2)' }],
+      html: `
+<h3>Énoncé</h3>
+<p>Le schéma représente la <b>commande du circuit du démarreur</b> et la <b>commande du boîtier d’allumage</b>.</p>
+<table class="tbl"><tr><th>Commande</th><th>Fonctionnement</th></tr>
+<tr><td>Contact à clé</td><td>2 positions : OFF (arrêt), ON (contact). 12 V ApC = 12 V après contact.</td></tr>
+<tr><td>Run</td><td>Contact de sécurité (coupe-circuit) en série après la clé</td></tr>
+<tr><td>Point mort</td><td>Contact position point mort</td></tr>
+<tr><td>Embrayage</td><td>Contact position levier d’embrayage</td></tr>
+<tr><td>Béquille</td><td>Contact position béquille</td></tr></table>
+<p><b>Logique 12 V</b> (pas de Zener sur les entrées : 1 = 12 V, 0 = 0 V) · R1 et R2 : 1 kΩ.</p>
+<h3>1. Lire les entrées</h3>
+<ul>
+<li><b>A (point mort)</b> : contact à la masse, relié au 12 V ApC <b>à travers le voyant de point mort</b>.<br>
+→ <b>point mort</b> : contact fermé → A = <b>0 V</b> et le voyant s’allume (il est entre 12 V et masse) ;<br>
+→ <b>vitesse enclenchée</b> : contact ouvert → aucun courant → pas de chute de tension dans la lampe → A = <b>12 V</b>.</li>
+<li><b>C (embrayage)</b> : contact à la masse + R1 au 12 V ApC. Contact fermé → C = 0 ; ouvert → C = 1. Sur le schéma, le contact se ferme <b>embrayé</b> : <b>débrayé → C = 1</b>.</li>
+<li><b>F (béquille)</b> : contact à la masse + R2 au 12 V ApC. Contact fermé <b>béquille au sol → F = 0</b> ; <b>béquille hors sol → F = 1</b>.</li>
+</ul>
+<h3>2. Les portes</h3>
+<table class="tbl"><tr><th>Point</th><th>Porte</th><th>Équation</th></tr>
+<tr><td>B</td><td>NON</td><td>B = Ā</td></tr>
+<tr><td>D</td><td>ET à 3 entrées</td><td>D = A·C·F</td></tr>
+<tr><td>E</td><td>OU</td><td>E = B + D = <b>Ā + A·C·F</b></td></tr>
+<tr><td>G</td><td>NON</td><td>G = F̄</td></tr>
+<tr><td>H</td><td>ET NON (&amp; + rond)</td><td>H = <span style="text-decoration:overline">A·G</span> = Ā + Ḡ = <b>Ā + F</b></td></tr></table>
+<h3>Ce que ça veut dire sur la moto</h3>
+<ul>
+<li><b>Démarreur autorisé</b> (E = 1) : <b>au point mort</b> (Ā) OU <b>vitesse enclenchée + débrayé + béquille relevée</b> (A·C·F).</li>
+<li><b>Allumage alimenté</b> (H = 1) : au point mort (Ā) OU béquille relevée (F). <b>Vitesse enclenchée + béquille au sol → H = 0 → moteur coupé</b> (sécurité anti-départ béquille baissée).</li>
+</ul>
+<h3>3. Les sorties de puissance</h3>
+<ul>
+<li><b>E → R3/R4 → Q1 → K1</b>. Le contact de K1 alimente la <b>commande du démarreur</b> (bouton) → <b>K2</b> → contact de puissance → <b>DEM</b>. Pour démarrer : E = 1 (Q1 saturé) <b>et</b> appui sur le bouton.</li>
+<li><b>D1</b> en parallèle sur la bobine de K1 = <b>diode de roue libre</b>.</li>
+<li><b>H → R5/R6 → Q2</b> : Q2 saturé = <b>boîtier d’allumage</b> alimenté. <b>DZ1 = 14 V</b> en parallèle protège le boîtier et Q2 des surtensions.</li>
+</ul>
+<h3>4. Correction détaillée question par question</h3>
+<ol class="corr">
+<li><b>Q01 — A, vitesse enclenchée → 12 V.</b> Contact point mort ouvert → pas de courant dans le voyant → pas de chute de tension dans la lampe (U = R × I = R × 0) → <b>A = 12 V</b> (état 1). Voyant éteint.</li>
+<li><b>Q02 — A, point mort → 0 V.</b> Contact fermé → A relié à la masse → <b>A = 0 V</b>. Les 12 V sont aux bornes du voyant, qui s’allume.</li>
+<li><b>Q03 — Q1 saturé.</b> La bobine de K1 est entre le 12 V ApC et le collecteur de Q1. Il faut Q1 saturé pour alimenter K1 ; son contact amène le 12 V au bouton « commande du démarreur », qui alimente alors K2.</li>
+<li><b>Q04 — D1 : éliminer le courant à la coupure.</b> Diode de roue libre en parallèle sur la bobine de K1 : à la coupure, elle absorbe la surtension d’auto-induction et protège Q1.</li>
+<li><b>Q05 — béquille au sol + vitesse enclenchée → hors tension.</b> Béquille au sol → F = 0 → G = 1. Vitesse → A = 1. H = NON(A·G) = NON(1·1) = <b>0</b> → Q2 bloqué → <b>boîtier d’allumage hors tension</b>.</li>
+<li><b>Q06 — H = Ā + F.</b> H = NON(A·G) = Ā + Ḡ (De Morgan). G = F̄ donc Ḡ = F. <b>H = Ā + F</b>.</li>
+<li><b>Q07 — E = Ā + A·C·F.</b> E = B + D, avec B = Ā et D = A·C·F. <b>E = Ā + A·C·F</b>. (On pourrait simplifier en Ā + C·F, mais c’est la forme du corrigé.)</li>
+<li><b>Q08 — H = 0 → A = 1 et G = 1.</b> Une ET NON ne donne 0 que si <b>toutes</b> ses entrées sont à 1.</li>
+<li><b>Q09 — Ic = 0,3 A.</b> Q1 saturé (Vce = 0) → les 12 V sont sur la bobine : Ic = U / R = 12 / 40 = <b>0,3 A</b>.</li>
+<li><b>Q10 — Ib = 0,002 A.</b> Ib = Ic / β = 0,3 / 150 = <b>0,002 A</b> (2 mA).</li>
+<li><b>Q11 — IR3 = 0,022 A.</b> IR3 = 11 × Ib = 11 × 0,002 = <b>0,022 A</b>.</li>
+<li><b>Q12 — IR4 = 0,02 A.</b> Loi des nœuds à la base : IR3 = IR4 + Ib → IR4 = 0,022 − 0,002 = <b>0,02 A</b> (= 10 × Ib).</li>
+<li><b>Q13 — UR3 = 11,4 V.</b> E = 1 = 12 V (logique 12 V). Maille : 12 = UR3 + Vbe → UR3 = 12 − 0,6 = <b>11,4 V</b>.</li>
+<li><b>Q14 — R3 = 518,18 Ω.</b> R3 = UR3 / IR3 = 11,4 / 0,022 = <b>518,18 Ω</b>.</li>
+<li><b>Q15 — R4 = 30 Ω.</b> R4 en parallèle sur base-émetteur : UR4 = Vbe = 0,6 V. R4 = 0,6 / 0,02 = <b>30 Ω</b>.</li>
+<li><b>Q16 — Vce Q2 = 12 V → bloqué.</b> Transistor bloqué = interrupteur ouvert : toute la tension d’alimentation se retrouve entre collecteur et émetteur. (Saturé ≈ 0 V.)</li>
+</ol>`,
+      retenir: [
+        'Logique 12 V : pas de Zener sur les entrées, état 1 = 12 V.',
+        'Voyant en série avec un contact à la masse : contact ouvert → pas de courant → 12 V au point A.',
+        'ET NON = 0 seulement si toutes les entrées sont à 1.',
+        'IR3 = IR4 + Ib ; UR4 = Vbe ; UR3 = 12 − Vbe.',
+        'Vce = 12 V → bloqué ; Vce ≈ 0 V → saturé.'
+      ],
+      pieges: [
+        'Ici la logique est en 12 V (pas 5 V comme le microtracteur) : UR3 = 12 − 0,6.',
+        'IR4 = IR3 − Ib (pas IR3 + Ib) : c’est R3 qui amène tout le courant.',
+        'Point mort = contact fermé = A à 0 V (voyant allumé).'
+      ],
+      memo: {
+        cle: 'DÉMARRER : point mort OU (débrayé + béquille relevée) · ALLUMAGE : point mort OU béquille relevée',
+        flow: ['Contact', 'Porte logique', 'Transistor', 'K1', 'Bouton démarreur', 'K2', 'DEM'],
+        points: ['E = Ā + A·C·F', 'H = Ā + F', 'Ic = 12/40 = 0,3 A · Ib = 0,002 A', 'IR3 = 0,022 A · IR4 = 0,02 A', 'R3 = 518,18 Ω · R4 = 30 Ω'],
+        astuce: 'Béquille au sol avec une vitesse : H = 0, le moteur est coupé.'
       }
     }
   ],
@@ -102,5 +201,21 @@ REV.add({
     { l: 'microtracteur', img: 'exo-microtracteur.jpg', q: 'Q18 — UR9 = 4,45 V et IR9 = 0,006 A. Valeur de la résistance R9 ?', c: ['R9 ≈ 741,66 Ω', 'R9 ≈ 74,16 Ω', 'R9 ≈ 7 416,6 Ω'], e: 'R9 = UR9 / IR9 = 4,45 / 0,006 ≈ 741,66 Ω. (Le corrigé papier écrit « R10 = … » dans les propositions : coquille, c’est bien R9.)', r: 'Loi d’Ohm, vérifier l’ordre de grandeur.', src: 'Exercice microtracteur tondeuse' },
     { l: 'microtracteur', img: 'exo-microtracteur.jpg', q: 'Q19 — Quelles commandes faut-il actionner pour alimenter l’électro-aimant de rotation des lames ?', c: ['Rotation des lames commandée, présence du panier et assis sur le siège', 'Rotation des lames commandée, pas de panier et assis sur le siège', 'Rotation des lames commandée, présence du panier et pas assis sur le siège'], e: 'M = C·D̄·Ē doit être à 1 : C = 1 (commande des lames actionnée), D = 0 (contact panier fermé = panier présent), E = 0 (contact siège fermé = conducteur assis). M = 1 → Q2 saturé → K2 → électro-aimant.', r: 'Sécurité : lames seulement si panier en place ET conducteur assis.', src: 'Exercice microtracteur tondeuse' },
     { l: 'microtracteur', img: 'exo-microtracteur.jpg', q: 'Bonus — Clé sur DEM, lames non commandées : dans quel cas le démarreur peut-il tourner ?', c: ['Pilote assis avec la pédale de frein enfoncée, ou siège vide avec le frein à main serré', 'Pilote assis avec le frein à main serré uniquement', 'Siège vide avec la pédale de frein enfoncée', 'Dans tous les cas dès que la clé est sur DEM'], e: 'L = J·C̄·(F + G). F = Ā·Ē = 1 : pédale enfoncée (contact fermé, A = 0) et assis (E = 0). G = B·E = 1 : frein à main serré (contact fermé → 0 → porte NON → B = 1) et siège vide (E = 1). Il suffit que F ou G soit à 1.', r: 'Déduit de l’énoncé : tous les contacts sont fermés = 0 V = état 0.', src: 'Exercice microtracteur tondeuse (question ajoutée)' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q01 — Quelle est la tension au point A lorsqu’une vitesse est enclenchée ?', c: ['A = 12 V', 'A = 0 V', 'A = en l’air'], e: 'Contact point mort ouvert : aucun courant dans le voyant, donc aucune chute de tension dans la lampe (U = R × 0). A est au 12 V ApC.', r: 'Pas de courant = pas de chute de tension.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q02 — Quelle est la tension au point A lorsqu’une vitesse est au point mort ?', c: ['A = 0 V', 'A = 12 V', 'A = en l’air'], e: 'Au point mort, le contact se ferme et relie A à la masse : A = 0 V. Les 12 V sont aux bornes du voyant, qui s’allume.', r: 'Contact à la masse fermé = 0 V.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q03 — Dans quel état doit être le transistor Q1 pour que l’action sur la commande de démarreur actionne le relais K2 ?', c: ['Q1 saturé', 'Q1 bloqué', 'Peu importe'], e: 'Q1 saturé alimente la bobine de K1 ; le contact de K1 amène le 12 V au bouton de commande du démarreur, qui alimente la bobine de K2. Q1 bloqué : le bouton n’a pas de tension.', r: 'Saturé = interrupteur fermé.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q04 — Quel est le rôle de la diode D1 (en parallèle sur la bobine de K1) ?', c: ['Éliminer le courant (la surtension) à la coupure', 'Protéger des surtensions du réseau', 'Redresser la tension'], e: 'Diode de roue libre : à la coupure de Q1, la bobine crée une surtension d’auto-induction ; D1 laisse circuler ce courant et protège Q1.', r: 'Diode inverse en parallèle sur une bobine = roue libre.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q05 — Béquille au sol et vitesse enclenchée : le boîtier d’allumage est-il sous tension ?', c: ['Hors tension', 'Sous tension', 'Moitié de la tension'], e: 'Béquille au sol → contact fermé → F = 0 → G = F̄ = 1. Vitesse → A = 1. H = NON(A·G) = NON(1) = 0 → Q2 bloqué → boîtier hors tension (sécurité : on ne roule pas béquille baissée).', r: 'ET NON = 0 seulement si tout est à 1.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q06 — Équation de la sortie H en fonction des entrées A et F ?', c: ['H = Ā + F', 'H = A + F̄', 'H = A·F̄'], e: 'H = NON(A·G) = Ā + Ḡ (De Morgan). Or G = F̄, donc Ḡ = F : H = Ā + F.', r: 'De Morgan : NON(a·b) = ā + b̄.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q07 — Équation de la sortie E en fonction des entrées A, C et F ?', c: ['E = Ā + A·C·F', 'E = A + A·C·F', 'E = Ā·(A + C + F)'], e: 'E est un OU entre B = Ā et D = A·C·F (ET à 3 entrées) : E = Ā + A·C·F.', r: 'Remonter porte par porte.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q08 — États des points A et G pour que la sortie H soit à 0 ?', c: ['A à 1 et G à 1', 'A à 0 et G à 0', 'A à 0 et G à 1'], e: 'H est une ET NON : sa sortie ne vaut 0 que si toutes ses entrées valent 1.', r: 'ET NON : 0 seulement si tout est à 1.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q09 — La bobine du relais K1 vaut 40 Ω, Q1 saturé (Vce = 0 V), alimentation 12 V. Courant Ic ?', c: ['Ic = 0,3 A', 'Ic = 0,03 A', 'Ic = 0,003 A'], e: 'Vce = 0 → les 12 V sont aux bornes de la bobine : Ic = 12 / 40 = 0,3 A.', r: 'Loi d’Ohm I = U / R.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q10 — β de Q1 = 150 et Ic = 0,3 A. Courant Ib ?', c: ['Ib = 0,002 A', 'Ib = 0,0002 A', 'Ib = 0,02 A'], e: 'Ib = Ic / β = 0,3 / 150 = 0,002 A (2 mA).', r: 'Ic = β·Ib donc Ib = Ic / β.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q11 — Vbe de Q1 = 0,6 V, Ib = 0,002 A et IR3 = 11 × Ib. Valeur de IR3 ?', c: ['IR3 = 0,022 A', 'IR3 = 0,00022 A', 'IR3 = 0,0022 A'], e: 'IR3 = 11 × 0,002 = 0,022 A.', r: 'Attention aux décimales.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q12 — IR3 = 0,022 A et Ib = 0,002 A. Valeur de IR4 (résistance base-masse) ?', c: ['IR4 = 0,02 A', 'IR4 = 0,002 A', 'IR4 = 0,0002 A'], e: 'Loi des nœuds à la base : IR3 = IR4 + Ib → IR4 = 0,022 − 0,002 = 0,02 A.', r: 'Le courant de R3 se partage entre R4 et la base.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q13 — Logique 12 V (E = 12 V), Vbe = 0,6 V. Tension aux bornes de R3 ?', c: ['UR3 = 11,4 V', 'UR3 = 12 V', 'UR3 = 0,6 V'], e: 'Maille : UE = UR3 + Vbe → UR3 = 12 − 0,6 = 11,4 V.', r: 'Loi des mailles.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q14 — UR3 = 11,4 V et IR3 = 0,022 A. Valeur de R3 ?', c: ['R3 = 518,18 Ω', 'R3 = 51,81 Ω', 'R3 = 5 181 Ω'], e: 'R3 = 11,4 / 0,022 = 518,18 Ω.', r: 'Loi d’Ohm R = U / I.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q15 — Vbe = 0,6 V et IR4 = 0,02 A. Valeur de R4 ?', c: ['R4 = 30 Ω', 'R4 = 300 Ω', 'R4 = 3 000 Ω'], e: 'R4 est en parallèle sur base-émetteur : UR4 = Vbe = 0,6 V. R4 = 0,6 / 0,02 = 30 Ω.', r: 'Résistance base-masse : sa tension = Vbe.', src: 'Exercice moto' },
+    { l: 'moto', img: 'exo-moto.jpg', q: 'Q16 — On mesure 12 V entre collecteur et émetteur de Q2. État du transistor ?', c: ['Bloqué', 'Saturé', 'Passant'], e: 'Bloqué = interrupteur ouvert : aucune chute de tension dans la charge, toute la tension d’alimentation est entre C et E. Saturé : Vce ≈ 0 V.', r: 'Vce = alimentation → bloqué.', src: 'Exercice moto' },
   ]
 });
