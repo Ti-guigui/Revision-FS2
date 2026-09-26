@@ -20,7 +20,7 @@ REV.add({
 <ul><li><b>Chef d’organisme</b> : sécurité et santé physique et mentale, registre SST, DUERP, FEN, RDP ; <b>principal responsable pénal</b>. 3 niveaux : chef d’organisme → encadrement → personnel.</li>
 <li>Central : ministre, DRH-MD, EMDS, états-majors zonaux, coordonnateur central, DCSSA, inspections (ITA, IRAD, IMPA, ITPCI).</li>
 <li>Local : <b>CLP</b> (coordonnateur local, en général le <b>commandant en second</b>) ; <b>CPRP</b> (conseille le chef, <b>tient le registre SST</b>) ; préventeurs ; médecin de prévention (civil) ; médecin conseiller (militaire, membre de droit de la CCHPA) ; conseiller incendie ; CLPSR ; PCR ; encadrement ; chaque agent.</li>
-<li><b>Instances</b> : CCHPA (militaires), formation spécialisée FS (civils, obligatoire dès 50 agents) ; <b>2 réunions par an</b> ; réunions conjointes possibles depuis juillet 2024 avec 2 procès-verbaux.</li>
+<li><b>Instances</b> : CCHPA (militaires), formation spécialisée FS (civils, obligatoire dès 50 agents) ; <b>2 réunions par an</b> ; réunions conjointes possibles depuis le 08/07/2024 avec 2 procès-verbaux distincts ; réunion supplémentaire en cas d’accident grave. CLP (= commandant en second) : coordonne, anime, surveille.</li>
 <li>Contrôle interne de niveau 1 : sous la responsabilité du CFA / chef de corps.</li></ul>`,
       retenir: ['Chef d’organisme = responsable de la PMR (et pénalement).', 'CPRP tient le registre SST.', 'CLP = commandant en second.', 'CCHPA / FS : 2 réunions par an.'],
       pieges: ['« Le chargé de prévention est responsable de la PMR-E » est FAUX : c’est le chef d’organisme.'],
@@ -32,9 +32,9 @@ REV.add({
 <ul><li><b>RDP</b> = DUERP + organisation locale + PAPRIPACT ; dématérialisable (arrêté du 18/12/2023).</li>
 <li><b>DUERP</b> : par unité de travail, mis à jour chaque année, conservé 40 ans. La FEN ne peut citer que des risques inscrits au DUERP.</li>
 <li><b>Registre SST</b> : tenu par le CPRP, accessible à tous, examiné au moins 2 fois par an. <b>Registre spécial</b> (droit de retrait) : sous la responsabilité du chef d’organisme ; aucune sanction pour un retrait valable.</li>
-<li><b>FEN</b> (fiche emploi-nuisances) : informe les agents et le médecin de prévention des risques pour la santé. Chef d’organisme + CPRP + médecin ; 2 parties (administrative, nuisances) ; mise à jour <b>au moins tous les 5 ans</b> ; 1 exemplaire à l’agent, 1 au dossier médical, l’original au dossier administratif.</li>
+<li><b>FEN</b> (fiche emploi-nuisances) : informe les agents et le médecin de prévention des risques pour la santé. Chef d’organisme + CPRP + médecin ; 2 parties (administrative, nuisances) ; mise à jour <b>au moins tous les 5 ans</b> ; <b>4 exemplaires</b> : agent, dossier médical, dossier administratif, chef d’organisme (selon ta fiche « l’essentiel » ; le cours citait : 1 à l’agent, 1 au dossier médical, l’original au dossier administratif).</li>
 <li><b>Fiche d’exposition</b> : complète la FEN et trace les expositions (amiante, rayonnements optiques) ; FEAPERI (rayonnements ionisants).</li></ul>`,
-      retenir: ['DUERP : chaque année, conservé 40 ans.', 'FEN : mise à jour au moins tous les 5 ans, 1 exemplaire remis à l’agent.', 'Fiche d’exposition = complète la FEN, trace les expositions.'],
+      retenir: ['DUERP : chaque année, conservé 40 ans.', 'FEN : mise à jour au moins tous les 5 ans ; 4 exemplaires (agent, dossier médical, dossier administratif, chef d’organisme).', 'Fiche d’exposition = complète la FEN, trace les expositions.'],
       memo: { cle: 'DUERP 1 AN · FEN 5 ANS · 40 ANS D’ARCHIVE', points: ['Registre SST : CPRP, 2×/an', 'Registre spécial : droit de retrait', 'FEN : informer agents + médecin'], astuce: 'La FEN ne parle que des risques déjà inscrits au DUERP.' }
     },
     {
@@ -47,6 +47,11 @@ REV.add({
 <li><b>PPCI</b> : sécurité des personnes et des biens, faciliter les secours, <b>limiter naissance et propagation du feu</b>, faciliter l’évacuation.</li>
 <li><b>RTE</b> : eau, sols pollués, ICPE (déclaration, enregistrement, autorisation), déchets (BSD, registre).</li>
 <li><b>PSR</b> : 2ᵉ cause de mortalité au ministère ; PPRR triennal, PLPRR local.</li>
+<li><b>Risque chimique</b> : 9 pictogrammes (nocif, toxique, CMR, corrosif, inflammable, comburant, gaz sous pression, explosif, polluant) ; <b>3 voies de contamination</b> : respiratoire, cutanée, digestive.</li>
+<li><b>PPCI</b> : <b>triangle du feu</b> = combustible + comburant + énergie d’activation ; <b>5 classes de feux</b> : A solides, B liquides, C gaz, D métaux, F huiles et graisses de cuisson. Formation incendie : initiale + entretien tous les <b>6 mois</b> + rappel des consignes tous les <b>2 mois</b>.</li>
+<li><b>ICPE</b> : 4 régimes : déclaration, enregistrement, autorisation, autorisation avec servitudes. Déchets tracés par <b>BSD</b>.</li>
+<li>Formations : <b>PRAP</b> = prévention des risques liés à l’activité physique ; <b>TMD</b> = transport de matières dangereuses.</li>
+<li><b>PMROPS</b> (en OPEX) : CCP EMA → AIPT (théâtre) → CPRPO (COMSITE) ; CCHSO possibles sur le théâtre.</li>
 <li>Niveaux de CIPCE : 3.</li></ul>`,
       retenir: ['Imputabilité : temps + lieu + lien avec le service.', 'PPCI : limiter naissance et propagation du feu.', 'Analyse d’accident = éviter un accident similaire.'],
       memo: { cle: 'IMPUTABILITÉ = TEMPS + LIEU + SERVICE', points: ['Sport commandé = ordre écrit', 'Trajet domicile-travail sans détour', 'PSR : 2ᵉ cause de mortalité'], astuce: 'Pour qu’un accident soit « de service » : au bon moment, au bon endroit, pour le service.' }
@@ -72,6 +77,16 @@ REV.add({
     { l: 'risques', q: 'Affirmation vraie : la PPCI…', c: ['Limite les risques de naissance du feu', 'Concerne uniquement les véhicules', 'Remplace les exercices d’évacuation', 'Est gérée par le médecin'], e: 'PPCI : limiter naissance et propagation du feu, faciliter secours et évacuation.', src: 'QCM Test FS2' },
     { l: 'risques', q: 'Orientation SST 2020-2023 ?', c: ['Prévention de l’exposition aux CMR', 'Sécurité routière uniquement', 'Réduction du bruit', 'Ergonomie des bureaux'], e: 'CMR = cancérogènes, mutagènes, reprotoxiques.', src: 'QCM Test FS2' },
     { l: 'risques', q: 'Combien de niveaux de CIPCE ?', c: ['3', '2', '4', '5'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
-    { l: 'risques', q: 'Un sport est « en service » s’il est :', c: ['Commandé (ordre écrit)', 'Pratiqué dans une salle civile', 'Pratiqué le week-end', 'Pratiqué seul'], e: 'Sport commandé = ordre écrit.' }
+    { l: 'risques', q: 'Un sport est « en service » s’il est :', c: ['Commandé (ordre écrit)', 'Pratiqué dans une salle civile', 'Pratiqué le week-end', 'Pratiqué seul'], e: 'Sport commandé = ordre écrit.' },
+    { l: 'risques', q: 'Le triangle du feu associe :', c: ['Combustible, comburant, énergie d’activation', 'Eau, air, chaleur', 'Combustible, eau, oxygène'], e: 'Supprimer un des trois côtés éteint le feu.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'risques', q: 'Un feu de métaux est de classe :', c: ['D', 'B', 'F'], e: 'A solides, B liquides, C gaz, D métaux, F huiles et graisses.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'risques', q: 'Un feu d’huile de cuisson est de classe :', c: ['F', 'B', 'A'], e: 'A solides, B liquides, C gaz, D métaux, F huiles / graisses.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'risques', q: 'Formation incendie : périodicité de l’entretien et du rappel des consignes ?', c: ['Entretien tous les 6 mois, rappel des consignes tous les 2 mois', 'Tous les ans', 'Tous les 3 ans'], e: 'Plus la formation initiale.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'risques', q: 'Les 3 voies de contamination chimique :', c: ['Respiratoire, cutanée, digestive', 'Visuelle, auditive, cutanée', 'Sanguine, osseuse, nerveuse'], e: 'D’où les EPI adaptés : masque, gants, hygiène.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'risques', q: 'Combien de régimes pour les ICPE ?', c: ['4 : déclaration, enregistrement, autorisation, autorisation avec servitudes', '3 : déclaration, enregistrement, autorisation', '2'], e: 'Ta fiche « l’essentiel » ajoute l’autorisation avec servitudes.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'risques', q: 'PRAP signifie :', c: ['Prévention des risques liés à l’activité physique', 'Plan de retour après accident', 'Protection des risques d’atmosphère polluée'], e: 'TMD = transport de matières dangereuses.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'risques', q: 'Chaîne PMROPS en opération :', c: ['CCP EMA → AIPT (théâtre) → CPRPO (COMSITE)', 'CPRP → CLP → chef de corps', 'DRH-MD → EMDS → CCHPA'], e: 'Des CCHSO sont possibles sur le théâtre.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'acteurs', q: 'Rôle du CLP (commandant en second) :', c: ['Coordonner, animer, surveiller la prévention', 'Tenir le registre SST', 'Être le principal responsable pénal'], e: 'Le CPRP conseille et tient le registre ; le chef d’organisme est responsable pénal.', src: 'Fiche « PMR / SST — l’essentiel »' },
+    { l: 'documents', q: 'En combien d’exemplaires la FEN est-elle établie (fiche « l’essentiel ») ?', c: ['4 : agent, dossier médical, dossier administratif, chef d’organisme', '1 seul, gardé par le chef', '2 : agent et médecin'], e: 'Base légale : arrêté du 9 octobre 2020 ; 2 parties ; mise à jour au moins tous les 5 ans.', src: 'Fiche « PMR / SST — l’essentiel »' },
   ]
 });

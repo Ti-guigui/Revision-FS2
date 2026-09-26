@@ -9,11 +9,12 @@ REV.add({
 <tr><td>Naissance de l’esprit maintenance</td><td>Avec l’<b>artillerie</b> au Moyen-Âge (AQA 03) — un QCM répondait « cavalerie »</td></tr>
 <tr><td>Saint Éloi, patron du Matériel, meurt en…</td><td>659</td></tr>
 <tr><td>Service du Matériel</td><td>Corps institué le 25/08/1940 ; 1943 : 1ʳᵉ école du Matériel à Meknès</td></tr>
-<tr><td>Musée du Matériel</td><td>1997 (centre de recueil du patrimoine)</td></tr>
+<tr><td>Musée du Matériel et de la maintenance</td><td>Créé en 1997 (centre de recueil du patrimoine), à Bourges en 1999, nom actuel en 2012, rouvert le 1ᵉʳ juillet 2023</td></tr>
+<tr><td>Étendard du Matériel</td><td>Remis le 5 septembre 1980</td></tr>
 <tr><td>Garde de l’étendard</td><td>Assurée par les BSMAT depuis 2018 ; 2025-2026 : 13ᵉ BSMAT</td></tr>
 <tr><td>Pilote du domaine maintenance (MAI)</td><td>COM ÉcoMAT (depuis l’été 2024)</td></tr>
 <tr><td>COMMF créé le 1ᵉʳ juillet…</td><td>2016 (non vérifiable dans l’AQA 03)</td></tr>
-<tr><td>EMPT</td><td>Sous l’autorité de la DRH-AT ; contrat de 9 ans après le bac</td></tr>
+<tr><td>EMPT</td><td>Pôle formation de la DRH-AT ; 2 ans à Bourges (créée en 2022), bac avec le GRETA ; contrat EVSO de 9 ans ; devise « instruits, droits, adroits » ; drapeau le 27/10/2022</td></tr>
 <tr><td>CETAT</td><td>Centre d’Enseignement Technique de l’Armée de Terre ; stagiaires engagés pour 2 ans</td></tr>
 <tr><td>BM3</td><td>Tenir les fonctions de chef de section, commander une section C3T dans les MCT de niveau 6</td></tr>
 <tr><td>CAMO (07/11/2018)</td><td>Partenariat stratégique avec la Belgique</td></tr></table></div>`,
@@ -26,17 +27,30 @@ REV.add({
       html: `
 <ul><li><b>MCO-T</b> : répondre au besoin opérationnel en maîtrisant les coûts, au « juste » besoin, en optimisant le personnel.</li>
 <li>Sous pilotage unique de la <b>SIMMT</b> : maintenance opérationnelle (MO) + maintenance industrielle (MI). Logique de milieu : terrestre, aéronautique, naval-nautique-plongée.</li>
-<li>Organisation : maîtrise d’ouvrage (MOA), maîtrise d’ouvrage déléguée (MOAd), maîtrises d’œuvre (MOE).</li>
+<li><b>4 principes du modèle MCO terrestre</b> (ch. 1) : 1) approche par compétence ; 2) étagement des responsabilités sur 3 niveaux (MOA / MOAd / MOE) ; 3) séparation MO / MI ; 4) équilibre entre MIé (industrielle étatique) et MIp (industrielle privée).</li>
+<li><b>MOA</b> : états-majors, directions et services (politique de soutien) · <b>MOAd</b> : la <b>SIMMT</b> pour le milieu terrestre · <b>MOE</b> : CFOT, CALT, divisions et brigades, SMITer (étatique), BITD (industriel privé).</li>
+<li><b>DT</b> (disponibilité technique) = % de matériels disponibles sur le nombre de matériels réalisés, à un instant donné. <b>ARM</b> = assurer ses fonctions pendant un temps déterminé sans réparation d’un niveau supérieur à l’OSR.</li>
+<li>Actes techniques : <b>préventifs</b> (prévisionnels ou conditionnels), <b>correctifs</b> (fait technique fortuit), <b>de modification</b>.</li>
 <li><b>3 niveaux techniques d’intervention (NTI)</b> ; les actes de NTI3 relèvent en général de la MO. La RAM sépare NTI1 et NTI2.</li>
 <li><b>COMMF</b> : maîtrise d’œuvre de la maintenance opérationnelle (pour les trois armées). Les 6 régiments du Matériel : MO de leur zone. MICAM subordonnée à la SIMMT.</li>
 <li>La SIMMT entretient la documentation de maintenance. <b>Types d’interventions</b> : préventives, correctives, de modification (+ rénovation sur SIM@T).</li>
-<li>En opération : 6 principes du MCO-T ; AMAT = autorité fonctionnelle et coordinateur MCO-T sur le théâtre ; ASIA = conseiller log du commandement de la force.</li>
-<li>3 familles professionnelles : FP MMT, FP LSC, FP MUN.</li></ul>
+<li><b>En opération : 6 effecteurs (principes) du MCO-T</b> (ch. 11, à ne pas confondre avec les 4 principes du ch. 1) : 1) au plus près des combats sans être une charge ; 2) redonner des moyens même incomplets ; 3) gérer une « casse de masse » avec des moyens comptés ; 4) conserver les ressources rares ; 5) manœuvrer à tous les niveaux ; 6) tirer profit des outils de communication et de données. Réparer <b>autrement, à temps, utilement</b>.</li>
+<li><b>ASIA</b> = conseiller logistique du commandant de la Force, rédige l’OAL, a l’AMAT sous son autorité. <b>AMAT</b> = conseiller MCO-T du commandant de la Force : organise, coordonne, conduit, contrôle, calcule la DT ; autorité organique ASIA, fonctionnelle SIMMT ; rédige le CRFM. <b>CALT</b> porte la logistique et le MCO du CFOT. La SIMMT rédige l’OMMT.</li>
+<li><b>REM</b> : 3 familles professionnelles → 12 filières → 77 ETD → ≈ 392 ETR. FP <b>MMT</b> (10 filières), FP <b>LSC</b> (5), FP <b>MUN</b> (1). Chaque ETD sur un <b>niveau d’emploi de 1 à 5</b>. COM ÉcoMAT = PILDOM MAI depuis l’été 2024.</li>
+<li>Niveaux fonctionnels : FS1 → NF2 (technicien) ; <b>FS2 → NF3a puis 3b</b> ; officiers (cours d’application) → NF4 ; MDR : CP → 1a, CTE/CME + brigadier → 1b, CQTS (+ 11 ans) → 1c. <b>CFD</b> = centre de formation délégué, <b>CFA</b> = centre de formation associé (pas « CFDT »).</li></ul>
 <div class="tw"><table><tr><th>Sigle</th><th>Signification</th></tr>
 <tr><td>SIMMT</td><td>Structure intégrée du MCO des matériels terrestres</td></tr>
 <tr><td>SMITer</td><td>Service de la maintenance industrielle terrestre</td></tr>
 <tr><td>MICAM</td><td>Mission de contrôle et d’appui de la maintenance</td></tr>
 <tr><td>SIM@T</td><td>Système d’information de la maintenance terrestre</td></tr>
+<tr><td>ECM</td><td>Équipe de conduite de la maintenance (la « CDM » de tes fiches)</td></tr>
+<tr><td>GLB</td><td>Gestion logistique des biens</td></tr>
+<tr><td>RGLU</td><td>Responsable de la gestion des munitions de l’unité</td></tr>
+<tr><td>CAA</td><td>Cellule approvisionnement des ateliers</td></tr>
+<tr><td>OCMUE / SOCMUE</td><td>Officier / sous-officier chargé des matériels de l’unité élémentaire</td></tr>
+<tr><td>GME</td><td>Groupement momentané d’entreprises</td></tr>
+<tr><td>PHL</td><td>Parc hors ligne</td></tr>
+<tr><td>CIPCE</td><td>Contrôle interne relatif à la préservation du capital en équipements</td></tr>
 <tr><td>PPAC / PEGP</td><td>Politique des parcs au contact / Politique d’emploi et de gestion des parcs</td></tr>
 <tr><td>RIP</td><td>Réparation dans l’industrie privée</td></tr>
 <tr><td>SMR</td><td>Section de maintenance régimentaire</td></tr>
@@ -56,26 +70,32 @@ REV.add({
       id: 'regiment', title: 'Au régiment : BML-NG, SMR, gestion des biens',
       html: `
 <ul><li><b>Chef de corps</b> : détenteur/gestionnaire logistique des biens, <b>désigne le responsable de la gestion logistique</b> (son assistant fonctionnel). Chef BML = clé de voûte ; le <b>CBML conseille le CDC</b> (comptabilité, utilisation, entretien, maintenance des matériels).</li>
-<li><b>STE</b> : cellules gestion logistique des biens, <b>conduite de la maintenance (CDM, pilote la maintenance)</b>, gestion pool tactique, munitions du corps de troupe.</li>
+<li>Organisation rationnelle = <b>2 impératifs, tous les deux exigés</b> : un responsable par domaine technique dans chaque unité ET le respect de l’organisation hiérarchique et fonctionnelle.</li>
+<li><b>STE</b> (section technique équipements) = <b>GLB</b> (gestion logistique des biens) + <b>ECM</b> (équipe de conduite de la maintenance, pilote la maintenance) + <b>RGLU</b> (munitions de l’unité). La gestion du pool tactique est une cellule du BML NG, pas un 4ᵉ composant de la STE.</li>
+<li><b>CAA</b> (cellule approvisionnement des ateliers) : suit les commandes dans SIM@T, réceptionne et distribue ; propose à l’ECM des solutions aux DHNS ; reverse les rechanges réparables ; gère le stock atelier (listes R et V) ; détient la <b>carte d’achat de niveau 1</b>.</li>
+<li><b>OCMUE</b> : planifie, organise, contrôle l’entretien ; peut interdire l’emploi d’un matériel dangereux. <b>SOCMUE</b> : conseiller technique du CDU, interlocuteur de la SMR, suit les potentiels sur SIM@T.</li>
+<li><b>6 régiments ont une UMR</b> : 2ᵉ REP, 1ᵉʳ RA, 61ᵉ RA, 9ᵉ RIMa (Guyane), 2ᵉ RPIMa (La Réunion), RIMaP-NC.</li>
 <li><b>SMR</b> : cellule RDC (réception-diagnostic-contrôle), station-service, ateliers, cellule approvisionnement.</li>
 <li>L’entretien, acte de combat et d’instruction, incombe à <b>TOUS les détenteurs</b> de matériels.</li>
-<li>PPAC : PEO (parc en exploitation opérationnelle) et PIT (parc en immobilisation technique).</li>
-<li><b>Stocks</b> : central, régional, local. <b>Statut de gestion logistique</b> = situation et état d’un bien. Code état 79 = à éliminer (52 = pièce neuve).</li>
+<li><b>PPAC 2022</b>, 4 piliers : autonomie des régiments ; continuum compétition / contestation / affrontement (projeter les unités avec leurs matériels) ; meilleure gestion des équipements ; intégration interarmées.</li>
+<li>Parc total → parc en utilisation → parc en service actif = <b>PEO</b> (parc en exploitation opérationnelle : <b>PRGT, POPEX, PDYN, PE</b> = 4 sous-parcs) + <b>PHL</b> (parc hors ligne : soutien industriel lourd). Pas de « PIT », « PSP » ni « PU ».</li>
+<li>Critères de gestion : <b>4 classes d’appartenance</b> (CA 1 à 4), <b>5 catégories de soutien</b> (CS10 à CS50), <b>SGL</b> (SGL4 en exploitation, SGL5 disponible, SGL7 non disponible).</li>
+<li><b>Échelonnement du code approvisionnement</b> : <b>Central</b> (entrepôt central) · <b>Avancé</b> (jusqu’au centre de distribution régional) · <b>R et V</b> (jusqu’à la cellule appro d’atelier). <b>Statut de gestion logistique</b> = situation et état d’un bien. Code état 79 = à éliminer (52 = pièce neuve).</li>
 <li>REO : moyens en personnel et matériels dimensionnant une unité.</li>
-<li>Marchés : GME GRIFFON/JAGUAR = NEXTER, ARQUUS, THALES ; SERVAL = NEXTER, ARQUUS, TEXELIS. VDAE remplace VBL et VB2L.</li>
-<li><b>SIMu</b> : un échelon central et <b>4 établissements principaux</b>. Hors SIMu : <b>vecteurs nucléaires</b>, artifices liés à la navigabilité des aéronefs.</li>
+<li><b>SCORPION</b> : GRIFFON (remplace VAB), JAGUAR (VAB HOT, ERC 90, AMX 10 RCR), SERVAL (VAB, VLTP), <b>VBAE</b> (VBL, VB2L), EGC (EBG). GME GRIFFON / JAGUAR = <b>KNDS (ex-NEXTER)</b>, ARQUUS, THALES SIX (+ TLAS pour le MEPAC) ; SERVAL = <b>KNDS + TEXELIS</b>. Rechanges : stock industriel des GME à Fourchambault ; AIP propriété de l’État. Régénération : 12ᵉ BSMAT Douai (GRIFFON), Gien (JAGUAR), 13ᵉ BSMAT Clermont-Ferrand (SERVAL).</li>
+<li><b>SIMu</b> (créé le 25/03/2011, rattaché au CEMA) : <b>1 direction à Versailles + 5 EPMu</b> (Bretagne, Champagne-Lorraine, Centre-Aquitaine, Provence, Méditerranée). Hors SIMu : <b>munitions nucléaires (vecteurs et têtes)</b>, artifices liés à la navigabilité des aéronefs (sauf stockage).</li>
 <li>Détenteur des biens de l’arme du Matériel dans une formation : le <b>CDU</b>.</li></ul>`,
-      retenir: ['CDM = pilote la maintenance.', 'Stocks : central, régional, local.', 'SIMu : 1 échelon central + 4 établissements principaux.', 'Le responsable de la gestion logistique est désigné par le chef de corps.'],
-      pieges: ['Le quiz FS2 dit 5 EPMu : l’AQA 03 dit 4 (à vérifier).'],
-      memo: { cle: 'CDC → CBML → CDM → SMR', points: ['CBML conseille le CDC', 'CDM pilote la maintenance', 'SMR = RDC + station-service + ateliers + appro', 'Statut de gestion logistique = situation et état'], astuce: 'L’entretien, c’est l’affaire de tous les détenteurs, pas seulement des mécanos.' }
+      retenir: ['ECM (« CDM ») = pilote la maintenance.', 'STE = GLB + ECM + RGLU.', 'Stocks : Central / Avancé / R et V.', 'SIMu : 1 direction + 5 EPMu.', 'PEO (PRGT, POPEX, PDYN, PE) + PHL.', 'Le responsable de la gestion logistique est désigné par le chef de corps.'],
+      pieges: ['SIMu : 5 EPMu (AQA 03), pas 4.', 'Pas de « PIT » : le soutien industriel lourd, c’est le PHL.', 'Stocks : « Central / Avancé / R et V », pas « central / régional / local ».'],
+      memo: { cle: 'CDC → CBML → STE (GLB · ECM · RGLU) → SMR', points: ['CBML conseille le CDC', 'ECM pilote la maintenance', 'SIMu : 5 EPMu', 'SMR = RDC + station-service + ateliers + appro', 'Statut de gestion logistique = situation et état'], astuce: 'L’entretien, c’est l’affaire de tous les détenteurs, pas seulement des mécanos.' }
     },
     {
       id: 'documentation', title: 'Documentation',
       html: `
 <ul><li><b>Circulaire 9400</b> (05/07/2004) : documentation technique + complémentaire. <b>Circulaire 9401</b> (27/07/2004) : organisation de la maintenance dans les formations.</li>
-<li>Documentation technique utilisateur : <b>TCKIT, notice de mise en œuvre, documentation d’entretien</b> ; manuel de maintenance (nature et temps de l’opération, opérateurs, outillage, ingrédients).</li>
-<li><b>MAT 1015 = carnet de bord</b>. <b>MAT 10004</b> (remplace le MAT 1013) = vie du matériel de la mise en place au retrait, suivi des entretiens. <b>MAT 1017</b> = observations des inspections ; signé par le commandant d’unité chaque mois, le chef BML tous les 6 mois, le chef de corps une fois par an. <b>MAT 4486 = DIT</b>.</li>
-<li><b>BIMT</b> : veille documentaire, <b>trimestriel</b>. Toujours utiliser la dernière fiche de visite approuvée.</li>
+<li><b>3 familles de documentation technique</b> : 1) information à caractère général (instructions, répertoires, registres, périodiques) ; 2) <b>DTU</b> (mise en œuvre, entretien / réparation, ravitaillement, <b>fiches COS, de visite, de station-service, manuel de maintenance</b>) ; 3) documentation de modification (fiches et bulletins techniques). Le manuel de maintenance fait partie de la DTU : nature et temps de l’opération, opérateurs, outillage spécifique, ingrédients, décomposition.</li>
+<li><b>MAT 1015 = carnet de bord</b>. Il sert aussi d’ordre de sortie ; la carte d’identité du véhicule y est insérée. <b>MAT 10 004</b> = carnet de matériel, toute la vie du matériel (affectations, modifications, maintenance, contrôles MICAM) ; <b>MAT 10 004/21</b> = fiches des constituants principaux (moteur, boîte, réducteur). <b>MAT 1017</b> = carnet de contrôle des matériels de l’UE (armement, transmissions, optique, levage, NRBC, incendie, EOT, franchissement ; pas les matériels à moteur thermique ni les remorques) : visé chaque mois par le sous-officier spécialisé et contresigné par le CDU, tous les 6 mois par le CBML, une fois par an par le CDC. <b>MAT 4486 = DIT</b>.</li>
+<li><b>BIMT</b> : veille documentaire, <b>trimestriel</b> (fusion du bulletin d’information technique et du MAT 3999). Toujours utiliser la dernière fiche de visite approuvée.</li>
 <li>Un fait technique est <b>fortuit ou prescrit</b>. Arborescence logistique : tout ce qui constitue un matériel avec type et n° de série.</li></ul>`,
       retenir: ['MAT 1015 = carnet de bord ; MAT 10004 = vie du matériel ; MAT 4486 = DIT.', 'BIMT trimestriel.', 'Fait technique : fortuit ou prescrit.'],
       memo: { cle: '1015 CARNET · 10004 VIE · 4486 DIT', points: ['MAT 1017 : CDU mensuel, BML 6 mois, CDC annuel', 'BIMT : tous les 3 mois', 'Circ. 9400 doc · 9401 organisation'], astuce: '10004 = « dix mille quatre » = toute la vie du matériel.' }
@@ -91,7 +111,7 @@ REV.add({
 <tr><td>5. Réparation</td><td>Atelier</td></tr>
 <tr><td>6. Contrôles (en cours, en fin d’actes, final)</td><td>RDC</td></tr>
 <tr><td>7. Restitution</td><td>RDC</td></tr></table></div>
-<p><b>Le RDC prend en charge 4 étapes sur 7.</b></p>
+<p><b>Le RDC prend en charge 4 étapes sur 7</b> : 1 (mise en réparation, par visite contradictoire avec l’utilisateur), 2 (diagnostic, ouverture du dossier SIM@T), 6 (<b>contrôle final</b> seulement : les contrôles en cours et en fin d’acte sont faits par le chef d’atelier), 7 (restitution : documents renseignés, actes techniques / DATEC clôturés). Le chef d’atelier gère 3 (préparation), 4 (approvisionnement via SIM@T, avec la CAA) et 5 (réparation, confiée au chef d’équipe). Les ateliers multi-techniques font les 7 étapes et rendent compte à l’ECM.</p>
 <ul><li><b>DIT</b> (MAT 4486) en 4 phases : réception, diagnostic, intervention technique, contrôle.</li>
 <li><b>SIM@T</b> : planifier, préparer, effectuer, suivre. On crée des IT, on déclare les indisponibilités, on planifie. Le chef d’équipe commande et consomme les pièces, pointe ses heures.</li>
 <li>Statuts RDC : retardé, différé, accepté. AISM = article individualisé à suivi de maintenance.</li>
@@ -142,18 +162,18 @@ REV.add({
     { l: 'regiment', q: 'Qui est l’assistant fonctionnel du détenteur de biens ?', c: ['Le responsable de la gestion logistique', 'Le chef d’atelier', 'Le CPRP', 'Le commandant en second'], e: 'Il est désigné par le détenteur des biens (chef de corps).', src: 'QCM Test FS2' },
     { l: 'regiment', q: 'Qui désigne le responsable de la gestion logistique ?', c: ['Le détenteur des biens (chef de corps)', 'Le chef BML', 'La SIMMT', 'Le CDU'], e: 'Le chef de corps, détenteur des biens, le désigne.', src: 'QCM Test FS2' },
     { l: 'regiment', q: 'Le CBML assiste le CDC pour…', c: ['Comptabilité, utilisation, entretien, maintenance des matériels', 'La sécurité au travail uniquement', 'Le recrutement', 'Les munitions uniquement'], e: 'Le chef BML est la clé de voûte de la maintenance au régiment.', src: 'QCM Test FS2' },
-    { l: 'regiment', q: 'Qui pilote la maintenance au BML ?', c: ['La CDM (conduite de la maintenance)', 'Le RDC', 'La cellule approvisionnement', 'La station-service'], e: 'La cellule CDM de la STE pilote la maintenance.', src: 'Contrôle RDC' },
+    { l: 'regiment', q: 'Qui pilote la maintenance au BML ?', c: ['L’ECM (équipe de conduite de la maintenance, « CDM »)', 'Le RDC', 'La cellule approvisionnement', 'La station-service'], e: 'La cellule CDM de la STE pilote la maintenance.', src: 'Contrôle RDC' },
     { l: 'regiment', q: 'La situation et l’état d’un bien, c’est :', c: ['Le statut de gestion logistique', 'Le code état', 'L’arborescence logistique', 'Le REO'], e: 'Statut de gestion logistique = situation et état d’un bien.', src: 'QCM Test FS2' },
-    { l: 'regiment', q: 'Échelonnement des stocks ?', c: ['Central, régional, local', 'National, zonal, régimentaire', 'Stratégique, opératif, tactique', 'Principal, secondaire'], e: 'Stocks central, régional, local.', src: 'QCM Test FS2' },
-    { l: 'regiment', q: 'Organisation du SIMu (AQA 03) ?', c: ['Un échelon central et quatre établissements principaux', 'Un échelon central et cinq établissements principaux', 'Trois échelons régionaux', 'Six régiments'], e: 'Réponse du QCM : 4 établissements principaux.', w: 'Le quiz FS2 parle de 5 EPMu : à vérifier.', src: 'QCM Test FS2' },
+    { l: 'regiment', q: 'Échelonnement du code approvisionnement (AQA 03) ?', c: ['Central, Avancé, R et V', 'Central, régional, local', 'National, zonal, régimentaire', 'Stratégique, opératif, tactique'], e: 'Central = entrepôt central ; Avancé = jusqu’au centre de distribution régional ; R et V = jusqu’à la cellule appro d’atelier.', w: 'Le QCM Test FS2 disait « central, régional, local » : l’AQA 03 emploie Central / Avancé / R et V.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'regiment', q: 'Organisation du SIMu (AQA 03) ?', c: ['Une direction (Versailles) et cinq établissements principaux (EPMu)', 'Un échelon central et quatre établissements principaux', 'Trois échelons régionaux', 'Six régiments'], e: 'EPMu Bretagne, Champagne-Lorraine, Centre-Aquitaine, Provence, Méditerranée ; 9 dépôts rattachés à la direction.', w: 'Une ancienne réponse disait 4 : l’AQA 03 en compte 5.', src: 'AQA 03 (fiche définitive)' },
     { l: 'regiment', q: 'Quelle munition est hors SIMu ?', c: ['Les vecteurs nucléaires', 'Les obus de 155 mm', 'Les munitions de petit calibre', 'Les grenades'], e: 'Hors SIMu : vecteurs nucléaires et artifices liés à la navigabilité des aéronefs.', src: 'QCM Test FS2' },
     { l: 'regiment', q: 'La section de maintenance régimentaire (SMR), ce sont…', c: ['Des spécialistes affectés au RDC, à la station-service ou aux ateliers', 'Les détenteurs de matériels', 'Les officiers du BML', 'Les personnels de la MICAM'], e: 'SMR : cellule RDC, station-service, ateliers, cellule approvisionnement.', src: 'QCM Test FS2' },
     { l: 'regiment', q: 'Qui détient les biens de l’arme du Matériel dans une formation ?', c: ['Le CDU', 'Le chef de corps', 'Le CPRP', 'Le chef d’atelier'], e: 'Réponse du QCM Test FS2 : le CDU.', src: 'QCM Test FS2' },
     { l: 'documentation', q: 'Le MAT 1015, c’est :', c: ['Le carnet de bord', 'Le DIT', 'La vie du matériel et ses entretiens', 'Le registre SST'], e: 'MAT 1015 = carnet de bord ; MAT 10004 = vie du matériel ; MAT 4486 = DIT.', src: 'QCM Test FS2' },
-    { l: 'documentation', q: 'Rôle du MAT 10004 ?', c: ['Suivre la vie du matériel de la mise en place au retrait, et ses entretiens', 'Carnet de bord', 'Demande d’intervention technique', 'Observations des inspections'], e: 'Il remplace le MAT 1013.', src: 'Contrôle RDC' },
+    { l: 'documentation', q: 'Rôle du MAT 10004 ?', c: ['Suivre la vie du matériel de la mise en place au retrait, et ses entretiens', 'Carnet de bord', 'Demande d’intervention technique', 'Observations des inspections'], e: 'Carnet de matériel : affectations, modifications, maintenance, contrôles MICAM.', w: '« Remplace le MAT 1013 » n’est pas confirmé par l’AQA 03.', src: 'Contrôle RDC' },
     { l: 'documentation', q: 'Édition du BIMT ?', c: ['Trimestrielle', 'Mensuelle', 'Annuelle', 'Semestrielle'], e: 'Le BIMT assure la veille documentaire tous les trimestres.', src: 'QCM Test FS2' },
     { l: 'documentation', q: 'Un fait technique peut être…', c: ['Fortuit ou prescrit', 'Préventif ou correctif', 'Majeur ou mineur', 'Interne ou externe'], e: 'FT = fait technique ; BS = bulletin de sécurité.', src: 'QCM Test FS2' },
-    { l: 'documentation', q: 'La documentation technique utilisateur comprend :', c: ['TCKIT, notice de mise en œuvre, documentation d’entretien', 'DUERP, FEN, registre SST', 'MAT 1017 uniquement', 'Circulaires 9400 et 9401'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
+    { l: 'documentation', q: 'La documentation technique utilisateur (DTU) comprend notamment :', c: ['Mise en œuvre, entretien / réparation, fiches COS, de visite, de station-service et le manuel de maintenance', 'DUERP, FEN, registre SST', 'MAT 1017 uniquement', 'Circulaires 9400 et 9401'], e: 'C’est la 2ᵉ des 3 familles de documentation technique (le QCM Test FS2 citait TCKIT, notice de mise en œuvre, documentation d’entretien).', src: 'AQA 03 (fiche définitive)' },
     { l: 'reparation', q: 'Combien d’étapes dans la réparation des matériels complets ?', c: ['7', '4', '5', '3'], e: 'Mise en réparation, diagnostic, préparation, approvisionnement, réparation, contrôles, restitution.', src: 'QCM Test FS2' },
     { l: 'reparation', q: 'Quelle cellule prend en charge 4 étapes sur 7 ?', c: ['Le RDC', 'L’atelier', 'La CDM', 'La cellule approvisionnement'], e: 'Mise en réparation, diagnostic, contrôles, restitution.', src: 'QCM Test FS2' },
     { l: 'reparation', q: 'Qui s’occupe de la phase « préparation » ?', c: ['Le chef d’atelier', 'Le RDC', 'Le chef BML', 'Le détenteur'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
@@ -176,5 +196,24 @@ REV.add({
     { l: 'reparation', q: 'Pour demander un nouveau matériel pour l’atelier, on justifie par :', c: ['L’augmentation de la DTO, la limitation des risques HSCT et la protection de l’environnement', 'Le prix du matériel', 'L’ancienneté de l’atelier'], e: 'Trois arguments de ta fiche.', src: 'Ta fiche « Environnement maintenance »' },
     { l: 'reparation', q: 'Bonne pratique en atelier : la réparation avance…', c: ['De point clé en point clé, contrôlés par le chef d’atelier', 'Sans contrôle jusqu’à l’essai final', 'Au rythme du détenteur'], e: 'Points clés identifiés par le chef d’atelier avec le chef d’équipe ; compte rendu du chef d’équipe à chaque point clé ; contrôle par le chef d’atelier.', src: 'Ta fiche « Environnement maintenance »' },
     { l: 'reparation', q: 'Présence de l’outillage spécifique : elle sera contrôlée lors de :', c: ['La MICAM', 'Du COS', 'Du BIMT'], e: 'L’outillage spécifique doit être identifié et disponible ; la MICAM le contrôle.', src: 'Ta fiche « Environnement maintenance »' },
+    { l: 'organisation', q: 'Combien de principes fondent le modèle du MCO terrestre (chapitre 1) ?', c: ['4', '6', '3'], e: 'Compétence ; étagement MOA / MOAd / MOE ; séparation MO / MI ; équilibre MIé / MIp.', r: 'Ne pas confondre avec les 6 effecteurs du MCO-T en opération (ch. 11).', src: 'AQA 03 (fiche définitive)' },
+    { l: 'organisation', q: 'Qui exerce la maîtrise d’ouvrage déléguée (MOAd) pour le milieu terrestre ?', c: ['La SIMMT', 'Le CFOT', 'Le SMITer'], e: 'MOA = états-majors ; MOAd = SIMMT ; MOE = CFOT, CALT, divisions, brigades, SMITer, BITD.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'organisation', q: 'Combien d’effecteurs (principes) du MCO-T en opération ?', c: ['6', '4', '3'], e: 'Au plus près des combats ; redonner des moyens même incomplets ; casse de masse ; ressources rares ; manœuvrer à tous les niveaux ; outils de données.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'organisation', q: 'Qui est le conseiller MCO-T du commandant de la Force et calcule la DT sur le théâtre ?', c: ['L’AMAT', 'L’ASIA', 'Le CALT'], e: 'L’AMAT est sous l’autorité organique de l’ASIA (conseiller logistique global) et fonctionnelle de la SIMMT ; il rédige le CRFM.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'organisation', q: 'Un FS2 accède au niveau fonctionnel :', c: ['3a puis 3b', '2', '4'], e: 'FS1 → NF2 (technicien) ; FS2 → NF3a puis 3b ; officiers → NF4.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'organisation', q: 'Les ETD sont décrits sur un niveau d’emploi gradué de :', c: ['1 à 5', '1 à 3', '1 à 4'], e: 'REM : 3 FP → 12 filières → 77 ETD → ≈ 392 ETR ; chaque ETD sur un NE de 1 à 5.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'organisation', q: 'La disponibilité technique (DT), c’est :', c: ['Le % de matériels disponibles sur les matériels réalisés, à un instant donné', 'Le temps moyen de réparation', 'Le nombre de matériels en RIP'], e: 'Définition AQA 03, chapitre 3.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'regiment', q: 'Composition officielle de la STE (AQA 03) ?', c: ['GLB, ECM, RGLU', 'GLB, CDM, gestion pool tactique, munitions', 'RDC, station-service, ateliers'], e: 'Gestion logistique des biens, équipe de conduite de la maintenance, responsable de la gestion des munitions de l’unité. RDC / station / ateliers = la SMR.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'regiment', q: 'Le parc en exploitation opérationnelle (PEO) comprend :', c: ['4 sous-parcs : PRGT, POPEX, PDYN, PE', '5 sous-parcs dont le PSP', 'Le PEO et le PIT'], e: 'Le soutien industriel lourd = parc hors ligne (PHL).', src: 'AQA 03 (fiche définitive)' },
+    { l: 'regiment', q: 'Qui détient la carte d’achat de niveau 1 ?', c: ['La cellule approvisionnement des ateliers (CAA)', 'Le RDC', 'Le CDU'], e: 'La CAA gère aussi le stock atelier (listes R et V) et propose des solutions aux DHNS.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'regiment', q: 'Combien de régiments sont dotés d’une UMR ?', c: ['6', '4', '9'], e: '2ᵉ REP, 1ᵉʳ RA, 61ᵉ RA, 9ᵉ RIMa, 2ᵉ RPIMa, RIMaP-NC.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'regiment', q: 'Qui peut interdire l’emploi d’un matériel si la sécurité est en jeu ?', c: ['L’OCMUE', 'Le SOCMUE', 'Le chef d’équipe'], e: 'OCMUE : planifie, organise, contrôle l’entretien. SOCMUE : conseiller technique du CDU.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'regiment', q: 'GME du SERVAL :', c: ['KNDS (ex-NEXTER) et TEXELIS', 'KNDS, ARQUUS et THALES SIX', 'ARQUUS seul'], e: 'GRIFFON / JAGUAR : KNDS, ARQUUS, THALES SIX.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'documentation', q: 'Combien de familles de documentation technique ?', c: ['3 : caractère général, DTU, modification', '4 dont le manuel de maintenance', '2 : technique et administrative'], e: 'Le manuel de maintenance fait partie de la DTU.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'documentation', q: 'Le MAT 1017 est visé mensuellement par :', c: ['Le sous-officier spécialisé, contresigné par le CDU', 'Le chef de corps', 'Le CBML'], e: 'Puis tous les 6 mois par le CBML et chaque année par le CDC.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'reparation', q: 'Dans les 7 étapes, quels contrôles fait le RDC ?', c: ['Le contrôle final uniquement', 'Les contrôles en cours, en fin d’acte et final', 'Aucun'], e: 'Contrôles en cours et en fin d’acte : chef d’atelier ; contrôle final : personnel qualifié du RDC.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'reparation', q: 'Qui passe les commandes de l’étape « approvisionnement » ?', c: ['Le chef d’atelier via SIM@T', 'Le RDC', 'Le CDU'], e: 'Suivi par le chef d’atelier et la CAA, qui réceptionne et distribue.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'histoire', q: 'Date de remise de l’étendard du Matériel ?', c: ['5 septembre 1980', '25 août 1940', '1er juillet 2023'], e: 'Garde tournante des BSMAT : 13ᵉ BSMAT en 2025-2026.', src: 'AQA 03 (fiche définitive)' },
+    { l: 'histoire', q: 'Devise de l’EMPT ?', c: ['« Instruits, droits, adroits »', '« Servir et réparer »', '« Toujours prêts »'], e: 'Adoptée par l’EMPT du Mans en 1959.', src: 'AQA 03 (fiche définitive)' },
   ]
 });
