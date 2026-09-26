@@ -1,3 +1,19 @@
+/* Dessins des portes logiques (normes OTAN et AFNOR) — seules les 6 portes vues en cours */
+function G(type, norme) {
+  var inv = /non$/.test(type), one = type === 'oui' || type === 'non';
+  var ins = one ? '<path d="M4 30H34"/><text x="0" y="24">A</text>'
+    : '<path d="M4 20H36M4 40H36"/><text x="0" y="15">A</text><text x="0" y="55">B</text>';
+  var body, end;
+  if (norme === 'afnor') {
+    var sign = one ? '1' : (type.indexOf('et') === 0 ? '&amp;' : '≥1');
+    body = '<rect x="34" y="8" width="42" height="44"/><text class="g-sign" x="55" y="36" text-anchor="middle">' + sign + '</text>';
+    end = 76;
+  } else if (one) { body = '<path d="M34 10L34 50L76 30Z"/>'; end = 76; }
+  else if (type.indexOf('et') === 0) { body = '<path d="M34 8H56A22 22 0 0 1 56 52H34Z"/>'; end = 78; }
+  else { body = '<path d="M28 8Q62 8 84 30Q62 52 28 52Q42 30 28 8Z"/>'; end = 84; }
+  var out = inv ? '<circle cx="' + (end + 6) + '" cy="30" r="6"/><path d="M' + (end + 12) + ' 30H136"/>' : '<path d="M' + end + ' 30H136"/>';
+  return '<svg class="gate" viewBox="-2 0 144 60" role="img" aria-label="Symbole de porte logique">' + ins + body + out + '<text x="130" y="24">S</text></svg>';
+}
 REV.add({
   id: 'elec', name: 'Électricité générale', icon: '⚡', color: '#d97706',
   desc: 'Grandeurs, lois, résistances, générateurs, alternatif, diodes, transistors, logique.',
@@ -128,29 +144,22 @@ REV.add({
 <tr><td>11</td><td>1011</td><td>8+2+1</td></tr><tr><td>12</td><td>1100</td><td>8+4</td></tr>
 <tr><td>15</td><td>1111</td><td>8+4+2+1 (4 bits)</td></tr><tr><td>18</td><td>10010</td><td>16+2</td></tr>
 <tr><td>20</td><td>10100</td><td>16+4</td></tr><tr><td>40</td><td>101000</td><td>32+8</td></tr></table></div>
-<h3>Algèbre de Boole (fascicule « Fonction logique »)</h3>
-<p>Les variables booléennes ne prennent que deux valeurs, 0 et 1 : ce ne sont pas des nombres mais des <b>états</b> (niveaux logiques). Les opérateurs logiques s’appellent aussi <b>portes</b> ou <b>fonctions logiques</b>.</p>
-<ul><li>Point (.) = « <b>et</b> » : A.B (on écrit aussi AB) · plus (+) = « <b>ou</b> » · barre (Ā) = « <b>inverse</b>, complément » · ⊕ = « <b>soit l’un, soit l’autre</b> » (OU exclusif) · « = S » indique la sortie.</li>
-<li>Deux barres s’annulent : Ā̄ = A (trois barres = une barre).</li>
-<li>Sauf NON, XOR et XNOR, les portes peuvent avoir de 2 à « x » entrées.</li></ul>
-<h3>Les 8 portes</h3>
-<div class="tw"><table><tr><th>Porte</th><th>Symbole AFNOR</th><th>Équation</th><th>Sortie à 1 si…</th><th>Analogie électrique</th></tr>
-<tr><td>OUI</td><td>1</td><td>S = A</td><td>A = 1</td><td>1 contact ouvert au repos</td></tr>
-<tr><td>NON (NOT)</td><td>1 + rond</td><td>S = Ā</td><td>A = 0</td><td>1 contact fermé au repos</td></tr>
-<tr><td>ET (AND)</td><td>&amp;</td><td>S = A.B</td><td>A et B à 1</td><td>2 contacts ouverts <b>en série</b></td></tr>
-<tr><td>ET NON (NAND)</td><td>&amp; + rond</td><td>S = (A.B)‾</td><td>au moins une entrée à 0</td><td>2 contacts fermés <b>en parallèle</b></td></tr>
-<tr><td>OU (OR)</td><td>≥1</td><td>S = A + B</td><td>au moins une entrée à 1</td><td>2 contacts ouverts <b>en parallèle</b></td></tr>
-<tr><td>OU NON (NOR)</td><td>≥1 + rond</td><td>S = (A + B)‾</td><td>A et B à 0</td><td>2 contacts fermés <b>en série</b></td></tr>
-<tr><td>OU EXCLUSIF (XOR)</td><td>=1</td><td>S = Ā.B + A.B̄ = A ⊕ B</td><td>entrées <b>différentes</b></td><td>2 inverseurs croisés</td></tr>
-<tr><td>OU NON EXCLUSIF (XNOR)</td><td>=1 + rond</td><td>S = Ā.B̄ + A.B = (A ⊕ B)‾</td><td>entrées <b>identiques</b></td><td>2 inverseurs</td></tr></table></div>
-<p>Le <b>rond</b> en sortie d’un symbole = inversion. Symboles OTAN : formes arrondies (ET en « D », OU en ogive, XOR avec une double courbe à l’entrée).</p>
-<h3>Propriétés</h3>
-<ul><li><b>Commutativité</b> : A.B = B.A ; A + B = B + A.</li>
-<li><b>Associativité</b> : (A.B).C = A.(B.C) ; (A + B) + C = A + (B + C). Attention : on ne peut pas écrire (A.B) + C = A.(B + C).</li>
-<li><b>Distributivité</b> : A.(B + C) = A.B + A.C ; et aussi A + (B.C) = (A + B).(A + C).</li>
-<li><b>Absorption</b> : A + A.B = A (car A.1 + A.B = A.(1 + B) = A.1 = A).</li></ul>`,
-      images: [{ src: 'logique-portes.jpg', cap: 'Tableau des portes : symboles OTAN et AFNOR, équations, analogies électriques, tables de vérité et chronogrammes' }],
-      retenir: ['2ⁿ combinaisons pour n entrées.', 'ET = série, OU = parallèle.', 'De Morgan : casser la barre, changer le signe.', 'AFNOR : & = ET, ≥1 = OU, =1 = OU exclusif, rond = inversion.', 'XOR = 1 si les entrées sont différentes ; XNOR = 1 si elles sont identiques.', 'Absorption : A + A.B = A.'],
+<h3>Les portes logiques vues en cours</h3>
+<p>Les opérateurs logiques s’appellent aussi <b>portes</b> ou <b>fonctions logiques</b>. En cours, vous avez vu les symboles de <b>6 portes</b>, dans les deux normes : <b>OTAN</b> (formes arrondies) et <b>AFNOR</b> (rectangles avec un signe dedans).</p>
+<div class="tw"><table class="gates"><tr><th>Porte</th><th>Symbole OTAN</th><th>Symbole AFNOR</th><th>Sortie à 1 si…</th></tr>
+<tr><td><b>OUI</b></td><td>${G('oui','otan')}</td><td>${G('oui','afnor')}</td><td>A = 1 (S = A)</td></tr>
+<tr><td><b>NON</b></td><td>${G('non','otan')}</td><td>${G('non','afnor')}</td><td>A = 0 (S = Ā)</td></tr>
+<tr><td><b>ET</b></td><td>${G('et','otan')}</td><td>${G('et','afnor')}</td><td>A <b>et</b> B à 1 (S = A.B)</td></tr>
+<tr><td><b>ET NON</b></td><td>${G('etnon','otan')}</td><td>${G('etnon','afnor')}</td><td>pas les deux à 1</td></tr>
+<tr><td><b>OU</b></td><td>${G('ou','otan')}</td><td>${G('ou','afnor')}</td><td>A <b>ou</b> B à 1 (S = A + B)</td></tr>
+<tr><td><b>OU NON</b></td><td>${G('ounon','otan')}</td><td>${G('ounon','afnor')}</td><td>A et B à 0</td></tr></table></div>
+<div class="box retenir"><b>★ Comment les reconnaître</b><ul>
+<li><b>Le rond en sortie = « NON »</b> (inversion) : NON, ET NON, OU NON ont un rond, OUI, ET, OU n’en ont pas.</li>
+<li><b>OTAN</b> : triangle = OUI / NON (1 entrée) · forme en « D » à dos plat = ET · forme en ogive à dos creux = OU.</li>
+<li><b>AFNOR</b> : « 1 » = OUI / NON · « &amp; » = ET · « ≥1 » = OU (au moins une entrée à 1).</li></ul></div>
+<p>Le tableau complet du fascicule (photo ci-dessous) contient aussi le OU exclusif et le OU NON exclusif : <b>ils n’ont pas été vus en cours</b>, ils ne sont pas dans les QCM.</p>`,
+      images: [{ src: 'logique-portes.jpg', cap: 'Tableau des portes du fascicule (seules les 6 premières lignes ont été vues en cours : OUI, NON, ET, ET NON, OU, OU NON)' }],
+      retenir: ['2ⁿ combinaisons pour n entrées.', 'ET = série, OU = parallèle.', 'De Morgan : casser la barre, changer le signe.', 'Rond en sortie = inversion (NON, ET NON, OU NON).', 'AFNOR : 1 = OUI/NON · & = ET · ≥1 = OU.'],
       pieges: ['Une porte NOR se remplace par un OU suivi d’un NON (pas un ET).', 'Dans une équation ET, une seule entrée à 0 suffit à mettre la sortie à 0.'],
       memo: { cle: 'ET = SÉRIE · OU = PARALLÈLE', points: ['Poids : 128-64-32-16-8-4-2-1', '2ⁿ lignes (6 entrées → 64)', '(A+B)‾ = Ā·B̄ · (A·B)‾ = Ā + B̄', '0 = 0–1 V · 1 = 2–5 V'], astuce: 'De Morgan : « je casse la barre, je change le signe ».' }
     }
@@ -190,16 +199,26 @@ REV.add({
     { l: 'logique', q: 'Selon De Morgan, (A + B)‾ est égal à :', c: ['Ā · B̄', 'Ā + B̄', 'A · B', '(A · B)‾'], e: 'On casse la barre ET on change le signe : (A+B)‾ = Ā·B̄.', r: '« Je casse la barre, je change le signe ».' },
     { l: 'logique', q: 'Équation de descente : S = B̄·D·(M̄ + H). Avec D = 0, la sortie vaut :', c: ['0 (0 V)', '1 (5 V)', '0,6 V', 'Ça dépend de M et H'], e: 'D est un facteur d’un ET : si D = 0, toute l’expression vaut 0 → 0 V. Le 0,6 V est le Vbe, pas un niveau logique.', r: 'Dans un ET, une seule entrée à 0 met la sortie à 0.', src: 'Corrigé UV2 Q56' },
     { l: 'logique', q: 'Quelle plage de tension correspond au niveau logique 1 ?', c: ['2 à 5 V', '0 à 1 V', '1 à 2 V', '5 à 12 V'], e: '0 = 0 à 1 V ; 1 = 2 à 5 V ; entre 1 et 2 V = zone interdite.', r: 'Électronique embarquée : logique en 5 V.' },
-    { l: 'logique', q: 'Symbole AFNOR « ≥1 » : de quelle porte s’agit-il ?', c: ['OU (OR)', 'ET (AND)', 'OU exclusif (XOR)', 'NON (NOT)'], e: '& = ET ; ≥1 = OU (au moins une entrée à 1) ; =1 = OU exclusif (exactement une entrée à 1) ; 1 = OUI.', img: 'logique-portes.jpg' },
-    { l: 'logique', q: 'Symbole AFNOR « =1 » suivi d’un rond : de quelle porte s’agit-il ?', c: ['OU NON exclusif (XNOR)', 'OU exclusif (XOR)', 'NON-OU (NOR)', 'NON (NOT)'], e: '=1 = OU exclusif ; le rond en sortie inverse → XNOR.' },
-    { l: 'logique', q: 'OU exclusif (XOR) : quand la sortie vaut-elle 1 ?', c: ['Quand les deux entrées sont différentes', 'Quand les deux entrées sont à 1', 'Quand au moins une entrée est à 1', 'Quand les deux entrées sont identiques'], e: 'S = Ā.B + A.B̄ = A ⊕ B : « soit l’un, soit l’autre », pas les deux.', r: 'XNOR = 1 si les entrées sont identiques.' },
-    { l: 'logique', q: 'Porte NAND : combien de lignes de sa table de vérité (2 entrées) donnent S = 0 ?', c: ['1 (A = 1 et B = 1)', '3', '0', '2'], e: 'NAND = inverse du ET : S = 0 seulement quand toutes les entrées sont à 1.' },
-    { l: 'logique', q: 'Analogie électrique de la porte ET :', c: ['Deux contacts ouverts au repos en série', 'Deux contacts ouverts au repos en parallèle', 'Deux contacts fermés au repos en série', 'Un contact fermé au repos'], e: 'ET = série (il faut A et B fermés). OU = parallèle. NOR = contacts fermés au repos en série. NAND = contacts fermés au repos en parallèle.' },
-    { l: 'logique', q: 'Analogie électrique de la porte NON (NOT) :', c: ['Un contact fermé au repos (NF)', 'Un contact ouvert au repos (NO)', 'Deux contacts en série', 'Deux inverseurs'], e: 'Appuyer sur A ouvre le contact : la lampe s’éteint. S = Ā.' },
-    { l: 'logique', q: 'Que signifie le signe ⊕ ?', c: ['« Soit l’un, soit l’autre » (OU exclusif)', '« Et »', '« Ou » inclusif', '« Inverse »'], e: 'A ⊕ B = Ā.B + A.B̄.' },
-    { l: 'logique', q: 'Simplifier A + A.B :', c: ['A', 'B', 'A.B', '1'], e: 'Règle d’absorption : A.1 + A.B = A.(1 + B) = A.1 = A.' },
-    { l: 'logique', q: 'Quelles portes ne peuvent pas avoir plus de 2 entrées (ou 1 pour NON) ?', c: ['NON, XOR et XNOR', 'ET et OU', 'NAND et NOR', 'Toutes'], e: 'Les autres portes peuvent avoir de 2 à « x » entrées.' },
-    { l: 'logique', q: 'Que vaut A.Ā ?', c: ['0', '1', 'A', 'Ā'], e: 'Une variable ET son complément vaut toujours 0 ; A + Ā = 1.' },
-    { l: 'logique', q: 'Quelle écriture est FAUSSE ?', c: ['(A.B) + C = A.(B + C)', 'A.(B + C) = A.B + A.C', '(A.B).C = A.(B.C)', 'A + (B.C) = (A + B).(A + C)'], e: 'On ne peut pas déplacer les parenthèses entre un ET et un OU (attention aux parenthèses !).' }
+    { l: 'logique', q: 'Quelle est cette porte (norme OTAN) ?' + G('oui','otan'), c: ['OUI', 'NON', 'ET', 'OU'], e: 'Un triangle SANS rond en sortie : la sortie recopie l’entrée, S = A.', r: 'Triangle seul = OUI ; triangle + rond = NON.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme OTAN) ?' + G('non','otan'), c: ['NON', 'OUI', 'ET NON', 'OU NON'], e: 'Triangle AVEC un rond en sortie : la sortie est l’inverse de l’entrée, S = Ā.', r: 'Le rond = inversion.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme OTAN) ?' + G('et','otan'), c: ['ET', 'OU', 'ET NON', 'OUI'], e: 'Forme en « D » (dos plat, avant arrondi), sans rond : porte ET, S = A.B.', r: 'D à dos plat = ET ; ogive à dos creux = OU.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme OTAN) ?' + G('etnon','otan'), c: ['ET NON', 'ET', 'OU NON', 'NON'], e: 'Forme en « D » avec un rond en sortie : ET suivi d’une inversion = ET NON.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme OTAN) ?' + G('ou','otan'), c: ['OU', 'ET', 'OU NON', 'OUI'], e: 'Forme en ogive (pointue, dos creux), sans rond : porte OU, S = A + B.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme OTAN) ?' + G('ounon','otan'), c: ['OU NON', 'OU', 'ET NON', 'NON'], e: 'Forme en ogive avec un rond en sortie : OU suivi d’une inversion = OU NON.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme AFNOR) ?' + G('oui','afnor'), c: ['OUI', 'NON', 'OU', 'ET'], e: 'Rectangle marqué « 1 », sans rond : OUI.', r: 'AFNOR : 1 = OUI/NON · & = ET · ≥1 = OU.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme AFNOR) ?' + G('non','afnor'), c: ['NON', 'OUI', 'OU NON', 'ET NON'], e: 'Rectangle marqué « 1 » avec un rond en sortie : NON.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme AFNOR) ?' + G('et','afnor'), c: ['ET', 'OU', 'ET NON', 'OUI'], e: '« & » (et commercial) = ET, sans rond.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme AFNOR) ?' + G('etnon','afnor'), c: ['ET NON', 'ET', 'OU NON', 'NON'], e: '« & » avec un rond en sortie = ET NON.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme AFNOR) ?' + G('ou','afnor'), c: ['OU', 'ET', 'OU NON', 'OUI'], e: '« ≥1 » = « au moins une entrée à 1 » = OU.' },
+    { l: 'logique', q: 'Quelle est cette porte (norme AFNOR) ?' + G('ounon','afnor'), c: ['OU NON', 'OU', 'ET NON', 'NON'], e: '« ≥1 » avec un rond en sortie = OU NON.' },
+    { l: 'logique', q: 'Quel est le symbole AFNOR de la porte ET NON ?', c: [G('etnon','afnor'), G('et','afnor'), G('ounon','afnor'), G('non','afnor')], e: 'ET = « & » ; NON = rond en sortie → « & » + rond.' },
+    { l: 'logique', q: 'Quel est le symbole AFNOR de la porte OU ?', c: [G('ou','afnor'), G('et','afnor'), G('ounon','afnor'), G('oui','afnor')], e: 'OU = « ≥1 », sans rond.' },
+    { l: 'logique', q: 'Quel est le symbole AFNOR de la porte NON ?', c: [G('non','afnor'), G('oui','afnor'), G('etnon','afnor'), G('ounon','afnor')], e: 'NON = « 1 » + rond en sortie.' },
+    { l: 'logique', q: 'Quel est le symbole OTAN de la porte OU NON ?', c: [G('ounon','otan'), G('ou','otan'), G('etnon','otan'), G('non','otan')], e: 'OU = ogive ; NON = rond en sortie → ogive + rond.' },
+    { l: 'logique', q: 'Quel est le symbole OTAN de la porte ET ?', c: [G('et','otan'), G('ou','otan'), G('etnon','otan'), G('oui','otan')], e: 'ET = forme en « D » à dos plat, sans rond.' },
+    { l: 'logique', q: 'Quel est le symbole OTAN de la porte OUI ?', c: [G('oui','otan'), G('non','otan'), G('et','otan'), G('ou','otan')], e: 'OUI = triangle sans rond.' },
+    { l: 'logique', q: 'Sur un symbole de porte, que signifie le petit rond en sortie ?', c: ['Une inversion (NON)', 'Une entrée supplémentaire', 'Une masse', 'Un fusible'], e: 'Le rond inverse la sortie : NON, ET NON, OU NON.' },
+    { l: 'logique', q: 'Porte ET NON à 2 entrées : dans quel cas la sortie vaut-elle 0 ?', c: ['Seulement quand A = 1 et B = 1', 'Quand A = 0 et B = 0', 'Quand une seule entrée est à 1', 'Jamais'], e: 'ET NON = inverse du ET : le ET vaut 1 seulement si A = B = 1, donc le ET NON vaut 0 seulement dans ce cas.' },
+    { l: 'logique', q: 'Porte OU NON à 2 entrées : dans quel cas la sortie vaut-elle 1 ?', c: ['Seulement quand A = 0 et B = 0', 'Quand A = 1 et B = 1', 'Quand une seule entrée est à 1', 'Toujours'], e: 'OU NON = inverse du OU : le OU vaut 0 seulement si A = B = 0, donc le OU NON vaut 1 seulement dans ce cas.' }
   ]
 });
