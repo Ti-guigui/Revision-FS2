@@ -229,7 +229,7 @@
 
   function setActiveNav(route) {
     var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', trancher: 'cours', fiche: 'cours', fiches: 'cours',
-      qcm: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
+      qcm: 'qcm', uv2: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
     var key = map[route] || 'home';
     if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') key = 'quiz';
     document.querySelectorAll('[data-nav]').forEach(function (a) {
@@ -258,6 +258,7 @@
       case 'trancher': html = viewTrancher(); break;
       case 'fiches': html = viewFiches(); break;
       case 'fiche': html = viewFiche(parts[1]); break;
+      case 'uv2': html = parts[1] === 'fiche' ? viewUV2Fiche(parts[2]) : viewUV2(); break;
       default: html = viewHome();
     }
     main.innerHTML = html;
@@ -322,6 +323,7 @@
       resume +
       (toReview ? '<a class="card review-cta" href="#/revision"><span class="big">🔁</span><span><b>QCM de révision</b><br>' +
         toReview + ' question' + (toReview > 1 ? 's' : '') + ' ratée' + (toReview > 1 ? 's' : '') + ' à retravailler</span><span class="chev">›</span></a>' : '') +
+      '<a class="card review-cta uv2-cta" href="#/uv2"><span class="big">📝</span><span><b>Test UV2 — 60 questions, 2 h</b><br>Le dossier transmis, des UV2 blancs et les fiches mémoire illustrées</span><span class="chev">›</span></a>' +
       '<h2 class="h2 h2-atelier">🧰 Les postes de l’atelier</h2>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
       '<div class="home-foot">' +
@@ -448,6 +450,7 @@
           '</span><span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '—' : sc.pct + ' %') + '</span></a>';
       }).join('') + '</div>' +
       '<div class="home-foot">' +
+        '<a class="card mini" href="#/uv2">📝 Test UV2 — 60 questions, 2 h</a>' +
         '<button class="card mini" data-action="exam">🎓 Examen blanc — 40 questions toutes matières</button>' +
         '<a class="card mini" href="#/revision">🔁 QCM de révision' + (toReview ? ' (' + toReview + ')' : '') + '</a>' +
       '</div>';
@@ -508,6 +511,7 @@
     if (!session) {
       return '<div class="card pad center"><p>Aucun QCM en cours.</p><a class="btn primary" href="#/qcm">🧠 Choisir un QCM</a></div>';
     }
+    if (session.exam && !session.done) return viewExam();
     if (session.i >= session.qids.length) return viewBilan();
     var q = REV.qById[session.qids[session.i]];
     var s = subj(q.subject), l = REV.lessonById[q.lkey];
@@ -565,6 +569,17 @@
   }
 
   function afterSessionRender() {
+    if (session && session.exam && !session.done) {
+      window.scrollTo(0, 0);
+      var tEl = document.getElementById('exam-timer');
+      var tick = function () {
+        var left = session.deadline - Date.now();
+        if (tEl) { tEl.textContent = '⏱️ ' + fmtLeft(left); tEl.classList.toggle('low', left < 10 * 60000); }
+        if (left <= 0) { clearInterval(timerId); toast('⏱️ Temps écoulé : l’épreuve est terminée.'); finishExam(); }
+      };
+      tick(); timerId = setInterval(tick, 1000);
+      return;
+    }
     var ans = session && session.answers[session.i];
     if (ans) {
       var fb = document.getElementById('feedback');
@@ -588,6 +603,7 @@
   function chosenList(ans) { return Array.isArray(ans.chosen) ? ans.chosen : (ans.chosen >= 0 ? [ans.chosen] : []); }
 
   function answer(k) {
+    if (session && session.exam && !session.done) { if (k >= 0) examPick(k); return; }
     if (!session || session.answers[session.i]) return;
     var q = REV.qById[session.qids[session.i]];
     if (q.multi && k !== -1) { // questions à plusieurs réponses : on coche / décoche, puis on valide
@@ -629,6 +645,7 @@
   /* ----- Résultat d'un QCM ----- */
   function viewBilan() {
     if (!session || !session.answers.length) return viewResultats();
+    if (session.exam) return viewBilanUV2();
     var answered = session.answers.filter(Boolean).length;
     var ok = session.answers.filter(function (a) { return a && a.ok; }).length;
     var pct = answered ? Math.round(ok * 100 / answered) : 0;
@@ -849,6 +866,206 @@
       }).join('');
   }
 
+  /* ---------- Test UV2 : épreuve de 60 questions (10 par matière), 2 h, barème + 1 / − 0,5 / 0 ---------- */
+  var UV2_MIN = 120, UV2_BLANCS = 6;
+  function qnum(q) { return parseInt(q.q, 10) || 0; }
+  var UV2_MATS = [
+    { id: 'dsft', nom: 'DSFT', subj: 'dsft', orig: function (q) { return q.lkey === 'dsft/uv2-dsft' && qnum(q) <= 11; }, autres: ['dsft/uv2-var-dsft', 'dsft/uv2-banque'] },
+    { id: 'pneu', nom: 'Freinage pneumatique', subj: 'pneu', orig: function (q) { return q.lkey === 'dsft/uv2-dsft' && qnum(q) >= 12; }, autres: ['pneu/uv2-banque'] },
+    { id: 'hydro', nom: 'Hydraulique', subj: 'hydro', orig: function (q) { return q.lkey === 'hydro/uv2-hydro'; }, autres: ['hydro/uv2-var-hydro', 'hydro/uv2-banque'] },
+    { id: 'moteur', nom: 'Motorisation', subj: 'moteur', orig: function (q) { return q.lkey === 'moteur/uv2-moteur'; }, autres: ['moteur/uv2-banque'] },
+    { id: 'equip', nom: 'Équipement électrique', subj: 'equip', orig: function (q) { return q.lkey === 'equip/uv2-equip'; }, autres: ['equip/uv2-var-equip', 'equip/uv2-banque'] },
+    { id: 'elec', nom: 'Électricité générale', subj: 'elec', orig: function (q) { return q.lkey === 'elec/uv2-elec'; }, autres: ['elec/uv2-var-elec', 'elec/uv2-banque'] }
+  ];
+  function uv2Mat(id) { return UV2_MATS.find(function (m) { return m.id === id; }); }
+  function uv2Orig(m) { return allQuestions().filter(m.orig).sort(function (a, b) { return qnum(a) - qnum(b); }); }
+  function uv2Autres(m) { return allQuestions().filter(function (q) { return m.autres.indexOf(q.lkey) >= 0; }); }
+  function seeded(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function sshuffle(a, rnd) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  // Sujet : k = 0 → dossier transmis ; 1..n → UV2 blanc n°k (toujours le même) ; -1 → aléatoire
+  function uv2Sujet(k) {
+    var qs = [], mats = [];
+    UV2_MATS.forEach(function (m, mi) {
+      var O = uv2Orig(m), X = uv2Autres(m), pick;
+      if (k === 0) pick = O;
+      else {
+        var rnd = k > 0 ? seeded(k * 7919 + mi * 104729) : Math.random;
+        // les questions du dossier reviennent souvent : 6 du dossier + 4 variantes (ou plus si le dossier en a moins)
+        var nO = Math.min(6, O.length);
+        pick = sshuffle(sshuffle(O, rnd).slice(0, nO).concat(sshuffle(X, rnd).slice(0, 10 - nO)), rnd);
+      }
+      pick.forEach(function (q) { qs.push(q); mats.push(m.id); });
+    });
+    return { qs: qs, mats: mats };
+  }
+  function uv2Title(k) { return k === 0 ? 'UV2 — Dossier d’évaluation n°1' : k > 0 ? 'UV2 blanc n°' + k : 'UV2 aléatoire'; }
+  function startExam(k, train, qs, mats, title) {
+    if (!qs) { var sj = uv2Sujet(k); qs = sj.qs; mats = sj.mats; title = uv2Title(k); }
+    if (train) {
+      startSession({ mode: 'uv2', title: title + ' (entraînement)', questions: qs });
+      session.mats = mats; saveSession(); return;
+    }
+    var now = Date.now();
+    session = {
+      mode: 'uv2', exam: true, k: k, title: title, qids: qs.map(function (q) { return q.id; }), mats: mats,
+      perm: qs.map(function (q) { var p = q.c.map(function (_, i) { return i; }); return q.fixed ? p : shuffle(p); }),
+      sel: [], answers: [], i: 0, started: now, deadline: now + UV2_MIN * 60000
+    };
+    saveSession();
+    go('#/session');
+  }
+  function fmtLeft(ms) {
+    ms = Math.max(0, ms); var m = Math.floor(ms / 60000), s = Math.floor(ms % 60000 / 1000);
+    return (m >= 60 ? Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0') : String(m)) + ' min ' + String(s).padStart(2, '0') + ' s';
+  }
+  function fr(n) { return String(Math.round(n * 100) / 100).replace('.', ','); }
+  function uv2Note(sess) {
+    var ok = 0, ko = 0, bl = 0;
+    sess.answers.forEach(function (a) { if (!a || a.blank) bl++; else if (a.ok) ok++; else ko++; });
+    return { ok: ok, ko: ko, bl: bl, note: ok - 0.5 * ko };
+  }
+  function exText(q) { return session.k === 0 ? q.q : q.q.replace(/^\d+\)\s*/, '').replace(/^Q\d+ (\(\d\) )?—\s*/, ''); }
+  function viewExam() {
+    var i = session.i, n = session.qids.length, q = REV.qById[session.qids[i]], l = REV.lessonById[q.lkey];
+    var m = uv2Mat(session.mats[i]), s = subj(m.subj), sel = session.sel[i];
+    var nb = session.sel.filter(function (v) { return v != null; }).length;
+    var enonce = l.exo && (l.html.match(/<h3>Énoncé<\/h3>([\s\S]*?)<h3>/) || [])[1];
+    var grid = UV2_MATS.map(function (mm) {
+      var cells = session.mats.map(function (id, j) {
+        if (id !== mm.id) return '';
+        return '<button class="eg' + (session.sel[j] != null ? ' done' : '') + (j === i ? ' cur' : '') + '" data-action="exam-go" data-i="' + j + '" aria-label="Question ' + (j + 1) + '">' + (j + 1) + '</button>';
+      }).join('');
+      return cells ? '<div class="eg-m"><span class="small">' + subj(mm.subj).icon + ' ' + esc(mm.nom) + '</span><div class="eg-row">' + cells + '</div></div>' : '';
+    }).join('');
+    return '<div class="q-head exam-head" style="--c:' + s.color + '">' +
+        '<div class="q-meta"><span>' + s.icon + ' ' + esc(m.nom) + '</span><b class="exam-timer" id="exam-timer">⏱️ ' + fmtLeft(session.deadline - Date.now()) + '</b></div>' +
+        '<div class="q-count"><b>Question ' + (i + 1) + ' / ' + n + '</b><span class="muted small">' + esc(session.title) + ' · ' + nb + ' réponse' + (nb > 1 ? 's' : '') + ' donnée' + (nb > 1 ? 's' : '') + '</span></div>' +
+        '<div class="progress"><span style="width:' + Math.round(nb * 100 / n) + '%"></span></div></div>' +
+      '<div class="q-card">' +
+        (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
+        '<h1 class="q-text">' + exText(q) + '</h1>' +
+        (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
+        '<div class="choices" role="group" aria-label="Réponses">' + session.perm[i].map(function (orig, k) {
+          return '<button class="choice' + (sel === orig ? ' picked' : '') + '" data-action="answer" data-k="' + k + '" aria-pressed="' + (sel === orig) + '">' +
+            '<span class="letter">' + LETTERS[k] + '</span><span class="ct">' + q.c[orig] + '</span></button>';
+        }).join('') + '</div>' +
+        '<div class="exam-nav"><button class="btn" data-action="exam-prev"' + (i ? '' : ' disabled') + '>⬅️ Précédente</button>' +
+          (sel != null ? '<button class="btn ghost small" data-action="exam-clear">✖ Effacer ma réponse</button>' : '<span class="muted small">Sans réponse = 0 point</span>') +
+          (i + 1 < n ? '<button class="btn primary" data-action="exam-next">Suivante ➡️</button>' : '<button class="btn primary" data-action="exam-finish">🧾 Terminer</button>') + '</div>' +
+      '</div>' +
+      '<details class="card pad exam-grid"' + (i === 0 ? ' open' : '') + '><summary><b>🗂️ Toutes les questions</b> <span class="muted small">(vert = répondue)</span></summary>' + grid + '</details>' +
+      '<div class="q-foot row-actions center"><button class="btn primary" data-action="exam-finish">🧾 Terminer l’épreuve et voir ma note</button>' +
+      '<button class="btn ghost small" data-action="exam-quit">Abandonner</button></div>';
+  }
+  function examPick(k) {
+    var orig = session.perm[session.i][k];
+    session.sel[session.i] = session.sel[session.i] === orig ? null : orig;
+    saveSession(); render();
+  }
+  function finishExam() {
+    if (!session || !session.exam || session.done) return;
+    clearInterval(timerId);
+    session.qids.forEach(function (id, i) {
+      var q = REV.qById[id], v = session.sel[i];
+      if (v == null) session.answers[i] = { chosen: -1, ok: false, blank: true };
+      else { var ok = q.good.indexOf(v) >= 0; session.answers[i] = { chosen: v, ok: ok }; record(id, ok); }
+    });
+    session.done = true; session.ended = Math.min(Date.now(), session.deadline); session.i = session.qids.length;
+    finishSession();
+    store.sessions[0].note = uv2Note(session).note; save();
+    saveSession();
+    go('#/bilan');
+  }
+  function viewBilanUV2() {
+    var r = uv2Note(session), n = session.qids.length, sur20 = r.note * 20 / n;
+    var lv = level(Math.max(0, Math.round(r.note * 100 / n)));
+    var per = UV2_MATS.map(function (m) {
+      var o = { m: m, ok: 0, ko: 0, bl: 0 };
+      session.mats.forEach(function (id, j) { if (id !== m.id) return; var a = session.answers[j]; if (!a || a.blank) o.bl++; else if (a.ok) o.ok++; else o.ko++; });
+      o.pts = o.ok - 0.5 * o.ko; o.n = o.ok + o.ko + o.bl; return o;
+    }).filter(function (o) { return o.n; });
+    var faible = per.slice().sort(function (a, b) { return a.pts / a.n - b.pts / b.n; })[0];
+    var dur = Math.round(((session.ended || Date.now()) - session.started) / 60000);
+    var corr = per.map(function (o) {
+      var items = session.qids.map(function (id, j) {
+        if (session.mats[j] !== o.m.id) return '';
+        var q = REV.qById[id], a = session.answers[j] || { blank: true }, perm = session.perm[j];
+        var st = a.blank ? '⚪' : a.ok ? '✅' : '❌';
+        var good = q.good.map(function (g) { return '<b>' + LETTERS[perm.indexOf(g)] + '</b> — ' + q.c[g]; }).join('<br>');
+        return '<details class="card err' + (a.ok ? ' ok' : '') + '"><summary>' + st + ' <b>Q' + (j + 1) + '</b> — ' + exText(q) + '</summary>' +
+          (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
+          (a.blank ? '<p class="muted">Pas de réponse (0 point)</p>' : '<p>Ta réponse : <b>' + LETTERS[perm.indexOf(a.chosen)] + '</b> — ' + q.c[a.chosen] + (a.ok ? ' ✅ (+ 1)' : ' ❌ (− 0,5)') + '</p>') +
+          (a.ok ? '' : '<p class="fb-good">Bonne réponse : ' + good + '</p>') +
+          '<p>💡 ' + q.e + '</p>' + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') +
+          '<a class="small" href="#/lecon/' + q.lkey + '">📖 Revoir la leçon</a></details>';
+      }).join('');
+      return '<h3 class="h3">' + subj(o.m.subj).icon + ' ' + esc(o.m.nom) + ' — ' + fr(o.pts) + ' / ' + o.n + '</h3>' + items;
+    }).join('');
+    return '<section class="result">' +
+      '<div class="res-head"><div class="res-title">📝 RÉSULTAT UV2</div><div class="res-subj">' + esc(session.title.toUpperCase()) + '</div>' +
+      '<div class="res-score">' + fr(r.note) + ' / ' + n + '</div>' +
+      '<div class="res-pct ' + lv.cls + '">' + fr(sur20) + ' / 20</div>' +
+      '<p>✅ ' + r.ok + ' bonne' + (r.ok > 1 ? 's' : '') + ' (+ ' + r.ok + ') &nbsp; ❌ ' + r.ko + ' fausse' + (r.ko > 1 ? 's' : '') + ' (− ' + fr(r.ko * 0.5) + ') &nbsp; ⚪ ' + r.bl + ' sans réponse</p>' +
+      '<p class="muted small">Temps utilisé : ' + dur + ' min sur ' + UV2_MIN + '</p></div>' +
+      '<h2 class="h2">📚 Note par matière</h2><div class="card"><table class="tbl"><tr><th>Matière</th><th>✅</th><th>❌</th><th>⚪</th><th>Points</th></tr>' + per.map(function (o) {
+        return '<tr><td>' + subj(o.m.subj).icon + ' ' + esc(o.m.nom) + '</td><td class="num-c">' + o.ok + '</td><td class="num-c">' + o.ko + '</td><td class="num-c">' + o.bl + '</td><td class="num-c"><b>' + fr(o.pts) + '</b> / ' + o.n + '</td></tr>';
+      }).join('') + '</table></div>' +
+      (faible ? '<a class="card review-cta" href="#/uv2/fiche/' + faible.m.id + '"><span class="big">🧠</span><span><b>À revoir en priorité : ' + esc(faible.m.nom) + '</b><br>Ouvre la fiche mémoire UV2 de cette matière</span><span class="chev">›</span></a>' : '') +
+      '<h2 class="h2">🧾 Correction complète</h2>' + corr +
+      '<div class="row-actions center">' +
+        (r.ko + r.bl ? '<button class="btn primary" data-action="redo-wrong">🔁 Refaire mes erreurs et oublis (' + (r.ko + r.bl) + ')</button>' : '') +
+        '<button class="btn" data-action="uv2-redo">↻ Refaire la même épreuve</button>' +
+        '<a class="btn ghost" href="#/uv2">📝 Autres épreuves UV2</a>' +
+      '</div></section>';
+  }
+  function viewUV2() {
+    var hist = function (t) {
+      var h = store.sessions.filter(function (x) { return x.title === t && x.note !== undefined; });
+      return h.length ? '<span class="muted small">Dernière note : <b>' + fr(h[0].note) + ' / ' + h[0].total + '</b> (' + fmtDate(h[0].d) + ')</span>' : '<span class="muted small">Pas encore passé</span>';
+    };
+    var card = function (k, ic, sub) {
+      return '<button class="card subj uv2-ep" data-action="uv2-start" data-k="' + k + '"><span class="subj-ic">' + ic + '</span><span class="subj-body"><b>' + esc(uv2Title(k)) + '</b><span class="muted small">' + sub + '</span>' + (k >= 0 ? hist(uv2Title(k)) : '') + '</span><span class="chev">›</span></button>';
+    };
+    var blancs = [];
+    for (var k = 1; k <= UV2_BLANCS; k++) blancs.push(card(k, '🎯', '60 questions : celles qui tombent le plus + variantes'));
+    return '<h1 class="h1">📝 Test UV2</h1>' +
+      '<div class="card pad uv2-consignes"><h2 class="h2">📋 Comme le jour de l’épreuve</h2><ul>' +
+        '<li><b>60 questions</b> : DSFT, freinage pneumatique, hydraulique, motorisation, équipement électrique, électricité générale (10 par matière).</li>' +
+        '<li><b>2 heures</b> ; une seule bonne réponse par question (A, B ou C).</li>' +
+        '<li>Barème : bonne réponse <b>+ 1</b> · mauvaise <b>− 0,5</b> · pas de réponse <b>0</b>. Si tu hésites vraiment, laisse vide.</li>' +
+        '<li>Tu peux passer une question et y revenir, et changer ta réponse tant que tu n’as pas terminé. La correction complète s’affiche à la fin.</li></ul>' +
+        '<label class="chk"><input type="checkbox" id="uv2-train"> Mode entraînement : correction après chaque question, sans chrono</label></div>' +
+      '<h2 class="h2">🗂️ Choisis ton épreuve</h2><div class="subject-grid">' +
+        card(0, '📄', 'Le sujet transmis, question par question, dans l’ordre') + blancs.join('') + card(-1, '🎲', 'Un nouveau tirage à chaque fois') + '</div>' +
+      '<h2 class="h2">🧠 Fiches mémoire UV2</h2><p class="muted">Une fiche par matière, avec les schémas à connaître et les questions qui reviennent.</p>' +
+      '<div class="subject-grid">' + UV2_MATS.map(function (m) {
+        var s = subj(m.subj);
+        return '<a class="card subj" href="#/uv2/fiche/' + m.id + '" style="--c:' + s.color + '"><span class="subj-ic">' + s.icon + '</span><span class="subj-body"><b>' + esc(m.nom) + '</b><span class="muted small">Fiche mémoire illustrée</span></span><span class="chev">›</span></a>';
+      }).join('') + '</div>' +
+      '<h2 class="h2">🎯 Entraînement par matière</h2><div class="home-foot">' + UV2_MATS.map(function (m) {
+        return '<button class="card mini" data-action="uv2-mat" data-m="' + m.id + '">' + subj(m.subj).icon + ' ' + esc(m.nom) + ' (' + (uv2Orig(m).length + uv2Autres(m).length) + ')</button>';
+      }).join('') + '</div>' +
+      '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2 (corrigé du dossier)</a><a class="card mini" href="#/trancher">⚖️ Points tranchés</a></div>';
+  }
+  function viewUV2Fiche(id) {
+    var m = uv2Mat(id), F = (REV.uv2Fiches || {})[id];
+    if (!m || !F) return viewUV2();
+    var s = subj(m.subj);
+    return crumbs([['#/uv2', 'Test UV2'], [null, 'Fiche mémoire : ' + m.nom]]) +
+      '<article class="lesson fiche uv2-fiche" style="--c:' + s.color + '"><h1 class="h1">' + s.icon + ' Fiche mémoire UV2 — ' + esc(m.nom) + '</h1>' +
+      (F.intro ? '<p class="muted">' + F.intro + '</p>' : '') +
+      '<nav class="chips">' + F.blocs.map(function (b, j) { return '<a class="chip" href="#/uv2/fiche/' + id + '#u-' + j + '">' + esc(b.t) + '</a>'; }).join('') + '</nav>' +
+      F.blocs.map(function (b, j) {
+        return '<section id="u-' + j + '" class="fiche-sec uv2-bloc"><h2 class="h2">' + esc(b.t) + '</h2>' +
+          (b.img ? '<div class="fiche-figs">' + b.img.map(function (im) { return fig({ src: im[0], cap: im[1] }); }).join('') + '</div>' : '') +
+          (b.html || '') +
+          (b.pts ? '<div class="box retenir"><b>★ À retenir</b><ul>' + b.pts.map(function (p) { return '<li>' + p + '</li>'; }).join('') + '</ul></div>' : '') +
+          (b.qr ? '<div class="box methode"><b>❓ La question qui tombe</b><ul>' + b.qr.map(function (p) { return '<li>' + p[0] + ' → <b>' + p[1] + '</b></li>'; }).join('') + '</ul></div>' : '') +
+          '</section>';
+      }).join('') +
+      '</article><div class="row-actions sticky-actions"><button class="btn primary" data-action="uv2-mat" data-m="' + id + '">🎯 Questions UV2 ' + esc(m.nom) + '</button><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';
+  }
+
   /* ---------- Actions ---------- */
   function onClick(e) {
     var el = e.target.closest('[data-action]');
@@ -894,6 +1111,22 @@
       var ids = session.qids.map(function (id) { return REV.qById[id]; });
       startSession({ mode: session.mode, title: session.title, subject: session.subject, timer: session.timer, questions: arrange(ids) });
     }
+    else if (a === 'uv2-start') { var tr = document.getElementById('uv2-train'); startExam(+el.getAttribute('data-k'), tr && tr.checked); }
+    else if (a === 'uv2-redo') { startExam(session.k, false, session.qids.map(function (id) { return REV.qById[id]; }), session.mats, session.title); }
+    else if (a === 'uv2-mat') {
+      var mm = uv2Mat(el.getAttribute('data-m'));
+      var list2 = uv2Orig(mm).concat(shuffle(uv2Autres(mm)));
+      startSession({ mode: 'uv2', title: 'UV2 — ' + mm.nom, questions: list2 });
+    }
+    else if (a === 'exam-next') { if (session.i + 1 < session.qids.length) { session.i++; saveSession(); render(); } }
+    else if (a === 'exam-prev') { if (session.i > 0) { session.i--; saveSession(); render(); } }
+    else if (a === 'exam-go') { session.i = +el.getAttribute('data-i'); saveSession(); render(); }
+    else if (a === 'exam-clear') { session.sel[session.i] = null; saveSession(); render(); }
+    else if (a === 'exam-finish') {
+      var vides = session.qids.length - session.sel.filter(function (v) { return v != null; }).length;
+      if (confirm(vides ? 'Il reste ' + vides + ' question' + (vides > 1 ? 's' : '') + ' sans réponse (0 point). Terminer l’épreuve ?' : 'Terminer l’épreuve et voir ta note ?')) finishExam();
+    }
+    else if (a === 'exam-quit') { if (confirm('Abandonner cette épreuve ? Elle ne sera pas notée.')) { session = null; saveSession(); go('#/uv2'); } }
     else if (a === 'print') window.print();
     else if (a === 'export') {
       var blob = new Blob([JSON.stringify(store)], { type: 'application/json' });
