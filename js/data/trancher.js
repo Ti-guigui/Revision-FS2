@@ -1,6 +1,8 @@
 /* Points où les documents de cours se contredisent (tableau « à trancher avec le formateur » du livre FS2). */
 window.REV = window.REV || {};
 REV.trancher = [
+  { sujet: 'Batterie branchée à l’envers (démarreur classique, 2 réponses)', a: 'Copie du test démarreur : « le moteur démarre à l’envers du démarreur » + court-circuit des diodes de puissance', b: 'Cours : inducteurs et induit en série → le démarreur tourne dans le même sens ; l’inversion détruit le pont de diodes', keep: 'Sûr : court-circuit des diodes de puissance. La 2ᵉ réponse est à faire préciser.' },
+  { sujet: '12 V : 2,1 V/élément à vide, 8 V au démarrage', a: 'Copie : « je recharge la batterie » (+ « essai d’intensité » dans la version 2 réponses)', b: '2,1 V/élément = batterie déjà chargée : c’est l’essai d’intensité qui conclut', keep: 'Batterie chargée (s’en assurer) puis essai d’intensité au démarrage.' },
   { sujet: 'Bornes des alternateurs 6 / 9 diodes', a: 'Fiche mémoire : 6 diodes = 1 borne L ; 9 diodes = L et +', b: 'Fiche Complet Élec + QCM OVI114 : 6 ou 12 diodes = 2 bornes L et + ; 9 diodes = 1 borne L', keep: 'Version B, validée par le QCM OVI114 (Q37, 42, 46, 78, 125, 150, 156).' },
   { sujet: 'Capteur à effet Hall', a: 'Fiche mémoire : capteur actif', b: 'Cours + OVI114 Q3 : capteur passif (alimenté en 5 V)', keep: 'Passif (convention du cours).' },
   { sujet: 'CAN H au niveau dominant', a: 'Une fiche : 3,2 V', b: 'Toutes les autres : 3,5 V', keep: '3,5 V.' },
