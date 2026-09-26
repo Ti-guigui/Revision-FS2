@@ -366,3 +366,11 @@ table.gates td { vertical-align: middle; }
 .tabs a { padding: 8px 14px; border-radius: 10px 10px 0 0; text-decoration: none; color: var(--muted, inherit); font-weight: 700; margin-bottom: -2px; border-bottom: 2px solid transparent; }
 .tabs a.on { color: var(--primary); border-bottom-color: var(--primary); }
 .exo-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px 4px; }
+
+/* QCM : énoncé d'exercice, rappel de la question, développement */
+.q-enonce { margin: 0 0 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); font-size: .92rem; }
+.q-enonce summary { cursor: pointer; font-weight: 700; color: var(--primary); }
+.fb-recap { margin: 8px 0 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); }
+.fb-recap p { margin: 4px 0; }
+.fb-recap .fb-q { font-weight: 700; }
+.fb-sec.dev { border-left: 4px solid var(--primary); padding-left: 10px; }

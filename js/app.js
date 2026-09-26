@@ -164,6 +164,15 @@
     } catch (e) { /* ignore */ }
   }
 
+  // Exercices corrigés : les questions suivent l'ordre du sujet (Q01, Q02…) ; ailleurs elles sont mélangées.
+  function isExoQ(q) { var l = REV.lessonById[q.lkey]; return !!(l && l.exo); }
+  function arrange(qs, count) {
+    qs = shuffle(qs);
+    if (!qs.length || !qs.every(isExoQ)) return qs;
+    var order = function (q) { return subj(q.subject).questions.indexOf(q); };
+    return qs.slice(0, count || qs.length).sort(function (x, y) { return order(x) - order(y); });
+  }
+
   function startSession(opts) {
     var qs = opts.questions.slice(0, opts.count || opts.questions.length);
     if (!qs.length) { toast('Aucune question disponible pour ce choix.'); return; }
@@ -446,7 +455,10 @@
       '<div class="progress"><span style="width:' + Math.round(session.i * 100 / n) + '%"></span></div>' +
       (session.timer && !ans ? '<div class="timer"><span id="timer-bar"></span><b id="timer-txt">' + QUIZ_SECONDS + ' s</b></div>' : '') +
       '</div>';
-    var body = '<div class="q-card"><h1 class="q-text">' + q.q + '</h1>' +
+    var enonce = l.exo && (l.html.match(/<h3>Énoncé<\/h3>([\s\S]*?)<h3>/) || [])[1];
+    var body = '<div class="q-card">' +
+      (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
+      '<h1 class="q-text">' + q.q + '</h1>' +
       (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
       '<div class="choices" role="group" aria-label="Réponses">' + perm.map(function (orig, k) {
         var cls = 'choice';
@@ -461,9 +473,15 @@
     var fb = '';
     if (ans) {
       var goodLetter = LETTERS[perm.indexOf(q.a)];
+      // exercices : on reprend le développement complet de la correction détaillée de la leçon
+      var qn = l.exo && (q.q.match(/^Q\d+/) || [])[0];
+      var dev = qn && (l.html.match(new RegExp('<li><b>' + qn + ' — [^<]*</b>\\s*([\\s\\S]*?)</li>')) || [])[1];
       fb = '<div class="feedback ' + (ans.ok ? 'ok' : 'ko') + '" id="feedback" tabindex="-1">' +
         '<div class="fb-title">' + (ans.ok ? '✅ Bonne réponse !' : (ans.chosen === -1 ? '⏱️ Temps écoulé' : '❌ Mauvaise réponse')) + '</div>' +
-        (ans.ok ? '' : '<p class="fb-good">La bonne réponse est : <b>' + goodLetter + '</b> — ' + q.c[q.a] + '</p>') +
+        '<div class="fb-recap"><p class="fb-q">❓ ' + q.q + '</p>' +
+          (ans.chosen >= 0 ? '<p>Ta réponse : <b>' + LETTERS[perm.indexOf(ans.chosen)] + '</b> — ' + q.c[ans.chosen] + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
+          (ans.ok ? '' : '<p class="fb-good">La bonne réponse est : <b>' + goodLetter + '</b> — ' + q.c[q.a] + '</p>') + '</div>' +
+        (dev ? '<div class="fb-sec dev"><b>🧮 Développement de la réponse</b><p>' + dev + '</p></div>' : '') +
         '<div class="fb-sec"><b>💡 Explication</b><p>' + q.e + '</p></div>' +
         (q.r ? '<div class="fb-sec retenir"><b>🧠 À retenir</b><p>' + q.r + '</p></div>' : '') +
         (q.w ? '<div class="fb-sec attention"><b>⚠️ Attention</b><p>' + q.w + '</p></div>' : '') +
@@ -696,7 +714,7 @@
     }
     else if (a === 'lesson-qcm') {
       var key = el.getAttribute('data-key'), l = REV.lessonById[key];
-      startSession({ mode: 'lecon', title: 'Leçon ' + l.title, subject: l.subject, lesson: key, questions: shuffle(lessonQuestions(key)) });
+      startSession({ mode: 'lecon', title: 'Leçon ' + l.title, subject: l.subject, lesson: key, questions: arrange(lessonQuestions(key)) });
     }
     else if (a === 'quiz') {
       startSession({ mode: 'quiz', title: 'Quiz éclair', timer: el.getAttribute('data-timer') === '1', questions: shuffle(allQuestions()), count: 10 });
@@ -719,11 +737,11 @@
     else if (a === 'redo-wrong') {
       var qs = [];
       session.qids.forEach(function (id, i) { var an = session.answers[i]; if (an && !an.ok) qs.push(REV.qById[id]); });
-      startSession({ mode: 'revision', title: session.title + ' — erreurs', subject: session.subject, questions: shuffle(qs) });
+      startSession({ mode: 'revision', title: session.title + ' — erreurs', subject: session.subject, questions: arrange(qs) });
     }
     else if (a === 'redo') {
       var ids = session.qids.map(function (id) { return REV.qById[id]; });
-      startSession({ mode: session.mode, title: session.title, subject: session.subject, timer: session.timer, questions: shuffle(ids) });
+      startSession({ mode: session.mode, title: session.title, subject: session.subject, timer: session.timer, questions: arrange(ids) });
     }
     else if (a === 'print') window.print();
     else if (a === 'export') {
@@ -772,7 +790,7 @@
     var keys = Array.prototype.map.call(f.querySelectorAll('input[name=lesson]:checked'), function (c) { return c.value; });
     if (!keys.length) { toast('Coche au moins une leçon.'); return; }
     var count = +f.querySelector('input[name=count]:checked').value;
-    var qs = shuffle(s.questions.filter(function (q) { return keys.indexOf(q.lkey) >= 0; }));
+    var qs = arrange(s.questions.filter(function (q) { return keys.indexOf(q.lkey) >= 0; }), count);
     var all = keys.length === f.querySelectorAll('input[name=lesson]').length;
     startSession({ mode: 'qcm', title: s.name + (all ? '' : ' (' + keys.length + ' leçon' + (keys.length > 1 ? 's' : '') + ')'), subject: s.id, questions: qs, count: count });
   }
