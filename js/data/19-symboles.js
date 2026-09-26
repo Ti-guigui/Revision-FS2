@@ -300,7 +300,6 @@ REV.addExercises('dsft', {
 <ol class="corr">
 <li><b>Q01 — Parallélisme : ouverture (A > B).</b> Si la cote A (avant des roues) est supérieure à B (arrière) : ouverture. Hors tolérance → usure RUGUEUSE (côté intérieur).</li>
 <li><b>Q02 — Parallélisme : pincement (A < B).</b> Si A est inférieure à B : pincement. Hors tolérance → usure RUGUEUSE (côté extérieur).</li>
-<li><b>Q03 — Épure de Jeantaud.</b> Le prolongement des axes de fusées se rejoint en un point : le centre instantané de rotation (CIR).</li>
 <li><b>Q04 — Déport au sol.</b> Distance entre l’axe de pivot et le plan de la roue, mesurée au sol ; un déport important crée un couple C = F × d sur les pivots.</li>
 <li><b>Q05 — Carrossage positif.</b> Angle entre le plan de la roue et la verticale, roue penchée vers l’extérieur en haut. Hors tolérance → usure LISSE (côté extérieur).</li>
 <li><b>Q06 — Carrossage négatif.</b> Roue penchée vers l’intérieur en haut. Hors tolérance → usure LISSE (côté intérieur).</li>
@@ -330,7 +329,6 @@ REV.addExercises('dsft', {
   questions: [
     { l: 'sym-dsft', img: 'sym/agd27-p30-0.png', q: 'Q01 — Que représente cette figure ?', c: ['Parallélisme : ouverture (A > B)', 'Parallélisme : pincement (A < B)', 'Carrossage positif'], e: 'Si la cote A (avant des roues) est supérieure à B (arrière) : ouverture. Hors tolérance → usure RUGUEUSE (côté intérieur).', src: 'Symboles du cours' },
     { l: 'sym-dsft', img: 'sym/agd27-p30-1.png', q: 'Q02 — Que représente cette figure ?', c: ['Parallélisme : pincement (A < B)', 'Parallélisme : ouverture (A > B)', 'Carrossage négatif'], e: 'Si A est inférieure à B : pincement. Hors tolérance → usure RUGUEUSE (côté extérieur).', src: 'Symboles du cours' },
-    { l: 'sym-dsft', img: 'sym/agd27-p30-2.png', q: 'Q03 — Que représente cette figure ?', c: ['Épure de Jeantaud', 'Angle de chasse', 'Angle inclus'], e: 'Le prolongement des axes de fusées se rejoint en un point : le centre instantané de rotation (CIR).', src: 'Symboles du cours' },
     { l: 'sym-dsft', img: 'sym/agd27-p33-0.png', q: 'Q04 — Que représente cette figure ?', c: ['Déport au sol', 'Angle de carrossage', 'Angle d’inclinaison de pivot'], e: 'Distance entre l’axe de pivot et le plan de la roue, mesurée au sol ; un déport important crée un couple C = F × d sur les pivots.', src: 'Symboles du cours' },
     { l: 'sym-dsft', img: 'sym/agd27-p34-1.png', q: 'Q05 — Que représente cette figure ?', c: ['Carrossage positif', 'Carrossage négatif', 'Inclinaison de pivot'], e: 'Angle entre le plan de la roue et la verticale, roue penchée vers l’extérieur en haut. Hors tolérance → usure LISSE (côté extérieur).', src: 'Symboles du cours' },
     { l: 'sym-dsft', img: 'sym/agd27-p34-2.png', q: 'Q06 — Que représente cette figure ?', c: ['Carrossage négatif', 'Carrossage positif', 'Déport positif'], e: 'Roue penchée vers l’intérieur en haut. Hors tolérance → usure LISSE (côté intérieur).', src: 'Symboles du cours' },
