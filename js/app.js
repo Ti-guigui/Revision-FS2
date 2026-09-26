@@ -239,9 +239,33 @@
       default: html = viewHome();
     }
     main.innerHTML = html;
+    setDecor(route, parts);
     if (route !== 'session') window.scrollTo(0, 0);
     if (route === 'session') afterSessionRender();
     main.focus({ preventScroll: true });
+  }
+
+  // Décor de fond : motif propre à chaque matière (img/deco/<id>.svg) ; atelier de mécanique sur l'accueil
+  function decoUrl(id) { return 'url("' + new URL('img/deco/' + id + '.svg', document.baseURI).href + '")'; }
+  function setDecor(route, parts) {
+    var id = null;
+    if (/^(matiere|lecon|qcm|memos)$/.test(route)) id = parts[1];
+    else if ((route === 'session' || route === 'bilan') && session) {
+      var q = REV.qById[session.qids[Math.min(session.i, session.qids.length - 1)]];
+      id = session.subject || (q && q.subject);
+    }
+    var s = id && subj(id);
+    var b = document.body;
+    b.setAttribute('data-route', route || 'home');
+    if (s) {
+      b.setAttribute('data-subj', s.id);
+      b.style.setProperty('--deco', decoUrl(s.id));
+      b.style.setProperty('--sc', s.color);
+    } else {
+      b.removeAttribute('data-subj');
+      b.style.removeProperty('--deco');
+      b.style.removeProperty('--sc');
+    }
   }
 
   /* ---------- Vues ---------- */
@@ -258,22 +282,25 @@
         (Math.min(session.answers.length + 1, session.qids.length)) + ' / ' + session.qids.length + '</a>' : '';
 
     return '' +
-      '<section class="hero">' +
-        '<div class="hero-box">' +
-          '<div class="hero-title">📚 RÉVISIONS 2026</div>' +
-          '<p class="hero-sub">Bienvenue sur la plateforme de révision<br><b>FS2 / MOBTER</b></p>' +
-          '<div class="hero-grid">' +
-            tile('#/cours', '📖', 'COURS', totalLessons() + ' leçons') +
-            tile('#/qcm', '🧠', 'QCM', 'par matière') +
-            tile('#/quiz', '⚡', 'QUIZ', 'éclair chronométré') +
-            tile('#/resultats', '📊', 'MES RÉSULTATS', sc.pct === null ? 'pas encore de score' : 'niveau global ' + sc.pct + ' %') +
-          '</div>' +
+      '<section class="atelier">' +
+        '<div class="atelier-wall">' +
+          '<div class="atelier-plaque"><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span>' +
+            '<small>ATELIER DE MAINTENANCE · FS2 / MOBTER</small><strong>RÉVISIONS 2026</strong></div>' +
+          '<p class="atelier-sub">Bienvenue à l’atelier : choisis ton poste de travail.</p>' +
         '</div>' +
+        '<div class="atelier-outils" aria-hidden="true"></div>' +
+        '<div class="servante" role="navigation" aria-label="Accès rapide">' +
+          tile('#/cours', '📖', 'COURS', totalLessons() + ' leçons') +
+          tile('#/qcm', '🧠', 'QCM', 'par matière') +
+          tile('#/quiz', '⚡', 'QUIZ', 'éclair chronométré') +
+          tile('#/resultats', '📊', 'MES RÉSULTATS', sc.pct === null ? 'pas encore de score' : 'niveau global ' + sc.pct + ' %') +
+        '</div>' +
+        '<div class="hazard" aria-hidden="true"></div>' +
       '</section>' +
       resume +
       (toReview ? '<a class="card review-cta" href="#/revision"><span class="big">🔁</span><span><b>QCM de révision</b><br>' +
         toReview + ' question' + (toReview > 1 ? 's' : '') + ' ratée' + (toReview > 1 ? 's' : '') + ' à retravailler</span><span class="chev">›</span></a>' : '') +
-      '<h2 class="h2">📚 Matières</h2>' +
+      '<h2 class="h2 h2-atelier">🧰 Les postes de l’atelier</h2>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
       '<div class="home-foot">' +
         '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
@@ -284,11 +311,11 @@
   }
   function tile(href, icon, label, sub) {
     return '<a class="tile" href="' + href + '"><span class="tile-ic">' + icon + '</span><span class="tile-l">' +
-      label + '</span><span class="tile-s">' + esc(sub) + '</span></a>';
+      label + '</span><span class="tile-s">' + esc(sub) + '</span><span class="tile-handle" aria-hidden="true"></span></a>';
   }
   function subjectCard(s) {
     var sc = scoreOf(s.questions), lv = level(sc.pct);
-    return '<a class="card subj" href="#/matiere/' + s.id + '" style="--c:' + s.color + '">' +
+    return '<a class="card subj" href="#/matiere/' + s.id + '" style="--c:' + s.color + ';--deco:' + decoUrl(s.id).replace(/"/g, '&quot;') + '">' +
       '<span class="subj-ic">' + s.icon + '</span>' +
       '<span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">' + s.lessons.length +
       ' leçons · ' + s.questions.length + ' questions</span>' + bar(sc.pct) + '</span>' +

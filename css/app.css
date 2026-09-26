@@ -378,3 +378,107 @@ table.gates td { vertical-align: middle; }
 /* Questions à plusieurs réponses */
 .choice.picked { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 12%, var(--surface)); }
 .choice.picked .letter { background: var(--primary); color: var(--on-primary, #fff); }
+
+/* ==========================================================================
+   THÈME PREMIUM « ATELIER »
+   ========================================================================== */
+:root { --steel-1: #1b2230; --steel-2: #2a3446; --steel-3: #3b475d; --amber: #f5b301; --font-d: "Oswald", "Arial Narrow", system-ui, sans-serif; }
+body { background:
+  radial-gradient(1200px 500px at 110% -10%, color-mix(in srgb, var(--sc, var(--primary)) 10%, transparent), transparent 70%),
+  var(--bg); }
+.h1, .h2, .brand, .hero-title, .tile-l, .subj-head .h1 { font-family: var(--font-d); letter-spacing: .4px; }
+.h1 { font-weight: 600; font-size: 1.6rem; }
+.subj-head .h1 { text-transform: uppercase; }
+.h2 { font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+/* barre du haut : acier brossé + liseré ambre */
+.topbar {
+  background: linear-gradient(180deg, #2c3648, #19202c); border-bottom: 3px solid var(--amber);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .25);
+}
+.brand { font-size: 1.25rem; font-weight: 600; letter-spacing: 1.5px; }
+.brand-sub { color: var(--amber); opacity: 1; font-weight: 700; letter-spacing: 1px; }
+.sidebar a.active { box-shadow: inset 3px 0 0 var(--amber); }
+
+/* décor de fond par matière : motif technique discret et fixe */
+body[data-subj]::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image: var(--deco); background-size: 240px 240px; background-repeat: repeat;
+  opacity: .07; transform: rotate(-4deg) scale(1.15);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body[data-subj]::before { opacity: .11; } }
+:root[data-theme="dark"] body[data-subj]::before { opacity: .11; }
+body[data-subj] .main { position: relative; }
+.subj-head {
+  position: relative; overflow: hidden; border: 1px solid var(--border); border-bottom: 4px solid var(--c);
+  border-radius: 16px; padding: 18px 16px; margin-bottom: 14px; box-shadow: var(--shadow);
+  background: linear-gradient(120deg, var(--surface) 55%, color-mix(in srgb, var(--c) 14%, var(--surface)));
+}
+.subj-head::after {
+  content: ""; position: absolute; right: -30px; top: -40px; width: 240px; height: 240px;
+  background: var(--deco) center / contain no-repeat; opacity: .22; pointer-events: none;
+}
+.subj-head > * { position: relative; z-index: 1; }
+.subj-ic { background: color-mix(in srgb, var(--c, var(--primary)) 14%, var(--surface)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c, var(--primary)) 30%, transparent); }
+
+/* cartes matières : plaque d'établi avec le motif de la matière */
+.subj { position: relative; overflow: hidden; border-left-width: 6px; transition: transform .15s, box-shadow .15s; }
+.subj::after {
+  content: ""; position: absolute; right: -24px; bottom: -34px; width: 130px; height: 130px;
+  background: var(--deco) center / contain no-repeat; opacity: .16; pointer-events: none; transition: opacity .2s, transform .3s;
+}
+.subj:hover { box-shadow: 0 10px 26px rgba(20, 30, 60, .14); }
+.subj:hover::after { opacity: .3; transform: rotate(-8deg) scale(1.08); }
+.subj > * { position: relative; z-index: 1; }
+.lesson, .q-card, .card { backdrop-filter: saturate(1.1); }
+.lesson-list a { transition: border-color .15s, transform .15s; }
+.lesson-list a:hover { transform: translateX(3px); border-color: var(--c, var(--primary)); }
+
+/* ---------- Accueil : l'atelier ---------- */
+.atelier {
+  position: relative; border-radius: 20px; overflow: hidden; color: #e8edf5;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, .13) 1.6px, transparent 2px) 0 0 / 18px 18px,
+    linear-gradient(180deg, #3a4558 0%, #283141 55%, #1c232f 100%);
+  box-shadow: 0 18px 40px rgba(15, 20, 30, .35), inset 0 1px 0 rgba(255, 255, 255, .12);
+  padding: 18px 14px 0;
+}
+.atelier-wall { text-align: center; padding: 6px 0 14px; }
+.atelier-plaque {
+  position: relative; display: inline-flex; flex-direction: column; gap: 2px; padding: 12px 26px;
+  border-radius: 10px; color: #1b2230;
+  background: linear-gradient(180deg, #f3f5f8, #c7ced9 55%, #aeb7c4); border: 1px solid #8791a1;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .35), inset 0 1px 0 #fff;
+}
+.atelier-plaque small { font-size: .68rem; font-weight: 800; letter-spacing: 2px; color: #445066; }
+.atelier-plaque strong { font-family: var(--font-d); font-size: 2rem; font-weight: 700; letter-spacing: 3px; line-height: 1.1; }
+.rivet { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, #8a93a2 60%, #5b6474); }
+.rivet:nth-child(1) { left: 7px; top: 7px; } .rivet:nth-child(2) { right: 7px; top: 7px; }
+.rivet:nth-child(3) { left: 7px; bottom: 7px; } .rivet:nth-child(4) { right: 7px; bottom: 7px; }
+.atelier-sub { margin: 12px 0 0; color: #cbd5e1; }
+/* servante d'atelier : les accès rapides sont des tiroirs */
+.atelier-outils { height: 120px; margin: 4px -6px 0; background: url("../img/deco/atelier-outils.svg") center bottom / contain no-repeat; filter: drop-shadow(0 4px 3px rgba(0,0,0,.35)); }
+@media (min-width: 700px) { .atelier-outils { height: 190px; } }
+.servante {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; margin: 0 -2px 0;
+  border-radius: 14px 14px 0 0; background: linear-gradient(180deg, #c62828, #9f1d1d);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), 0 -6px 18px rgba(0, 0, 0, .25);
+}
+@media (min-width: 700px) { .servante { grid-template-columns: repeat(4, 1fr); } .atelier-plaque strong { font-size: 2.4rem; } }
+.servante .tile {
+  position: relative; align-items: flex-start; text-align: left; padding: 12px 12px 22px; gap: 0;
+  background: linear-gradient(180deg, #e4453a, #b92424); border: 1px solid rgba(0, 0, 0, .25);
+  border-radius: 8px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 2px 0 rgba(0, 0, 0, .25);
+}
+.servante .tile:hover { background: linear-gradient(180deg, #ef5a4f, #c72c2c); transform: translateY(-2px); }
+.servante .tile-ic { font-size: 1.5rem; }
+.servante .tile-l { font-size: 1.05rem; font-weight: 600; letter-spacing: 1px; }
+.servante .tile-s { font-size: .74rem; opacity: .9; }
+.tile-handle {
+  position: absolute; left: 50%; bottom: 7px; width: 46%; height: 7px; transform: translateX(-50%); border-radius: 4px;
+  background: linear-gradient(180deg, #f1f3f6, #9aa3b1); box-shadow: 0 1px 2px rgba(0, 0, 0, .4);
+}
+.hazard { height: 16px; margin: 0 -14px; background: repeating-linear-gradient(-45deg, #f5b301 0 16px, #1b2230 16px 32px); }
+.h2-atelier { display: flex; align-items: center; gap: 8px; }
+.h2-atelier::after { content: ""; flex: 1; height: 6px; border-radius: 3px; background: repeating-linear-gradient(-45deg, var(--amber) 0 8px, transparent 8px 16px); opacity: .7; }
+.resume, .review-cta { border-radius: 14px; }
