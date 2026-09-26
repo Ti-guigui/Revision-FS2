@@ -51,6 +51,16 @@
     (x.questions || []).forEach(function (q) { s.questions.push(prepQuestion(s, q)); });
   };
 
+  // Ajoute des leçons de cours à une matière, insérées après une leçon donnée (renumérotation des leçons de cours).
+  REV.addLessons = function (id, afterId, lessons) {
+    var s = subj(id);
+    if (!s) return console.warn('Matière inconnue', id);
+    var at = s.lessons.findIndex(function (l) { return l.id === afterId; });
+    lessons.forEach(function (l) { prepLesson(s, l, ''); });
+    Array.prototype.splice.apply(s.lessons, [at < 0 ? s.lessons.length : at + 1, 0].concat(lessons));
+    s.lessons.filter(function (l) { return !l.exo; }).forEach(function (l, i) { l.num = String(i + 1).padStart(2, '0'); });
+  };
+
   // Complète une leçon de cours existante (schémas du livre, paragraphes, points à retenir).
   REV.extendLesson = function (key, x) {
     var l = REV.lessonById[key];
