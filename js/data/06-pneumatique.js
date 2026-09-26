@@ -85,7 +85,7 @@ REV.add({
 <tr><td>GBC 180 : quand contrôler le circuit pneumatique ?</td><td>En cas de panne ou lors d’une visite périodique</td><td></td></tr>
 <tr><td>GBC 180 : contrôle de la valve de secours</td><td>Créer une fuite franche sur le circuit AR : au freinage de service, le cylindre de frein de parc doit freiner les roues AR</td><td></td></tr>
 <tr><td>Voyant de pression allumé, 8,6 bar au manomètre</td><td>Piste : manocontact ou son câblage</td><td>La pression est normale</td></tr></table></div>
-<p>Pression de défreinage notée dans tes fiches : 0,6 b sur GBC 180, 0,3 b sur PPLOG (à confirmer).</p>`,
+<p>Défreinage noté dans ta fiche : <b>0,6 s sur GBC 180</b>, <b>0,3 s sur PPLOG</b>. Pilotage des valves : par présence d’air ou par absence d’air.</p>`,
       retenir: ['Louvoiement = prédominance de la VCR.', 'La remorque doit freiner un peu AVANT le tracteur (≈ 0,5 bar de plus sur le direct).'],
       memo: { cle: 'LA REMORQUE FREINE EN PREMIER', points: ['Louvoie → prédominance VCR', '+0,5 bar sur le direct', 'Valve de secours : fuite franche AR → le parc freine'], astuce: 'Une remorque tendue ne pousse pas le tracteur.' }
     }
