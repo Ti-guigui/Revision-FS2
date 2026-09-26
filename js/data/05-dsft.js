@@ -170,9 +170,9 @@ REV.add({
 <tr><td><b>V CFD 19</b></td><td><b>V</b> = <b>Recreusé</b> (1ᵉʳ recreusage) ; <b>VV</b> = 2ᵉ recreusage · <b>CFD</b> = localité de l’intervention (Clermont-Ferrand) · <b>19</b> = année du recreusage (2019)</td></tr></table></div>
 <h3>Jante</h3>
 <p>5½ J 13 FH E28 : largeur 5½" · hauteur de rebord J · diamètre 13" · sécurité FH (flat hump) · déport 28 mm. REGROOVABLE = recreusable ; BRAND TIRE HERE = zone de marquage à chaud.</p>`,
-      retenir: ['Largeur (mm ou pouces) / hauteur du flanc en % · R = radial · diamètre en pouces · indice de charge · indice de vitesse.', 'Deux indices de charge (152/148) = roue solo / roue jumelée.', 'DOT 4217 = 42ᵉ semaine 2017 ; DOT 2018 = 20ᵉ semaine 2018.', '« 00 » = flanc de 100 % : pneu carré.', 'V = recreusé (VV = 2ᵉ recreusage) · R = rechapé · AR = armée.'],
+      retenir: ['Largeur (mm ou pouces) / hauteur du flanc en % · R = radial · diamètre en pouces · indice de charge · indice de vitesse.', 'Deux indices de charge (152/148) = roue solo / roue jumelée.', 'DOT 4217 = 42ᵉ semaine 2017 ; DOT 2018 = 20ᵉ semaine 2018.', '« 00 » = flanc de 100 % : pneu carré.', 'V = recreusé (VV = 2ᵉ recreusage) · R = rechapé · AR = armée.', 'Durée de vie d’un pneumatique : 20 ans.'],
       pieges: ['La lettre après l’indice de charge est la VITESSE, pas la charge.', '« V » dans « V CFD 20 » signifie RECREUSÉ, pas « vérifié » (certaines corrections de test disaient « vérifié »).', 'Talon d’accrochage : 15° pour une jante 22,5" ; 5° pour une jante 20".'],
-      memo: { cle: 'LARGEUR / HAUTEUR % R DIAMÈTRE · CHARGE · VITESSE · DOT', points: ['225/40 R18 92 Y DOT 4217', '152/148 = solo / jumelé', '14.00 : 14" de large, 00 = 100 % → carré', 'AR = armée · R = rechapé · V = recreusé · VV = 2ᵉ recreusage'], astuce: 'Le chiffre porte (charge), la lettre court (vitesse) ; V comme « Vidé » : on a recreusé la gomme.' }
+      memo: { cle: 'LARGEUR / HAUTEUR % R DIAMÈTRE · CHARGE · VITESSE · DOT', points: ['225/40 R18 92 Y DOT 4217', '152/148 = solo / jumelé', '14.00 : 14" de large, 00 = 100 % → carré', 'AR = armée · R = rechapé · V = recreusé · VV = 2ᵉ recreusage', 'Durée de vie : 20 ans'], astuce: 'Le chiffre porte (charge), la lettre court (vitesse) ; V comme « Vidé » : on a recreusé la gomme.' }
     },
     {
       id: 'panne', title: 'Recherche de panne freinage',
