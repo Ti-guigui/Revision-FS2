@@ -500,3 +500,4 @@ body[data-subj] .main { position: relative; }
 .livre-figs .fiche-figs { margin-top: 10px; }
 .livre-figs figure img { width: 100%; height: auto; background: #fff; }
 .livre-figs figcaption { font-size: .85rem; }
+.ov { text-decoration: overline; text-decoration-thickness: 2px; }

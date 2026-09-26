@@ -11,7 +11,7 @@
       im('m026_0', 'Vilebrequin : plateau de fixation, tourillons, masses d’équilibrage, manetons, nez'), im('m029_1', 'Volant moteur : 1 couronne dentée · 2 disque d’embrayage · 3 face de centrage')]
   });
   REV.extendLesson('moteur/cycle', {
-    images: [im('m036_0', 'Les 4 temps : admission, compression, explosion-détente, échappement'), im('m041_0', 'Diagramme réel : AOA, RFA, AOE, RFE'), im('m044_0', 'Épure de distribution : balayage (croisement) autour du PMH')]
+    images: [im('m036_0', 'Les 4 temps : admission, compression, explosion-détente, échappement'), im('m044_0', 'Balayage : croisement des soupapes autour du PMH')]
   });
   REV.extendLesson('moteur/distribution', {
     images: [im('m046_0', 'Soupape : 1 coupelle + clavettes · 2 queue · 3 ressort · 4 guide · 5 siège · 6 tête (tulipe)'), im('m048_0', 'Joints de queue de soupape'),

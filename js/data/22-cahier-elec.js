@@ -124,7 +124,7 @@
     '<tr><td>Ohm</td><td>U = R × I</td></tr><tr><td>Puissance</td><td>P = U × I = R × I² = U² / R</td></tr>' +
     '<tr><td>Quantité d’électricité</td><td>Q (Ah) = I (A) × t (h)</td></tr><tr><td>Énergie</td><td>W (Wh) = P × t</td></tr>' +
     '<tr><td>Série</td><td>R = R1 + R2 (même courant)</td></tr><tr><td>Parallèle</td><td>R = R1 × R2 / (R1 + R2) (même tension)</td></tr>' +
-    '<tr><td>Résistivité</td><td>R = ρ × L / S (S en m²)</td></tr><tr><td>Générateur</td><td>Ug = E − r × I</td></tr>' +
+    '<tr><td>Générateur</td><td>Ug = E − r × I</td></tr>' +
     '<tr><td>Transistor</td><td>β = Ic / Ib ; saturé : VCE ≈ 0</td></tr><tr><td>Alternatif</td><td>Ueff = Umax / √2 ; f = 1 / T</td></tr></table></div>';
   function les(id, title, html, retenir, pieges, cle, flow, points, astuce, images) {
     var o = { id: id, title: title, html: html + F, retenir: retenir, pieges: pieges, memo: { cle: cle, flow: flow, points: points, astuce: astuce } };

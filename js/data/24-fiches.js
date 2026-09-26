@@ -3,22 +3,20 @@
 REV.fiches = {
   elec: { html: `
 <div class="tw"><table><tr><th>Grandeur</th><th>Formule</th><th>Unités</th></tr>
+<tr><td>Loi des nœuds</td><td>Σ courants entrants = Σ courants sortants</td><td>A</td></tr>
+<tr><td>Loi des mailles</td><td>Σ des tensions sur une boucle fermée = 0</td><td>V</td></tr>
 <tr><td>Loi d’Ohm</td><td>U = R × I</td><td>V = Ω × A</td></tr>
 <tr><td>Puissance</td><td>P = U × I = R × I² = U² / R</td><td>W</td></tr>
 <tr><td>Quantité d’électricité</td><td>Q = I × t</td><td>Ah = A × h</td></tr>
-<tr><td>Énergie</td><td>W = P × t</td><td>Wh</td></tr>
 <tr><td>Résistivité</td><td>R = ρ × L / S</td><td>Ω · Ω.m · m · m² (1 mm² = 10⁻⁶ m²)</td></tr>
 <tr><td>Série</td><td>R = R1 + R2 + … (même courant)</td><td></td></tr>
 <tr><td>Parallèle (2 R)</td><td>R = R1 × R2 / (R1 + R2) (même tension)</td><td></td></tr>
-<tr><td>Générateur réel</td><td>Ug = E − r × I</td><td></td></tr>
 <tr><td>Alternatif</td><td>f = 1 / T · Ueff = Umax / √2</td><td>Hz · s</td></tr>
 <tr><td>Triphasé</td><td>U (entre phases) = V (phase-neutre) × √3</td><td>√2 = 1,414 · √3 = 1,732</td></tr>
 <tr><td>Transistor</td><td>Ic = β × Ib ; saturé : VCE ≈ 0</td><td></td></tr>
 <tr><td>Logique</td><td>2ⁿ combinaisons pour n entrées</td><td></td></tr></table></div>
-<h3>Batteries</h3>
-<p>Série : tensions ajoutées, capacité = la plus faible. Parallèle : même tension, capacités ajoutées.</p>
-<h3>Composants</h3>
-<p>Diode : passante de l’anode vers la cathode (≈ 0,6 V). LED ≈ 2 V + résistance série. Zéner : en inverse garde VZ (stabilise). Pont de Graëtz = 4 diodes ; pont triphasé = 6 diodes. Transistor : bloqué = interrupteur ouvert ; saturé = interrupteur fermé. Diode de roue libre sur une bobine = protège le transistor. Alimentation stabilisée : transformateur → pont → condensateur → Zéner + ballast.</p>
+<h3>Diodes et transistors</h3>
+<p>Diode : passante de l’anode vers la cathode (≈ 0,6 V). LED ≈ 2 V + résistance série. Zéner : en inverse garde VZ (stabilise). Pont de Graëtz = 4 diodes ; pont triphasé = 6 diodes. Transistor : bloqué = interrupteur ouvert ; saturé = interrupteur fermé. Diode de roue libre sur une bobine = protège le transistor.</p>
 <h3>Portes logiques vues en cours (6)</h3>
 <p>OUI (S = A) · NON (S = Ā) · ET (S = A·B, « série ») · ET NON · OU (S = A + B, « parallèle ») · OU NON. De Morgan : (A·B)‾ = Ā + B̄ ; (A + B)‾ = Ā·B̄.</p>
 <h3>Méthode de calcul (cahier d’exercices)</h3>
@@ -26,13 +24,10 @@ REV.fiches = {
 
   equip: { html: `
 <div class="tw"><table><tr><th>Point</th><th>Valeur / règle</th></tr>
-<tr><td>Mesures</td><td>Voltmètre en parallèle · ampèremètre en série · ohmmètre hors tension · chute de tension circuit EN CHARGE</td></tr>
 <tr><td>Batterie 12 V</td><td>6 éléments de 2 V · 12,6 V chargée · 12,2 V = 50 % · &lt; 12 V déchargée · charge à C/10 pendant 10 h</td></tr>
 <tr><td>Test d’aptitude</td><td>3 × C pendant 15 s, 3 fois ; &gt; 9 V au 3ᵉ essai (12 V) · fuite &lt; 30 mA contact coupé</td></tr>
 <tr><td>Démarreur</td><td>Moteur &lt; 1 Ω · appel (EXC ↔ +DEM) · maintien (EXC ↔ masse) ≈ 2 × appel · mini au démarrage 9,6 V (12 V) / 19,2 V (24 V)</td></tr>
 <tr><td>Régulation</td><td>12 V : 13,5 à 15 V · 24 V : 28 à 29,5 V</td></tr>
-<tr><td>Relais</td><td>85/86 = bobine (commande) · 30/87/87a = puissance · 87 = NO · 87a = NF</td></tr>
-<tr><td>Bornes</td><td>KL30 = + permanent · KL15 = + après contact · KL31 = masse · KL50 = démarreur</td></tr>
 <tr><td>CAN</td><td>2 × 120 Ω → 60 Ω mesurés · dominant 0 (H 3,5 V / L 1,5 V) · récessif 1 (2,5 / 2,5 V) · fils torsadés = perturbations</td></tr>
 <tr><td>Sonde lambda</td><td>riche ≈ 900 mV · pauvre ≈ 100 mV · efficace à 300 °C</td></tr></table></div>
 <h3>Alternateurs : 6, 9 ou 12 diodes</h3>
@@ -40,14 +35,13 @@ REV.fiches = {
 <tr><td>6 diodes</td><td>2 bornes (L et +), régulateur intégré</td><td>Pont de 6 diodes de puissance (2 par phase) ; excitation par le régulateur ; lampe HS = pas de conséquence sur la charge</td></tr>
 <tr><td>9 diodes</td><td>1 seule borne L (D+)</td><td>6 diodes de puissance + 3 diodes trio (excitation, extinction du voyant) ; pré-excitation par la lampe : lampe HS = pas de charge</td></tr>
 <tr><td>12 diodes</td><td>2 bornes, régulateur intégré</td><td>6 × 2 diodes de puissance en parallèle (2 par demi-phase) : pour les grosses puissances, plus de courant, moins d’échauffement par diode</td></tr></table></div>
-<h3>Diagnostic</h3>
-<p>Aucun des 3 signes du court-circuit → coupure. Une seule panne à la fois. La masse ne fait jamais partie de la zone de diagnostic. &gt; 1 V d’écart sur un même potentiel = ligne HS.</p>` },
+` },
 
   moteur: { html: `
 <div class="tw"><table><tr><th>Point</th><th>À retenir</th></tr>
 <tr><td>Rapport volumétrique</td><td>ρ = (Vu + v) / v · P = C × ω</td></tr>
-<tr><td>Distribution</td><td>Arbre à cames = ½ vitesse du vilebrequin · balayage = chevauchement AOA / RFE · R = 720° / n</td></tr>
-<tr><td>Graissage</td><td>2–4 bar essence · 4–8 bar diesel</td></tr>
+<tr><td>Distribution</td><td>Arbre à cames = ½ vitesse du vilebrequin · balayage = croisement des soupapes · R = 720° / n</td></tr>
+<tr><td>Graissage</td><td>4 à 8 bar (diesel)</td></tr>
 <tr><td>Refroidissement</td><td>Pressuriser = élever le point d’ébullition · bouchon à 2 soupapes</td></tr>
 <tr><td>Common rail</td><td>Débit injecté = temps d’ouverture + pression de rampe · injecteur électromagnétique ≈ 0,5 Ω · piézo ≈ 200 kΩ</td></tr>
 <tr><td>Bosch 1ʳᵉ gén. (CP1)</td><td>Monter la HP = régulateur de haute pression (sur la pompe)</td></tr>

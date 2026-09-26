@@ -10,29 +10,29 @@ REV.add({
 <tr><td>Cylindrée totale</td><td>Vtot = Vu × n (nombre de cylindres)</td></tr>
 <tr><td>Rapport volumétrique</td><td>ρ = (Vu + v) / v → v = Vu / (ρ − 1) (v = chambre de combustion)</td></tr>
 <tr><td>Puissance</td><td>P (W) = C (N·m) × 2π × N (tr/min) / 60 · 1 CV = 736 W</td></tr>
-<tr><td>ρ essence / diesel</td><td>6/1 à 12/1 (bougie) · 13/1 à 24/1 (auto-inflammation)</td></tr>
+<tr><td>ρ diesel</td><td>13/1 à 24/1 (auto-inflammation)</td></tr>
 <tr><td>A &lt; C / A = C / A &gt; C</td><td>Course longue / carré / super-carré</td></tr></table></div>
 <p>La <b>puissance réelle mesurée au banc</b> est proportionnelle <b>au couple et à la vitesse de rotation</b> (P = C × ω).</p>`,
       retenir: ['Alésage = diamètre du cylindre ; course = distance parcourue par le piston.', 'ρ = (Vu + v) / v.', 'P = C × ω.'],
       pieges: ['ρ se calcule avec la chambre de combustion v, pas avec Vtot.'],
-      memo: { cle: 'P = C × ω', points: ['Vu = π × A²/4 × C', 'ρ = (Vu + v)/v', 'Essence 6–12 · Diesel 13–24', '1 CV = 736 W'], astuce: 'A < C : course longue (le piston voyage plus qu’il n’est large).' }
+      memo: { cle: 'P = C × ω', points: ['Vu = π × A²/4 × C', 'ρ = (Vu + v)/v', 'Diesel 13–24', '1 CV = 736 W'], astuce: 'A < C : course longue (le piston voyage plus qu’il n’est large).' }
     },
     {
       id: 'cycle', title: 'Les gaz et le cycle 4 temps',
       html: `
 <ul><li><b>Isobare</b> = pression constante · <b>isochore</b> = volume constant · <b>adiabatique</b> = sans échange de chaleur (la température varie).</li>
 <li>Compression adiabatique : la pression monte <b>lentement au début</b> de la remontée du piston, puis <b>rapidement à l’approche du PMH</b>.</li></ul>
-<div class="tw"><table><tr><th>Phase</th><th>Essence (Beau de Rochas)</th><th>Diesel</th></tr>
-<tr><td>Admission</td><td>Mélange air + essence</td><td>Air seul</td></tr>
-<tr><td>Compression</td><td>ρ 6 à 12</td><td>ρ 13 à 24</td></tr>
-<tr><td>Combustion</td><td>Allumage commandé (bougie), combustion isochore</td><td>Gasoil injecté dans l’air chaud : auto-inflammation. Lent = isobare ; rapide/mixte (Sabathé) = isochore puis isobare</td></tr>
-<tr><td>Échappement</td><td>Plus de CO</td><td>Plus de NOx</td></tr></table></div>
+<div class="tw"><table><tr><th>Phase</th><th>Moteur diesel</th></tr>
+<tr><td>Admission</td><td>Air seul</td></tr>
+<tr><td>Compression</td><td>ρ 13 à 24</td></tr>
+<tr><td>Combustion</td><td>Gazole injecté dans l’air chaud : auto-inflammation. Lent = isobare ; rapide/mixte (Sabathé) = isochore puis isobare</td></tr>
+<tr><td>Échappement</td><td>Rejette surtout des NOx et des suies</td></tr></table></div>
 <ul><li>Combustion qui continue après la fin de l’injection = <b>combustion diffusante</b>.</li>
 <li><b>Cliquetis</b> (essence) : auto-allumage d’une partie du mélange <b>après l’étincelle</b>.</li>
 <li><b>Cognements diesel</b> : augmentés par une <b>avance à l’injection trop grande</b> ou un <b>cétane trop faible</b>.</li></ul>`,
-      retenir: ['Combustion après la fin d’injection = combustion diffusante.', 'Cliquetis = après l’étincelle.', 'Le diesel rejette plus de NOx, l’essence plus de CO.'],
+      retenir: ['Combustion après la fin d’injection = combustion diffusante.', 'Cliquetis = après l’étincelle.', 'Le diesel rejette surtout des NOx et des suies.'],
       pieges: ['Isobare (P constante) ≠ isochore (V constant).'],
-      memo: { cle: 'ADMISSION · COMPRESSION · COMBUSTION · ÉCHAPPEMENT', flow: ['Diesel : air seul', 'Compression ρ 13–24 (air très chaud)', 'Injection → auto-inflammation', 'Combustion diffusante après l’injection'], points: ['Cognements : avance trop grande / cétane faible', 'Cliquetis essence : après l’étincelle'], astuce: 'Diesel = « Diffuse » : la combustion continue après l’injection.' }
+      memo: { cle: 'ADMISSION · COMPRESSION · COMBUSTION · ÉCHAPPEMENT', flow: ['Diesel : air seul', 'Compression ρ 13–24 (air très chaud)', 'Injection → auto-inflammation', 'Combustion diffusante après l’injection'], points: ['Cognements : avance trop grande / cétane faible'], astuce: 'Diesel = « Diffuse » : la combustion continue après l’injection.' }
     },
     {
       id: 'distribution', title: 'La distribution',
@@ -42,25 +42,19 @@ REV.add({
 <li>Chaîne cinématique : came → poussoir (galet, sabot, plateau, désaxé) → tige de culbuteur → culbuteur/linguet → soupape.</li>
 <li>Soupapes : contraintes mécaniques, chimiques, thermiques. Ressorts à pas constant, progressif, ou concentriques à pas inversé (évitent l’affolement).</li>
 <li><b>Jeu aux soupapes</b> : nécessaire car la soupape se dilate plus que le bloc. Méthodes : bascule, méthode des 5 (4 cyl), méthode Peugeot universelle.</li></ul>
-<div class="tw"><table><tr><th>Sigle</th><th>Nom</th><th>Rôle</th></tr>
-<tr><td>AOA</td><td>Avance ouverture admission</td><td>Améliore le remplissage</td></tr>
-<tr><td>RFA</td><td>Retard fermeture admission</td><td>Profite de l’inertie des gaz frais après le PMB</td></tr>
-<tr><td>AA</td><td>Avance à l’allumage</td><td>Pression maxi juste après le PMH</td></tr>
-<tr><td>AOE</td><td>Avance ouverture échappement</td><td>Avance la chute de pression, limite la contre-pression</td></tr>
-<tr><td>RFE</td><td>Retard fermeture échappement</td><td>Inertie des gaz pour vider le cylindre</td></tr></table></div>
-<p>Les gaz ont une inertie : on ouvre l’admission un peu AVANT le PMH (AOA), on la ferme APRÈS le PMB (RFA) ; on ouvre l’échappement AVANT le PMB (AOE), on le ferme APRÈS le PMH (RFE). L’allumage est avancé (AA) car la combustion met du temps à se développer.</p>`,
-      retenir: ['Balayage = chevauchement AOA / RFE : les gaz brûlés qui sortent vite favorisent l’aspiration du mélange.', 'Arbre à cames = ½ vitesse du vilebrequin.', 'R = 720° / n.'],
+<p><b>Balayage</b> : pendant le croisement des soupapes (admission et échappement ouvertes ensemble autour du PMH), les gaz brûlés qui sortent vite favorisent l’aspiration de l’air frais.</p>`,
+      retenir: ['Balayage : les gaz brûlés qui sortent vite favorisent l’aspiration du mélange (croisement des soupapes).', 'Arbre à cames = ½ vitesse du vilebrequin.', 'R = 720° / n.'],
       pieges: ['Régularité cyclique : 720° (2 tours), jamais 360°.'],
-      memo: { cle: 'AVANCE À L’OUVERTURE · RETARD À LA FERMETURE', points: ['AOA / RFA : admission', 'AOE / RFE : échappement', 'Balayage = AOA + RFE (chevauchement)', '4 cyl → 180° ; 6 cyl → 120°'], astuce: 'On ouvre en avance et on ferme en retard : les gaz ont de l’élan.' }
+      memo: { cle: 'ARBRE À CAMES = ½ VITESSE', points: ['Un cycle = 2 tours de vilebrequin', 'Balayage = croisement des soupapes', '4 cyl → 180° ; 6 cyl → 120°'], astuce: 'R = 720° / n, jamais 360°.' }
     },
     {
       id: 'graissage', title: 'Le graissage',
       html: `
 <ul><li><b>Rôles</b> : réduire frottements et usure, évacuer la chaleur, éviter la corrosion, éliminer les particules, participer à l’étanchéité.</li>
 <li><b>Types</b> : barbotage (petits moteurs, risque de déjaugeage) · huile perdue (2 temps) · sous pression normale (vilebrequin, rampe de culbuteurs, arbre à cames) · intégrale (idem + axe de piston) · carter sec (meilleur refroidissement, moteurs inclinés, complexe).</li>
-<li><b>Circuit</b> : carter, crépine (maille 1 mm), pompe à <b>engrenage, à rotor ou à palettes</b>, filtre, canalisations. Pression : 2–4 bar essence, 4–8 bar diesel.</li>
+<li><b>Circuit</b> : carter, crépine (maille 1 mm), pompe à <b>engrenage, à rotor ou à palettes</b>, filtre, canalisations. Pression : 4 à 8 bar (diesel).</li>
 <li>Consommation d’huile : joints de queue de soupape, joint de culasse, segmentation. Défaut de pression : entraînement de pompe, crépine colmatée, fuites.</li></ul>`,
-      retenir: ['Pression d’huile : 2–4 bar essence, 4–8 bar diesel.', 'Pompe à engrenage, à rotor ou à palettes.'],
+      retenir: ['Pression d’huile : 4 à 8 bar (diesel).', 'Pompe à engrenage, à rotor ou à palettes.'],
       pieges: ['Graissage intégral = pression normale + axe de piston.'],
       memo: { cle: 'CARTER → CRÉPINE → POMPE → FILTRE → PALIERS', points: ['Pompe à rotor (test final Q2)', 'Diesel 4–8 bar', 'Carter sec = moteurs inclinés'], astuce: 'L’huile : glisser, refroidir, protéger, nettoyer, étancher.' }
     },
@@ -249,7 +243,7 @@ REV.add({
     { l: 'cycle', q: 'Les cognements diesel sont augmentés par…', c: ['Une avance à l’injection trop grande', 'Un retard à l’injection', 'Un indice de cétane élevé', 'Un gasoil trop froid'], e: 'Trop d’avance (ou cétane trop faible) : plus de carburant s’accumule avant l’inflammation, qui devient brutale.', src: 'QCM moteur Q8' },
     { l: 'cycle', q: 'Le cliquetis (moteur essence) apparaît…', c: ['Après l’étincelle', 'Avant l’étincelle', 'Pendant l’admission', 'Uniquement au ralenti'], e: 'C’est l’auto-allumage d’une partie du mélange après l’étincelle de la bougie.', src: 'QCM moteur Q9' },
     { l: 'cycle', q: 'Comparé à un moteur essence, un diesel rejette…', c: ['Plus d’oxydes d’azote (NOx)', 'Plus de monoxyde de carbone (CO)', 'Moins de NOx', 'Autant de chaque polluant'], e: 'Combustion à haute température avec excès d’air : plus de NOx. L’essence rejette plus de CO.', src: 'QCM moteur Q10' },
-    { l: 'distribution', q: 'Les gaz brûlés qui sortent vite et favorisent l’aspiration du mélange, c’est :', c: ['Le balayage', 'Le cliquetis', 'La combustion diffusante', 'L’affolement des soupapes'], e: 'Balayage = chevauchement AOA / RFE : admission et échappement ouverts ensemble autour du PMH.', src: 'Test final Q1 (officiel)' },
+    { l: 'distribution', q: 'Les gaz brûlés qui sortent vite et favorisent l’aspiration du mélange, c’est :', c: ['Le balayage', 'Le cliquetis', 'La combustion diffusante', 'L’affolement des soupapes'], e: 'Balayage : admission et échappement ouverts ensemble autour du PMH (croisement des soupapes).', src: 'Test final Q1 (officiel)' },
     { l: 'distribution', q: 'À quelle vitesse tourne l’arbre à cames par rapport au vilebrequin ?', c: ['À demi-vitesse', 'À la même vitesse', 'Deux fois plus vite', 'Au quart de la vitesse'], e: 'Un cycle 4 temps = 2 tours de vilebrequin, chaque soupape s’ouvre une fois : l’arbre à cames fait 1 tour.' },
     { l: 'distribution', q: 'Régularité cyclique d’un moteur 6 cylindres ?', c: ['120°', '180°', '60°', '360°'], e: 'R = 720° / n = 720 / 6 = 120°. 4 cylindres → 180°.', w: 'On divise 720° (2 tours), jamais 360°.' },
     { l: 'distribution', q: 'Pourquoi faut-il un jeu aux soupapes ?', c: ['Parce que la soupape se dilate plus que le bloc', 'Pour augmenter le remplissage', 'Pour réduire le bruit', 'Pour la lubrification'], e: 'À chaud la soupape s’allonge : sans jeu, elle ne fermerait plus complètement.' },
