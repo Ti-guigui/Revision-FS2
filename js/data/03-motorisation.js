@@ -158,7 +158,7 @@ REV.add({
       memo: { cle: 'INDUCTIF = SINUS · HALL = CARRÉ · PIÉZO-RÉSISTIF = PRESSION', points: ['PMH : 60 − 2 dents', 'Phase : entrefer 1,2 mm', 'Rail : 0,5 V → 1–1,5 V au démarreur', 'CTN : chaud = R faible'], astuce: 'Le capteur inductif fabrique son courant ; les autres attendent leur 5 V.' }
     },
     {
-      id: 'diag-hp', title: 'Diagnostic haute pression (Delphi DFP1, Bosch CP1)',
+      id: 'diag-hp', title: 'Diagnostic haute pression (Delphi, Bosch, Continental)',
       html: `
 <p>Logigrammes de diagnostic « le moteur ne démarre pas ». On commence toujours par les <b>contrôles préliminaires</b>.</p>
 <h3>Delphi, pompe DFP1</h3>
@@ -173,6 +173,14 @@ REV.add({
 <li>Pas de fuite → contrôler l’<b>IMV grippé fermé</b>.</li>
 <li>IMV bon → contrôler le <b>clapet de sécurité HP</b> : grippé ouvert → le changer.</li>
 <li>Tout est bon → <b>échange de la pompe haute pression</b>.</li></ol>
+<h3>Continental</h3>
+<p>Même démarche que Delphi :</p>
+<ol><li>Filtre à gazole.</li>
+<li>Capteur HP contact mis : 0,5 V bon ; &gt; 1 V = capteur HS ou ligne en court-circuit.</li>
+<li>Au démarreur : <b>1 à 1,5 V</b> → circuits BP et HP bons → capteurs PMH et d’arbre à cames.</li>
+<li><b>0,5 à 0,9 V</b> → étanchéité des retours d’injecteurs, puis des aiguilles (bougies déposées) → fuite sur un ou plusieurs injecteurs.</li>
+<li>Pas de fuite → contrôler le <b>régulateur de débit</b> : tension, résistance (Ω) et grippage.</li>
+<li>Régulateur bon → <b>clapet de sécurité HP</b> (grippé ouvert ?) → en dernier, échange de la pompe HP.</li></ol>
 <h3>Bosch, pompe CP1</h3>
 <ol><li><b>Signal du capteur HP contact mis</b> : 0,5 V = bon ; pas de tension ou largement &gt; 0,5 V → contrôler la ligne et le capteur.</li>
 <li><b>Pendant le démarreur</b> : <b>U ≥ 1 V</b> → circuits BP et HP bons → vérifier le capteur PMH (résistance, entrefer, limaille, continuité du faisceau) puis le capteur de phase (alimentation, cible).</li>
@@ -181,7 +189,7 @@ REV.add({
 <li>Contrôler l’<b>étanchéité des retours des porte-injecteurs</b> (non étanches → les changer tous), puis des injecteurs (bougies de préchauffage retirées).</li>
 <li>Contrôler le <b>régulateur HP</b> : résistance ≈ <b>2 Ω</b>, alimentation, grippage.</li>
 <li>Tout est bon → <b>test d’étanchéité de la pompe HP avec un rail bouché</b> → changer la pompe HP.</li></ol>`,
-      images: [{ src: 'diag-delphi-dfp1.jpg', cap: 'Logigramme : diagnostic haute pression Delphi, pompe DFP1' }, { src: 'diag-bosch-cp1.jpg', cap: 'Logigramme : diagnostic rampe commune Bosch, pompe CP1' }],
+      images: [{ src: 'diag-delphi-dfp1.jpg', cap: 'Logigramme : diagnostic haute pression Delphi, pompe DFP1' }, { src: 'diag-bosch-cp1.jpg', cap: 'Logigramme : diagnostic rampe commune Bosch, pompe CP1' }, { src: 'diag-continental.jpg', cap: 'Logigramme : diagnostic haute pression Continental' }],
       retenir: ['Toujours commencer par les contrôles préliminaires (filtre).', 'Capteur HP contact mis = 0,5 V.', 'Delphi au démarreur : 1–1,5 V = HP bonne ; > 1,5 V = IMV ; 0,5–0,9 V = fuite (retours, aiguilles), IMV, clapet HP, puis pompe.', 'Bosch au démarreur : ≥ 1 V = HP bonne → capteurs PMH/phase ; < 1 V = alimentation, filtre (ΔP 0,3 bar), clapet, fuites, régulateur HP (≈ 2 Ω), pompe.'],
       pieges: ['On ne change la pompe HP qu’en dernier, quand tout le reste est bon.'],
       memo: { cle: 'DU PLUS SIMPLE AU PLUS CHER', flow: ['Filtre', 'Capteur HP contact mis (0,5 V)', 'Capteur HP au démarreur', 'Fuites retours / injecteurs', 'Régulateur (IMV / HP)', 'Clapet de sécurité', 'Pompe HP'], points: ['Delphi : > 1,5 V → IMV', 'Bosch : ΔP filtre ≤ 0,3 bar', 'Régulateur HP Bosch ≈ 2 Ω'], astuce: 'Pas assez de pression au démarreur ? Cherche d’abord où elle s’échappe.' }
@@ -301,6 +309,9 @@ REV.add({
     { l: 'diag-hp', q: 'Bosch CP1 : chute de pression à travers le filtre à gazole ≥ 0,3 bar. Que faire ?', c: ['Changer le filtre', 'Changer la pompe HP', 'Changer les injecteurs', 'Rien, c’est normal'], e: 'ΔP maxi admis : 0,3 bar.' },
     { l: 'diag-hp', q: 'Bosch CP1 : résistance normale du régulateur HP ?', c: ['≈ 2 Ω', '≈ 0,5 Ω', '≈ 200 kΩ', '≈ 60 Ω'], e: 'On contrôle aussi son alimentation et son état mécanique (grippage).' },
     { l: 'diag-hp', q: 'Dans les logigrammes de diagnostic HP, quand change-t-on la pompe haute pression ?', c: ['En dernier, quand tous les autres contrôles sont bons', 'En premier', 'Dès que le moteur ne démarre pas', 'Après le filtre'], e: 'On va du plus simple au plus coûteux ; chez Bosch, test d’étanchéité de la pompe avec un rail bouché avant de la changer.' },
+    { l: 'diag-hp', q: 'Continental : 0,5 à 0,9 V au démarreur, aucune fuite aux retours ni aux aiguilles d’injecteurs. Contrôle suivant ?', c: ['Le régulateur de débit : tension, résistance et grippage', 'Changer la pompe HP', 'Le capteur de phase', 'Le filtre à gazole'], e: 'Puis, si le régulateur est bon, le clapet de sécurité HP ; la pompe HP en dernier.' },
+    { l: 'diag-hp', q: 'Diagnostic HP (Delphi ou Continental) : le clapet de sécurité HP est grippé ouvert. Conséquence au démarreur ?', c: ['La pression reste trop basse (0,5 à 0,9 V au capteur) : le moteur ne démarre pas', 'La pression dépasse 1,5 V', 'Le capteur HP affiche plus de 1 V contact mis', 'Aucune conséquence'], e: 'La HP s’échappe par le clapet : pression insuffisante pour injecter.' },
+    { l: 'diag-hp', q: 'Pour contrôler l’étanchéité des aiguilles d’injecteurs pendant l’action du démarreur, que faut-il déposer ?', c: ['Les bougies de préchauffage', 'Les injecteurs', 'La pompe HP', 'Le capteur de pression'], e: 'Étape commune aux logigrammes Delphi, Continental et Bosch.' }
     { l: 'carburants', q: 'Indice de cétane minimal du gazole ?', c: ['51', '40', '95', '30'], e: 'En dessous : délai d’allumage allongé → démarrage difficile à froid, cognements, fumées.' },
     { l: 'carburants', q: 'À quel moment apparaissent les premiers cristaux de paraffine ?', c: ['Au point de trouble (PT)', 'Au point d’écoulement (PE)', 'À la température limite de filtrabilité (TLF)', 'À 0 °C exactement'], e: 'Ordre : PE < TLF < PT. TLF = les cristaux bouchent le filtre ; PE = le gazole est figé.' },
     { l: 'carburants', q: 'Que se passe-t-il à la température limite de filtrabilité (TLF) ?', c: ['Les cristaux bouchent le filtre', 'Le gazole est figé', 'Les premiers cristaux apparaissent', 'Le gazole s’évapore'], e: 'PT : premiers cristaux ; TLF : filtre bouché ; PE : figé.' },
