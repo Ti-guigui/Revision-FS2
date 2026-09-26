@@ -476,13 +476,14 @@
       // exercices : on reprend le développement complet de la correction détaillée de la leçon
       var qn = l.exo && (q.q.match(/^Q\d+/) || [])[0];
       var dev = qn && (l.html.match(new RegExp('<li><b>' + qn + ' — [^<]*</b>\\s*([\\s\\S]*?)</li>')) || [])[1];
+      if (dev && dev.trim() === q.e.trim()) dev = null; // déjà l'explication complète
       fb = '<div class="feedback ' + (ans.ok ? 'ok' : 'ko') + '" id="feedback" tabindex="-1">' +
         '<div class="fb-title">' + (ans.ok ? '✅ Bonne réponse !' : (ans.chosen === -1 ? '⏱️ Temps écoulé' : '❌ Mauvaise réponse')) + '</div>' +
         '<div class="fb-recap"><p class="fb-q">❓ ' + q.q + '</p>' +
           (ans.chosen >= 0 ? '<p>Ta réponse : <b>' + LETTERS[perm.indexOf(ans.chosen)] + '</b> — ' + q.c[ans.chosen] + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
           (ans.ok ? '' : '<p class="fb-good">La bonne réponse est : <b>' + goodLetter + '</b> — ' + q.c[q.a] + '</p>') + '</div>' +
         (dev ? '<div class="fb-sec dev"><b>🧮 Développement de la réponse</b><p>' + dev + '</p></div>' : '') +
-        '<div class="fb-sec"><b>💡 Explication</b><p>' + q.e + '</p></div>' +
+        '<div class="fb-sec' + (l.exo && !dev ? ' dev' : '') + '"><b>' + (l.exo && !dev ? '🧮 Développement de la réponse' : '💡 Explication') + '</b><p>' + q.e + '</p></div>' +
         (q.r ? '<div class="fb-sec retenir"><b>🧠 À retenir</b><p>' + q.r + '</p></div>' : '') +
         (q.w ? '<div class="fb-sec attention"><b>⚠️ Attention</b><p>' + q.w + '</p></div>' : '') +
         (q.src ? '<p class="muted small">Source : ' + esc(q.src) + '</p>' : '') +
