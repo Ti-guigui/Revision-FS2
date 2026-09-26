@@ -360,7 +360,7 @@ REV.addExercises('elec', {
       id: 'sym-portes', title: 'Portes logiques : symboles de ta fiche',
       html: `
 <h3>Énoncé</h3>
-<p>Symboles OTAN et AFNOR découpés dans ta fiche des portes logiques (8 portes). Questions simples à 3 propositions, comme dans tes tests.</p>
+<p>Symboles OTAN et AFNOR découpés dans ta fiche des portes logiques (les 6 portes vues en cours : OUI, NON, ET, ET NON, OU, OU NON). Questions simples à 3 propositions, comme dans tes tests.</p>
 <h3>Correction détaillée question par question</h3>
 <ol class="corr">
 <li><b>Q01 — OUI.</b> Porte OUI : S = A.</li>
@@ -375,55 +375,43 @@ REV.addExercises('elec', {
 <li><b>Q10 — OU.</b> Porte OU : S = A + B.</li>
 <li><b>Q11 — OU NON.</b> Porte OU NON : S = (A + B)‾.</li>
 <li><b>Q12 — OU NON.</b> Porte OU NON : S = (A + B)‾.</li>
-<li><b>Q13 — OU EXCLUSIF.</b> Porte OU EXCLUSIF : S = A ⊕ B.</li>
-<li><b>Q14 — OU EXCLUSIF.</b> Porte OU EXCLUSIF : S = A ⊕ B.</li>
-<li><b>Q15 — OU NON EXCLUSIF.</b> Porte OU NON EXCLUSIF : S = (A ⊕ B)‾.</li>
-<li><b>Q16 — OU NON EXCLUSIF.</b> Porte OU NON EXCLUSIF : S = (A ⊕ B)‾.</li>
-<li><b>Q17 — S = A.</b> Porte OUI : S = A.</li>
-<li><b>Q18 — S = Ā.</b> Porte NON : S = Ā.</li>
-<li><b>Q19 — S = A · B.</b> Porte ET : S = A · B.</li>
-<li><b>Q20 — S = (A · B)‾.</b> Porte ET NON : S = (A · B)‾.</li>
-<li><b>Q21 — S = A + B.</b> Porte OU : S = A + B.</li>
-<li><b>Q22 — S = (A + B)‾.</b> Porte OU NON : S = (A + B)‾.</li>
-<li><b>Q23 — S = A ⊕ B.</b> Porte OU EXCLUSIF : S = A ⊕ B.</li>
-<li><b>Q24 — S = (A ⊕ B)‾.</b> Porte OU NON EXCLUSIF : S = (A ⊕ B)‾.</li>
-<li><b>Q25 — OU.</b> Une seule entrée à 1 suffit pour avoir S = 1 (S = 0 seulement si A = B = 0).</li>
-<li><b>Q26 — ET.</b> S = 1 seulement si toutes les entrées sont à 1.</li>
-<li><b>Q27 — ET NON.</b> S = 0 seulement si toutes les entrées sont à 1.</li>
-<li><b>Q28 — OU NON.</b> S = 1 seulement si toutes les entrées sont à 0.</li>
+<li><b>Q13 — S = A.</b> Porte OUI : S = A.</li>
+<li><b>Q14 — S = Ā.</b> Porte NON : S = Ā.</li>
+<li><b>Q15 — S = A · B.</b> Porte ET : S = A · B.</li>
+<li><b>Q16 — S = (A · B)‾.</b> Porte ET NON : S = (A · B)‾.</li>
+<li><b>Q17 — S = A + B.</b> Porte OU : S = A + B.</li>
+<li><b>Q18 — S = (A + B)‾.</b> Porte OU NON : S = (A + B)‾.</li>
+<li><b>Q19 — OU.</b> Une seule entrée à 1 suffit pour avoir S = 1 (S = 0 seulement si A = B = 0).</li>
+<li><b>Q20 — ET.</b> S = 1 seulement si toutes les entrées sont à 1.</li>
+<li><b>Q21 — ET NON.</b> S = 0 seulement si toutes les entrées sont à 1.</li>
+<li><b>Q22 — OU NON.</b> S = 1 seulement si toutes les entrées sont à 0.</li>
 </ol>`,
       retenir: ['Reconnaître le symbole, puis dire son rôle.'],
       memo: { cle: 'SYMBOLE → NOM → RÔLE', points: ['Regarder les orifices, les flèches, les ressorts et les pilotages'], astuce: 'Un symbole se lit comme une phrase : entrée, sortie, commande.' }
     }
   ],
   questions: [
-    { l: 'sym-portes', img: 'sym/porte-oui-otan.png', q: 'Q01 — Quelle est cette porte logique (norme OTAN) ?', c: ['OUI', 'OU EXCLUSIF', 'NON'], e: 'Porte OUI : S = A.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-oui-afnor.png', q: 'Q02 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OUI', 'OU EXCLUSIF', 'OU NON'], e: 'Porte OUI : S = A.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-non-otan.png', q: 'Q03 — Quelle est cette porte logique (norme OTAN) ?', c: ['NON', 'OU NON EXCLUSIF', 'OU'], e: 'Porte NON : S = Ā.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-non-afnor.png', q: 'Q04 — Quelle est cette porte logique (norme AFNOR) ?', c: ['NON', 'OUI', 'OU NON'], e: 'Porte NON : S = Ā.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-et-otan.png', q: 'Q05 — Quelle est cette porte logique (norme OTAN) ?', c: ['ET', 'ET NON', 'OU EXCLUSIF'], e: 'Porte ET : S = A · B.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-et-afnor.png', q: 'Q06 — Quelle est cette porte logique (norme AFNOR) ?', c: ['ET', 'ET NON', 'OU EXCLUSIF'], e: 'Porte ET : S = A · B.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-oui-otan.png', q: 'Q01 — Quelle est cette porte logique (norme OTAN) ?', c: ['OUI', 'OU NON', 'NON'], e: 'Porte OUI : S = A.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-oui-afnor.png', q: 'Q02 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OUI', 'OU NON', 'OU'], e: 'Porte OUI : S = A.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-non-otan.png', q: 'Q03 — Quelle est cette porte logique (norme OTAN) ?', c: ['NON', 'ET NON', 'OUI'], e: 'Porte NON : S = Ā.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-non-afnor.png', q: 'Q04 — Quelle est cette porte logique (norme AFNOR) ?', c: ['NON', 'ET NON', 'OU'], e: 'Porte NON : S = Ā.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-et-otan.png', q: 'Q05 — Quelle est cette porte logique (norme OTAN) ?', c: ['ET', 'ET NON', 'OUI'], e: 'Porte ET : S = A · B.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-et-afnor.png', q: 'Q06 — Quelle est cette porte logique (norme AFNOR) ?', c: ['ET', 'ET NON', 'NON'], e: 'Porte ET : S = A · B.', src: 'Symboles du cours' },
     { l: 'sym-portes', img: 'sym/porte-etnon-otan.png', q: 'Q07 — Quelle est cette porte logique (norme OTAN) ?', c: ['ET NON', 'ET', 'OUI'], e: 'Porte ET NON : S = (A · B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-etnon-afnor.png', q: 'Q08 — Quelle est cette porte logique (norme AFNOR) ?', c: ['ET NON', 'ET', 'OUI'], e: 'Porte ET NON : S = (A · B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-ou-otan.png', q: 'Q09 — Quelle est cette porte logique (norme OTAN) ?', c: ['OU', 'OUI', 'ET NON'], e: 'Porte OU : S = A + B.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-ou-afnor.png', q: 'Q10 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OU', 'OU EXCLUSIF', 'OUI'], e: 'Porte OU : S = A + B.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-etnon-afnor.png', q: 'Q08 — Quelle est cette porte logique (norme AFNOR) ?', c: ['ET NON', 'ET', 'OU'], e: 'Porte ET NON : S = (A · B)‾.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-ou-otan.png', q: 'Q09 — Quelle est cette porte logique (norme OTAN) ?', c: ['OU', 'OUI', 'ET'], e: 'Porte OU : S = A + B.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-ou-afnor.png', q: 'Q10 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OU', 'OU NON', 'NON'], e: 'Porte OU : S = A + B.', src: 'Symboles du cours' },
     { l: 'sym-portes', img: 'sym/porte-ounon-otan.png', q: 'Q11 — Quelle est cette porte logique (norme OTAN) ?', c: ['OU NON', 'OU', 'ET'], e: 'Porte OU NON : S = (A + B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-ounon-afnor.png', q: 'Q12 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OU NON', 'OU', 'ET NON'], e: 'Porte OU NON : S = (A + B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-xor-otan.png', q: 'Q13 — Quelle est cette porte logique (norme OTAN) ?', c: ['OU EXCLUSIF', 'OU NON', 'ET NON'], e: 'Porte OU EXCLUSIF : S = A ⊕ B.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-xor-afnor.png', q: 'Q14 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OU EXCLUSIF', 'OU', 'OU NON'], e: 'Porte OU EXCLUSIF : S = A ⊕ B.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-xnor-otan.png', q: 'Q15 — Quelle est cette porte logique (norme OTAN) ?', c: ['OU NON EXCLUSIF', 'OU EXCLUSIF', 'OU NON'], e: 'Porte OU NON EXCLUSIF : S = (A ⊕ B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-xnor-afnor.png', q: 'Q16 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OU NON EXCLUSIF', 'OU NON', 'OUI'], e: 'Porte OU NON EXCLUSIF : S = (A ⊕ B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-oui-otan.png', q: 'Q17 — Quelle est l’équation de sortie de cette porte ?', c: ['S = A', 'S = (A · B)‾', 'S = Ā'], e: 'Porte OUI : S = A.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-non-otan.png', q: 'Q18 — Quelle est l’équation de sortie de cette porte ?', c: ['S = Ā', 'S = (A ⊕ B)‾', 'S = A ⊕ B'], e: 'Porte NON : S = Ā.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-et-otan.png', q: 'Q19 — Quelle est l’équation de sortie de cette porte ?', c: ['S = A · B', 'S = Ā', 'S = A + B'], e: 'Porte ET : S = A · B.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-etnon-otan.png', q: 'Q20 — Quelle est l’équation de sortie de cette porte ?', c: ['S = (A · B)‾', 'S = A', 'S = A · B'], e: 'Porte ET NON : S = (A · B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-ou-otan.png', q: 'Q21 — Quelle est l’équation de sortie de cette porte ?', c: ['S = A + B', 'S = A', 'S = A ⊕ B'], e: 'Porte OU : S = A + B.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-ounon-otan.png', q: 'Q22 — Quelle est l’équation de sortie de cette porte ?', c: ['S = (A + B)‾', 'S = A', 'S = A · B'], e: 'Porte OU NON : S = (A + B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-xor-otan.png', q: 'Q23 — Quelle est l’équation de sortie de cette porte ?', c: ['S = A ⊕ B', 'S = A', 'S = A + B'], e: 'Porte OU EXCLUSIF : S = A ⊕ B.', src: 'Symboles du cours' },
-    { l: 'sym-portes', img: 'sym/porte-xnor-otan.png', q: 'Q24 — Quelle est l’équation de sortie de cette porte ?', c: ['S = (A ⊕ B)‾', 'S = A ⊕ B', 'S = Ā'], e: 'Porte OU NON EXCLUSIF : S = (A ⊕ B)‾.', src: 'Symboles du cours' },
-    { l: 'sym-portes', q: 'Q25 — Quelle porte a ce fonctionnement : « Une seule entrée à 1 suffit pour avoir S = 1 » ?', c: ['OU', 'ET', 'ET NON'], e: 'Une seule entrée à 1 suffit pour avoir S = 1 (S = 0 seulement si A = B = 0).', src: 'Ta fiche des portes logiques' },
-    { l: 'sym-portes', q: 'Q26 — Quelle porte a ce fonctionnement : « S = 1 seulement si toutes les entrées sont à 1. » ?', c: ['ET', 'OU', 'ET NON'], e: 'S = 1 seulement si toutes les entrées sont à 1.', src: 'Ta fiche des portes logiques' },
-    { l: 'sym-portes', q: 'Q27 — Quelle porte a ce fonctionnement : « S = 0 seulement si toutes les entrées sont à 1. » ?', c: ['ET NON', 'OU', 'ET'], e: 'S = 0 seulement si toutes les entrées sont à 1.', src: 'Ta fiche des portes logiques' },
-    { l: 'sym-portes', q: 'Q28 — Quelle porte a ce fonctionnement : « S = 1 seulement si toutes les entrées sont à 0. » ?', c: ['OU NON', 'NON', 'ET'], e: 'S = 1 seulement si toutes les entrées sont à 0.', src: 'Ta fiche des portes logiques' },
+    { l: 'sym-portes', img: 'sym/porte-ounon-afnor.png', q: 'Q12 — Quelle est cette porte logique (norme AFNOR) ?', c: ['OU NON', 'OU', 'NON'], e: 'Porte OU NON : S = (A + B)‾.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-oui-otan.png', q: 'Q13 — Quelle est l’équation de sortie de cette porte ?', c: ['S = A', 'S = (A + B)‾', 'S = A + B'], e: 'Porte OUI : S = A.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-non-otan.png', q: 'Q14 — Quelle est l’équation de sortie de cette porte ?', c: ['S = Ā', 'S = (A · B)‾', 'S = A'], e: 'Porte NON : S = Ā.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-et-otan.png', q: 'Q15 — Quelle est l’équation de sortie de cette porte ?', c: ['S = A · B', 'S = (A · B)‾', 'S = A'], e: 'Porte ET : S = A · B.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-etnon-otan.png', q: 'Q16 — Quelle est l’équation de sortie de cette porte ?', c: ['S = (A · B)‾', 'S = Ā', 'S = A + B'], e: 'Porte ET NON : S = (A · B)‾.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-ou-otan.png', q: 'Q17 — Quelle est l’équation de sortie de cette porte ?', c: ['S = A + B', 'S = A', 'S = A · B'], e: 'Porte OU : S = A + B.', src: 'Symboles du cours' },
+    { l: 'sym-portes', img: 'sym/porte-ounon-otan.png', q: 'Q18 — Quelle est l’équation de sortie de cette porte ?', c: ['S = (A + B)‾', 'S = A', 'S = A + B'], e: 'Porte OU NON : S = (A + B)‾.', src: 'Symboles du cours' },
+    { l: 'sym-portes', q: 'Q19 — Quelle porte a ce fonctionnement : « Une seule entrée à 1 suffit pour avoir S = 1 » ?', c: ['OU', 'OU NON', 'ET'], e: 'Une seule entrée à 1 suffit pour avoir S = 1 (S = 0 seulement si A = B = 0).', src: 'Ta fiche des portes logiques' },
+    { l: 'sym-portes', q: 'Q20 — Quelle porte a ce fonctionnement : « S = 1 seulement si toutes les entrées sont à 1. » ?', c: ['ET', 'ET NON', 'OU'], e: 'S = 1 seulement si toutes les entrées sont à 1.', src: 'Ta fiche des portes logiques' },
+    { l: 'sym-portes', q: 'Q21 — Quelle porte a ce fonctionnement : « S = 0 seulement si toutes les entrées sont à 1. » ?', c: ['ET NON', 'OU NON', 'OU'], e: 'S = 0 seulement si toutes les entrées sont à 1.', src: 'Ta fiche des portes logiques' },
+    { l: 'sym-portes', q: 'Q22 — Quelle porte a ce fonctionnement : « S = 1 seulement si toutes les entrées sont à 0. » ?', c: ['OU NON', 'NON', 'OU'], e: 'S = 1 seulement si toutes les entrées sont à 0.', src: 'Ta fiche des portes logiques' },
   ]
 });

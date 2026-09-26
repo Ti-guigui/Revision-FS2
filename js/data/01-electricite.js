@@ -169,8 +169,8 @@ REV.add({
 <li><b>Le rond en sortie = « NON »</b> (inversion) : NON, ET NON, OU NON ont un rond, OUI, ET, OU n’en ont pas.</li>
 <li><b>OTAN</b> : triangle = OUI / NON (1 entrée) · forme en « D » à dos plat = ET · forme en ogive à dos creux = OU.</li>
 <li><b>AFNOR</b> : « 1 » = OUI / NON · « &amp; » = ET · « ≥1 » = OU (au moins une entrée à 1).</li></ul></div>
-<p>Le tableau complet du fascicule (photo ci-dessous) contient aussi le OU exclusif et le OU NON exclusif : <b>ils n’ont pas été vus en cours</b>, ils ne sont pas dans les QCM.</p>`,
-      images: [{ src: 'logique-portes.jpg', cap: 'Tableau des portes du fascicule (seules les 6 premières lignes ont été vues en cours : OUI, NON, ET, ET NON, OU, OU NON)' }],
+`,
+      images: [{ src: 'logique-portes.jpg', cap: 'Tableau des portes vues en cours : OUI, NON, ET, ET NON, OU, OU NON' }],
       retenir: ['2ⁿ combinaisons pour n entrées.', 'ET = série, OU = parallèle.', 'De Morgan : casser la barre, changer le signe.', 'Rond en sortie = inversion (NON, ET NON, OU NON).', 'AFNOR : 1 = OUI/NON · & = ET · ≥1 = OU.'],
       pieges: ['Une porte NOR se remplace par un OU suivi d’un NON (pas un ET).', 'Dans une équation ET, une seule entrée à 0 suffit à mettre la sortie à 0.'],
       memo: { cle: 'ET = SÉRIE · OU = PARALLÈLE', points: ['Poids : 128-64-32-16-8-4-2-1', '2ⁿ lignes (6 entrées → 64)', '(A+B)‾ = Ā·B̄ · (A·B)‾ = Ā + B̄', '0 = 0–1 V · 1 = 2–5 V'], astuce: 'De Morgan : « je casse la barre, je change le signe ».' }

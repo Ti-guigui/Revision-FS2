@@ -21,7 +21,7 @@ REV.add({
 <li>Central : ministre, DRH-MD, EMDS, états-majors zonaux, coordonnateur central, DCSSA, inspections (ITA, IRAD, IMPA, ITPCI).</li>
 <li>Local : <b>CLP</b> (coordonnateur local, en général le <b>commandant en second</b>) ; <b>CPRP</b> (conseille le chef, <b>tient le registre SST</b>) ; préventeurs ; médecin de prévention (civil) ; médecin conseiller (militaire, membre de droit de la CCHPA) ; conseiller incendie ; CLPSR ; PCR ; encadrement ; chaque agent.</li>
 <li><b>Instances</b> : CCHPA (militaires), formation spécialisée FS (civils, obligatoire dès 50 agents) ; <b>2 réunions par an</b> ; réunions conjointes possibles depuis le 08/07/2024 avec 2 procès-verbaux distincts ; réunion supplémentaire en cas d’accident grave. CLP (= commandant en second) : coordonne, anime, surveille.</li>
-<li>Contrôle interne de niveau 1 : sous la responsabilité du CFA / chef de corps.</li></ul>`,
+</ul>`,
       retenir: ['Chef d’organisme = responsable de la PMR (et pénalement).', 'CPRP tient le registre SST.', 'CLP = commandant en second.', 'CCHPA / FS : 2 réunions par an.'],
       pieges: ['« Le chargé de prévention est responsable de la PMR-E » est FAUX : c’est le chef d’organisme.'],
       memo: { cle: 'CHEF D’ORGANISME = RESPONSABLE', points: ['CPRP : registre SST, conseille', 'CLP : commandant en second', 'CCHPA (militaires) / FS (civils) : 2×/an'], astuce: 'Le CPRP conseille, le chef décide et répond.' }
@@ -52,7 +52,7 @@ REV.add({
 <li><b>ICPE</b> : 4 régimes : déclaration, enregistrement, autorisation, autorisation avec servitudes. Déchets tracés par <b>BSD</b>.</li>
 <li>Formations : <b>PRAP</b> = prévention des risques liés à l’activité physique ; <b>TMD</b> = transport de matières dangereuses.</li>
 <li><b>PMROPS</b> (en OPEX) : CCP EMA → AIPT (théâtre) → CPRPO (COMSITE) ; CCHSO possibles sur le théâtre.</li>
-<li>Niveaux de CIPCE : 3.</li></ul>`,
+</ul>`,
       retenir: ['Imputabilité : temps + lieu + lien avec le service.', 'PPCI : limiter naissance et propagation du feu.', 'Analyse d’accident = éviter un accident similaire.'],
       memo: { cle: 'IMPUTABILITÉ = TEMPS + LIEU + SERVICE', points: ['Sport commandé = ordre écrit', 'Trajet domicile-travail sans détour', 'PSR : 2ᵉ cause de mortalité'], astuce: 'Pour qu’un accident soit « de service » : au bon moment, au bon endroit, pour le service.' }
     }
@@ -64,9 +64,8 @@ REV.add({
     { l: 'fondamentaux', q: 'Le droit de retrait des militaires est-il applicable en opération et à l’entraînement ?', c: ['Non (décret 2012-422)', 'Oui, toujours', 'Oui, seulement à l’entraînement', 'Oui, sur ordre écrit'], e: 'Correction apportée par l’AQA 03 au cours PMR.' },
     { l: 'acteurs', q: 'Affirmation FAUSSE ?', c: ['« Le chargé de prévention est responsable de la PMR-E »', '« Le chef d’organisme est le principal responsable pénal »', '« Le CPRP tient le registre SST »', '« Le CLP est en général le commandant en second »'], e: 'C’est le chef d’organisme qui est responsable, pas le chargé de prévention.', src: 'QCM Test FS2' },
     { l: 'acteurs', q: 'Qui tient le registre SST ?', c: ['Le CPRP', 'Le chef d’organisme', 'Le médecin de prévention', 'Le commandant en second'], e: 'Le CPRP conseille le chef et tient le registre SST.', src: 'QCM Test FS2' },
-    { l: 'acteurs', q: 'Qui est en général le coordonnateur local à la prévention (CLP) ?', c: ['Le commandant en second', 'Le chef de corps', 'Le CPRP', 'Le médecin conseiller'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
+    { l: 'acteurs', q: 'Qui est en général le coordonnateur local à la prévention (CLP) ?', c: ['Le commandant en second', 'Le chef de corps', 'Le CPRP', 'Le médecin conseiller'], e: 'Fiche PMR / SST l’essentiel : CLP (= C2, commandant en second) : coordonne, anime, surveille.', src: 'QCM Test FS2' },
     { l: 'acteurs', q: 'Combien de réunions par an pour la CCHPA / FS (AQA 03) ?', c: ['2', '4', '1', '12'], e: 'Le cours disait 4 : l’AQA 03 (plus récente) dit 2.' },
-    { l: 'acteurs', q: 'Le contrôle interne de niveau 1 est sous la responsabilité…', c: ['Du CFA / chef de corps', 'De la MICAM', 'Du CPRP', 'Du médecin de prévention'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
     { l: 'documents', q: 'À quoi sert la fiche emploi-nuisances (FEN) ?', c: ['Informer les agents et le médecin de prévention des risques pour la santé', 'Déclarer un accident', 'Exercer le droit de retrait', 'Suivre la vie d’un matériel'], e: 'Elle ne peut citer que des risques inscrits au DUERP.', src: 'QCM Test FS2' },
     { l: 'documents', q: 'Mise à jour de la FEN ?', c: ['A minima 5 ans après son élaboration ou sa dernière mise à jour', 'Chaque année', 'Tous les 40 ans', 'Uniquement après un accident'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
     { l: 'documents', q: 'Remise de la FEN :', c: ['Un exemplaire est remis à l’agent', 'Elle reste confidentielle au chef', 'Elle n’est remise qu’au médecin', 'Elle est affichée'], e: '1 exemplaire à l’agent, 1 au dossier médical, l’original au dossier administratif.', src: 'QCM Test FS2' },
@@ -76,7 +75,6 @@ REV.add({
     { l: 'risques', q: 'L’analyse d’un accident permet avant tout…', c: ['D’éviter un accident similaire', 'De désigner un coupable', 'De calculer une indemnité', 'De clôturer le dossier'], e: 'But : comprendre pour prévenir la récidive.', src: 'QCM Test FS2' },
     { l: 'risques', q: 'Affirmation vraie : la PPCI…', c: ['Limite les risques de naissance du feu', 'Concerne uniquement les véhicules', 'Remplace les exercices d’évacuation', 'Est gérée par le médecin'], e: 'PPCI : limiter naissance et propagation du feu, faciliter secours et évacuation.', src: 'QCM Test FS2' },
     { l: 'risques', q: 'Orientation SST 2020-2023 ?', c: ['Prévention de l’exposition aux CMR', 'Sécurité routière uniquement', 'Réduction du bruit', 'Ergonomie des bureaux'], e: 'CMR = cancérogènes, mutagènes, reprotoxiques.', src: 'QCM Test FS2' },
-    { l: 'risques', q: 'Combien de niveaux de CIPCE ?', c: ['3', '2', '4', '5'], e: 'Réponse du QCM Test FS2.', src: 'QCM Test FS2' },
     { l: 'risques', q: 'Un sport est « en service » s’il est :', c: ['Commandé (ordre écrit)', 'Pratiqué dans une salle civile', 'Pratiqué le week-end', 'Pratiqué seul'], e: 'Sport commandé = ordre écrit.' },
     { l: 'risques', q: 'Le triangle du feu associe :', c: ['Combustible, comburant, énergie d’activation', 'Eau, air, chaleur', 'Combustible, eau, oxygène'], e: 'Supprimer un des trois côtés éteint le feu.', src: 'Fiche « PMR / SST — l’essentiel »' },
     { l: 'risques', q: 'Un feu de métaux est de classe :', c: ['D', 'B', 'F'], e: 'A solides, B liquides, C gaz, D métaux, F huiles et graisses.', src: 'Fiche « PMR / SST — l’essentiel »' },
