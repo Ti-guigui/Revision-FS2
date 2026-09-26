@@ -36,8 +36,8 @@
   edit('tact', 'Portée maxi du CAESAR retenue dans tes tests', { q: 'Portée maxi du CAESAR ?' });
   edit('hydro', 'Q07 — Débit fourni par la pompe dans cette situation', { q: 'Q07 — Ripper (5 L/min) et orientation (15 L/min) en même temps, plus 1 L/min pour le pilotage LS. Débit fourni par la pompe ?' });
   edit('hydro', 'Q09 — Au neutre, ta fiche retient', { q: 'Q09 — Au neutre, la pompe LS reste à 50 b et débite 1 L/min. Puissance absorbée ?' });
-  edit('mcot', 'Q10 — Pour effectué un COS', { c: { 0: 'Être qualifié BSTAT Mobilité terrestre et être employé / désigné au RDC' },
-    e: 'Le COS est fait par un BSTAT Mobilité terrestre, employé et désigné au RDC : celui qui signe engage sa responsabilité.' });
+  edit('mcot', 'Q10 — Pour effectué un COS', { c: { 0: 'Être BM2 Mobilité terrestre et affecté au RDC' },
+    e: 'Le COS est fait par un BM2 Mobilité terrestre affecté au RDC (par un FS2 Mobter si besoin urgent, ponctuel, local) : celui qui signe engage sa responsabilité.' });
   edit('mcot', 'Q09 — Dans quelle circonstance je doit éffectuer un COS', {
     e: 'COS : sur ordre, une fois par an, en sortie de remisage de plus de 6 mois (sauf ENU), au retour de RIP, en sortie de station-service ou d’atelier. Un COS est valable 1 an.' });
   edit('mcot', 'Q06 — Qui réparti les différents travaux', { e: 'Le RDC distribue les différents travaux aux ateliers (phase 2 du DIT).' });
