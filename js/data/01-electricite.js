@@ -51,6 +51,18 @@ REV.add({
 <li><b>Règle de cours</b> : environ 5 A par mm² de section de conducteur.</li>
 </ul>
 <p>Le <b>potentiel</b> est comme une altitude : la borne − sert de 0 V ; en série, le potentiel baisse à chaque résistance traversée.</p>
+<h3>Cours CT1 : les bases à connaître par cœur</h3>
+<ul>
+<li><b>Courant</b> = déplacement d’électrons libres dans un conducteur. Le <b>générateur</b> crée ce mouvement : pôle − en excès d’électrons, pôle + en déficit.</li>
+<li><b>Sens réel</b> (électronique) : du − vers le +. <b>Sens conventionnel</b> : du <b>+ vers le −</b>. En électricité et en électronique on emploie <b>toujours le sens conventionnel</b>.</li>
+<li><b>Effets du courant</b> : calorifique, chimique, magnétique.</li>
+<li>Intensité : symbole <b>I</b>, en ampères (1 mA = 0,001 A = 10⁻³ A ; 1 µA = 10⁻⁶ A). Tension : symbole <b>U</b> (ou V), en volts (1 mV = 10⁻³ V ; 1 µV = 10⁻⁶ V).</li>
+<li><b>Nœud</b> = point de raccordement d’<b>au moins trois</b> conducteurs. Loi des nœuds : somme des courants entrants = somme des courants sortants. Le courant qui sort du + revient en totalité au −.</li>
+<li><b>Maille</b> = partie de circuit formant une boucle fermée. Loi des mailles : <b>la somme des tensions d’une maille est nulle</b>. Méthode : choisir un sens arbitraire ; flèche de tension dans ce sens → signe + ; sens contraire → signe −.</li>
+<li><b>Potentiel</b> = valeur d’un point en volts par rapport à une référence ; en automobile la référence (0 V) est la <b>masse</b>, reliée à la borne − de la batterie. <b>D.D.P. = tension</b> : U<sub>AB</sub> = V<sub>A</sub> − V<sub>B</sub>.</li>
+<li><b>Fléchage</b> : pour un <b>générateur</b>, la flèche de tension est dans le <b>même sens que le courant</b> ; pour un <b>récepteur</b>, <b>en sens inverse du courant</b>.</li>
+<li>Générateurs <b>continus</b> : batterie, pile, dynamo, alternateur + redressement, cellule photovoltaïque. <b>Alternatifs</b> : alternateur (EDF, groupe électrogène).</li>
+<li><b>Boîte à outils</b> : loi des nœuds → un courant ; loi des mailles → une tension ; loi d’Ohm → courant, tension ou résistance. Toujours <b>flécher</b> courants et tensions avant de calculer.</li></ul>
 <div class="box explic"><b>+ Méthode</b><p>Dans une association, on raisonne en deux temps : d’abord réduire le montage (série puis parallèle, branche par branche) jusqu’à une seule résistance équivalente, puis revenir vers chaque élément avec la loi d’Ohm.</p></div>
 <div class="box explic"><b>+ Pourquoi le pont diviseur exige des résistances en série</b><p>La formule suppose que le même courant les traverse toutes. Dès qu’une branche en parallèle prend du courant, la répartition change.</p></div>`,
       images: [{ src: 'elec-q16-req.png', cap: 'Test final Q16 : résistance équivalente entre A et B (réponse 2 Ω)' }],
@@ -219,6 +231,13 @@ REV.add({
     { l: 'logique', q: 'Quel est le symbole OTAN de la porte OUI ?', c: [G('oui','otan'), G('non','otan'), G('et','otan'), G('ou','otan')], e: 'OUI = triangle sans rond.' },
     { l: 'logique', q: 'Sur un symbole de porte, que signifie le petit rond en sortie ?', c: ['Une inversion (NON)', 'Une entrée supplémentaire', 'Une masse', 'Un fusible'], e: 'Le rond inverse la sortie : NON, ET NON, OU NON.' },
     { l: 'logique', q: 'Porte ET NON à 2 entrées : dans quel cas la sortie vaut-elle 0 ?', c: ['Seulement quand A = 1 et B = 1', 'Quand A = 0 et B = 0', 'Quand une seule entrée est à 1', 'Jamais'], e: 'ET NON = inverse du ET : le ET vaut 1 seulement si A = B = 1, donc le ET NON vaut 0 seulement dans ce cas.' },
-    { l: 'logique', q: 'Porte OU NON à 2 entrées : dans quel cas la sortie vaut-elle 1 ?', c: ['Seulement quand A = 0 et B = 0', 'Quand A = 1 et B = 1', 'Quand une seule entrée est à 1', 'Toujours'], e: 'OU NON = inverse du OU : le OU vaut 0 seulement si A = B = 0, donc le OU NON vaut 1 seulement dans ce cas.' }
+    { l: 'logique', q: 'Porte OU NON à 2 entrées : dans quel cas la sortie vaut-elle 1 ?', c: ['Seulement quand A = 0 et B = 0', 'Quand A = 1 et B = 1', 'Quand une seule entrée est à 1', 'Toujours'], e: 'OU NON = inverse du OU : le OU vaut 0 seulement si A = B = 0, donc le OU NON vaut 1 seulement dans ce cas.' },
+    { l: 'lois', q: 'Dans quel sens circule le courant conventionnel ?', c: ['Du + vers le −', 'Du − vers le +', 'Dans les deux sens'], e: 'Le sens réel des électrons est du − vers le + ; les physiciens avaient choisi avant le sens conventionnel + → −, qu’on emploie toujours.', r: 'On utilise toujours le sens conventionnel.', src: 'Cours CT1' },
+    { l: 'lois', q: 'Quels sont les effets du courant électrique ?', c: ['Calorifique, chimique, magnétique', 'Lumineux uniquement', 'Mécanique et sonore'], e: 'Cours CT1 : ce qu’il faut retenir.', src: 'Cours CT1' },
+    { l: 'lois', q: 'Un nœud est un point de raccordement d’au moins :', c: ['3 conducteurs', '2 conducteurs', '4 conducteurs'], e: 'Deux conducteurs raccordés forment une simple liaison, pas un nœud.', src: 'Cours CT1' },
+    { l: 'lois', q: 'Loi des mailles :', c: ['Dans une maille, la somme des tensions est nulle', 'Dans une maille, la somme des courants est nulle', 'La tension est la même partout'], e: 'On additionne les tensions en respectant leur signe selon un sens arbitraire.', src: 'Cours CT1' },
+    { l: 'lois', q: 'Pour un récepteur, la flèche de tension est dessinée :', c: ['En sens inverse du courant', 'Dans le même sens que le courant', 'Perpendiculaire au courant'], e: 'Générateur : même sens que le courant ; récepteur : sens contraire.', src: 'Cours CT1' },
+    { l: 'lois', q: 'En automobile, le potentiel de référence (0 V) est :', c: ['La masse métallique, reliée à la borne − de la batterie', 'La borne + de la batterie', 'Le + après contact'], e: 'Comme le niveau de la mer pour les altitudes.', src: 'Cours CT1' },
+    { l: 'lois', q: 'Combien vaut 1 µA ?', c: ['0,000 001 A (10⁻⁶ A)', '0,001 A (10⁻³ A)', '1 000 A'], e: '1 mA = 10⁻³ A ; 1 µA = 10⁻⁶ A.', src: 'Cours CT1' },
   ]
 });

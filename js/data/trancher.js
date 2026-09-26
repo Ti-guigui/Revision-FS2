@@ -1,6 +1,7 @@
 /* Points où les documents de cours se contredisent (tableau « à trancher avec le formateur » du livre FS2). */
 window.REV = window.REV || {};
 REV.trancher = [
+  { sujet: 'UV2 Q44 : 12 V, 12,2 V à vide et 9,2 V en charge', a: 'Correction du dossier UV2 (fiches de révision) : essai d’intensité au démarrage', b: 'Cours : 12,2 V à vide = batterie à 50 % → la recharger d’abord', keep: 'Recharger d’abord, puis faire l’essai d’intensité (le résultat n’est fiable qu’avec une batterie chargée).' },
   { sujet: 'SIMu : nombre d’établissements principaux', a: 'Ancienne fiche / QCM : un échelon central + 4 établissements', b: 'AQA 03 indice R : 1 direction + 5 EPMu', keep: 'TRANCHÉ : 5 EPMu (Bretagne, Champagne-Lorraine, Centre-Aquitaine, Provence, Méditerranée).' },
   { sujet: 'Échelonnement des stocks', a: 'QCM Test FS2 : central, régional, local', b: 'AQA 03 : Central / Avancé / R et V', keep: 'TRANCHÉ par l’AQA 03 indice R : Central / Avancé / R et V.' },
   { sujet: 'Qualification pour effectuer un COS', a: 'Ta fiche : BM2 Mobter + affecté au RDC (« effectué par un FS2 Mobter »)', b: 'Cours / contrôle RDC : BSTAT Mobilité terrestre employé et désigné au RDC', keep: 'BSTAT Mobilité terrestre désigné au RDC (cours) ; faire préciser le niveau.' },
