@@ -18,23 +18,35 @@
     return h.toString(36);
   }
 
+  function prepLesson(s, l, num) {
+    l.subject = s.id;
+    l.num = num;
+    l.key = s.id + '/' + l.id;
+    REV.lessonById[l.key] = l;
+  }
+  function prepQuestion(s, q) {
+    if (q.a === undefined) q.a = 0; // par défaut, la bonne réponse est écrite en premier (l'ordre est mélangé à l'affichage)
+    q.subject = s.id;
+    q.lkey = s.id + '/' + q.l;
+    q.id = s.id + ':' + hash(q.q + '|' + q.c[q.a]);
+    if (!REV.lessonById[q.lkey]) console.warn('Leçon inconnue pour la question', q);
+    REV.qById[q.id] = q;
+    return q;
+  }
+
   REV.add = function (s) {
-    s.lessons.forEach(function (l, i) {
-      l.subject = s.id;
-      l.num = String(i + 1).padStart(2, '0');
-      l.key = s.id + '/' + l.id;
-      REV.lessonById[l.key] = l;
-    });
-    s.questions = (s.questions || []).map(function (q) {
-      if (q.a === undefined) q.a = 0; // par défaut, la bonne réponse est écrite en premier (l'ordre est mélangé à l'affichage)
-      q.subject = s.id;
-      q.lkey = s.id + '/' + q.l;
-      q.id = s.id + ':' + hash(q.q + '|' + q.c[q.a]);
-      if (!REV.lessonById[q.lkey]) console.warn('Leçon inconnue pour la question', q);
-      REV.qById[q.id] = q;
-      return q;
-    });
+    s.lessons.forEach(function (l, i) { prepLesson(s, l, String(i + 1).padStart(2, '0')); });
+    s.questions = (s.questions || []).map(function (q) { return prepQuestion(s, q); });
     REV.subjects.push(s);
+  };
+
+  // Ajoute des exercices corrigés (onglet « Exercices ») à une matière existante.
+  REV.addExercises = function (id, x) {
+    var s = subj(id);
+    if (!s) return console.warn('Matière inconnue pour les exercices', id);
+    var n = s.lessons.filter(function (l) { return l.exo; }).length;
+    x.lessons.forEach(function (l) { l.exo = true; prepLesson(s, l, 'E' + (++n)); s.lessons.push(l); });
+    (x.questions || []).forEach(function (q) { s.questions.push(prepQuestion(s, q)); });
   };
 
   function subj(id) { return REV.subjects.find(function (s) { return s.id === id; }); }
@@ -58,8 +70,15 @@
     try {
       var d = JSON.parse(raw);
       store.q = d.q || {};
+      // les exercices corrigés sont passés de la matière « exos » à l'onglet Exercices de l'électricité
+      Object.keys(store.q).forEach(function (k) {
+        if (k.indexOf('exos:') === 0) { if (!store.q['elec:' + k.slice(5)]) store.q['elec:' + k.slice(5)] = store.q[k]; delete store.q[k]; }
+      });
       store.sessions = d.sessions || [];
       store.lessonsSeen = d.lessonsSeen || {};
+      Object.keys(store.lessonsSeen).forEach(function (k) {
+        if (k.indexOf('exos/') === 0) { store.lessonsSeen['elec/' + k.slice(5)] = store.lessonsSeen[k]; delete store.lessonsSeen[k]; }
+      });
     } catch (e) { /* données corrompues : on repart de zéro */ }
   }
   function save() { safeSet(KEY, JSON.stringify(store)); }
@@ -188,7 +207,7 @@
     switch (route) {
       case '': html = viewHome(); break;
       case 'cours': html = viewCours(); break;
-      case 'matiere': html = viewMatiere(parts[1]); break;
+      case 'matiere': html = viewMatiere(parts[1], parts[2]); break;
       case 'lecon': html = viewLecon(parts[1] + '/' + parts[2]); break;
       case 'qcm': html = parts[1] ? viewQcmSetup(parts[1]) : viewQcmChoice(); break;
       case 'quiz': html = viewQuiz(); break;
@@ -264,10 +283,13 @@
       '<a class="card mini" href="#/trancher">⚖️ Points à trancher avec le formateur</a></div>';
   }
 
-  function viewMatiere(id) {
+  function viewMatiere(id, tab) {
     var s = subj(id);
     if (!s) return viewCours();
     var sc = scoreOf(s.questions);
+    var exos = s.lessons.filter(function (l) { return l.exo; });
+    var showExos = tab === 'exercices' && exos.length;
+    var shown = s.lessons.filter(function (l) { return !!l.exo === !!showExos; });
     return crumbs([['#/cours', 'Cours'], [null, s.name]]) +
       '<header class="subj-head" style="--c:' + s.color + '"><span class="subj-ic xl">' + s.icon + '</span><div><h1 class="h1">' +
         esc(s.name) + '</h1><p class="muted">' + esc(s.desc || '') + '</p></div></header>' +
@@ -276,11 +298,18 @@
         '<a class="btn" href="#/memos/' + s.id + '">🧠 Aides-mémoires</a>' +
         (sc.pct !== null ? '<span class="pill ' + level(sc.pct).cls + '">' + level(sc.pct).dot + ' ' + sc.pct + ' %</span>' : '') +
       '</div>' +
-      '<ol class="lesson-list">' + s.lessons.map(function (l) {
-        var ls = scoreOf(lessonQuestions(l.key)), lv = level(ls.pct);
+      (exos.length ? '<nav class="tabs">' +
+        '<a href="#/matiere/' + s.id + '"' + (showExos ? '' : ' class="on"') + '>📖 Leçons (' + (s.lessons.length - exos.length) + ')</a>' +
+        '<a href="#/matiere/' + s.id + '/exercices"' + (showExos ? ' class="on"' : '') + '>📝 Exercices corrigés (' + exos.length + ')</a></nav>' : '') +
+      (showExos ? '<p class="muted small">Chaque exercice se travaille seul : ouvre-le pour le schéma et la correction détaillée, ou lance directement son QCM.</p>' : '') +
+      '<ol class="lesson-list">' + shown.map(function (l) {
+        var lq = lessonQuestions(l.key), ls = scoreOf(lq), lv = level(ls.pct);
         return '<li><a href="#/lecon/' + l.key + '"><span class="num">' + l.num + '</span><span class="lt">' + esc(l.title) +
-          '<span class="muted small">' + lessonQuestions(l.key).length + ' questions' + (store.lessonsSeen[l.key] ? ' · ✔ lue' : '') + '</span></span>' +
-          '<span class="lscore ' + lv.cls + '">' + (ls.pct === null ? '—' : ls.pct + ' % ' + lv.dot) + '</span></a></li>';
+          '<span class="muted small">' + lq.length + ' questions' + (store.lessonsSeen[l.key] ? ' · ✔ lue' : '') + '</span></span>' +
+          '<span class="lscore ' + lv.cls + '">' + (ls.pct === null ? '—' : ls.pct + ' % ' + lv.dot) + '</span></a>' +
+          (l.exo && lq.length ? '<div class="exo-actions"><a class="btn" href="#/lecon/' + l.key + '">📖 Schéma + corrigé</a>' +
+            '<button class="btn primary" data-action="lesson-qcm" data-key="' + l.key + '">🧠 S’entraîner (' + lq.length + ')</button></div>' : '') +
+          '</li>';
       }).join('') + '</ol>';
   }
 
@@ -308,11 +337,12 @@
     if (!l) return viewCours();
     var s = subj(l.subject);
     store.lessonsSeen[key] = Date.now(); save();
-    var idx = s.lessons.indexOf(l);
-    var prev = s.lessons[idx - 1], next = s.lessons[idx + 1];
+    var group = s.lessons.filter(function (x) { return !!x.exo === !!l.exo; }); // les exercices ne s'enchaînent qu'entre eux
+    var idx = group.indexOf(l);
+    var prev = group[idx - 1], next = group[idx + 1];
     var qn = lessonQuestions(key).length;
     var ls = scoreOf(lessonQuestions(key));
-    return crumbs([['#/cours', 'Cours'], ['#/matiere/' + s.id, s.name], [null, l.num + ' — ' + l.title]]) +
+    return crumbs([['#/cours', 'Cours'], ['#/matiere/' + s.id, s.name]].concat(l.exo ? [['#/matiere/' + s.id + '/exercices', 'Exercices corrigés']] : []).concat([[null, l.num + ' — ' + l.title]])) +
       '<article class="lesson" style="--c:' + s.color + '">' +
       '<h1 class="h1"><span class="num">' + l.num + '</span> ' + esc(l.title) + '</h1>' +
       (ls.pct !== null ? '<p><span class="pill ' + level(ls.pct).cls + '">' + level(ls.pct).dot + ' Ton score : ' + ls.pct + ' %</span></p>' : '') +

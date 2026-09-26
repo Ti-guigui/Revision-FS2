@@ -1,7 +1,5 @@
-/* Exercices corrigés (sujets complets avec schéma) — séparés des matières. */
-REV.add({
-  id: 'exos', name: 'Exercices corrigés', icon: '📝', color: '#0d9488',
-  desc: 'Sujets complets sur schéma, corrigés pas à pas. Chaque réponse a été recalculée à partir du cours (pas recopiée du corrigé).',
+/* Rattachés à l'onglet « Exercices corrigés » de la matière Électricité. */
+REV.addExercises('elec', {
   lessons: [
     {
       id: 'microtracteur', title: 'Microtracteur tondeuse',

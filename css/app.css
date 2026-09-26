@@ -360,3 +360,9 @@ svg.gate .g-sign { font-size: 18px; font-weight: 800; }
 .q-text svg.gate { display: block; width: 190px; height: 80px; margin: 14px auto 0; }
 .choice svg.gate { width: 120px; height: 50px; }
 table.gates td { vertical-align: middle; }
+
+/* Onglets Leçons / Exercices d'une matière */
+.tabs { display: flex; gap: 6px; margin: 14px 0 6px; border-bottom: 2px solid var(--border); flex-wrap: wrap; }
+.tabs a { padding: 8px 14px; border-radius: 10px 10px 0 0; text-decoration: none; color: var(--muted, inherit); font-weight: 700; margin-bottom: -2px; border-bottom: 2px solid transparent; }
+.tabs a.on { color: var(--primary); border-bottom-color: var(--primary); }
+.exo-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px 4px; }
