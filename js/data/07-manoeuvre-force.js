@@ -34,7 +34,7 @@ REV.add({
     {
       id: 'resistances', title: '1 · S — Somme des résistances du fardeau (ΣR)',
       html: `
-<div class="box methode"><b>✎ Toujours dans cet ordre</b><p>1 S → 2 E → 3 N → 4 S → 5 E → 6 S → 7 R → 8 D. Chaque étape utilise le résultat de la précédente : ΣR sert à calculer Nb, l’EMD sert à Nb et à l’EMT, l’EMT sert à la sécurité… Si la sécurité oblige à changer le nombre de brins, on <b>revient à l’étape 4 (schéma)</b>. Le QCM de cette matière suit aussi cet ordre ; un calcul complet résolu étape par étape est dans l’onglet « Exercices corrigés ».</p></div>
+<div class="box methode"><b>✎ Toujours dans cet ordre</b><p>1 S → 2 E → 3 N → 4 S → 5 E → 6 S → 7 R → 8 D. Chaque étape utilise le résultat de la précédente : ΣR sert à calculer Nb, l’EMD sert à Nb et à l’EMT, l’EMT sert à la sécurité… Si la sécurité oblige à changer le nombre de brins, on <b>revient à l’étape 4 (schéma)</b>. Le QCM de cette matière suit aussi cet ordre.</p></div>
 <h3>La méthode S E N S E S R D</h3>
 <div class="tw"><table><tr><th>Lettre</th><th>Étape</th></tr>
 <tr><td>S</td><td>Somme des résistances du fardeau (ΣR)</td></tr>

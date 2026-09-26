@@ -445,6 +445,7 @@
             if (!c) return '';
             return '<label class="chk"><input type="checkbox" name="lesson" value="' + l.key + '" checked> ' + l.num + ' — ' + esc(l.title) + ' <span class="muted small">(' + c + ')</span></label>';
           }).join('') + '</div></fieldset>' +
+        (s.questions.some(function (q) { return q.fixed; }) ? '<fieldset><legend>Type de questions</legend><label class="chk"><input type="checkbox" name="tests"> 📝 Seulement les questions des tests (recopiées de tes copies)</label></fieldset>' : '') +
         '<button class="btn primary big" type="submit">▶️ Commencer</button>' +
       '</form>';
   }
@@ -845,7 +846,8 @@
     var keys = Array.prototype.map.call(f.querySelectorAll('input[name=lesson]:checked'), function (c) { return c.value; });
     if (!keys.length) { toast('Coche au moins une leçon.'); return; }
     var count = +f.querySelector('input[name=count]:checked').value;
-    var qs = arrange(s.questions.filter(function (q) { return keys.indexOf(q.lkey) >= 0; }), count);
+    var onlyTests = f.querySelector('input[name=tests]:checked');
+    var qs = arrange(s.questions.filter(function (q) { return keys.indexOf(q.lkey) >= 0 && (!onlyTests || q.fixed); }), count);
     var all = keys.length === f.querySelectorAll('input[name=lesson]').length;
     startSession({ mode: 'qcm', title: s.name + (all ? '' : ' (' + keys.length + ' leçon' + (keys.length > 1 ? 's' : '') + ')'), subject: s.id, questions: qs, count: count });
   }
