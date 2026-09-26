@@ -208,7 +208,7 @@
   }
 
   function setActiveNav(route) {
-    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', trancher: 'cours',
+    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', trancher: 'cours', fiche: 'cours', fiches: 'cours',
       qcm: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
     var key = map[route] || 'home';
     if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') key = 'quiz';
@@ -236,6 +236,8 @@
       case 'resultats': html = viewResultats(); break;
       case 'memos': html = viewMemos(parts[1]); break;
       case 'trancher': html = viewTrancher(); break;
+      case 'fiches': html = viewFiches(); break;
+      case 'fiche': html = viewFiche(parts[1]); break;
       default: html = viewHome();
     }
     main.innerHTML = html;
@@ -249,7 +251,7 @@
   function decoUrl(id) { return 'url("' + new URL('img/deco/' + id + '.svg', document.baseURI).href + '")'; }
   function setDecor(route, parts) {
     var id = null;
-    if (/^(matiere|lecon|qcm|memos)$/.test(route)) id = parts[1];
+    if (/^(matiere|lecon|qcm|memos|fiche)$/.test(route)) id = parts[1];
     else if ((route === 'session' || route === 'bilan') && session) {
       var q = REV.qById[session.qids[Math.min(session.i, session.qids.length - 1)]];
       id = session.subject || (q && q.subject);
@@ -303,6 +305,8 @@
       '<h2 class="h2 h2-atelier">🧰 Les postes de l’atelier</h2>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
       '<div class="home-foot">' +
+        '<a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
+        '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
         '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
         '<a class="card mini" href="#/trancher">⚖️ Points à trancher avec le formateur</a>' +
       '</div>' +
@@ -325,7 +329,9 @@
   function viewCours() {
     return '<h1 class="h1">📖 Cours</h1><p class="muted">Choisis une matière, puis une leçon : explication, schémas, à retenir, pièges et aide-mémoire.</p>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
-      '<div class="home-foot"><a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
+      '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
+      '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
+      '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
       '<a class="card mini" href="#/trancher">⚖️ Points à trancher avec le formateur</a></div>';
   }
 
@@ -341,6 +347,7 @@
         esc(s.name) + '</h1><p class="muted">' + esc(s.desc || '') + '</p></div></header>' +
       '<div class="row-actions">' +
         '<a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM ' + esc(s.name) + '</a>' +
+        '<a class="btn" href="#/fiche/' + s.id + '">📄 Fiche de révision</a>' +
         '<a class="btn" href="#/memos/' + s.id + '">🧠 Aides-mémoires</a>' +
         (sc.pct !== null ? '<span class="pill ' + level(sc.pct).cls + '">' + level(sc.pct).dot + ' ' + sc.pct + ' %</span>' : '') +
       '</div>' +
@@ -741,6 +748,74 @@
       if (m) { var el = document.getElementById('m-' + m[1]); if (el) { el.scrollIntoView({ block: 'start' }); el.classList.add('flash'); } }
     }, 50);
     return html;
+  }
+
+  // Fiches de révision complètes : l'essentiel de la matière (REV.fiches) + toutes les leçons résumées + schémas + symboles
+  function viewFiches() {
+    return crumbs([['#/cours', 'Cours'], [null, 'Fiches de révision']]) +
+      '<h1 class="h1">📄 Fiches de révision complètes</h1><p class="muted">Une fiche par matière : l’essentiel, les formules, les schémas, les symboles, les pièges. Imprimable en PDF.</p>' +
+      '<a class="card review-cta" href="#/fiche/uv2"><span class="big">🎯</span><span><b>Fiche spéciale UV2</b><br>Tous les points à connaître pour le dossier d’évaluation</span><span class="chev">›</span></a>' +
+      '<div class="subject-grid">' + REV.subjects.map(function (s) {
+        return '<a class="card subj" href="#/fiche/' + s.id + '" style="--c:' + s.color + ';--deco:' + decoUrl(s.id).replace(/"/g, '&quot;') + '"><span class="subj-ic">' + s.icon + '</span><span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">Fiche complète</span></span><span class="chev">›</span></a>';
+      }).join('') + '</div>';
+  }
+  function list(cls, title, arr) {
+    return arr && arr.length ? '<div class="box ' + cls + '"><b>' + title + '</b><ul>' + arr.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' : '';
+  }
+  function fig(im) {
+    return '<figure><a href="img/' + im.src + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + im.src + '" alt="' + esc(im.cap) + '"></a><figcaption>' + esc(im.cap) + '</figcaption></figure>';
+  }
+  function viewFiche(id) {
+    var F = (REV.fiches || {})[id];
+    if (id === 'uv2') {
+      return crumbs([['#/cours', 'Cours'], ['#/fiches', 'Fiches de révision'], [null, 'UV2']]) +
+        '<article class="lesson fiche"><h1 class="h1">🎯 Fiche spéciale UV2</h1>' + (F ? F.html : '') + '</article>' +
+        '<div class="row-actions sticky-actions"><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';
+    }
+    var s = subj(id);
+    if (!s) return viewFiches();
+    var cours = s.lessons.filter(function (l) { return !l.exo; });
+    var exos = s.lessons.filter(function (l) { return l.exo; });
+    var syms = exos.filter(function (l) { return /^sym/.test(l.id); });
+    var autres = exos.filter(function (l) { return !/^sym/.test(l.id); });
+    var html = crumbs([['#/cours', 'Cours'], ['#/fiches', 'Fiches de révision'], [null, s.name]]) +
+      '<article class="lesson fiche" style="--c:' + s.color + '">' +
+      '<h1 class="h1">' + s.icon + ' Fiche de révision — ' + esc(s.name) + '</h1>' +
+      '<p class="muted">' + esc(s.desc || '') + '</p>' +
+      '<nav class="chips">' + (F ? '<a class="chip" href="#/fiche/' + id + '#f-essentiel">⭐ L’essentiel</a>' : '') +
+        cours.map(function (l) { return '<a class="chip" href="#/fiche/' + id + '#f-' + l.id + '">' + l.num + ' ' + esc(l.title) + '</a>'; }).join('') +
+        (syms.length ? '<a class="chip" href="#/fiche/' + id + '#f-symboles">🔣 Symboles</a>' : '') +
+        (autres.length ? '<a class="chip" href="#/fiche/' + id + '#f-exos">📝 Exercices types</a>' : '') + '</nav>' +
+      (F ? '<section id="f-essentiel" class="fiche-sec"><h2 class="h2">⭐ L’essentiel à connaître</h2>' + F.html + '</section>' : '');
+    cours.forEach(function (l) {
+      html += '<section id="f-' + l.id + '" class="fiche-sec"><h2 class="h2">' + l.num + ' — ' + esc(l.title) + ' <a class="small" href="#/lecon/' + l.key + '">📖 leçon</a></h2>' +
+        list('retenir', '★ À retenir', l.retenir) + list('piege', '⚠️ Pièges', l.pieges) +
+        (l.memo && l.memo.points ? list('methode', '🧠 ' + (l.memo.cle || 'Aide-mémoire'), l.memo.points) : '') +
+        (l.images ? '<div class="fiche-figs">' + l.images.map(fig).join('') + '</div>' : '') + '</section>';
+    });
+    if (syms.length) {
+      html += '<section id="f-symboles" class="fiche-sec"><h2 class="h2">🔣 Symboles : désignation</h2>';
+      syms.forEach(function (l) {
+        var seen = {}, cards = [];
+        lessonQuestions(l.key).forEach(function (q) {
+          if (!q.img || seen[q.img] || !/désignation de ce symbole|Quel est ce symbole|Quelle est cette porte/.test(q.q)) return;
+          seen[q.img] = 1;
+          cards.push('<figure><img loading="lazy" src="img/' + q.img + '" alt=""><figcaption><b>' + q.good.map(function (g) { return q.c[g]; }).join(' / ') + '</b><br><span class="small">' + q.e.replace(/^[^:]*: /, '') + '</span></figcaption></figure>');
+        });
+        html += '<h3>' + esc(l.title) + '</h3><div class="fiche-sym">' + cards.join('') + '</div>';
+      });
+      html += '</section>';
+    }
+    if (autres.length) {
+      html += '<section id="f-exos" class="fiche-sec"><h2 class="h2">📝 Exercices types (corrigés)</h2><ul class="fiche-exos">' + autres.map(function (l) {
+        return '<li><a href="#/lecon/' + l.key + '"><b>' + l.num + '</b> ' + esc(l.title) + '</a>' + (l.retenir ? '<ul>' + l.retenir.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul>' : '') + '</li>';
+      }).join('') + '</ul></section>';
+    }
+    setTimeout(function () {
+      var m = location.hash.match(/#(f-[\w-]+)$/);
+      if (m) { var el = document.getElementById(m[1]); if (el) el.scrollIntoView({ block: 'start' }); }
+    }, 50);
+    return html + '</article><div class="row-actions sticky-actions"><a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM ' + esc(s.name) + '</a><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';
   }
 
   function viewTrancher() {
