@@ -1,6 +1,7 @@
 /* Points où les documents de cours se contredisent (tableau « à trancher avec le formateur » du livre FS2). */
 window.REV = window.REV || {};
 REV.trancher = [
+  { sujet: 'Qualification pour effectuer un COS', a: 'Ta fiche : BM2 Mobter + affecté au RDC (« effectué par un FS2 Mobter »)', b: 'Cours / contrôle RDC : BSTAT Mobilité terrestre employé et désigné au RDC', keep: 'BSTAT Mobilité terrestre désigné au RDC (cours) ; faire préciser le niveau.' },
   { sujet: 'Batterie branchée à l’envers (démarreur classique, 2 réponses)', a: 'Copie du test démarreur : « le moteur démarre à l’envers du démarreur » + court-circuit des diodes de puissance', b: 'Cours : inducteurs et induit en série → le démarreur tourne dans le même sens ; l’inversion détruit le pont de diodes', keep: 'Sûr : court-circuit des diodes de puissance. La 2ᵉ réponse est à faire préciser.' },
   { sujet: '12 V : 2,1 V/élément à vide, 8 V au démarrage', a: 'Copie : « je recharge la batterie » (+ « essai d’intensité » dans la version 2 réponses)', b: '2,1 V/élément = batterie déjà chargée : c’est l’essai d’intensité qui conclut', keep: 'Batterie chargée (s’en assurer) puis essai d’intensité au démarrage.' },
   { sujet: 'Bornes des alternateurs 6 / 9 diodes', a: 'Fiche mémoire : 6 diodes = 1 borne L ; 9 diodes = L et +', b: 'Fiche Complet Élec + QCM OVI114 : 6 ou 12 diodes = 2 bornes L et + ; 9 diodes = 1 borne L', keep: 'Version B, validée par le QCM OVI114 (Q37, 42, 46, 78, 125, 150, 156).' },
@@ -22,8 +23,8 @@ REV.trancher = [
   { sujet: 'Durée de vie d’un pneumatique', a: 'Fiche manuscrite DSFT (et livre) : pneu utilisable 20 ans', b: 'Fiche imprimée « Rappels marquages pneumatique » : environ 10 ans selon utilisation et stockage', keep: 'À faire trancher par le formateur (aucune question du QCM ne porte dessus).' },
   { sujet: 'Naissance de l’esprit maintenance', a: 'QCM Uv1 : la cavalerie', b: 'AQA 03 : l’artillerie', keep: 'Artillerie (texte officiel AQA 03).' },
   { sujet: 'Niveaux d’emploi par ETR', a: 'QCM Uv1 : 3', b: 'Quiz FS2 : 5', keep: 'Non vérifiable dans l’AQA 03 : à confirmer.' },
-  { sujet: 'RDC : qui répartit les travaux (phase 2 du DIT) ?', a: 'Uv1 + fiche env. : le RDC', b: 'Corrigé UV2 : la CDM', keep: 'RDC (réponse cochée sur la copie).' },
-  { sujet: 'RDC : qui valide la partie 4 du DIT « dans tous les cas » ?', a: 'Uv1 : la CDM', b: 'Corrigé UV2 : le RDC', keep: 'CDM (réponse cochée sur la copie), à confirmer.' },
+  { sujet: 'RDC : qui répartit les travaux (phase 2 du DIT) ?', a: 'Uv1 + fiche env. : le RDC', b: 'Corrigé UV2 : la CDM', keep: 'RDC (réponse cochée sur la copie, confirmée par ta fiche : le RDC distribue les travaux aux ateliers).' },
+  { sujet: 'RDC : qui valide la partie 4 du DIT « dans tous les cas » ?', a: 'Uv1 : la CDM', b: 'Corrigé UV2 : le RDC', keep: 'CDM (réponse cochée sur la copie ; ta fiche : la CDM ouvre et clôture le MAT 4486), à confirmer.' },
   { sujet: 'Feuille NTI1 : ce qu’on ne peut pas avoir', a: 'Uv1 : potentiel km supérieur au compteur', b: 'UV2 : compteur supérieur au potentiel', keep: 'Uv1 (copie corrigée).' },
   { sujet: 'Freinage pneumatique : temps de remplissage', a: 'Cours : 6 à 11 min', b: 'Corrigé UV2 Word : 6 à 10 min', keep: 'Cours : 6 à 11 min (proposition présente dans le QCM).' },
   { sujet: '4 roues restent freinées (UV2 Q15)', a: 'Corrigé PDF : circuit de frein de parc', b: 'Corrigé Word : circuits de service AV + AR', keep: 'Dépend du schéma : à faire trancher.' },
