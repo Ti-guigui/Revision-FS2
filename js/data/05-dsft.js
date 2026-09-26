@@ -143,17 +143,38 @@ REV.add({
     {
       id: 'pneus', title: 'Roues et pneumatiques',
       html: `
-<div class="tw"><table><tr><th>Marquage</th><th>Lecture</th></tr>
-<tr><td>Jante 5½ J 13 FH E28</td><td>Largeur 5½" · rebord J · diamètre 13" · sécurité FH (flat hump) · déport 28 mm</td></tr>
-<tr><td>Pneu 185/70 R13 86T M+S</td><td>Largeur 185 mm · H/S 70 % · radial · 13" · charge 86 (530 kg) · <b>vitesse T</b> (190 km/h) · neige</td></tr>
-<tr><td>Pneu PL 295/80 R 22.5 152/148 H</td><td>Largeur · H/L 80 % · radial · 22,5" · charge roue simple / jumelée · vitesse</td></tr>
-<tr><td>12.00 R 20</td><td>Largeur en pouces, 00 = rapport H/L, radial, jante 20"</td></tr>
-<tr><td>DOT 4519</td><td>Semaine 45 de 2019. Ton cours : pneu utilisable 20 ans</td></tr>
-<tr><td>V CFD 20</td><td>Vérifié à Clermont-Ferrand en 2020</td></tr>
-<tr><td>REGROOVABLE / BRAND TIRE HERE</td><td>Recreusable / zone de marquage à chaud</td></tr></table></div>`,
-      retenir: ['Dans 185/70 R13 86T : 86 = indice de charge, T = indice de vitesse.', 'DOT 4519 = semaine 45 de 2019.', 'V CFD 20 = vérifié à Clermont-Ferrand en 2020.'],
-      pieges: ['La lettre après l’indice de charge est la VITESSE, pas la charge.'],
-      memo: { cle: 'LARGEUR / SÉRIE R DIAMÈTRE CHARGE VITESSE', points: ['185 mm / 70 % / radial / 13" / 86 / T', 'DOT SSAA = semaine + année', 'V CFD 20 = vérifié CF 2020'], astuce: 'Le chiffre porte (charge), la lettre court (vitesse).' }
+<p>Source : fiche « Rappels marquages pneumatique » (FS2 MOBTER).</p>
+<h3>Marquage VL : 225/40 R18 92 Y DOT 4217</h3>
+<div class="tw"><table><tr><th>Repère</th><th>Signification</th></tr>
+<tr><td><b>225</b></td><td>Largeur de la bande de roulement, de flanc à flanc, en <b>mm</b></td></tr>
+<tr><td><b>40</b></td><td>Hauteur du flanc = rapport Hauteur / Largeur en <b>%</b> (le flanc fait 40 % de 225 mm)</td></tr>
+<tr><td><b>R</b></td><td>Type de structure : <b>radial</b></td></tr>
+<tr><td><b>18</b></td><td>Diamètre intérieur du pneu en <b>pouces</b> = diamètre d’accrochage de la jante</td></tr>
+<tr><td><b>92</b></td><td><b>Indice de charge</b> → charge maxi en kg (tableau des indices)</td></tr>
+<tr><td><b>Y</b></td><td><b>Indice de vitesse</b> → vitesse maxi en km/h (tableau des indices)</td></tr>
+<tr><td><b>DOT</b></td><td>Sigle des manufactures américaines : <b>Department Of Transportation</b></td></tr>
+<tr><td><b>4217</b></td><td>Semaine et année de fabrication : <b>42ᵉ semaine de 2017</b></td></tr></table></div>
+<div class="box piege"><b>⚠ Durée de vie</b><p>Un pneumatique dure <b>environ 10 ans</b>, selon ses conditions d’utilisation et de stockage.</p></div>
+<h3>Marquage PL : 295/80 R22.5 152/148 L DOT 2018</h3>
+<ul><li><b>295</b> = largeur en mm · <b>80</b> = hauteur du flanc, 80 % de 295 mm · <b>R</b> = radial · <b>22.5</b> = diamètre intérieur en pouces.</li>
+<li>Jante 22,5" : <b>inclinaison du talon d’accrochage à 15°</b>.</li>
+<li><b>152</b> = indice de charge en montage <b>roue SOLO</b> · <b>148</b> = indice de charge en montage <b>roue JUMELÉE</b>.</li>
+<li><b>L</b> = indice de vitesse · <b>DOT 2018</b> = <b>20ᵉ semaine de 2018</b>.</li></ul>
+<h3>Marquage en pouces : 14.00 R20 152/148 L DOT 2019</h3>
+<ul><li><b>14</b> = largeur de la bande de roulement, de flanc à flanc, en <b>pouces</b> (14").</li>
+<li><b>00</b> = rapport Hauteur / Largeur : le flanc fait <b>100 %</b> de 14" → pneu dit <b>CARRÉ</b> (mêmes dimensions en hauteur et en largeur).</li>
+<li><b>R</b> = radial · <b>20</b> = diamètre intérieur en pouces · jante 20" : <b>talon d’accrochage à 5°</b>.</li>
+<li><b>152</b> = charge roue solo · <b>148</b> = charge roue jumelée · <b>L</b> = vitesse · <b>DOT 2019</b> = 20ᵉ semaine de 2019.</li></ul>
+<h3>Marquages militaires spécifiques</h3>
+<div class="tw"><table><tr><th>Marquage</th><th>Signification</th></tr>
+<tr><td><b>AR17</b></td><td>Pneumatique exclusivement militaire : « <b>Armée</b>, fabriqué en 2017 »</td></tr>
+<tr><td><b>R18</b></td><td><b>Rechapé</b> en 2018</td></tr>
+<tr><td><b>V CFD 19</b></td><td><b>V</b> = <b>Recreusé</b> (1ᵉʳ recreusage) ; <b>VV</b> = 2ᵉ recreusage · <b>CFD</b> = localité de l’intervention (Clermont-Ferrand) · <b>19</b> = année du recreusage (2019)</td></tr></table></div>
+<h3>Jante</h3>
+<p>5½ J 13 FH E28 : largeur 5½" · hauteur de rebord J · diamètre 13" · sécurité FH (flat hump) · déport 28 mm. REGROOVABLE = recreusable ; BRAND TIRE HERE = zone de marquage à chaud.</p>`,
+      retenir: ['Largeur (mm ou pouces) / hauteur du flanc en % · R = radial · diamètre en pouces · indice de charge · indice de vitesse.', 'Deux indices de charge (152/148) = roue solo / roue jumelée.', 'DOT 4217 = 42ᵉ semaine 2017 ; DOT 2018 = 20ᵉ semaine 2018.', '« 00 » = flanc de 100 % : pneu carré.', 'V = recreusé (VV = 2ᵉ recreusage) · R = rechapé · AR = armée.', 'Durée de vie d’un pneu : environ 10 ans.'],
+      pieges: ['La lettre après l’indice de charge est la VITESSE, pas la charge.', '« V » dans « V CFD 20 » signifie RECREUSÉ, pas « vérifié » (certaines corrections de test disaient « vérifié »).', 'Talon d’accrochage : 15° pour une jante 22,5" ; 5° pour une jante 20".'],
+      memo: { cle: 'LARGEUR / HAUTEUR % R DIAMÈTRE · CHARGE · VITESSE · DOT', points: ['225/40 R18 92 Y DOT 4217', '152/148 = solo / jumelé', '14.00 : 14" de large, 00 = 100 % → carré', 'AR = armée · R = rechapé · V = recreusé · VV = 2ᵉ recreusage', 'Durée de vie ≈ 10 ans'], astuce: 'Le chiffre porte (charge), la lettre court (vitesse) ; V comme « Vidé » : on a recreusé la gomme.' }
     },
     {
       id: 'panne', title: 'Recherche de panne freinage',
@@ -216,8 +237,21 @@ REV.add({
     { l: 'abs', q: 'Quel système évite le patinage des roues motrices ?', c: ['L’ASR', 'L’ABS', 'L’ICP', 'La SPR'], e: 'ASR = antipatinage à l’accélération.' },
     { l: 'abs', q: 'Capteur de roue qui mesure jusqu’à 0 km/h ?', c: ['Le capteur à effet Hall', 'Le capteur inductif', 'Le capteur piézo-électrique', 'La CTN'], e: 'Le Hall (alimenté, créneaux) mesure jusqu’à l’arrêt ; l’inductif n’a plus de signal à très basse vitesse.' },
     { l: 'pneus', q: 'Dans le marquage « 185 70 R 15 86 T », que représente la lettre T ?', c: ['L’indice de vitesse', 'L’indice de charge', 'Le type de carcasse', 'La saison'], e: '86 = indice de charge ; T = indice de vitesse (190 km/h). R = radial.', src: 'Test final Q21 (officiel)' },
-    { l: 'pneus', q: 'Que signifie le marquage « V CFD 20 » ?', c: ['Vérifié à Clermont-Ferrand en 2020', 'Recreusé à Clermont-Ferrand en 2020', 'Vérifié la 20ᵉ semaine', 'Vitesse maxi 200 km/h'], e: 'V = vérifié, CFD = Clermont-Ferrand, 20 = 2020.', src: 'UV2 Q6' },
-    { l: 'pneus', q: 'Que signifie « DOT 4519 » ?', c: ['Fabriqué la semaine 45 de 2019', 'Fabriqué en 1945', 'Indice de charge 45, vitesse 19', 'Pneu de 45 cm, jante 19"'], e: 'Les 4 chiffres = semaine + année de fabrication.' },
+    { l: 'pneus', q: 'Que signifie le marquage « V CFD 20 » sur un pneumatique ?', c: ['Recreusé (1ᵉʳ recreusage) à Clermont-Ferrand en 2020', 'Vérifié à Clermont-Ferrand en 2020', 'Vérifié à Clermont-Ferrand la 20ᵉ semaine', 'Vitesse maxi 200 km/h'], e: 'V = recreusé (VV = 2ᵉ recreusage) ; CFD = localité de l’intervention (Clermont-Ferrand) ; 20 = année du recreusage.', w: 'Une correction de test donnait « vérifié » : la fiche de révision dit RECREUSÉ.' },
+    { l: 'pneus', q: 'Que signifie « DOT 4217 » sur un pneumatique ?', c: ['Fabriqué la 42ᵉ semaine de 2017', 'Fabriqué en 1742', 'Indice de charge 42, vitesse 17', 'Fabriqué le 4 février 2017'], e: 'Les 4 chiffres = semaine puis année de fabrication. DOT = Department Of Transportation (sigle des manufactures américaines).' },
+    { l: 'pneus', q: 'Dans « 225/40 R18 92 Y », que signifie 225 ?', c: ['La largeur de la bande de roulement, de flanc à flanc, en mm', 'Le diamètre de la jante en mm', 'La hauteur du flanc en mm', 'La charge maxi en kg'], e: '225 mm de flanc à flanc ; 40 = le flanc fait 40 % de 225 mm.' },
+    { l: 'pneus', q: 'Dans « 225/40 R18 92 Y », que signifie 40 ?', c: ['La hauteur du flanc : 40 % de la largeur', 'La hauteur du flanc : 40 mm', 'L’indice de charge', 'Le diamètre en cm'], e: 'Rapport Hauteur / Largeur en pourcentage : le flanc fait 40 % de 225 mm.' },
+    { l: 'pneus', q: 'Dans « 225/40 R18 92 Y », que signifie 18 ?', c: ['Le diamètre intérieur du pneu (accrochage de la jante) en pouces', 'La largeur en pouces', 'L’année de fabrication', 'La pression de gonflage'], e: '18" = diamètre d’accrochage de la jante.' },
+    { l: 'pneus', q: 'Dans « 225/40 R18 92 Y », que signifie 92 ?', c: ['L’indice de charge (charge maxi en kg, voir tableau)', 'L’indice de vitesse', 'La charge maxi : 92 kg', 'La hauteur du flanc'], e: '92 = indice de charge ; Y = indice de vitesse. On lit la valeur réelle dans le tableau des indices.' },
+    { l: 'pneus', q: 'Que signifie le sigle « DOT » sur un pneumatique ?', c: ['Department Of Transportation (manufactures américaines)', 'Date Of Tyre', 'Dimension Officielle du Talon', 'Diamètre Ou Taille'], e: 'Il est suivi de la semaine et de l’année de fabrication.' },
+    { l: 'pneus', q: 'Durée de vie d’un pneumatique selon la fiche de révision ?', c: ['Environ 10 ans, selon l’utilisation et le stockage', 'Environ 20 ans', 'Environ 3 ans', 'Illimitée s’il n’est pas usé'], e: 'Environ 10 ans en fonction des conditions d’utilisation et de stockage.' },
+    { l: 'pneus', q: 'Pneu PL « 295/80 R22.5 152/148 L » : que signifient 152 et 148 ?', c: ['Indice de charge en roue solo (152) et en roue jumelée (148)', 'Indice de vitesse avant (152) et arrière (148)', 'Charge maxi en kg de chaque roue', 'Largeur mini et maxi'], e: 'Deux indices de charge : montage roue SOLO puis roue JUMELÉE. L = indice de vitesse.' },
+    { l: 'pneus', q: 'Inclinaison du talon d’accrochage pour une jante de 22,5" ?', c: ['15°', '5°', '45°', '22,5°'], e: 'Jante 22,5" : talon à 15° ; jante 20" (ex. 14.00 R20) : talon à 5°.' },
+    { l: 'pneus', q: 'Pneu « 14.00 R20 » : que signifie 14 ?', c: ['La largeur de la bande de roulement en pouces (14")', 'La largeur en mm', 'Le diamètre de la jante', 'L’indice de charge'], e: 'Sur ce type de marquage, la largeur est en pouces.' },
+    { l: 'pneus', q: 'Pneu « 14.00 R20 » : que signifie « 00 » ?', c: ['Rapport H/L de 100 % : pneu dit « carré »', 'Pneu sans chambre', 'Aucune indication', 'Flanc de 0 mm'], e: 'Le flanc fait 100 % de 14" : mêmes dimensions en hauteur et en largeur.' },
+    { l: 'pneus', q: 'Marquage militaire « AR17 » :', c: ['Pneumatique exclusivement militaire, « Armée », fabriqué en 2017', 'Rechapé en 2017', 'Recreusé en 2017', 'Arrière droit, 17 pouces'], e: 'AR = armée ; R = rechapé ; V = recreusé.' },
+    { l: 'pneus', q: 'Marquage militaire « R18 » :', c: ['Rechapé en 2018', 'Radial 18 pouces', 'Recreusé en 2018', 'Armée 2018'], e: 'R = rechapé (nouvelle bande de roulement) ; V = recreusé (sculptures recreusées).' },
+    { l: 'pneus', q: 'Que signifie « VV » sur un pneumatique militaire ?', c: ['2ᵉ recreusage', 'Double vitesse', 'Vérifié deux fois', 'Véhicule de l’avant'], e: 'V = 1ᵉʳ recreusage ; VV = 2ᵉ recreusage.' },
     { l: 'panne', q: 'Le véhicule plonge de l’avant au freinage. Diagnostic ?', c: ['Défaut du freinage arrière', 'Défaut du freinage avant', 'Assistance défaillante', 'Maître-cylindre HS'], e: 'Si l’arrière ne freine pas assez, tout le freinage est fait par l’avant : la caisse plonge.', src: 'Cas P4 – 1' },
     { l: 'panne', q: 'Freine mal, pédale DURE. Élément à contrôler ?', c: ['L’assistance (aspiration, clapet, pompe à vide, servo)', 'Le maître-cylindre', 'Le correcteur', 'Les disques'], e: 'Pédale dure = l’assistance ne fonctionne plus.', src: 'Cas AX – 1' },
     { l: 'panne', q: 'Ne freine plus de l’AV, peu de l’AR, pédale longue, bocal bon, pas de voyant. Diagnostic ?', c: ['Fuite interne du maître-cylindre tandem', 'Correcteur HS', 'Assistance HS', 'Disque voilé'], e: 'Bocal bon + pas de voyant ICP = pas de fuite externe ; pédale longue sans pression AV = fuite interne.', src: 'Cas Auverland – 1' },
