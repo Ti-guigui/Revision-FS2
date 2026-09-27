@@ -31,6 +31,8 @@
       if (q.img && /p71-12|valve-reduction/.test(q.img)) return false;      // son symbole
       if (/spires par mètre/.test(q.q)) return false;                       // torsade du bus CAN
       if (/niveau d’électrolyte/.test(q.q)) return false;                   // niveau des batteries
+      if (/grognard|lame de scie/i.test(q.q + good + (q.img || ''))) return false;   // contrôle au grognard
+      if (/retour partiel/i.test(q.q + good) && !q.fixed) return false;              // valve de barrage à retour partiel (hors dossier UV2)
       if (q.lkey === 'elec/uv2-elec' && /^\s*5[3-6]\)/.test(q.q)) return false; // portes logiques : barres illisibles
       return true;
     });
@@ -38,6 +40,30 @@
       q.c = q.c.map(function (c) {
         if (!HORS.test(c)) return c;
         return q.c.some(function (x) { return /^Valve relais simple pilotage$/.test(x); }) ? 'Valve de réduction' : 'Valve relais simple pilotage';
+      });
+    });
+  });
+
+  /* grognard et valve de barrage à retour partiel : pas vus en cours, retirés des leçons */
+  REV.subjects.forEach(function (s) {
+    s.lessons.forEach(function (l) {
+      if (l.images) l.images = l.images.filter(function (im) { return !/grognard/.test(im.src); });
+      if (l.html) l.html = l.html.replace(/Court-circuit de l’induit\s*:\s*sur un grognard, la lame ne doit pas vibrer\.?/g, '')
+        .replace(/\s*court-circuit au grognard \(la lame ne doit pas vibrer\)\.?/g, '.')
+        .replace(/<li>[^<]*(?:<b>)?Q11 — Valve de barrage à retour partiel[\s\S]*?<\/li>/g, '')
+        .replace(/<li>[^<]*(?:<b>)?Q45 — Priorité de remplissage, avec retour partiel[\s\S]*?<\/li>/g, '');
+      if (l.html) l.html = l.html.replace(/\s*Court-circuit de l’induit\s*:\s*sur un grognard[^.<]*\./g, '');
+      if (l.retenir) l.retenir = l.retenir.filter(function (r) { return !/grognard/i.test(r); });
+    });
+  });
+
+  REV.subjects.forEach(function (s) {
+    s.questions.forEach(function (q) {
+      if (q.fixed) return;
+      q.c = q.c.map(function (c, i) {
+        if (!/retour partiel/i.test(c) || q.good.indexOf(i) >= 0) return c;
+        var alt = ['Valve de barrage sans retour', 'Clapet anti-retour ou valve de retenue', 'Double valve d’arrêt'].filter(function (x) { return q.c.indexOf(x) < 0; })[0];
+        return alt || c;
       });
     });
   });

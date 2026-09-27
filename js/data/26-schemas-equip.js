@@ -50,7 +50,7 @@
 <h3>Dépannage (AGA 01)</h3>
 <ul><li>Clé actionnée, rien ne se passe → contacteur électromagnétique. Bruit de « mitraillette », moteur ne tourne pas → <b>enroulement de maintien coupé</b>.</li>
 <li>Contrôle solénoïde : − sur DEM → le relais s’enclenche (appel) ; − sur la carcasse, appuyer → reste enclenché (maintien) ; − sur BAT → reste enclenché (lame de contact).</li>
-<li>Tout bobinage : isolement (∞ = bon), coupure, court-circuit (valeur constructeur). Induit : même valeur entre chaque paire de lames ; court-circuit au grognard (la lame ne doit pas vibrer).</li>
+<li>Tout bobinage : isolement (∞ = bon), coupure, court-circuit (valeur constructeur). Induit : même valeur entre chaque paire de lames.</li>
 <li>Balais : coulissent librement, ni gras ni humides, usure &lt; 60 % de la longueur.</li></ul>`,
     retenir: ['Solénoïde = fonction mécanique (lanceur) + fonction électrique (contact de puissance).', 'Maintien coupé = claquements (« mitraillette »).', 'Grognard : la lame de scie ne vibre pas = pas de court-circuit.']
   });

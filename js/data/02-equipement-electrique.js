@@ -163,7 +163,7 @@ REV.add({
 </ul>
 <div class="box methode"><b>✎ Contrôle du solénoïde déposé (+ sur l’excitation)</b><p>1) <b>Appel</b> : − sur DEM → le relais s’enclenche. 2) <b>Maintien</b> : − sur la carcasse, pousser le noyau → il doit rester enclenché. 3) <b>Lame de contact</b> : − sur BAT, pousser le noyau → il doit rester enclenché.</p></div>
 <ul>
-<li>Bobinages (inducteur, induit) : 3 contrôles — isolement (infini par rapport à la masse), coupure, court-circuit (valeur constructeur). Court-circuit de l’induit : sur un <b>grognard</b>, la lame ne doit pas vibrer.</li>
+<li>Bobinages (inducteur, induit) : 3 contrôles — isolement (infini par rapport à la masse), coupure, court-circuit (valeur constructeur).</li>
 <li>Balais : coulissent librement, ni gras ni humides, <b>usure maxi 60 %</b> de la longueur.</li>
 <li>Rien ne se passe à la clé → contacteur électromagnétique possible. Bruit de mitraillette sans rotation → bobinage de maintien interrompu.</li>
 </ul>`,
@@ -499,7 +499,7 @@ REV.add({
     { l: 'demarreur', q: 'Démarreur : quelle partie crée le champ magnétique ?', c: ['L’inducteur (bobinages et masses polaires sur la carcasse)', 'L’induit', 'Le collecteur', 'Le lanceur'], e: 'Dans le démarreur, l’inducteur est fixe (stator) et crée le champ ; l’induit tourne.' },
     { l: 'demarreur', q: 'Solénoïde déposé, + sur l’excitation : comment tester la bobine d’APPEL ?', c: ['Mettre le − sur DEM : le relais doit s’enclencher', 'Mettre le − sur la carcasse', 'Mettre le − sur BAT', 'Mesurer entre BAT et DEM'], e: 'Appel : − sur DEM. Maintien : − sur la carcasse, noyau poussé, il reste enclenché. Lame de contact : − sur BAT.', src: 'Cours AGA 01' },
     { l: 'demarreur', q: 'Usure maximale admise pour les balais du démarreur ?', c: ['60 % de la longueur initiale', '10 %', '90 %', '30 %'], e: 'Ils doivent aussi coulisser librement et ne pas être gras ou humides.' },
-    { l: 'demarreur', q: 'Comment contrôler un court-circuit dans l’induit ?', c: ['Sur un grognard : la lame ne doit pas vibrer', 'À l’ohmmètre entre lame et masse', 'Au voltmètre sous tension', 'En mesurant le faux-rond'], e: 'L’isolement se contrôle à l’ohmmètre (infini), le court-circuit entre spires au grognard.' },
+    { l: 'demarreur', q: 'Comment contrôler un court-circuit dans l’induit ?', c: ['Sur un grognard : la lame ne doit pas vibrer', 'À l’ohmmètre entre lame et masse', 'Au voltmètre sous tension', 'En mesurant le faux-rond'], e: 'L’isolement se contrôle à l’ohmmètre (infini par rapport à la masse).' },
     { l: 'demarreur', q: 'Les dents du lanceur sont usinées (abîmées). Cause possible ?', c: ['Le contacteur à clé ne revient pas au zéro (anti-redémarrage HS)', 'Batterie trop chargée', 'Balais neufs', 'Câble trop gros'], e: 'L’anti-redémarrage impose de revenir au repos : s’il ne fonctionne pas, on relance moteur tournant.' },
     { l: 'demarreur', q: 'Rôle d’un relais dans le circuit de démarrage ?', c: ['Limiter les chutes de tension dans les fils longs (faible courant qui commande un fort courant)', 'Redresser le courant', 'Freiner l’induit', 'Engrener le pignon'], e: 'Il évite de faire passer un fort courant dans de longs fils de forte section.' },
     { l: 'alternateur', q: 'Principe de l’alternateur :', c: ['Magnétisme + mouvement = électricité (loi de Lenz)', 'Loi de Laplace', 'Effet Hall', 'Réaction chimique'], e: 'Une variation de flux magnétique dans une bobine crée une tension alternative sinusoïdale.', src: 'Cours AGA 01' },
