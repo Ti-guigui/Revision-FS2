@@ -764,6 +764,34 @@
       '<button class="btn danger" data-action="reset">🗑️ Tout effacer</button></div></div>';
   }
 
+  /* ----- Aides-mémoires : systèmes (phases, pannes) et symboles ----- */
+  var ACT = { R: 'Remplacer', P: 'Réparer', G: 'Régler', N: 'Recharger / nettoyer', C: 'Contrôler' };
+  function sysHtml(x, s) {
+    return '<section class="sys" style="--c:' + s.color + '">' +
+      '<header class="sys-h"><h3>' + x.t + '</h3><p>' + x.role + '</p></header>' +
+      (x.img && x.img.length ? '<div class="sys-figs">' + x.img.map(function (i) {
+        return '<figure><a href="img/' + i[0] + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + i[0] + '" alt=""></a><figcaption>' + i[1] + '</figcaption></figure>';
+      }).join('') + '</div>' : '') +
+      '<h4 class="sys-sub">Fonctionnement, étape par étape</h4><ol class="steps">' + x.phases.map(function (p) {
+        return '<li><b>' + p[0] + '</b><span>' + p[1] + '</span></li>';
+      }).join('') + '</ol>' +
+      (x.methode ? '<h4 class="sys-sub">Méthode</h4><div class="flow flow-h">' + x.methode.map(function (m, i) { return '<span>' + (i + 1) + '. ' + m + '</span>'; }).join('<i>›</i>') + '</div>' : '') +
+      (x.pannes.length ? '<h4 class="sys-sub">Pannes : symptôme → diagnostic → action</h4><div class="pannes">' + x.pannes.map(function (p) {
+        return '<div class="panne"><div class="pn-s"><small>Symptôme</small>' + p[0] + '</div><div class="pn-d"><small>Diagnostic</small>' + p[1] + '</div>' +
+          '<div class="pn-a"><small><span class="act act-' + p[3] + '">' + ACT[p[3]] + '</span></small>' + p[2] + '</div></div>';
+      }).join('') + '</div>' : '') + '</section>';
+  }
+  function symbolesOf(s) {
+    var by = {}, order = [];
+    s.questions.forEach(function (q) {
+      if (!q.img || !/^sym/.test(q.l)) return;
+      if (!by[q.img]) { by[q.img] = { img: q.img }; order.push(q.img); }
+      var a = q.c[q.good[0]], o = by[q.img];
+      if (/rôle/i.test(q.q)) { if (!o.role) o.role = a; } else if (!o.des) o.des = a;
+    });
+    return order.map(function (k) { return by[k]; }).filter(function (o) { return o.des; });
+  }
+
   /* ----- Aides-mémoires ----- */
   function viewMemos(id) {
     var list = id ? [subj(id)].filter(Boolean) : REV.subjects;
@@ -774,7 +802,26 @@
       }).join('') + '</div>') +
       '<div class="row-actions"><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';
     list.forEach(function (s) {
-      html += '<h2 class="h2">' + s.icon + ' ' + esc(s.name) + '</h2><div class="memo-grid">' +
+      var sy = id ? (REV.systemes || {})[s.id] || [] : [];
+      var sb = id ? symbolesOf(s) : [];
+      if (id && (sy.length || sb.length)) {
+        html += '<nav class="chips memo-nav">' + (sy.length ? '<a class="chip" href="#/memos/' + s.id + '#m-systemes">⚙️ Systèmes : fonctionnement et pannes</a>' : '') +
+          (sb.length ? '<a class="chip" href="#/memos/' + s.id + '#m-symboles">🔣 Symboles : désignation et rôle</a>' : '') +
+          '<a class="chip" href="#/memos/' + s.id + '#m-lecons">🧠 Aide-mémoire par leçon</a></nav>';
+      }
+      if (sy.length) {
+        html += '<h2 class="h2 sec-title" id="m-systemes">⚙️ Les systèmes : fonctionnement, pannes, diagnostic</h2>' +
+          '<p class="muted small legend-acts">Actions : <span class="act act-R">Remplacer</span> <span class="act act-P">Réparer</span> <span class="act act-G">Régler</span> <span class="act act-N">Recharger / nettoyer / purger</span> <span class="act act-C">Contrôler plus loin</span></p>' +
+          sy.map(function (x) { return sysHtml(x, s); }).join('');
+      }
+      if (sb.length) {
+        html += '<h2 class="h2 sec-title" id="m-symboles">🔣 Symboles : désignation et rôle</h2><div class="sym-grid">' +
+          sb.map(function (x) {
+            return '<figure class="sym-card"><a href="img/' + x.img + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + x.img + '" alt=""></a>' +
+              '<figcaption><b>' + x.des + '</b>' + (x.role ? '<span>' + x.role + '</span>' : '') + '</figcaption></figure>';
+          }).join('') + '</div>';
+      }
+      html += '<h2 class="h2 sec-title" id="m-lecons">' + s.icon + ' ' + esc(s.name) + (id ? ' — aide-mémoire par leçon' : '') + '</h2><div class="memo-grid">' +
         s.lessons.map(function (l) { return '<div id="m-' + l.id + '">' + memoHtml(l, s, true) + '</div>'; }).join('') + '</div>';
     });
     setTimeout(function () {
