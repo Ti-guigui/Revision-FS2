@@ -671,3 +671,21 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .ruler th { font-size: .62rem; padding: 14px 3px 3px; letter-spacing: 0; }
 .ruler td { padding: 4px 3px; }
 .rul-sym.base { font-size: .95rem !important; }
+
+/* Tableaux de formules empilés sur téléphone */
+@media (max-width: 640px) {
+  .formule .tw:has(.ftab) { overflow: visible; border: 0; }
+  .ruler th { overflow-wrap: normal; }
+  .ftab, .ftab tbody, .ftab tr, .ftab td { display: block; width: 100%; box-sizing: border-box; }
+  .ftab tr:first-child { display: none; }
+  .ftab tr { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2, var(--surface)); }
+  .ftab td { border: 0 !important; padding: 2px 0 !important; background: none !important; }
+  .ftab td:empty { display: none; }
+  .ftab td.f-name { font-weight: 800; font-size: 1rem; color: var(--c, #2563eb); margin-bottom: 4px; }
+  .ftab td.f-main { font-size: 1.05rem; font-weight: 700; line-height: 1.5; padding: 8px 10px !important; margin: 2px 0 6px;
+    border-left: 4px solid var(--c, #2563eb) !important; border-radius: 6px; background: rgba(37, 99, 235, .10) !important; }
+  .ftab td.f-more { font-size: .9rem; }
+  .ftab .f-sep { display: block; height: 0; overflow: hidden; margin: 4px 0; border-top: 1px dashed var(--border); }
+  .ftab td.f-lab::before { content: attr(data-l) " : "; font-size: .72rem; text-transform: uppercase; color: var(--muted); }
+  .ftab td.f-more::before { content: attr(data-l) " : "; font-weight: 700; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; }
+}

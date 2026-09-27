@@ -551,6 +551,27 @@
   }
 
   /* ----- Formules, valeurs, conversions et méthodes par matière ----- */
+  /* Sur téléphone, chaque ligne de tableau devient une fiche : nom en titre, formule encadrée,
+     les autres colonnes avec leur intitulé. Les règles de conversion (.ruler) ne sont pas touchées. */
+  function stackTables(html) {
+    return html.replace(/<table>([\s\S]*?)<\/table>/g, function (all, inner) {
+      var rows = inner.match(/<tr>[\s\S]*?<\/tr>/g) || [];
+      if (!rows.length || !/^<tr><th>/.test(rows[0]) || /rul-step/.test(rows[0])) return all;
+      var heads = (rows[0].match(/<th>([\s\S]*?)<\/th>/g) || []).map(function (h) { return h.replace(/<[^>]+>/g, ''); });
+      var main = -1;
+      heads.forEach(function (h, i) { if (main < 0 && i > 0 && /formule|à retenir|valeur|méthode/i.test(h)) main = i; });
+      if (main < 0) main = heads.length > 1 ? 1 : -1;
+      return '<table class="ftab">' + rows[0] + rows.slice(1).map(function (r) {
+        var i = 0;
+        return r.replace(/<td>([\s\S]*?)<\/td>/g, function (m, txt) {
+          var k = i++, cls = k === 0 ? 'f-name' : k === main ? 'f-main' + (/formule|à retenir|valeur|méthode/i.test(heads[k]) ? '' : ' f-lab') : 'f-more';
+          if (k === main) txt = txt.replace(/ · /g, '<span class="f-sep"> · </span>');
+          return '<td class="' + cls + '" data-l="' + esc(heads[k] || '') + '">' + txt + '</td>';
+        });
+      }).join('') + '</table>';
+    });
+  }
+
   function viewFormules(id) {
     var F = REV.formulaires || {};
     var subs = REV.subjects.filter(function (s) { return F[s.id]; });
@@ -560,7 +581,7 @@
       subs.map(function (s) { return '<a class="chip' + (id === s.id ? ' on' : '') + '" href="#/formules/' + s.id + '">' + s.icon + ' ' + esc(s.name) + '</a>'; }).join('') + '</nav>' +
       list.map(function (s) {
         return '<h2 class="h2 sec-title">' + s.icon + ' ' + esc(s.name) + '</h2>' + F[s.id].map(function (b) {
-          return '<section class="card pad lesson formule" style="--c:' + s.color + '"><h3>' + b.t + '</h3>' + b.html + '</section>';
+          return '<section class="card pad lesson formule" style="--c:' + s.color + '"><h3>' + b.t + '</h3>' + stackTables(b.html) + '</section>';
         }).join('') + '<div class="row-actions"><a class="btn" href="#/matiere/' + s.id + '">📖 Cours ' + esc(s.name) + '</a><a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM</a></div>';
       }).join('') +
       '<div class="row-actions sticky-actions"><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';

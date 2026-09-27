@@ -37,7 +37,7 @@
 
   var PREFIXES = ruler({ step: '× 10³', factor: '1 000', cells: [['Téra', 'T'], ['Giga', 'G'], ['Méga', 'M'], ['kilo', 'k'], ['unité', 'V A Ω W', 1], ['milli', 'm'], ['micro', 'µ'], ['nano', 'n'], ['pico', 'p']],
     ex: '35 kΩ = 35 000 Ω · 200 mA = 0,2 A · 500 µA = 0,000 5 A · 40 ms = 0,040 s · 3 kW = 3 000 W' });
-  var LONGUEURS = ruler({ step: '× 10', factor: '10', cells: [['kilomètre', 'km'], ['hectomètre', 'hm'], ['décamètre', 'dam'], ['mètre', 'm', 1], ['décimètre', 'dm'], ['centimètre', 'cm'], ['millimètre', 'mm']],
+  var LONGUEURS = ruler({ step: '× 10', factor: '10', cells: [['kilo', 'km'], ['hecto', 'hm'], ['déca', 'dam'], ['mètre', 'm', 1], ['déci', 'dm'], ['centi', 'cm'], ['milli', 'mm']],
     ex: '60 cm = 6 dm (diamètre d’un arbre) · 8 cm = 80 mm (alésage)' });
   var SURFACES = ruler({ step: '× 100', factor: '100', cells: [['m²', 'm²', 1], ['dm²', 'dm²'], ['cm²', 'cm²'], ['mm²', 'mm²']],
     ex: '1 mm² = 0,01 cm² = 10⁻⁶ m² · 5 cm² = 500 mm²' });
