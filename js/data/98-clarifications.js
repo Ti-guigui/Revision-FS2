@@ -91,7 +91,7 @@
   edit('mcot', 'Q10 — Pour effectué un COS', { c: { 0: 'Être titulaire du BM2 / BSTAT Mobter ou FS1 NG, avoir 2 ans d’atelier, la FA RDC/COS et être inscrit sur le DUO' },
     e: 'Pour tenir le poste au RDC, un militaire doit être titulaire du BM2 / BSTAT Mobter ou du FS1 NG, avoir 2 ans d’atelier, la FA RDC/COS et être inscrit sur le DUO. Un FS2 Mobter peut faire le COS si le besoin est urgent, ponctuel, local.' });
   edit('mcot', 'Q09 — Dans quelle circonstance je doit éffectuer un COS', {
-    c: { 0: 'Sur ordre, annuellement (bus : tous les 6 mois), après un remisage de plus de 6 mois (sauf ENU)' }, e: 'COS : sur ordre, une fois par an (bus : 6 mois), après un remisage de plus de 6 mois (sauf ENU). Pas après une RIP : le prestataire rend le véhicule apte et conforme.' });
+    c: { 0: 'Tous les ans (bus : tous les 6 mois), lors d’une VP + OS, sur ordre, après un remisage de plus de 6 mois (sauf ENU)' }, e: 'COS : tous les ans (bus : 6 mois), lors d’une VP + OS, sur ordre, après un remisage de plus de 6 mois (sauf ENU). Sortie de RIP : on ne touche plus au véhicule.' });
   edit('mcot', 'Q06 — Qui réparti les différents travaux', { e: 'Le RDC distribue les différents travaux aux ateliers (phase 2 du DIT).' });
   edit('mcot', 'Q07 — Dans tous les cas qui validera la partie 4 du DIT', { e: 'La CDM (ECM, équipe de conduite de la maintenance) ouvre et clôture le DIT (MAT 4486) : c’est elle qui valide la partie 4 dans tous les cas, pas le RDC.' });
 

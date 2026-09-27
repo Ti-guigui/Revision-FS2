@@ -8,7 +8,7 @@ REV.addLessons('mcot', 'reparation', [{
 <tr><td><b>Conduite de la maintenance (CDM)</b></td><td>Pilote les activités de maintenance · <b>ouvre et clôture le MAT 4486</b></td></tr>
 <tr><td><b>RDC</b> (Réception, Diagnostic, Contrôle)</td><td><ul>
 <li>Ouvre l’AT</li><li>Ouvre et remplit le MAT 4486</li><li>Applique les procédures</li>
-<li>Effectue le contrôle des organes de sécurité (<b>COS</b>) : sur ordre · annuellement · remisage de plus de 6 mois (sauf ENU)</li>
+<li>Effectue le contrôle des organes de sécurité (<b>COS</b>) : tous les ans · lors d’une VP + OS · sur ordre · remisage de plus de 6 mois (sauf ENU). Sortie de RIP : on ne touche plus au véhicule.</li>
 <li>Crée son tableau de production</li>
 <li>Opérations de contrôle en sortie : organes de <b>freinage</b> · de <b>direction</b> · de <b>liaison au sol</b> · d’<b>éclairage</b> · suite aux <b>interventions techniques</b> · <b>essai dynamique</b></li>
 <li><b>Distribue les différents travaux aux ateliers</b></li></ul></td></tr>
@@ -62,7 +62,7 @@ REV.addLessons('mcot', 'reparation', [{
 <li><b>Opérations correctives</b> : renseignées par le <b>chef d’atelier</b> ; suivi détaillé des opérations effectuées (prioriser les plus importantes).</li>
 <li><b>Vérification périodique</b> : ESP, VGP, etc.</li>
 <li><b>Opération en industrie privée = RIP</b>.</li></ul>`,
-  retenir: ['CDM : pilote la maintenance, ouvre et clôture le MAT 4486.', 'RDC : ouvre l’AT, ouvre et remplit le MAT 4486, fait le COS, distribue les travaux aux ateliers.', 'COS : BM2 Mobter affecté au RDC (FS2 Mobter si urgent, ponctuel, local) ; sur ordre, annuellement, bus 6 mois, stockage > 6 mois sauf ENU (pas après une RIP).', 'MAT 4486 ch. 4 : éclairage, freinage, suspension, direction, réparation effectuée, essai dynamique.', 'Vidange = en rouge dans le MAT 10004 ; BIMT tous les 3 mois.'],
+  retenir: ['CDM : pilote la maintenance, ouvre et clôture le MAT 4486.', 'RDC : ouvre l’AT, ouvre et remplit le MAT 4486, fait le COS, distribue les travaux aux ateliers.', 'COS : BM2 Mobter affecté au RDC (FS2 Mobter si urgent, ponctuel, local) ; tous les ans (bus 6 mois), lors d’une VP + OS, sur ordre, stockage > 6 mois sauf ENU. Sortie de RIP : on ne touche plus au véhicule.', 'MAT 4486 ch. 4 : éclairage, freinage, suspension, direction, réparation effectuée, essai dynamique.', 'Vidange = en rouge dans le MAT 10004 ; BIMT tous les 3 mois.'],
   pieges: ['Retour de RIP : pas de COS obligatoire, on ne repasse jamais derrière (le prestataire rend le véhicule apte et conforme au code de la route).', 'Le MAT 10004 peut être rempli par la CDM, le RDC et le chef d’atelier (pas seulement le RDC).'],
   memo: { cle: 'CDM PILOTE · RDC CONTRÔLE · STATION ENTRETIENT · ATELIER RÉPARE', flow: ['CDM ouvre le MAT 4486', 'RDC : réception, diagnostic', 'Atelier / station : travaux', 'RDC : contrôle de sortie + COS', 'CDM clôture'], points: ['COS : BM2 Mobter affecté au RDC', 'Bus : COS tous les 6 mois', 'BIMT : 3 mois', 'Vidange en rouge'], astuce: 'Éclairage, Freinage, Suspension, Direction, Réparation, Essai : « Et Freiner Sans Dévier, Réparer, Essayer ».' }
 }]);
