@@ -119,6 +119,15 @@ REV.systemes = {
   ],
 
   dsft: [
+    { t: 'Les angles du train avant (diagnostic)', img: [['sym/agd27-p37-1.png', 'Angle inclus = carrossage + pivot'], ['tableau-alfa.jpg', 'Tableau ALFA']],
+      role: 'Lire un relevé d’angles et trouver la pièce en cause.',
+      phases: [['1. Plage', 'Écrire la plage mini–maxi de chaque angle (1° = 60′).'], ['2. Hors tolérance', 'Repérer les angles hors plage, à gauche et à droite.'], ['3. Angle inclus', 'Calculer carrossage + pivot à gauche et à droite.'], ['4. Conclusion', 'Angle inclus bon (identique G/D) → triangle, berceau ou châssis. Angle inclus pas bon → fusée, porte-fusée et/ou jambe de force.']],
+      pannes: [
+        ['Carrossage et pivot hors tolérance, angle inclus bon (identique G/D)', 'La fusée est bonne : c’est la position de la roue qui a bougé', 'Remplacer le triangle ; contrôler le berceau et le châssis', 'R'],
+        ['Angle inclus pas bon (différent G/D)', 'Fusée, porte-fusée et/ou jambe de force déformés', 'Remplacer la fusée / le porte-fusée et/ou la jambe de force', 'R'],
+        ['Usure rugueuse du pneu', 'Parallélisme pas bon', 'Régler le parallélisme', 'G'],
+        ['Usure lisse du pneu', 'Carrossage pas bon', 'Contrôler l’angle inclus, puis la pièce en cause', 'C'],
+        ['Le véhicule tire d’un côté', 'Côté du carrossage le plus positif (et de la chasse la plus faible)', 'Ordre de réglage : hauteur de caisse, carrossage, parallélisme', 'G']] },
     { t: 'Le freinage hydraulique', img: [['livres/l-d047_2.jpg', 'Maître-cylindre'], ['livres/l-d054_0.jpg', 'ICP by-pass'], ['livres/l-d059_1.jpg', 'Circuit en II']],
       role: 'Ralentir et arrêter le véhicule en transformant l’effort à la pédale en pression dans les récepteurs.',
       phases: [['1. Pédale', 'L’effort du conducteur est multiplié par l’assistance (dépression : Mastervac).'], ['2. Maître-cylindre tandem', 'Transforme l’effort en pression ; 2 chambres : si un circuit fuit, l’autre freine encore.'], ['3. Correcteur', 'Dose la pression arrière (limiteur ou compensateur, asservi ou non à la charge).'], ['4. Récepteurs', 'Étriers (disques) et cylindres de roue (tambours).'], ['5. Défreinage', 'Rappel par le joint carré (disque) ou les ressorts (tambour) ; SPR : 0,5 à 1,5 bar gardés à l’arrière.']],

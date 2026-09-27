@@ -74,7 +74,7 @@ REV.fiches = {
 <div class="tw"><table><tr><th>Point</th><th>À retenir</th></tr>
 <tr><td>Usure des pneus</td><td>Rugueuse = parallélisme · lisse = carrossage · facettes = amortisseurs</td></tr>
 <tr><td>Tirage</td><td>Tire du côté du carrossage le plus positif</td></tr>
-<tr><td>Angle inclus</td><td>= carrossage + pivot (diagnostic : identique G/D → triangle ; différent → fusée)</td></tr>
+<tr><td>Angle inclus</td><td>= carrossage + pivot (diagnostic : bon → triangle, berceau ou châssis ; pas bon → fusée, porte-fusée et/ou jambe de force)</td></tr>
 <tr><td>Réglage</td><td>Hauteur de caisse → carrossage → parallélisme (toujours en dernier) · 1° = 60′, écrire mini–maxi</td></tr>
 <tr><td>Willis</td><td>Porte-satellites MENÉ = démultiplié · MENANT = multiplié · FIXE = marche arrière · 2 éléments liés = prise directe</td></tr>
 <tr><td>Freinage hydraulique</td><td>Fuite interne sans trace = maître-cylindre tandem · pédale dure = assistance · liquide ≤ 165 °C à remplacer</td></tr>
@@ -110,7 +110,7 @@ REV.fiches = {
 <h2 class="h2">🚙 DSFT (Q1 à Q18)</h2>
 <ul>
 <li><b>Tableau ALFA</b> : 1° = 60′ ; pour chaque angle, écrire la plage MINI–MAXI (valeur ± tolérance) puis comparer. Ex. 10°30′ ± 30′ → 10°00′ à 11°00′.</li>
-<li><b>Pièce incriminée</b> : angle inclus (carrossage + pivot) identique G/D mais carrossage et pivot décalés en sens inverse → triangle / bras ; angle inclus différent → fusée.</li>
+<li><b>Pièce incriminée</b> : angle inclus (carrossage + pivot) identique G/D mais carrossage et pivot décalés en sens inverse → triangle, berceau ou châssis ; angle inclus pas bon → fusée, porte-fusée et/ou jambe de force.</li>
 <li><b>Tirage</b> : du côté du carrossage le plus positif.</li>
 <li><b>Usures</b> : rugueuse = parallélisme (intérieur = trop d’ouverture, extérieur = trop de pincement) ; lisse = carrossage ; facettes = amortisseurs (changer pneus + amortisseurs du même train).</li>
 <li><b>Ordre de réglage</b> : hauteur de caisse → carrossage → parallélisme.</li>
