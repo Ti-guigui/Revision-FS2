@@ -807,7 +807,7 @@
 
   /* ----- Vérification des corrigés : chaque test, question par question ----- */
   var VERIF_TESTS = [
-    ['uv2-', 'UV2 — dossier d’évaluation n°1', 'Corrigé du formateur (quiz Socrative) ; les 2 écarts avec le cours sont signalés.', 'off'],
+    ['uv2-', 'UV2 — dossier d’évaluation n°1', 'Corrigé du formateur (quiz Socrative, qui peut contenir des erreurs) ; l’écart restant avec le cours est signalé.', 'off'],
     ['tf-', 'Test final UV1 (sujet de préparation)', 'Correction officielle, vérifiée avec le cours.', 'off'],
     ['cah', 'Cahiers d’exercices (hydraulique, électricité)', 'Corrigés officiels des cahiers EMB.', 'off'],
     ['test-eee', 'Test équipement électrique et électronique embarquée', 'Pas de corrigé officiel : chaque réponse est tirée du cours (AGA 01, capteurs, LIN, CAN).', 'ok'],
@@ -821,7 +821,7 @@
   var VERIF_FLAGS = [
     [/^(dsft\/uv2-dsft|hydro\/uv2-hydro|elec\/uv2-elec)$/, /^(1[2348]|21|5[3-9]|6[0-4])\)/, 'ok', 'Question absente du quiz Socrative : réponse vérifiée dans le cours.'],
     [/^equip\/uv2-equip$/, /^46\)/, 'ecart', 'Corrigé Socrative du formateur : A (surtension). Le site garde C (cours AGA 01 : l’amorçage vient du + après contact, la lampe ne fait que signaler).'],
-    [/^moteur\/uv2-moteur$/, /^38\)/, 'ecart', 'Corrigé Socrative du formateur : A (réduire les HC). Le site garde C (cours GD 22 : l’accéléromètre recale l’injection pilote).'],
+    [/^moteur\/uv2-moteur$/, /^38\)/, 'off', 'Question mal posée, 2 réponses possibles (précision du formateur) : A (Socrative) et C (cours GD 22).'],
     [/^ppld\/questions$/, /(règle la pression maxi du circuit|je règle la pression de stand-by|Donner la bonne réponse|En sortie terrain)/, 'ded', 'Aucune case cochée sur ta feuille : réponse déduite du cours AGE 12.'],
     [/^ppld\/questions$/, /composant 6/, 'conf', 'Deux réponses marquées sur ta feuille (B et C) : à confirmer.']];
   var VERIF_LBL = { off: ['✅', 'Corrigé officiel'], ok: ['📘', 'Vérifié dans le cours'], ded: ['🟠', 'Déduit du cours'], ecart: ['⚠️', 'Écart avec le corrigé'], conf: ['❓', 'À confirmer'] };
