@@ -816,6 +816,8 @@
     ['moto', 'Exercice moto', 'Copie corrigée avec le cours d’électricité.', 'ok'],
     ['controle-rdc', 'Contrôle des connaissances RDC n°1', 'Corrigé du formateur (quiz RDC Socrative) et ta fiche.', 'off'],
     ['quiz-rdc', 'Quiz RDC', 'Corrigé du formateur (Socrative).', 'off'],
+    ['qcm-epms', 'EPMS – QCM FS2', 'Cases cochées sur la copie, vérifiées dans le cours EPMS.', 'ok'],
+    ['test-sst', 'Test SST', 'Copie corrigée ; CCHPA : AQA 03 retenue.', 'ok'],
     ['compo-b', 'Composante B (IA – B commune ECOMAT)', 'Cases cochées sur la copie ; hors des cours fournis.', 'ded'],
     ['questions', 'PPLD — questions posées', 'Réponses surlignées sur ta feuille, vérifiées dans le cours AGE 12 ; Test n°1 sans case cochée : réponses déduites du cours.', 'ok']];
   // Questions dont la réponse du site n'est pas celle du corrigé, ou non confirmée
@@ -825,6 +827,7 @@
     [/^dsft\/uv2-dsft$/, /^13\)/, 'off', 'Confirmé par le formateur : l’élément 13 est la VNAE.'],
     [/^moteur\/uv2-moteur$/, /^38\)/, 'off', 'Question mal posée, 2 réponses possibles (précision du formateur) : A (Socrative) et C (cours GD 22).'],
     [/^ppld\/questions$/, /(règle la pression maxi du circuit|je règle la pression de stand-by|Donner la bonne réponse|En sortie terrain)/, 'ded', 'Aucune case cochée sur ta feuille : réponse déduite du cours AGE 12.'],
+    [/^epms\/qcm-epms$/, /^1[12]- /, 'conf', 'Réception « 4 membres » / 3 tentatives au gué : réponses de la copie, non détaillées dans le cours.'],
     [/^tact\/compo-b$/, /^(1|10|14|16|17)\. /, 'conf', 'Non vérifiable dans les documents fournis : à confirmer avec le formateur.'],
     [/^ppld\/questions$/, /composant 6/, 'conf', 'Deux réponses marquées sur ta feuille (B et C) : à confirmer.']];
   var VERIF_LBL = { off: ['✅', 'Corrigé officiel'], ok: ['📘', 'Vérifié dans le cours'], ded: ['🟠', 'Déduit du cours'], ecart: ['⚠️', 'Écart avec le corrigé'], conf: ['❓', 'À confirmer'] };
