@@ -40,7 +40,7 @@ REV.add({
 <li><b>Dessiccateur</b> (dessiccation – régénération – absorption) : dessèche l’air, supprime la condensation, accroît la sécurité, prolonge la vie des équipements, dispense d’antigel, évite les purges fastidieuses.</li>
 <li><b>Clapet anti-retour</b> : l’air ne passe que dans un sens ; <b>conserve la réserve en aval si fuite en amont</b>.</li>
 <li><b>Valve de barrage</b> : n’alimente un circuit qu’une fois la pression amont atteinte (priorité de remplissage) ; retour total, partiel ou sans retour.</li></ul>`,
-      images: [{ src: 'pneumatique-dsft-theorique.jpg', cap: 'Schéma « DSFT théorique » du dossier UV2 (repères 7 = clapet anti-retour, 13 = VNAE, valve de non-addition des efforts, 17 = valve de barrage à retour partiel)' }],
+      images: [{ src: 'pneumatique-dsft-theorique.jpg', cap: 'Schéma « DSFT théorique » du dossier UV2 (repères 7 = clapet anti-retour, 13 = VNAE, valve de non-addition des efforts)' }],
       retenir: ['Valve de protection : isole les circuits valides.', 'Dessiccateur : air sec, plus besoin d’antigel.', 'Clapet anti-retour : garde la pression en aval si fuite en amont.'],
       memo: { cle: 'COMPRESSEUR → RÉGULATEUR → DESSICCATEUR → PROTECTION → RÉSERVOIRS', flow: ['Compresseur', 'Régulateur', 'Dessiccateur', 'Valve de protection 4 circuits', 'Réservoirs'], points: ['Clapet anti-retour = garde la réserve', 'Valve de barrage = priorité de remplissage'], astuce: 'Air sec = pas d’eau = pas de gel = pas d’antigel.' }
     },
