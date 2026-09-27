@@ -29,7 +29,7 @@
     q.subject = s.id;
     q.lkey = s.id + '/' + q.l;
     q.good = Array.isArray(q.a) ? q.a : [q.a]; // plusieurs bonnes réponses possibles (« 2 rép. »)
-    q.multi = q.good.length > 1;
+    q.multi = q.good.length > 1 && !q.any; // q.any : une seule case à cocher, plusieurs réponses acceptées
     q.id = s.id + ':' + hash(q.q + '|' + q.good.map(function (i) { return q.c[i]; }).join('+'));
     if (!REV.lessonById[q.lkey]) console.warn('Leçon inconnue pour la question', q);
     REV.qById[q.id] = q;
@@ -557,7 +557,7 @@
         '<div class="fb-title">' + (ans.ok ? '✅ Bonne réponse !' : (ans.chosen === -1 ? '⏱️ Temps écoulé' : '❌ Mauvaise réponse')) + '</div>' +
         '<div class="fb-recap"><p class="fb-q">❓ ' + q.q + '</p>' +
           (mine.length ? '<p>Ta réponse : ' + mine.map(function (c) { return '<b>' + lab(q, perm.indexOf(c)) + '</b> — ' + q.c[c]; }).join(' · ') + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
-          (ans.ok ? '' : '<p class="fb-good">' + (q.multi ? 'Les bonnes réponses sont :<br>' : 'La bonne réponse est : ') + goodTxt + '</p>') + '</div>' +
+          (ans.ok ? '' : '<p class="fb-good">' + (q.multi ? 'Les bonnes réponses sont :<br>' : q.any ? 'Réponses acceptées :<br>' : 'La bonne réponse est : ') + goodTxt + '</p>') + '</div>' +
         (dev ? '<div class="fb-sec dev"><b>🧮 Développement de la réponse</b><p>' + dev + '</p></div>' : '') +
         '<div class="fb-sec' + (l.exo && !dev ? ' dev' : '') + '"><b>' + (l.exo && !dev ? '🧮 Développement de la réponse' : '💡 Explication') + '</b><p>' + q.e + '</p></div>' +
         (q.r ? '<div class="fb-sec retenir"><b>🧠 À retenir</b><p>' + q.r + '</p></div>' : '') +
@@ -1128,7 +1128,7 @@
         return '<details class="card err' + (a.ok ? ' ok' : '') + '"><summary>' + st + ' <b>Q' + (j + 1) + '</b> — ' + exText(q) + '</summary>' +
           (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
           (a.blank ? '<p class="muted">Pas de réponse (0 point)</p>' : '<p>Ta réponse : <b>' + LETTERS[perm.indexOf(a.chosen)] + '</b> — ' + q.c[a.chosen] + (a.ok ? ' ✅ (+ 1)' : ' ❌ (− 0,5)') + '</p>') +
-          (a.ok ? '' : '<p class="fb-good">Bonne réponse : ' + good + '</p>') +
+          (a.ok ? '' : '<p class="fb-good">' + (q.good.length > 1 ? (q.any ? 'Réponses acceptées : ' : 'Bonnes réponses : ') : 'Bonne réponse : ') + good + '</p>') +
           '<p>💡 ' + q.e + '</p>' + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') +
           '<a class="small" href="#/lecon/' + q.lkey + '">📖 Revoir la leçon</a></details>';
       }).join('');
