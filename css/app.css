@@ -627,3 +627,13 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .exo-card .exo-actions .btn { min-height: 38px; padding: 6px 12px; font-size: .9rem; flex: 1; }
 .badge { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: .7rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: #fff; background: #475569; }
 .b-uv2 { background: #7c3aed; } .b-tf { background: #c81e1e; } .b-cah { background: #15803d; } .b-sym { background: #0e7490; } .b-test { background: #c2410c; } .b-livre { background: #1d4ed8; } .b-exo { background: #475569; }
+
+/* Leçons à revoir */
+.rev-lesson { border-left: 4px solid var(--c, #f59e0b); margin-bottom: 14px; }
+.rev-lesson .h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 0; }
+.rev-q { border-top: 1px solid rgba(127,127,127,.25); padding: 8px 0; }
+.rev-q summary { cursor: pointer; font-weight: 600; }
+.rev-q[open] summary { margin-bottom: 6px; }
+/* Formules */
+.formule { border-left: 4px solid var(--c, #2563eb); margin-bottom: 12px; }
+.formule h3 { margin-top: 0; }

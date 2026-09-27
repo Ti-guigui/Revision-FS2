@@ -260,6 +260,8 @@
       case 'verif': html = viewVerif(); break;
       case 'exercices': html = viewExercices(parts[1]); break;
       case 'uv2': html = parts[1] === 'fiche' ? viewUV2Fiche(parts[2]) : viewUV2(); break;
+      case 'a-revoir': html = viewARevoir(); break;
+      case 'formules': html = viewFormules(parts[1]); break;
       default: html = viewHome();
     }
     main.innerHTML = html;
@@ -323,9 +325,10 @@
         '<div class="hazard" aria-hidden="true"></div>' +
       '</section>' +
       resume +
-      (toReview ? '<a class="card review-cta" href="#/revision"><span class="big">🔁</span><span><b>QCM de révision</b><br>' +
-        toReview + ' question' + (toReview > 1 ? 's' : '') + ' ratée' + (toReview > 1 ? 's' : '') + ' à retravailler</span><span class="chev">›</span></a>' : '') +
-      '<a class="card review-cta exo-cta" href="#/exercices"><span class="big">✍️</span><span><b>Exercices corrigés</b><br>Tests officiels, cahiers, UV2, test final UV1, exercices sur schéma</span><span class="chev">›</span></a>' +
+      '<a class="card review-cta" href="#/a-revoir"><span class="big">📌</span><span><b>Leçons à revoir</b><br>' +
+        (toReview ? toReview + ' erreur' + (toReview > 1 ? 's' : '') + ' à comprendre et à refaire, leçon par leçon' : 'Tes erreurs des tests, expliquées leçon par leçon') + '</span><span class="chev">›</span></a>' +
+      '<a class="card review-cta" href="#/formules"><span class="big">📐</span><span><b>Formules, valeurs et conversions</b><br>Par matière, avec les méthodes de calcul (distance de freinage, manœuvre de force…)</span><span class="chev">›</span></a>' +
+      '<a class="card review-cta exo-cta" href="#/exercices"><span class="big">✍️</span><span><b>Exercices corrigés</b><br>Livres, cahiers d’exercices, dossier d’évaluation et test final</span><span class="chev">›</span></a>' +
       '<a class="card review-cta uv2-cta" href="#/uv2"><span class="big">📝</span><span><b>Test UV2 — 60 questions, 2 h</b><br>Le dossier transmis, des UV2 blancs et les fiches mémoire illustrées</span><span class="chev">›</span></a>' +
       '<h2 class="h2 h2-atelier">🧰 Les postes de l’atelier</h2>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
@@ -373,6 +376,7 @@
         '<a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM ' + esc(s.name) + '</a>' +
         '<a class="btn" href="#/fiche/' + s.id + '">📄 Fiche de révision</a>' +
         '<a class="btn" href="#/memos/' + s.id + '">🧠 Aides-mémoires</a>' +
+        (REV.formulaires && REV.formulaires[s.id] ? '<a class="btn" href="#/formules/' + s.id + '">📐 Formules et conversions</a>' : '') +
         (exos.length ? '<a class="btn exo-btn" href="#/matiere/' + s.id + '/exercices">📝 Exercices corrigés (' + exos.length + ')</a>' : '') +
         (sc.pct !== null ? '<span class="pill ' + level(sc.pct).cls + '">' + level(sc.pct).dot + ' ' + sc.pct + ' %</span>' : '') +
       '</div>' +
@@ -507,6 +511,59 @@
       '<ul class="plain">' + Object.keys(bySubj).map(function (k) { var s = subj(k); return '<li>' + s.icon + ' ' + esc(s.name) + ' : <b>' + bySubj[k] + '</b></li>'; }).join('') + '</ul>' +
       '<p class="muted small">Une question sort de cette liste quand tu la réussis 2 fois de suite.</p>' +
       '<button class="btn primary big" data-action="revision">▶️ Lancer la révision (' + Math.min(20, list.length) + ' questions)</button></div>';
+  }
+
+  /* ----- Leçons à revoir : les erreurs regroupées par leçon, avec l'explication pour comprendre ----- */
+  function viewARevoir() {
+    var list = allQuestions().filter(needsReview);
+    var head = '<h1 class="h1">📌 Leçons à revoir</h1>';
+    if (!list.length) {
+      return head + '<div class="card pad center"><p class="big">🎉</p><p>Aucune erreur à retravailler pour l’instant.</p>' +
+        '<p class="muted">Dès que tu te trompes dans un QCM, un quiz ou l’épreuve UV2, la leçon concernée apparaît ici avec la bonne réponse et l’explication.</p>' +
+        '<a class="btn primary" href="#/qcm">🧠 Faire un QCM</a></div>';
+    }
+    var groups = {}, order = [];
+    list.forEach(function (q) { if (!groups[q.lkey]) { groups[q.lkey] = []; order.push(q.lkey); } groups[q.lkey].push(q); });
+    order.sort(function (a, b) { return groups[b].length - groups[a].length; });
+    var clean = function (t) { return t.replace(/^\d+\)\s*/, '').replace(/^Q\d+ (\(\d\) )?—\s*/, '').replace(/^Question N°\d+\s*:\s*/, ''); };
+    return head + '<div class="card pad"><p><b>' + list.length + '</b> question' + (list.length > 1 ? 's' : '') + ' à retravailler dans <b>' + order.length + '</b> leçon' + (order.length > 1 ? 's' : '') +
+      '. Pour chaque leçon : relis ce qu’il faut comprendre, la bonne réponse et son explication, puis refais les questions.</p>' +
+      '<p class="muted small">Une question sort de cette liste quand tu la réussis 2 fois de suite.</p>' +
+      '<div class="row-actions"><button class="btn primary" data-action="revision">🔁 Refaire toutes mes erreurs</button><a class="btn" href="#/formules">📐 Formules et conversions</a></div></div>' +
+      order.map(function (k) {
+        var l = REV.lessonById[k], s = subj(l.subject), qs = groups[k];
+        return '<section class="card pad rev-lesson" style="--c:' + s.color + '"><h2 class="h2">' + s.icon + ' ' + esc(l.title) +
+          ' <span class="pill bad">' + qs.length + ' erreur' + (qs.length > 1 ? 's' : '') + '</span></h2>' +
+          '<p class="muted small">' + esc(s.name) + '</p>' +
+          (l.retenir && l.retenir.length ? '<div class="box retenir"><b>🎯 Ce qu’il faut comprendre</b><ul>' + l.retenir.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' : '') +
+          qs.map(function (q) {
+            var r = store.q[q.id] || { ko: 0 };
+            return '<details class="rev-q"><summary>❌ ' + clean(q.q) + ' <span class="muted small">(ratée ' + r.ko + ' fois)</span></summary>' +
+              (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
+              '<p class="fb-good">' + (q.good.length > 1 ? (q.any ? 'Réponses acceptées : ' : 'Bonnes réponses : ') : 'Bonne réponse : ') + q.good.map(function (g) { return '<b>' + q.c[g] + '</b>'; }).join(' / ') + '</p>' +
+              (q.e ? '<p>💡 ' + q.e + '</p>' : '') + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') + (q.w ? '<p>⚠️ ' + q.w + '</p>' : '') + '</details>';
+          }).join('') +
+          '<div class="row-actions"><a class="btn" href="#/lecon/' + k + '">📖 Revoir la leçon</a>' +
+          (l.hidden ? '' : '<a class="btn" href="#/memos/' + s.id + '#m-' + l.id + '">🧠 Aide-mémoire</a>') +
+          (REV.formulaires && REV.formulaires[s.id] ? '<a class="btn" href="#/formules/' + s.id + '">📐 Formules</a>' : '') +
+          '<button class="btn primary" data-action="redo-lesson-errors" data-key="' + k + '">🔁 Refaire ces ' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</button></div></section>';
+      }).join('');
+  }
+
+  /* ----- Formules, valeurs, conversions et méthodes par matière ----- */
+  function viewFormules(id) {
+    var F = REV.formulaires || {};
+    var subs = REV.subjects.filter(function (s) { return F[s.id]; });
+    var list = id && F[id] ? subs.filter(function (s) { return s.id === id; }) : subs;
+    return '<h1 class="h1">📐 Formules, valeurs et conversions</h1><p class="muted">Les valeurs à connaître, les formules, les tableaux de conversion et les méthodes de calcul pas à pas, matière par matière.</p>' +
+      '<nav class="chips exo-filter"><a class="chip' + (id && F[id] ? '' : ' on') + '" href="#/formules">Toutes</a>' +
+      subs.map(function (s) { return '<a class="chip' + (id === s.id ? ' on' : '') + '" href="#/formules/' + s.id + '">' + s.icon + ' ' + esc(s.name) + '</a>'; }).join('') + '</nav>' +
+      list.map(function (s) {
+        return '<h2 class="h2 sec-title">' + s.icon + ' ' + esc(s.name) + '</h2>' + F[s.id].map(function (b) {
+          return '<section class="card pad lesson formule" style="--c:' + s.color + '"><h3>' + b.t + '</h3>' + b.html + '</section>';
+        }).join('') + '<div class="row-actions"><a class="btn" href="#/matiere/' + s.id + '">📖 Cours ' + esc(s.name) + '</a><a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM</a></div>';
+      }).join('') +
+      '<div class="row-actions sticky-actions"><button class="btn" data-action="print">🖨️ Imprimer / PDF</button></div>';
   }
 
   /* ----- Question en cours ----- */
@@ -749,7 +806,7 @@
         var lv = level(x.pct);
         return '<li><a href="#/lecon/' + x.l.key + '">' + lv.dot + ' <b>' + esc(x.l.title) + '</b> <span class="muted small">' + x.s.icon + ' ' + esc(x.s.name) + '</span></a><span class="num-c">' + x.pct + ' %</span></li>';
       }).join('') + '</ol>' : '<div class="card pad">🎉 Toutes les leçons travaillées sont au-dessus de 80 %.</div>') +
-      (toReview ? '<a class="card review-cta" href="#/revision"><span class="big">🔁</span><span><b>QCM de révision</b><br>' + toReview + ' question(s) ratée(s) à retravailler</span><span class="chev">›</span></a>' : '') +
+      (toReview ? '<a class="card review-cta" href="#/a-revoir"><span class="big">📌</span><span><b>Leçons à revoir</b><br>' + toReview + ' erreur(s) expliquée(s) leçon par leçon</span><span class="chev">›</span></a>' : '') +
 
       (weak.length ? '<h2 class="h2">🧠 Tes aides-mémoires</h2><ul class="card memo-links">' + weak.slice(0, 10).map(function (x) {
         return '<li><a href="#/memos/' + x.s.id + '#m-' + x.l.id + '">→ Mémo ' + esc(x.l.title) + '</a></li>';
@@ -1212,6 +1269,10 @@
         if (session.answers.filter(Boolean).length) { session.qids = session.qids.slice(0, session.answers.length); session.perm = session.perm.slice(0, session.answers.length); session.i = session.qids.length; finishSession(); saveSession(); go('#/bilan'); }
         else { session = null; saveSession(); go('#/'); }
       }
+    }
+    else if (a === 'redo-lesson-errors') {
+      var rk = el.getAttribute('data-key'), rl = REV.lessonById[rk];
+      startSession({ mode: 'revision', title: 'À revoir : ' + rl.title, subject: rl.subject, questions: arrange(lessonQuestions(rk).filter(needsReview)) });
     }
     else if (a === 'lesson-qcm') {
       var key = el.getAttribute('data-key'), l = REV.lessonById[key];
