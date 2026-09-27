@@ -172,5 +172,21 @@
       if (l.exo && !GARDER.test(l.id)) { l.exo = false; l.hidden = true; l.num = 'QCM'; }
     });
   });
+  /* Titres des exercices : sans « UV1 / UV2 / UV3 » ni nom de livre, seulement le sujet. */
+  var TITRES = {
+    'elec/uv2-elec': 'Électricité générale (Q57 à Q64)', 'equip/uv2-equip': 'Équipement électrique (Q41 à Q52)',
+    'moteur/uv2-moteur': 'Motorisation (Q31 à Q40)', 'hydro/uv2-hydro': 'Hydraulique (Q19 à Q30)', 'dsft/uv2-dsft': 'DSFT et freinage pneumatique (Q1 à Q18)',
+    'moteur/tf-moteur': 'Motorisation (Q1 à Q10)', 'elec/tf-elec': 'Électricité générale (Q11 à Q20)', 'dsft/tf-dsft': 'DSFT (Q21 à Q30)',
+    'hydro/tf-hydro': 'Hydraulique (Q31 à Q40)', 'equip/tf-equip': 'Équipement électrique (Q41 à Q50)', 'mdf/tf-mdf': 'Manœuvre de force (Q51 à Q60)',
+    'hydro/livre-agd19': 'Pompes, vérins et moteurs : calculs', 'hydro/cahier-calculs': 'Calculs hydrauliques (Q1 à Q10)', 'dsft/livre-distance-arret': 'Distance de freinage et distance d’arrêt'
+  };
+  REV.subjects.forEach(function (s) {
+    s.lessons.forEach(function (l) {
+      if (!l.exo) return;
+      if (TITRES[l.key]) l.title = TITRES[l.key];
+      else l.title = l.title.replace(/^(Livres? AGA 03|Cahier électricité|Cahier d’exercices)\s*—\s*/, '').replace(/\bUV[123]\b\s*[—:-]?\s*/g, '');
+      l.title = l.title.charAt(0).toUpperCase() + l.title.slice(1);
+    });
+  });
   REV.subjects.forEach(function (s) { s.questions.forEach(function (q) { REV.qById[q.id] = q; }); });
 })();

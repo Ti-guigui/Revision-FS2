@@ -774,9 +774,9 @@
   /* ----- Tous les exercices corrigés, toutes matières ----- */
   function exoType(l) {
     var id = l.id;
-    if (/^uv2-(banque|var)/.test(id)) return ['UV2 entraînement', 'b-uv2'];
-    if (/^uv2-/.test(id)) return ['UV2 dossier', 'b-uv2'];
-    if (/^tf-/.test(id)) return ['Test final UV1', 'b-tf'];
+    if (/^uv2-(banque|var)/.test(id)) return ['Entraînement', 'b-uv2'];
+    if (/^uv2-/.test(id)) return ['Dossier d’évaluation', 'b-uv2'];
+    if (/^tf-/.test(id)) return ['Test final', 'b-tf'];
     if (/^(cah|cahier)/.test(id)) return ['Cahier officiel', 'b-cah'];
     if (/^sym/.test(id)) return ['Symboles', 'b-sym'];
     if (/^(test-|qcm-|controle)/.test(id)) return ['Test', 'b-test'];
@@ -797,7 +797,7 @@
     var subs = REV.subjects.filter(function (s) { return countExos(s); });
     var list = id ? subs.filter(function (s) { return s.id === id; }) : subs;
     var total = subs.reduce(function (n, s) { return n + countExos(s); }, 0);
-    return '<h1 class="h1">📝 Exercices corrigés</h1><p class="muted">Exercices des livres et des cahiers d’exercices, et tests des UV (dossier UV2, test final UV1) : ' + total + ' exercices avec leur correction détaillée. Les autres tests sont dans les QCM de chaque matière.</p>' +
+    return '<h1 class="h1">📝 Exercices corrigés</h1><p class="muted">Exercices des livres et des cahiers d’exercices, dossier d’évaluation et test final : ' + total + ' exercices avec leur correction détaillée. Les autres tests sont dans les QCM de chaque matière.</p>' +
       '<nav class="chips exo-filter"><a class="chip' + (id ? '' : ' on') + '" href="#/exercices">Tout (' + total + ')</a>' +
       subs.map(function (s) { return '<a class="chip' + (id === s.id ? ' on' : '') + '" href="#/exercices/' + s.id + '">' + s.icon + ' ' + esc(s.name) + ' (' + countExos(s) + ')</a>'; }).join('') + '</nav>' +
       list.map(function (s) {
