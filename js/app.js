@@ -228,7 +228,7 @@
   }
 
   function setActiveNav(route) {
-    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', fiche: 'cours', fiches: 'cours',
+    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', fiche: 'cours', fiches: 'cours', verif: 'cours',
       qcm: 'qcm', uv2: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
     var key = map[route] || 'home';
     if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') key = 'quiz';
@@ -257,6 +257,7 @@
       case 'memos': html = viewMemos(parts[1]); break;
       case 'fiches': html = viewFiches(); break;
       case 'fiche': html = viewFiche(parts[1]); break;
+      case 'verif': html = viewVerif(); break;
       case 'uv2': html = parts[1] === 'fiche' ? viewUV2Fiche(parts[2]) : viewUV2(); break;
       default: html = viewHome();
     }
@@ -351,7 +352,7 @@
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
       '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
       '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
-      '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' + '</div>';
+      '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' + '<a class="card mini" href="#/verif">✅ Vérification des corrigés</a>' + '</div>';
   }
 
   function viewMatiere(id, tab) {
@@ -762,6 +763,57 @@
       '<button class="btn" data-action="export">⬇️ Exporter</button>' +
       '<label class="btn">⬆️ Importer<input type="file" accept="application/json,.json" data-action="import" hidden></label>' +
       '<button class="btn danger" data-action="reset">🗑️ Tout effacer</button></div></div>';
+  }
+
+
+  /* ----- Vérification des corrigés : chaque test, question par question ----- */
+  var VERIF_TESTS = [
+    ['uv2-', 'UV2 — dossier d’évaluation n°1', 'Réponses vérifiées dans le cours ; les écarts avec le corrigé du dossier sont signalés.', 'ok'],
+    ['tf-', 'Test final UV1 (sujet de préparation)', 'Correction officielle, vérifiée avec le cours.', 'off'],
+    ['cah', 'Cahiers d’exercices (hydraulique, électricité)', 'Corrigés officiels des cahiers EMB.', 'off'],
+    ['test-eee', 'Test équipement électrique et électronique embarquée', 'Pas de corrigé officiel : chaque réponse est tirée du cours (AGA 01, capteurs, LIN, CAN).', 'ok'],
+    ['qcm-demarreur', 'QCM démarreur et batterie', 'Réponses du cours AGA 01.', 'ok'],
+    ['microtracteur', 'Exercice microtracteur tondeuse', 'Copie corrigée avec le cours d’électricité.', 'ok'],
+    ['moto', 'Exercice moto', 'Copie corrigée avec le cours d’électricité.', 'ok'],
+    ['controle-rdc', 'Contrôle des connaissances RDC n°1', 'Pas de corrigé officiel : réponses tirées du cours AQA 03 et de ta fiche.', 'ded'],
+    ['questions', 'PPLD — questions posées', 'Réponses surlignées sur ta feuille, vérifiées dans le cours AGE 12 ; Test n°1 sans case cochée : réponses déduites du cours.', 'ok']];
+  // Questions dont la réponse du site n'est pas celle du corrigé, ou non confirmée
+  var VERIF_FLAGS = [
+    [/^dsft\/uv2-dsft$/, /^6\)/, 'ecart', 'Corrigé du dossier : A. Le site retient B (V = recreusé).'],
+    [/^dsft\/uv2-dsft$/, /^16\)/, 'ecart', 'Corrigé du dossier : C. Le site retient A (6 à 11 minutes, cours).'],
+    [/^equip\/uv2-equip$/, /^44\)/, 'ecart', 'Corrigé du dossier : B. Le site retient C (recharger d’abord : 12,2 V = batterie à moitié chargée).'],
+    [/^ppld\/questions$/, /(règle la pression maxi du circuit|je règle la pression de stand-by|Donner la bonne réponse|En sortie terrain)/, 'ded', 'Aucune case cochée sur ta feuille : réponse déduite du cours AGE 12.'],
+    [/^ppld\/questions$/, /composant 6/, 'conf', 'Deux réponses marquées sur ta feuille (B et C) : à confirmer.']];
+  var VERIF_LBL = { off: ['✅', 'Corrigé officiel'], ok: ['📘', 'Vérifié dans le cours'], ded: ['🟠', 'Déduit du cours'], ecart: ['⚠️', 'Écart avec le corrigé'], conf: ['❓', 'À confirmer'] };
+  function viewVerif() {
+    var all = allQuestions(), html = '', tot = { off: 0, ok: 0, ded: 0, ecart: 0, conf: 0 };
+    VERIF_TESTS.forEach(function (t) {
+      var qs = all.filter(function (q) { var l = q.lkey.split('/')[1]; return l.indexOf(t[0]) === 0 && !/uv2-(banque|var)/.test(q.lkey); });
+      if (!qs.length) return;
+      var groups = {};
+      qs.forEach(function (q) { (groups[q.lkey] = groups[q.lkey] || []).push(q); });
+      html += '<section class="verif-sec"><h2 class="h2 sec-title">' + t[1] + '</h2><p class="muted small">' + t[2] + '</p>';
+      Object.keys(groups).forEach(function (k) {
+        var l = REV.lessonById[k];
+        html += '<h3 class="verif-l"><a href="#/lecon/' + k + '">' + esc(l.title) + '</a> <span class="muted small">(' + groups[k].length + ' questions)</span></h3><div class="tw"><table class="verif"><tr><th></th><th>Question</th><th>Réponse retenue</th><th>Justification</th></tr>';
+        groups[k].forEach(function (q) {
+          var st = t[3], note = '';
+          VERIF_FLAGS.forEach(function (f) { if (f[0].test(k) && f[1].test(q.q)) { st = f[2]; note = f[3]; } });
+          tot[st]++;
+          var L = VERIF_LBL[st];
+          html += '<tr class="v-' + st + '"><td title="' + L[1] + '">' + L[0] + '</td><td>' + q.q + '</td><td><b>' + q.good.map(function (g) { return q.c[g]; }).join('<br>') + '</b></td><td>' +
+            (note ? '<b class="v-note">' + note + '</b><br>' : '') + (q.e || '') + (q.src ? '<br><span class="muted small">Source : ' + esc(q.src) + '</span>' : '') + '</td></tr>';
+        });
+        html += '</table></div>';
+      });
+      html += '</section>';
+    });
+    var n = tot.off + tot.ok + tot.ded + tot.ecart + tot.conf;
+    return crumbs([['#/cours', 'Cours'], [null, 'Vérification des corrigés']]) +
+      '<h1 class="h1">✅ Vérification des corrigés</h1><p class="muted">Tous les tests du site, question par question : la réponse retenue, sa justification et d’où elle vient.</p>' +
+      '<div class="verif-sum">' + ['off', 'ok', 'ded', 'ecart', 'conf'].map(function (k) {
+        return '<div class="v-' + k + '"><span>' + VERIF_LBL[k][0] + '</span><b>' + tot[k] + '</b><small>' + VERIF_LBL[k][1] + '</small></div>';
+      }).join('') + '</div><p class="small muted">' + n + ' questions de tests. Les banques d’entraînement UV2 (questions types, autres valeurs) ne sont pas des tests : elles reprennent les leçons.</p>' + html;
   }
 
   /* ----- Aides-mémoires : systèmes (phases, pannes) et symboles ----- */

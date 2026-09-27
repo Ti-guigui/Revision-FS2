@@ -596,3 +596,16 @@ a.card:hover { box-shadow: 0 6px 20px rgba(15, 29, 61, .10); }
 @media print { .memo-nav { display: none; } .sys, .sym-card { box-shadow: none; } }
 .memo-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .memo-nav .chip { white-space: nowrap; flex: none; }
+/* ---------- Vérification des corrigés ---------- */
+.verif-sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 12px 0; }
+.verif-sum div { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; }
+.verif-sum b { display: block; font-size: 1.5rem; }
+.verif-sum small { color: var(--muted); }
+.verif-l { font-size: 1rem; margin: 16px 0 6px; }
+table.verif { width: 100%; border-collapse: collapse; font-size: .88rem; }
+table.verif td, table.verif th { padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; text-align: left; }
+table.verif td:first-child { width: 28px; text-align: center; }
+table.verif td:nth-child(3) { min-width: 140px; }
+tr.v-ecart td { background: var(--mid-bg) !important; }
+tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, transparent) !important; }
+.v-note { color: var(--mid); }
