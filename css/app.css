@@ -637,3 +637,37 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 /* Formules */
 .formule { border-left: 4px solid var(--c, #2563eb); margin-bottom: 12px; }
 .formule h3 { margin-top: 0; }
+
+/* Formulaire visuel : triangles, règles de conversion, mnémos, cycles superposés */
+.tri-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 8px 0; }
+.tri-card { margin: 0; padding: 8px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); text-align: center; }
+.tri-card figcaption { font-weight: 700; font-size: .85rem; margin-bottom: 4px; }
+.tri-card svg { width: 100%; max-width: 170px; height: auto; color: var(--text); }
+.tri-l { fill: none; stroke: currentColor; stroke-width: 3; stroke-linejoin: round; }
+.tri-v { fill: #e11d48; font-weight: 800; font-size: 17px; }
+.tri-u { fill: #2563eb; font-size: 13px; font-weight: 600; }
+.tri-f { font-size: .8rem; margin: 4px 0 0; }
+.tri-m { font-size: .78rem; margin: 4px 0 0; color: var(--muted); }
+.ruler { margin: 8px 0 14px; }
+.ruler table { border-collapse: collapse; width: 100%; }
+.ruler th, .ruler td { border: 1px solid var(--border); padding: 4px 6px; text-align: center; font-size: .78rem; }
+.ruler th { position: relative; font-weight: 600; color: var(--muted); padding-top: 16px; }
+.rul-step { position: absolute; top: 1px; left: -18px; font-size: .65rem; color: #2563eb; white-space: nowrap; }
+.rul-sym { font-size: 1.1rem !important; font-weight: 800; }
+.rul-sym.base { background: rgba(225, 29, 72, .12); color: #e11d48; }
+.rul-rule { font-size: .85rem; margin: 6px 0 2px; }
+.mnemo li { margin: 6px 0; }
+.cycles { margin: 8px auto; max-width: 420px; }
+.cycles svg { width: 100%; height: auto; color: var(--text); }
+.cy-ax { stroke: currentColor; fill: none; stroke-width: 1.5; }
+.dash { stroke-dasharray: 4 4; opacity: .6; }
+.cy-ess { stroke: #16a34a; fill: rgba(22, 163, 74, .10); stroke-width: 2.5; }
+.cy-dsl { stroke: #2563eb; fill: rgba(37, 99, 235, .10); stroke-width: 2.5; }
+.cy-t { fill: currentColor; font-size: 12px; font-weight: 700; }
+.cy-p { fill: currentColor; font-size: 13px; font-weight: 800; }
+.cy-l { font-size: 14px; font-weight: 800; }
+.cy-p.ess, .cy-l.ess { fill: #16a34a; }
+.cy-p.dsl, .cy-l.dsl { fill: #2563eb; }
+.ruler th { font-size: .62rem; padding: 14px 3px 3px; letter-spacing: 0; }
+.ruler td { padding: 4px 3px; }
+.rul-sym.base { font-size: .95rem !important; }
