@@ -28,7 +28,7 @@
   }
 
   /* ---------- Motorisation : pas d'essence ---------- */
-  dropQuestions('moteur', function (q) { return /cliquetis|Comparé à un moteur essence|AOE|AOA/i.test(q.q); });
+  dropQuestions('moteur', function (q) { return /cliquetis|Comparé à un moteur essence/i.test(q.q); });
   dropImages('moteur/capteurs-cr', /gd21\/m1(49|50|51|52|53|56)_/);
   (function () {
     var l = REV.lessonById['moteur/cycle'];
