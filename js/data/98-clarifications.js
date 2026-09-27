@@ -22,6 +22,26 @@
   /* ---------- Questions qui n'ont de sens qu'avec un document ---------- */
   drop('moteur', function (q) { return /demandée? au test final/.test(q.q); });
 
+  /* ---------- Hors programme (pas vu en cours) ---------- */
+  var HORS = /réduction pilotée/i;
+  REV.subjects.forEach(function (s) {
+    s.questions = s.questions.filter(function (q) {
+      var good = (q.good || [q.a || 0]).map(function (i) { return q.c[i]; }).join(' ');
+      if (HORS.test(q.q) || HORS.test(good)) return false;                 // valve de réduction pilotée
+      if (q.img && /p71-12|valve-reduction/.test(q.img)) return false;      // son symbole
+      if (/spires par mètre/.test(q.q)) return false;                       // torsade du bus CAN
+      if (/niveau d’électrolyte/.test(q.q)) return false;                   // niveau des batteries
+      if (q.lkey === 'elec/uv2-elec' && /^\s*5[3-6]\)/.test(q.q)) return false; // portes logiques : barres illisibles
+      return true;
+    });
+    s.questions.forEach(function (q) {
+      q.c = q.c.map(function (c) {
+        if (!HORS.test(c)) return c;
+        return q.c.some(function (x) { return /^Valve relais simple pilotage$/.test(x); }) ? 'Valve de réduction' : 'Valve relais simple pilotage';
+      });
+    });
+  });
+
   /* ---------- Références retirées de l'énoncé ---------- */
   each(function (q) {
     q.q = q.q.replace(/\s*\(question à rédiger sur la copie\)/g, '')

@@ -156,7 +156,6 @@ REV.addExercises('pneu', {
 <li><b>Q09 — Valve de barrage à retour total.</b> Valve de barrage à retour total : Alimente un circuit quand la pression amont atteint la pression de barrage (priorité de remplissage).</li>
 <li><b>Q10 — Valve de réduction.</b> Valve de réduction : Réduit la pression délivrée dans un rapport constant.</li>
 <li><b>Q11 — Valve de barrage à retour partiel.</b> Valve de barrage à retour partiel : Priorité de remplissage, avec retour partiel de l’air.</li>
-<li><b>Q12 — Valve de réduction pilotée.</b> Valve de réduction pilotée : Adapte l’effort de freinage avant en fonction de la charge arrière (pilotée par le correcteur).</li>
 <li><b>Q13 — Accumulateur d’air (réservoir).</b> Accumulateur d’air (réservoir) : Stocke l’air comprimé.</li>
 <li><b>Q14 — Valve de barrage sans retour.</b> Valve de barrage sans retour : Priorité de remplissage, sans retour de l’air.</li>
 <li><b>Q15 — Valve relais simple pilotage (VRSP).</b> Valve relais simple pilotage (VRSP) : Diminue le temps de réponse et la consommation au freinage.</li>
@@ -190,7 +189,6 @@ REV.addExercises('pneu', {
 <li><b>Q43 — Alimente un circuit quand la pression amont atteint la pression de barrage (priorité de remplissage)..</b> Valve de barrage à retour total.</li>
 <li><b>Q44 — Réduit la pression délivrée dans un rapport constant..</b> Valve de réduction.</li>
 <li><b>Q45 — Priorité de remplissage, avec retour partiel de l’air..</b> Valve de barrage à retour partiel.</li>
-<li><b>Q46 — Adapte l’effort de freinage avant en fonction de la charge arrière (pilotée par le correcteur)..</b> Valve de réduction pilotée.</li>
 <li><b>Q47 — Stocke l’air comprimé..</b> Accumulateur d’air (réservoir).</li>
 <li><b>Q48 — Priorité de remplissage, sans retour de l’air..</b> Valve de barrage sans retour.</li>
 <li><b>Q49 — Diminue le temps de réponse et la consommation au freinage..</b> Valve relais simple pilotage (VRSP).</li>

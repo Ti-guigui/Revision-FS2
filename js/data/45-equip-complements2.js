@@ -28,7 +28,7 @@
 <li>Régulateur : 2 transistors PNP (driver) · 1 diode Zéner (tension Zéner pour le découpage) · 1 inducteur · 1 diode de roue libre (protection).</li></ul>
 <h3>12 diodes à régulateur incorporé</h3>
 <ul><li><b>Double pont de diodes de puissance</b>, <b>2 stators décalés</b> ; 2 bornes : +BAT / L ou D+.</li>
-<li>Avantages : courant continu avec <b>moins d’ondulation</b> (plus lisse) ; <b>meilleur rendement</b> et charge plus stable ; pic de tension atteint plus tôt → <b>meilleure charge à bas régime</b>.</li></ul>`,
+<li>Avantages : courant continu avec <b>moins d’ondulation</b> (plus lisse) ; charge plus stable ; pic de tension atteint plus tôt → <b>meilleure charge à bas régime</b>.</li></ul>`,
     retenir: ['Alternateur : inducteur = rotor (tourne, génère le champ) ; induit = stator (fixe, reçoit le champ).', '2 ou 3 diodes trio HS = sous-tension, plus de charge.', '12 diodes : double pont, 2 stators décalés → moins d’ondulation, meilleure charge à bas régime.']
   });
 
@@ -66,7 +66,7 @@
     ex('alternateur', { q: 'Pourquoi l’alternateur 9 diodes a-t-il 6 diodes de puissance et 3 diodes trio ?', c: ['Pour séparer les phases de puissance et d’excitation', 'Pour doubler le courant', 'Pour alimenter le compte-tours'], e: 'Les 6 diodes redressent le courant de charge ; les 3 diodes trio fournissent l’excitation.' }),
     ex('alternateur', { img: F + 'eq-regulateur-6d.jpg', q: 'Composition du régulateur d’un alternateur 6 diodes à régulateur incorporé ?', c: ['2 transistors PNP, 1 diode Zéner, 1 inducteur, 1 diode de roue libre', '4 diodes et 1 condensateur', '1 relais et 1 fusible'], e: 'Zéner : tension de découpage ; diode de roue libre : protection.' }),
     ex('alternateur', { q: 'Alternateur 12 diodes à régulateur incorporé : comment est-il constitué ?', c: ['Double pont de diodes de puissance et 2 stators décalés', '9 diodes et 3 diodes trio', 'Un seul pont de 6 diodes'], e: '2 bornes : +BAT / L ou D+.' }),
-    ex('alternateur', { q: 'Avantage de l’alternateur 12 diodes ?', c: ['Courant plus lisse (moins d’ondulation), meilleur rendement, meilleure charge à bas régime', 'Il n’a pas besoin de régulateur', 'Il fonctionne sans batterie'], e: 'Le pic de tension est atteint plus tôt : meilleure charge à bas régime.' }),
+    ex('alternateur', { q: 'Avantage de l’alternateur 12 diodes ?', c: ['Plus de courant, avec un courant plus lisse (moins d’ondulation) et une meilleure charge à bas régime', 'Il n’a pas besoin de régulateur', 'Il fonctionne sans batterie'], e: 'Le pic de tension est atteint plus tôt : meilleure charge à bas régime.' }),
     ex('lin', { q: 'Alternateur piloté par LIN : quelle tension maximale est possible, et pourquoi ?', c: ['17 V, pour désulfater la batterie', '13,2 V, pour protéger les calculateurs', '24 V, pour démarrer'], e: 'Fonctionnement de 10,7 à 17 V ; 17 V possible pour le désulfatage.' }),
     ex('lin', { q: 'Où peut-on trouver le capteur IBS ?', c: ['Sur le moins de la batterie, ou sous forme de bague ampèremétrique près du + alternateur', 'Dans le démarreur', 'Sur la prise OBD'], e: 'L’IBS mesure l’état de la batterie ; il est relié par un fil de petite section.' }),
     ex('lin', { q: 'Voyant moteur et témoin de charge fonctionnent correctement. Que peut-on dire du bus LIN ?', c: ['Il est correct', 'Il est coupé', 'Il est saturé'], e: 'Bus LIN coupé = mode secours, tension fixe 13,2 V.' }),

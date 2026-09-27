@@ -91,7 +91,6 @@ REV.addExercises('dsft', {
 <li><b>Question N°26 → 1 : Indiquer au conducteur une chute de pression dans le circuit et envoyer la pression maximum dans le circuit arrière en shuntant le correcteur de freinage en cas de défaillance du circuit avant.</b> ICP by-pass : il allume le témoin et, si le circuit AVANT lâche, envoie la pression maxi à l’ARRIÈRE en shuntant le correcteur.</li>
 <li><b>Question N°27 → 1 : Un mécanisme d’embrayage à diaphragme poussé à un passage de couple supérieur d’environ 20%.</b> Affirmation FAUSSE : c’est le diaphragme TIRÉ (et non poussé) qui passe environ 20 % de couple en plus.</li>
 <li><b>Question N°28 → 3 : Elle doit avoir une faible inertie.</b> Une boîte doit supporter couple et puissance, être silencieuse, fiable, avoir un bon rendement. « Faible inertie » n’en fait pas partie.</li>
-<li><b>Question N°29 → 3 : Une valve de réduction pilotée.</b> Croix, orifices 1-2-3 et pilotage 4 : valve de réduction pilotée (réponse officielle).</li>
 <li><b>Question N°30 → 4 : Une valve de commande de remorque avec rupture.</b> Entrées 11 et 12, sortie 2, échappement 3, pilotages 41-42-43 : valve de commande de remorque avec rupture.</li>
 </ol>`,
       retenir: ['Barème + 1 / − 0,5 / 0 : dans le doute entre les 4, laisse vide.'],

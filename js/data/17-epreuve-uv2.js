@@ -177,16 +177,12 @@ REV.addExercises('equip', {
 REV.addExercises('elec', {
   lessons: [
     {
-      id: 'uv2-elec', title: 'UV2 — Dossier d’évaluation n°1 : électricité générale (Q53 à Q64)',
+      id: 'uv2-elec', title: 'UV2 — Dossier d’évaluation n°1 : électricité générale (Q57 à Q64)',
       html: `
 <h3>Énoncé</h3>
 <p>Questions et propositions <b>recopiées mot pour mot</b> du dossier d’évaluation n°1 de l’UV2, dans l’ordre de la copie (A, B, C ne sont pas mélangées). Barème de l’épreuve : bonne réponse + 1, mauvaise − 0,5, pas de réponse 0. Les réponses ont été <b>vérifiées avec le cours</b> ; quand elles diffèrent du corrigé du dossier, c’est indiqué.</p><p class="muted small">Les schémas des questions 53 à 56 (logique) et 61-62 (voyant L1) ne sont pas dans tes photos : ces questions sont <b>remplacées</b> par des questions équivalentes qui se résolvent sans schéma (marquées « question de remplacement »). Pour 57 à 60, les données du schéma sont rappelées entre parenthèses.</p>
 <h3>Correction détaillée question par question</h3>
 <ol class="corr">
-<li><b>53) B : A = M · H̄ · (B + D)</b> La porte NON donne H̄, la porte OU donne (B + D) et la porte ET multiplie le tout : A = M · H̄ · (B + D).</li>
-<li><b>54) B : S = B̄ · D · (M · H̄)‾</b> La porte ET NON donne le complément du produit de ses entrées : (M · H̄)‾. La porte ET multiplie : S = B̄ · D · (M · H̄)‾.</li>
-<li><b>55) A : S = B̄ · D · (M̄ + H)</b> De Morgan : (M · H̄)‾ = M̄ + H̿ = M̄ + H. Donc S = B̄ · D · (M̄ + H).</li>
-<li><b>56) A : S = 0V</b> D = 0 → le produit B̄ · D · (…) vaut 0 quoi qu’il arrive → S = 0 → 0 V.</li>
 <li><b>57) C : RK1 = 120Ω</b> Transistor saturé : les 24 V sont aux bornes de la bobine. RK1 = U / Ic = 24 / 0,2 = 120 Ω.</li>
 <li><b>58) B : IbQ1 = 2mA</b> Ib = Ic / β = 200 mA / 100 = 2 mA.</li>
 <li><b>59) B : UR1 = 4,4V</b> UR1 = tension de commande − Vbe = 5 − 0,6 = 4,4 V.</li>

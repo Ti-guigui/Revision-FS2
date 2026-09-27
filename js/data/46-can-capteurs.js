@@ -117,6 +117,21 @@
     pieges: ['Un capteur passif ne fonctionne pas sans son alimentation : contrôler l’alimentation et la masse avant de condamner le capteur.']
   });
 
+  REV.extendLesson('equip/alternateur', {
+    images: [{ src: 'equip/alt-6d-12d.svg', cap: '6 diodes : 1 stator et 1 pont de 6 diodes. 12 diodes à double stator : 2 stators décalés de 30°, 2 ponts de 6 diodes réunis sur B+' },
+      { src: 'equip/alt-ondulation.svg', cap: 'Tension redressée : 6 bosses par tour électrique avec 6 diodes, 12 bosses avec le double stator → courant plus lisse' }],
+    html: `
+<h3>Alternateur 6 diodes ou 12 diodes : la différence</h3>
+<div class="tw"><table><tr><th></th><th>6 diodes</th><th>12 diodes</th></tr>
+<tr><td>Induit (stator)</td><td>1 enroulement triphasé</td><td>1 enroulement dont chaque diode est doublée <b>ou</b> <b>2 enroulements triphasés</b> (2 stators) <b>décalés de 30°</b></td></tr>
+<tr><td>Pont de diodes</td><td>1 pont de 6 diodes : 3 positives + 3 négatives, 2 par phase</td><td>6 × 2 diodes en parallèle <b>ou</b> <b>2 ponts de 6 diodes</b> (1 par stator), sorties réunies sur B+</td></tr>
+<tr><td>Bornes, régulateur</td><td>2 bornes (+ et L ou D+), régulateur incorporé</td><td>Pareil : 2 bornes, régulateur incorporé</td></tr>
+<tr><td>Intérêt</td><td>—</td><td><b>Fournir plus de courant</b> (grosses puissances)</td></tr></table></div>
+<ul><li><b>Diodes doublées (6 × 2 en parallèle)</b> : le courant de chaque phase se partage entre 2 diodes → chaque diode chauffe moins, l’alternateur peut débiter plus.</li>
+<li><b>Double stator + double pont</b> : chaque stator a son propre pont de 6 diodes. Comme les 2 stators sont décalés de 30°, leurs alternances ne tombent pas en même temps : on redresse <b>12 alternances</b> par tour électrique au lieu de 6 → courant <b>plus lisse</b> (moins d’ondulation), <b>plus de courant</b>, meilleure charge à bas régime.</li></ul>`,
+    pieges: ['Intérêt du pont à 12 diodes : il FOURNIT PLUS DE COURANT.']
+  });
+
   var ex = function (l, q) { q.l = l; return q; };
   REV.addExercises('equip', { lessons: [], questions: [
     ex('can', { q: 'Pourquoi le nombre de calculateurs augmente-t-il sur les véhicules ?', c: ['Exigences de pollution, de sécurité et de confort, et options en cours de vie', 'Pour diminuer le prix du véhicule', 'Pour supprimer les capteurs'], e: 'Conséquence : plus de calculateurs, de capteurs et de faisceaux ; le multiplexage limite le câblage.' }),
@@ -145,6 +160,11 @@
     ex('lin', { img: F + 'lin-pcm-alternateur.jpg', q: 'VLTP-NP : quel calculateur est maître LIN et sert de passerelle avec le HS-CAN1 ?', c: ['Le PCM (gestion moteur)', 'L’alternateur', 'Le capteur de courant'], e: 'L’alternateur est l’esclave LIN du PCM.' }),
     ex('lin', { img: F + 'lin-pcm-alternateur.jpg', q: 'Batteries déchargées ou forte consommation : que fait le PCM sur l’alternateur piloté par LIN ?', c: ['Il augmente la tension de régulation', 'Il réduit la tension de régulation', 'Il coupe l’alternateur'], e: 'Batteries chargées : il réduit la tension de régulation.' }),
 
+    ex('alternateur', { img: 'equip/alt-6d-12d.svg', q: 'Alternateur 12 diodes à double stator : combien a-t-il de ponts de diodes ?', c: ['2 ponts de 6 diodes, un par stator', '1 pont de 12 diodes sur un seul stator', '1 pont de 6 diodes et 6 diodes trio'], e: 'Les sorties des 2 ponts sont réunies sur B+.' }),
+    ex('alternateur', { img: 'equip/alt-6d-12d.svg', q: 'Alternateur 12 diodes à double stator : comment sont placés les 2 enroulements du stator ?', c: ['Décalés de 30° l’un par rapport à l’autre', 'Superposés exactement', 'Décalés de 180°'], e: 'Grâce au décalage, les alternances des 2 stators ne tombent pas en même temps.' }),
+    ex('alternateur', { img: 'equip/alt-ondulation.svg', q: 'Pourquoi un alternateur 12 diodes à double stator donne-t-il un courant plus lisse qu’un 6 diodes ?', c: ['Il redresse 12 alternances par tour électrique au lieu de 6', 'Il n’a pas de régulateur', 'Ses diodes sont montées en série'], e: 'Moins d’ondulation, plus de courant, meilleure charge à bas régime.' }),
+    ex('alternateur', { img: 'equip/alt-6d-12d.svg', q: 'Combien de diodes par phase dans le pont d’un alternateur 6 diodes ?', c: ['2 (une positive, une négative)', '1', '3'], e: '3 phases × 2 diodes = 6 diodes : 3 positives et 3 négatives.' }),
+    ex('alternateur', { q: 'Alternateur 12 diodes à diodes doublées (6 × 2 en parallèle) : pourquoi 2 diodes en parallèle ?', c: ['Le courant de chaque phase se partage entre 2 diodes : l’alternateur peut débiter plus', 'Pour supprimer le régulateur', 'Pour redresser 2 fois plus vite'], e: 'Chaque diode chauffe moins : c’est un montage pour les grosses puissances.' }),
     ex('capteurs', { img: F + 'cap-synoptique.jpg', q: 'Rôle des capteurs ?', c: ['Informer le calculateur qui, en fonction de ces données, commande les actionneurs', 'Commander directement les actionneurs', 'Alimenter le calculateur'], e: 'Capteurs → calculateur → actionneurs.' }),
     ex('capteurs', { q: 'Quelle est la différence entre un capteur actif et un capteur passif ?', c: ['L’actif produit sa propre tension sans alimentation ; le passif doit être alimenté', 'L’actif est alimenté en 5 V ; le passif produit sa propre tension', 'L’actif a 3 fils ; le passif en a 2'], e: 'Actif = générateur (inductif, piézo-électrique) ; passif = alimenté, le plus souvent en 5 V.' }),
     ex('capteurs', { img: F + 'cap-inductif-slide.jpg', q: 'Parmi ces capteurs, lequel est actif ?', c: ['Le capteur inductif', 'La CTN', 'Le capteur à effet Hall'], e: 'Actifs : inductif et piézo-électrique. CTN et effet Hall sont passifs.' }),

@@ -91,7 +91,6 @@ REV.add({
 <p>La sulfatation <b>normale</b> apparaît à chaque décharge et disparaît à la charge ; elle devient anormale après une décharge trop longue ou une charge incomplète.</p>
 <h3>Entretien courant</h3>
 <ul><li>Batterie propre et sèche (évite les fuites de courant) ; fixation, bac sans fêlure.</li>
-<li>Niveau d’électrolyte <b>10 à 15 mm au-dessus des plaques</b>, complété à l’<b>eau distillée uniquement</b>. <b>Ne jamais ajouter d’acide</b> (la résistance interne augmente fortement).</li>
 <li>Bornes sulfatées : brosse métallique, puis <b>graisse conductrice</b> après serrage.</li>
 <li>Jamais de flamme ni d’étincelle : risque d’explosion (hydrogène + oxygène).</li>
 <li>Batterie défectueuse → toujours contrôler aussi le <b>circuit de charge</b>.</li>
@@ -119,7 +118,7 @@ REV.add({
 <div class="tw"><table><tr><th>Rond rouge</th><th>Rond blanc</th><th>Rond bleu</th></tr>
 <tr><td>Chargée humide · durée de vie 18 mois</td><td>Chargée sèche · 2 h de pose après remplissage · durée de vie 5 ans</td><td>Déchargée sèche · à charger au 1/20 de la capacité · stockage 10 ans</td></tr></table></div>
 <p>Batterie chargée sèche : remplir d’électrolyte à 1,28, attendre 30 min à 2 h. Les batteries usagées sont remises à l’organisme de soutien.</p>`,
-      retenir: ['Niveau 10–15 mm au-dessus des plaques, eau distillée seulement, jamais d’acide.', 'Test d’aptitude : 3 × C pendant 15 s, 3 fois ; > 9 V au 3ᵉ essai (12 V).', 'Fuite < 30 mA contact coupé.', 'Sans entretien : 14–14,5 V, 30 A maxi, pas d’ébullition.', 'Surcharge → corrosion des grilles positives.'],
+      retenir: ['Test d’aptitude : 3 × C pendant 15 s, 3 fois ; > 9 V au 3ᵉ essai (12 V).', 'Fuite < 30 mA contact coupé.', 'Sans entretien : 14–14,5 V, 30 A maxi, pas d’ébullition.', 'Surcharge → corrosion des grilles positives.'],
       pieges: ['L’acide se verse dans l’eau, jamais l’inverse.', 'Couper le chargeur avant de retirer les pinces (étincelle = explosion).'],
       memo: { cle: 'EAU DISTILLÉE, JAMAIS D’ACIDE', flow: ['Niveau et propreté', 'Densité au pèse-acide', 'Recharge 1/10 C', 'Test d’aptitude 3 × C (> 9 V)', 'Contrôle du circuit de charge'], points: ['Sulfatation = décharge trop longue / charge incomplète', 'Surcharge = corrosion des grilles +', 'Rouge humide 18 mois · blanc sèche 5 ans · bleu déchargée 10 ans'], astuce: '« Fais comme tu dois, mets l’acide dans l’eau ».' }
     },
@@ -190,7 +189,7 @@ REV.add({
 <tr><td>6 diodes, régulateur incorporé</td><td>2 bornes : L et + (+ B+)</td><td>Multifonction : charger/alimenter, allumer le témoin, rupture de courroie.</td></tr>
 <tr><td>6 diodes, régulateur séparé</td><td>+BAT, −BAT, EXC</td><td>EXC contact mis moteur arrêté = tension batterie ; moteur tournant = tension de régulation.</td></tr>
 <tr><td>9 diodes (ancienne génération)</td><td>1 borne L (ou D+)</td><td>6 diodes de puissance + 3 diodes trio d’excitation. Monofonction. Borne L : 2–3 V contact mis, URT moteur tournant.</td></tr>
-<tr><td>12 diodes</td><td>2 bornes L et +</td><td>Régulateur intégré. 2 diodes de puissance par phase en parallèle : plus de courant, meilleur rendement.</td></tr>
+<tr><td>12 diodes</td><td>2 bornes L et +</td><td>Régulateur intégré. 2 diodes de puissance par phase en parallèle : plus de courant.</td></tr>
 <tr><td>Numérique / LIN</td><td>B+ + 1 petit fil (LIN)</td><td>Piloté par un calculateur, IBS sur la batterie.</td></tr></table></div>
 <p>Borne L (témoin/excitation) : D+, L, +A/L, IND (DIN : KL61) · Masse : B−, D−, M, GRD, 31, E · Borne W : compte-tours (vieux diesels).</p>
 <h3>Pannes</h3>
@@ -369,7 +368,7 @@ REV.add({
 <li>Pourquoi multiplexer : de plus en plus de calculateurs (45 à 70 sur une Audi A8) ; une porte conducteur en filaire classique demande 33 fils. Le multiplexage réduit longueur de câble, connexions et fusibles.</li>
 <li>Le bus peut être filaire, optique ou hertzien (le plus souvent filaire). Protocoles : <b>CAN, VAN, LIN, MOST, FlexRay</b> ; les plus répandus : CAN puis VAN.</li>
 <li>Un message (trame) est fait d’octets (1 octet = 8 bits) ; le protocole envoie le message au bon boîtier et écarte les messages incorrects.</li>
-<li>CAN High Speed : 2,5 V &lt; CAN H &lt; 3,5 V et 1,5 V &lt; CAN L &lt; 2,5 V ; fils torsadés à <b>30 spires par mètre</b> ; un message ne part que si le bus est libre depuis un certain temps (temps de latence).</li>
+<li>CAN High Speed : 2,5 V &lt; CAN H &lt; 3,5 V et 1,5 V &lt; CAN L &lt; 2,5 V ; un message ne part que si le bus est libre depuis un certain temps (temps de latence).</li>
 <li>Calculateur : l’étage d’entrée convertit les signaux (souvent analogiques) en numérique ; le micro-ordinateur ne comprend que le numérique ; l’étage de sortie renvoie des signaux analogiques (12 V, 0 V…) aux actionneurs ; le gestionnaire de protocole fait la conversion série ↔ parallèle et contrôle les trames. Le calculateur moteur <b>intègre</b> allumage, injection, refroidissement, dépollution.</li>
 <li><b>Conversion décimal → binaire</b> : diviser par 2 jusqu’à un quotient de 1, puis lire du dernier quotient vers le premier reste. 13 = 1101 (8 + 4 + 0 + 1).</li>
 </ul>

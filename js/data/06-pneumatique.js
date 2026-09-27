@@ -26,9 +26,8 @@ REV.add({
 <tr><td>81/82 · 91/92</td><td>Huile arrivée/retour · eau arrivée/retour</td></tr></table></div>
 <p><b>Code couleur</b> : une couleur par circuit — frein de service avant, frein de service arrière, frein de stationnement, frein de remorque, alimentation / servitudes. Dans chaque couleur : trait plein = pression constante, tirets = pression délivrée, alterné avec du jaune = pression de pilotage.</p>
 <h3>Symboles du test final</h3>
-<ul><li>Croix, orifices 1-2-3 et pilotage 4 → <b>valve de réduction pilotée</b> (Q29).</li>
-<li>Croix, entrées 11-12, sortie 2, échappement 3, pilotages 41-42-43 → <b>VCR avec rupture</b> (triple pilotage) (Q30).</li></ul>`,
-      images: [{ src: 'symbole-valve-reduction.png', cap: 'Q29 : valve de réduction pilotée (1-2-3 + pilotage 4)' }, { src: 'symbole-vcr-rupture.png', cap: 'Q30 : valve de commande de remorque avec rupture (11-12, 2, 3, 41-42-43)' }],
+<ul><li>Croix, entrées 11-12, sortie 2, échappement 3, pilotages 41-42-43 → <b>VCR avec rupture</b> (triple pilotage) (Q30).</li></ul>`,
+      images: [{ src: 'symbole-vcr-rupture.png', cap: 'Q30 : valve de commande de remorque avec rupture (11-12, 2, 3, 41-42-43)' }],
       retenir: ['1 = entrée · 2 = sortie · 3 = échappement · 4 = pilotage.', '43 = pilotage par absence d’air.', '7 = antigel.'],
       pieges: ['Repère 3 = échappement à l’atmosphère, pas 7 (antigel).'],
       memo: { cle: '1 ENTRE · 2 SORT · 3 ÉCHAPPE · 4 PILOTE', points: ['11/12 = plusieurs entrées', '41/42 = plusieurs pilotages', '43 = pilotage négatif', '7 = antigel'], astuce: 'Suis l’air : il entre (1), il sort (2), il s’échappe (3), on le commande (4).' }
