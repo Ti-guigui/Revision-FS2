@@ -21,7 +21,7 @@ REV.add({
 <tr><td>2</td><td>Utilisation (sortie) ; plusieurs : 21, 22</td></tr>
 <tr><td>3</td><td>Mise à la pression atmosphérique (échappement)</td></tr>
 <tr><td>4</td><td>Commande (pilotage) ; plusieurs : 41, 42, 44</td></tr>
-<tr><td>43</td><td>Pilotage par absence d’air (pilotage négatif)</td></tr>
+<tr><td>43</td><td>Pilotage par absence d’air (pilotage inversé)</td></tr>
 <tr><td>7</td><td>Antigel</td></tr>
 <tr><td>81/82 · 91/92</td><td>Huile arrivée/retour · eau arrivée/retour</td></tr></table></div>
 <p><b>Code couleur</b> : une couleur par circuit — frein de service avant, frein de service arrière, frein de stationnement, frein de remorque, alimentation / servitudes. Dans chaque couleur : trait plein = pression constante, tirets = pression délivrée, alterné avec du jaune = pression de pilotage.</p>
@@ -30,7 +30,7 @@ REV.add({
       images: [{ src: 'symbole-vcr-rupture.png', cap: 'Q30 : valve de commande de remorque avec rupture (11-12, 2, 3, 41-42-43)' }],
       retenir: ['1 = entrée · 2 = sortie · 3 = échappement · 4 = pilotage.', '43 = pilotage par absence d’air.', '7 = antigel.'],
       pieges: ['Repère 3 = échappement à l’atmosphère, pas 7 (antigel).'],
-      memo: { cle: '1 ENTRE · 2 SORT · 3 ÉCHAPPE · 4 PILOTE', points: ['11/12 = plusieurs entrées', '41/42 = plusieurs pilotages', '43 = pilotage négatif', '7 = antigel'], astuce: 'Suis l’air : il entre (1), il sort (2), il s’échappe (3), on le commande (4).' }
+      memo: { cle: '1 ENTRE · 2 SORT · 3 ÉCHAPPE · 4 PILOTE', points: ['11/12 = plusieurs entrées', '41/42 = plusieurs pilotages', '43 = pilotage inversé', '7 = antigel'], astuce: 'Suis l’air : il entre (1), il sort (2), il s’échappe (3), on le commande (4).' }
     },
     {
       id: 'production', title: 'Production et stockage de l’air',
@@ -83,7 +83,7 @@ REV.add({
 <tr><td>Remorque non alignée avec ce PPLOG, alignée avec un autre tracteur</td><td>Pas de prédominance sur la VCR</td><td>Manomètres sur le direct et sur le circuit AR : il faut 0,5 bar de plus sur le direct</td></tr>
 <tr><td>Frein de parc qui s’enclenche tout seul en essai dynamique</td><td>L’élément L : la valve de retenue libère l’air de la chambre de parc</td><td></td></tr>
 <tr><td>GBC 180 : quand contrôler le circuit pneumatique ?</td><td>En cas de panne ou lors d’une visite périodique</td><td></td></tr>
-<tr><td>GBC 180 : contrôle de la valve de secours (valve relais inverse)</td><td>Créer une fuite franche sur le circuit AR : au freinage de service, le cylindre à verrou (alimenté par le circuit AV) doit freiner les roues AR</td><td></td></tr>
+<tr><td>GBC 180 : contrôle de la valve de secours (valve relais simple pilotage inversé)</td><td>Créer une fuite franche sur le circuit AR : au freinage de service, le cylindre à verrou (alimenté par le circuit AV) doit freiner les roues AR</td><td></td></tr>
 <tr><td>Voyant de pression allumé, 8,6 bar au manomètre</td><td>Piste : manocontact ou son câblage</td><td>La pression est normale</td></tr></table></div>
 <p>Défreinage noté dans ta fiche : <b>0,6 s sur GBC 180</b>, <b>0,3 s sur PPLOG</b>. Pilotage des valves : par présence d’air ou par absence d’air.</p>`,
       retenir: ['Louvoiement = prédominance de la VCR.', 'La remorque doit freiner un peu AVANT le tracteur (≈ 0,5 bar de plus sur le direct).'],
@@ -112,6 +112,6 @@ REV.add({
     { l: 'remorque', q: 'Conditions de déclenchement de la fonction rupture de la VCR ?', c: ['Le conducteur freine ET il y a une fuite sur la main directe', 'Le frein de parc est serré', 'La main automatique est débranchée', 'La pression dépasse 10 bar'], e: 'Un piston coupe alors 95 % de l’alimentation → la pression chute dans l’automatique → la VRU freine la remorque.' },
     { l: 'cas', q: 'Ensemble routier qui louvoie au freinage. Que contrôler ?', c: ['La prédominance de la VCR', 'Le dessiccateur', 'La valve de protection', 'Le compresseur'], e: 'La remorque doit freiner légèrement avant le tracteur pour rester tendue.', src: 'Cas PPLOG' },
     { l: 'cas', q: 'Prédominance correcte : quel écart entre circuit direct et circuit AR du tracteur ?', c: ['≈ 0,5 bar de plus sur le direct', '≈ 0,5 bar de plus sur le circuit AR', 'Aucun écart', '≈ 5 bar de plus sur le direct'], e: 'La remorque reçoit un peu plus de pression que l’arrière du tracteur.' },
-    { l: 'cas', q: 'GBC 180 : comment contrôler la valve de secours ?', c: ['Créer une fuite franche sur le circuit AR : au freinage de service, le cylindre à verrou (alimenté par le circuit AV via la valve relais inverse) doit freiner les roues AR', 'Débrancher la main rouge', 'Vider tous les réservoirs', 'Mesurer la pression au compresseur'], e: 'En cas de perte du circuit AR, c’est le ressort (frein de parc) qui prend le relais au freinage.', src: 'Cas GBC 180' }
+    { l: 'cas', q: 'GBC 180 : comment contrôler la valve de secours ?', c: ['Créer une fuite franche sur le circuit AR : au freinage de service, le cylindre à verrou (alimenté par le circuit AV via la valve relais simple pilotage inversé) doit freiner les roues AR', 'Débrancher la main rouge', 'Vider tous les réservoirs', 'Mesurer la pression au compresseur'], e: 'En cas de perte du circuit AR, c’est le ressort (frein de parc) qui prend le relais au freinage.', src: 'Cas GBC 180' }
   ]
 });

@@ -8,7 +8,7 @@
     images: [
       { src: GBC, cap: 'GBC 180 ADR : véhicule qui roule, conducteur qui freine' },
       { src: P + 'gbc180-vierge.jpg', cap: 'GBC 180 ADR : schéma vierge à colorier' },
-      { src: POR, cap: 'GBC 180 (cylindre à verrou, valve relais inverse, VCR rupture) : véhicule qui roule, conducteur qui freine, avec légende' },
+      { src: POR, cap: 'GBC 180 (cylindre à verrou, valve relais simple pilotage inversé, VCR rupture) : véhicule qui roule, conducteur qui freine, avec légende' },
       { src: P + 'porteur-freinage-couleurs.jpg', cap: 'GBC 180 : même phase, sans légende' },
       { src: P + 'porteur-vierge.jpg', cap: 'GBC 180 : schéma vierge à colorier' }],
     html: `
@@ -18,18 +18,18 @@
 <h3>Repères du GBC 180 ADR</h3>
 <div class="tw"><table><tr><th>N°</th><th>Désignation</th><th>N°</th><th>Désignation</th></tr>
 <tr><td>1</td><td>Compresseur</td><td>13</td><td>Valve relais simple pilotage</td></tr>
-<tr><td>2</td><td>Serpentin</td><td>14</td><td>Valve relais simple pilotage négatif</td></tr>
+<tr><td>2</td><td>Serpentin</td><td>14</td><td>Valve relais simple pilotage inversé</td></tr>
 <tr><td>3</td><td>Régulateur</td><td>15</td><td>Robinet de frein de parc</td></tr>
-<tr><td>4</td><td>Dessiccateur</td><td>16</td><td>Connecteur de freinage + valve relais simple pilotage intégrée</td></tr>
+<tr><td>4</td><td>Dessiccateur</td><td>16</td><td>Correcteur de freinage à commande mécanique et V.R.S.P. intégrée</td></tr>
 <tr><td>5</td><td>Double valve d’arrêt</td><td>17</td><td>VCR avec rupture</td></tr>
 <tr><td>6</td><td>Valve de protection</td><td>18</td><td>Vase à diaphragme</td></tr>
 <tr><td>7</td><td>Réservoir AV</td><td>19</td><td>VNAE (valve de non-addition des efforts)</td></tr>
-<tr><td>8</td><td>Réservoirs AR (et intermédiaire AR)</td><td>20</td><td>Tristop</td></tr>
+<tr><td>8</td><td>Réservoirs AR (et intermédiaire AR)</td><td>20</td><td>Cylindre de frein à ressorts (« Tristop »)</td></tr>
 <tr><td>9</td><td>Réservoir parc / remorque</td><td>21</td><td>Valve de desserrage rapide</td></tr>
 <tr><td>10</td><td>Détendeur</td><td>22</td><td>Mains d’accouplement à clapet : rouge = automatique, jaune = directe</td></tr>
-<tr><td>11</td><td>Purgeur automatique</td><td>23</td><td>Mains d’accouplement sans clapet</td></tr>
+<tr><td>11</td><td>Valve de purge d’eau</td><td>23</td><td>Mains d’accouplement sans clapet</td></tr>
 <tr><td>12</td><td>Robinet de frein de service</td><td></td><td></td></tr></table></div>`,
-    retenir: ['Véhicule qui roule + conducteur qui freine : air piloté après le robinet de frein de parc.', 'GBC 180 ADR : 17 = VCR avec rupture · 19 = VNAE · 20 = Tristop · 21 = valve de desserrage rapide.', 'GBC 180 : cylindre à verrou à l’arrière, commandé par la valve relais inverse.'],
+    retenir: ['Véhicule qui roule + conducteur qui freine : air piloté après le robinet de frein de parc.', 'GBC 180 ADR : 17 = VCR avec rupture · 19 = VNAE · 20 = Tristop · 21 = valve de desserrage rapide.', 'GBC 180 : cylindre à verrou à l’arrière, commandé par la valve relais simple pilotage inversé.'],
     memo: { cle: 'ROULE + FREINE = AIR PILOTÉ APRÈS LE ROBINET DE PARC', points: ['Chambres à ressort alimentées = défreiné côté parc', 'Rouge = automatique · jaune = directe', 'Colorier : une couleur par circuit'], astuce: 'Le ressort freine, l’air défreine.' }
   }]);
 
@@ -41,8 +41,8 @@
     q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 20.', c: ['Tristop (cylindre à ressort)', 'Vase à diaphragme', 'Cylindre à verrou'], e: 'Les vases à diaphragme sont repérés 18.' }),
     q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 21.', c: ['Valve de desserrage rapide', 'Valve de protection', 'Double valve d’arrêt'], e: 'Elle facilite l’échappement de l’air pour accélérer le défreinage.' }),
     q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 6.', c: ['Valve de protection', 'Dessiccateur', 'Régulateur'], e: 'Elle alimente les circuits dans un ordre précis et isole un circuit défaillant.' }),
-    q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 16.', c: ['Connecteur de freinage + valve relais simple pilotage intégrée', 'VCR avec rupture', 'Valve relais simple pilotage négatif'], e: 'Il adapte l’effort de freinage arrière à la charge.' }),
-    q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 5.', c: ['Double valve d’arrêt', 'Clapet anti-retour', 'Purgeur automatique'], e: 'Elle alimente un circuit à partir de la plus forte de deux pressions.' }),
+    q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 16.', c: ['Correcteur de freinage à commande mécanique et V.R.S.P. intégrée', 'VCR avec rupture', 'Valve relais simple pilotage inversé'], e: 'Il adapte l’effort de freinage arrière à la charge.' }),
+    q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 5.', c: ['Double valve d’arrêt', 'Clapet anti-retour', 'Valve de purge d’eau'], e: 'Elle alimente un circuit à partir de la plus forte de deux pressions.' }),
     q({ q: 'Sur le schéma du GBC 180 ADR, les mains d’accouplement 22 rouge et jaune sont :', c: ['Rouge = automatique (alimentation) ; jaune = directe (commande)', 'Rouge = directe ; jaune = automatique', 'Les deux commandent le frein de parc'], e: 'Mains à clapet (22) ; mains sans clapet repérées 23.' }),
     q({ img: POR, q: 'Sur ce schéma du GBC 180, quel élément transmet le freinage à la remorque par les mains automatique et directe ?', c: ['La VCR rupture', 'La valve de desserrage rapide', 'Le détendeur'], e: 'La VCR commande la remorque à partir des informations AV et AR ; la rupture fait chuter l’automatique en cas de fuite sur la directe.' })
   ] });
