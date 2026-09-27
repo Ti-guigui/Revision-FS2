@@ -1,16 +1,16 @@
-/* Freinage pneumatique : schémas complets transmis (GBC 180 ADR et porteur), coloriés en phase
+/* Freinage pneumatique : schémas complets transmis (GBC 180 ADR et GBC 180), coloriés en phase
    « véhicule qui roule, conducteur qui freine », et versions vierges pour s’entraîner à colorier. */
 (function () {
   var P = 'pneu/';
   var GBC = P + 'gbc180-freinage-couleurs.jpg', POR = P + 'porteur-freinage-legende.jpg';
   REV.addLessons('pneu', 'remorque', [{
-    id: 'schemas-complets', title: 'Schémas complets : GBC 180 ADR et porteur',
+    id: 'schemas-complets', title: 'Schémas complets : GBC 180 ADR et GBC 180',
     images: [
       { src: GBC, cap: 'GBC 180 ADR : véhicule qui roule, conducteur qui freine' },
       { src: P + 'gbc180-vierge.jpg', cap: 'GBC 180 ADR : schéma vierge à colorier' },
-      { src: POR, cap: 'Porteur (cylindre à verrou, VCR rupture) : véhicule qui roule, conducteur qui freine, avec légende' },
-      { src: P + 'porteur-freinage-couleurs.jpg', cap: 'Porteur : même phase, sans légende' },
-      { src: P + 'porteur-vierge.jpg', cap: 'Porteur : schéma vierge à colorier' }],
+      { src: POR, cap: 'GBC 180 (cylindre à verrou, valve relais inverse, VCR rupture) : véhicule qui roule, conducteur qui freine, avec légende' },
+      { src: P + 'porteur-freinage-couleurs.jpg', cap: 'GBC 180 : même phase, sans légende' },
+      { src: P + 'porteur-vierge.jpg', cap: 'GBC 180 : schéma vierge à colorier' }],
     html: `
 <h3>La phase coloriée</h3>
 <p><b>Le véhicule roule et le conducteur freine</b> : les réservoirs AV, AR, parc et remorque sont sous pression, le robinet de frein de service envoie la pression de freinage vers l’avant et l’arrière, et <b>il y a de l’air piloté après le robinet de frein de parc</b> (frein de parc desserré : les chambres à ressort restent alimentées, le véhicule est défreiné côté parc).</p>
@@ -29,7 +29,7 @@
 <tr><td>10</td><td>Détendeur</td><td>22</td><td>Mains d’accouplement à clapet : rouge = automatique, jaune = directe</td></tr>
 <tr><td>11</td><td>Purgeur automatique</td><td>23</td><td>Mains d’accouplement sans clapet</td></tr>
 <tr><td>12</td><td>Robinet de frein de service</td><td></td><td></td></tr></table></div>`,
-    retenir: ['Véhicule qui roule + conducteur qui freine : air piloté après le robinet de frein de parc.', 'GBC 180 : 17 = VCR avec rupture · 19 = VNAE · 20 = Tristop · 21 = valve de desserrage rapide.'],
+    retenir: ['Véhicule qui roule + conducteur qui freine : air piloté après le robinet de frein de parc.', 'GBC 180 ADR : 17 = VCR avec rupture · 19 = VNAE · 20 = Tristop · 21 = valve de desserrage rapide.', 'GBC 180 : cylindre à verrou à l’arrière, commandé par la valve relais inverse.'],
     memo: { cle: 'ROULE + FREINE = AIR PILOTÉ APRÈS LE ROBINET DE PARC', points: ['Chambres à ressort alimentées = défreiné côté parc', 'Rouge = automatique · jaune = directe', 'Colorier : une couleur par circuit'], astuce: 'Le ressort freine, l’air défreine.' }
   }]);
 
@@ -44,7 +44,7 @@
     q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 16.', c: ['Connecteur de freinage + valve relais simple pilotage intégrée', 'VCR avec rupture', 'Valve relais simple pilotage négatif'], e: 'Il adapte l’effort de freinage arrière à la charge.' }),
     q({ q: 'Sur le schéma du GBC 180 ADR, donnez le nom de l’élément 5.', c: ['Double valve d’arrêt', 'Clapet anti-retour', 'Purgeur automatique'], e: 'Elle alimente un circuit à partir de la plus forte de deux pressions.' }),
     q({ q: 'Sur le schéma du GBC 180 ADR, les mains d’accouplement 22 rouge et jaune sont :', c: ['Rouge = automatique (alimentation) ; jaune = directe (commande)', 'Rouge = directe ; jaune = automatique', 'Les deux commandent le frein de parc'], e: 'Mains à clapet (22) ; mains sans clapet repérées 23.' }),
-    q({ img: POR, q: 'Sur ce schéma de porteur, quel élément transmet le freinage à la remorque par les mains automatique et directe ?', c: ['La VCR rupture', 'La valve de desserrage rapide', 'Le détendeur'], e: 'La VCR commande la remorque à partir des informations AV et AR ; la rupture fait chuter l’automatique en cas de fuite sur la directe.' })
+    q({ img: POR, q: 'Sur ce schéma du GBC 180, quel élément transmet le freinage à la remorque par les mains automatique et directe ?', c: ['La VCR rupture', 'La valve de desserrage rapide', 'Le détendeur'], e: 'La VCR commande la remorque à partir des informations AV et AR ; la rupture fait chuter l’automatique en cas de fuite sur la directe.' })
   ] });
 
   /* questions types UV2 : le schéma transmis remplace le schéma théorique quand la question ne dépend pas de ses numéros */
@@ -53,12 +53,12 @@
   s.questions = s.questions.filter(function (x) { return !(x.lkey === 'pneu/uv2-banque' && x.img === OLD && /élément 7|élément 12/.test(x.q)); });
   s.questions.forEach(function (x) { if (x.lkey === 'pneu/uv2-banque' && x.img === OLD) x.img = GBC; });
 
-  if (REV.systemes && REV.systemes.pneu) REV.systemes.pneu.unshift({ t: 'Schéma complet : véhicule qui roule, conducteur qui freine', img: [[GBC, 'GBC 180 ADR colorié'], [POR, 'Porteur colorié avec légende'], [P + 'gbc180-vierge.jpg', 'Schéma vierge à colorier']],
+  if (REV.systemes && REV.systemes.pneu) REV.systemes.pneu.unshift({ t: 'Schéma complet : véhicule qui roule, conducteur qui freine', img: [[GBC, 'GBC 180 ADR colorié'], [POR, 'GBC 180 colorié avec légende'], [P + 'gbc180-vierge.jpg', 'Schéma vierge à colorier']],
     role: 'Lire un schéma complet et savoir où il y a de l’air dans chaque phase.',
     phases: [['Production', 'Compresseur → serpentin → régulateur → dessiccateur → valve de protection → réservoirs AV, AR, parc / remorque.'], ['Véhicule qui roule', 'Frein de parc desserré : air piloté après le robinet de frein de parc, chambres à ressort alimentées.'], ['Conducteur qui freine', 'Le robinet de frein de service délivre la pression vers l’AV et l’AR ; la VCR commande la remorque par la main directe.']],
     pannes: [] });
   if (REV.uv2Fiches && REV.uv2Fiches.pneu) REV.uv2Fiches.pneu.blocs.splice(1, 0, { t: 'Schémas complets : véhicule qui roule, conducteur qui freine',
-    img: [[GBC, 'GBC 180 ADR'], [POR, 'Porteur avec légende']],
+    img: [[GBC, 'GBC 180 ADR'], [POR, 'GBC 180 avec légende']],
     pts: ['Air piloté après le robinet de frein de parc (frein de parc desserré).', 'GBC 180 : 17 = VCR rupture · 19 = VNAE · 20 = Tristop · 21 = desserrage rapide · 22 = mains à clapet.', 'Rouge = automatique ; jaune = directe.'],
     qr: [['Élément 19 (GBC)', 'VNAE'], ['Élément 17 (GBC)', 'VCR avec rupture']] });
 })();

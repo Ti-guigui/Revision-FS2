@@ -164,7 +164,7 @@ REV.systemes = {
       pannes: [
         ['Frein de parc qui s’enclenche tout seul en essai dynamique', 'La valve de retenue (élément L) libère l’air de la chambre de parc', 'Remplacer la valve', 'R'],
         ['Test VNAE : voyant de parc qui reste allumé frein de parc mis + pédale', 'La VNAE ne réalimente pas la chambre à ressort', 'Remplacer la VNAE', 'R'],
-        ['GBC 180 : fuite franche sur le circuit AR', 'Au freinage de service, le frein de parc doit freiner les roues AR', 'Si non : valve de secours à remplacer', 'R']] },
+        ['GBC 180 : fuite franche sur le circuit AR', 'Au freinage de service, la valve relais inverse alimente le cylindre à verrou par le circuit AV : l’AR doit freiner mécaniquement', 'Si non : valve relais inverse (secours) à contrôler / remplacer', 'R'], ['GBC 180 ADR : fuite sur un circuit', 'Ce circuit n’est plus freiné, les autres freinent', 'Rechercher et réparer la fuite ; la valve de protection doit isoler le circuit', 'R']] },
     { t: 'Commande de la remorque : VCR et VRU', img: [['pneu/remorquage-avec-rupture.jpg', 'Remorquage avec rupture'], ['pneu/valve-relais-urgence.jpg', 'VRU']],
       role: 'Commander le freinage de la remorque à partir du tracteur, et la freiner seule si l’attelage se rompt.',
       phases: [['Main rouge (automatique)', 'Pression constante : alimente la remorque.'], ['Main jaune (directe)', 'Pression délivrée : commande le freinage.'], ['Freinage', 'La VCR (pilotages 41-42 service, 43 parc) commande la VRU de la remorque.'], ['Rupture', 'Conducteur qui freine + fuite sur la jaune : le piston coupe 95 % de l’alimentation, la rouge chute, la VRU freine la remorque.']],
