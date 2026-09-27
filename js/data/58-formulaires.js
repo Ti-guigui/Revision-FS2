@@ -62,7 +62,8 @@ REV.formulaires = {
 <tr><td>Chute de tension maxi dans une ligne</td><td colspan="2">&lt; 1 V entre batterie et démarreur</td></tr></table></div>
 <ul><li>Moteur du démarreur : <b>&lt; 1 Ω</b> · bobine de maintien ≈ 2 × bobine d’appel (2 Ω → 4 Ω).</li>
 <li>Diesel : le démarreur entraîne le moteur à ≈ <b>200 tr/min</b>.</li>
-<li>Méthode de diagnostic au démarrage (24 V) : sous 19,2 V → <b>batteries</b> ; au-dessus mais démarreur qui peine → <b>démarreur</b> ; batteries bonnes mais chute &gt; 1 V jusqu’au démarreur → <b>ligne</b>.</li></ul>` },
+<li>Méthode de diagnostic au démarrage (24 V) : sous 19,2 V → <b>batteries</b> ; au-dessus mais démarreur qui peine → <b>démarreur</b> ; batteries bonnes mais chute &gt; 1 V jusqu’au démarreur → <b>ligne</b>.</li></ul>
+<div class="box methode"><b>✎ Diagnostic complet du démarreur</b><p>1) Bobines d’appel et de maintien bonnes, moteur du démarreur <b>≈ 0 Ω</b>.<br>2) On doit retrouver <b>Ubat à la borne +DEM</b> ; sinon → <b>perte en ligne</b> (câble sectionné, cosse).<br>3) Tension des batteries au lancement <b>qui s’effondre</b>, circuit bon → <b>moteur thermique grippé</b>.<br>4) Tension des batteries au lancement <b>trop élevée</b>, démarreur qui peine → <b>résistance du moteur du démarreur trop élevée</b>.</p></div>` },
     { t: 'Multiplexage CAN, capteurs, RCO', html: `
 <div class="tw"><table><tr><th>Mesure (prise OBD)</th><th>Normal</th><th>Anomalie</th></tr>
 <tr><td>Résistance 6–14 (batterie débranchée)</td><td>60 Ω (2 × 120 Ω en parallèle)</td><td>120 Ω = fil coupé / terminaison HS · ≈ 0 Ω = court-circuit H-L</td></tr>
