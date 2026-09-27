@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap">
-  <link rel="stylesheet" href="css/app.css?v=53">
+  <link rel="stylesheet" href="css/app.css?v=54">
 </head>
 <body>
   <a class="skip" href="#main">Aller au contenu</a>
@@ -28,6 +28,7 @@
       <nav class="side-nav">
         <a href="#/" data-nav="home"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span>Accueil</a>
         <a href="#/cours" data-nav="cours"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/></svg></span>Cours</a>
+        <a href="#/exercices" data-nav="exercices"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg></span>Exercices corrigés</a>
         <a href="#/qcm" data-nav="qcm"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8l1.5 1.5L12 7"/><path d="M8 14l1.5 1.5L12 13"/><path d="M14 8h3M14 14h3"/></svg></span>QCM</a>
         <a href="#/quiz" data-nav="quiz"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>Quiz</a>
         <a href="#/resultats" data-nav="resultats"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>Résultats</a>
@@ -48,6 +49,7 @@
   <nav class="bottom-nav" aria-label="Navigation principale">
     <a href="#/" data-nav="home"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span>Accueil</a>
     <a href="#/cours" data-nav="cours"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/></svg></span>Cours</a>
+    <a href="#/exercices" data-nav="exercices"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg></span>Exercices</a>
     <a href="#/qcm" data-nav="qcm"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8l1.5 1.5L12 7"/><path d="M8 14l1.5 1.5L12 13"/><path d="M14 8h3M14 14h3"/></svg></span>QCM</a>
     <a href="#/quiz" data-nav="quiz"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>Quiz</a>
     <a href="#/resultats" data-nav="resultats"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>Résultats</a>
@@ -55,7 +57,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/app.js?v=53"></script>
+  <script src="js/app.js?v=54"></script>
   <script src="js/data/01-electricite.js"></script>
   <script src="js/data/02-equipement-electrique.js"></script>
   <script src="js/data/03-motorisation.js"></script>

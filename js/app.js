@@ -228,7 +228,7 @@
   }
 
   function setActiveNav(route) {
-    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', fiche: 'cours', fiches: 'cours', verif: 'cours',
+    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', fiche: 'cours', fiches: 'cours', verif: 'cours', exercices: 'exercices',
       qcm: 'qcm', uv2: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
     var key = map[route] || 'home';
     if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') key = 'quiz';
@@ -258,6 +258,7 @@
       case 'fiches': html = viewFiches(); break;
       case 'fiche': html = viewFiche(parts[1]); break;
       case 'verif': html = viewVerif(); break;
+      case 'exercices': html = viewExercices(parts[1]); break;
       case 'uv2': html = parts[1] === 'fiche' ? viewUV2Fiche(parts[2]) : viewUV2(); break;
       default: html = viewHome();
     }
@@ -323,6 +324,7 @@
       resume +
       (toReview ? '<a class="card review-cta" href="#/revision"><span class="big">🔁</span><span><b>QCM de révision</b><br>' +
         toReview + ' question' + (toReview > 1 ? 's' : '') + ' ratée' + (toReview > 1 ? 's' : '') + ' à retravailler</span><span class="chev">›</span></a>' : '') +
+      '<a class="card review-cta exo-cta" href="#/exercices"><span class="big">✍️</span><span><b>Exercices corrigés</b><br>Tests officiels, cahiers, UV2, test final UV1, exercices sur schéma</span><span class="chev">›</span></a>' +
       '<a class="card review-cta uv2-cta" href="#/uv2"><span class="big">📝</span><span><b>Test UV2 — 60 questions, 2 h</b><br>Le dossier transmis, des UV2 blancs et les fiches mémoire illustrées</span><span class="chev">›</span></a>' +
       '<h2 class="h2 h2-atelier">🧰 Les postes de l’atelier</h2>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
@@ -350,6 +352,7 @@
   function viewCours() {
     return '<h1 class="h1">📖 Cours</h1><p class="muted">Choisis une matière, puis une leçon : explication, schémas, à retenir, pièges et aide-mémoire.</p>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
+      '<a class="card review-cta exo-cta" href="#/exercices"><span class="big">✍️</span><span><b>Tous les exercices corrigés</b><br>Toutes matières, avec schéma et correction</span><span class="chev">›</span></a>' +
       '<div class="home-foot"><a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
       '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
       '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' + '<a class="card mini" href="#/verif">✅ Vérification des corrigés</a>' + '</div>';
@@ -369,13 +372,14 @@
         '<a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM ' + esc(s.name) + '</a>' +
         '<a class="btn" href="#/fiche/' + s.id + '">📄 Fiche de révision</a>' +
         '<a class="btn" href="#/memos/' + s.id + '">🧠 Aides-mémoires</a>' +
+        (exos.length ? '<a class="btn exo-btn" href="#/matiere/' + s.id + '/exercices">📝 Exercices corrigés (' + exos.length + ')</a>' : '') +
         (sc.pct !== null ? '<span class="pill ' + level(sc.pct).cls + '">' + level(sc.pct).dot + ' ' + sc.pct + ' %</span>' : '') +
       '</div>' +
-      (exos.length ? '<nav class="tabs">' +
+      (exos.length ? '<nav class="tabs seg-tabs">' +
         '<a href="#/matiere/' + s.id + '"' + (showExos ? '' : ' class="on"') + '>📖 Leçons (' + (s.lessons.length - exos.length) + ')</a>' +
         '<a href="#/matiere/' + s.id + '/exercices"' + (showExos ? ' class="on"' : '') + '>📝 Exercices corrigés (' + exos.length + ')</a></nav>' : '') +
       (showExos ? '<p class="muted small">Chaque exercice se travaille seul : ouvre-le pour le schéma et la correction détaillée, ou lance directement son QCM.</p>' : '') +
-      '<ol class="lesson-list">' + shown.map(function (l) {
+      (showExos ? '<div class="exo-grid">' + shown.map(function (l) { return exoCard(l, s); }).join('') + '</div>' : '<ol class="lesson-list">' + shown.map(function (l) {
         var lq = lessonQuestions(l.key), ls = scoreOf(lq), lv = level(ls.pct);
         return '<li><a href="#/lecon/' + l.key + '"><span class="num">' + l.num + '</span><span class="lt">' + esc(l.title) +
           '<span class="muted small">' + lq.length + ' questions' + (store.lessonsSeen[l.key] ? ' · ✔ lue' : '') + '</span></span>' +
@@ -383,7 +387,7 @@
           (l.exo && lq.length ? '<div class="exo-actions"><a class="btn" href="#/lecon/' + l.key + '">📖 Schéma + corrigé</a>' +
             '<button class="btn primary" data-action="lesson-qcm" data-key="' + l.key + '">🧠 S’entraîner (' + lq.length + ')</button></div>' : '') +
           '</li>';
-      }).join('') + '</ol>';
+      }).join('') + '</ol>');
   }
 
   function crumbs(items) {
@@ -765,6 +769,41 @@
       '<button class="btn danger" data-action="reset">🗑️ Tout effacer</button></div></div>';
   }
 
+
+  /* ----- Tous les exercices corrigés, toutes matières ----- */
+  function exoType(l) {
+    var id = l.id;
+    if (/^uv2-(banque|var)/.test(id)) return ['UV2 entraînement', 'b-uv2'];
+    if (/^uv2-/.test(id)) return ['UV2 dossier', 'b-uv2'];
+    if (/^tf-/.test(id)) return ['Test final UV1', 'b-tf'];
+    if (/^(cah|cahier)/.test(id)) return ['Cahier officiel', 'b-cah'];
+    if (/^sym/.test(id)) return ['Symboles', 'b-sym'];
+    if (/^(test-|qcm-|controle)/.test(id)) return ['Test', 'b-test'];
+    if (/^(aga03-|livre-)/.test(id)) return ['Exercices du livre', 'b-livre'];
+    return ['Exercice corrigé', 'b-exo'];
+  }
+  function exoCard(l, s) {
+    var lq = lessonQuestions(l.key), ls = scoreOf(lq), lv = level(ls.pct), t = exoType(l);
+    return '<div class="exo-card" style="--c:' + s.color + '"><div class="exo-top"><span class="badge ' + t[1] + '">' + t[0] + '</span>' +
+      '<span class="lscore ' + lv.cls + '">' + (ls.pct === null ? '' : ls.pct + ' % ' + lv.dot) + '</span></div>' +
+      '<a class="exo-title" href="#/lecon/' + l.key + '">' + esc(l.title) + '</a>' +
+      '<span class="muted small">' + s.icon + ' ' + esc(s.name) + ' · ' + lq.length + ' questions' + (store.lessonsSeen[l.key] ? ' · ✔ lu' : '') + '</span>' +
+      '<div class="exo-actions"><a class="btn" href="#/lecon/' + l.key + '">📖 Schéma + corrigé</a>' +
+      (lq.length ? '<button class="btn primary" data-action="lesson-qcm" data-key="' + l.key + '">🧠 S’entraîner</button>' : '') + '</div></div>';
+  }
+  function countExos(s) { return s.lessons.filter(function (l) { return l.exo; }).length; }
+  function viewExercices(id) {
+    var subs = REV.subjects.filter(function (s) { return countExos(s); });
+    var list = id ? subs.filter(function (s) { return s.id === id; }) : subs;
+    var total = subs.reduce(function (n, s) { return n + countExos(s); }, 0);
+    return '<h1 class="h1">📝 Exercices corrigés</h1><p class="muted">Tests officiels, cahiers d’exercices, UV2, test final UV1 et exercices sur schéma : ' + total + ' exercices avec leur correction détaillée.</p>' +
+      '<nav class="chips exo-filter"><a class="chip' + (id ? '' : ' on') + '" href="#/exercices">Tout (' + total + ')</a>' +
+      subs.map(function (s) { return '<a class="chip' + (id === s.id ? ' on' : '') + '" href="#/exercices/' + s.id + '">' + s.icon + ' ' + esc(s.name) + ' (' + countExos(s) + ')</a>'; }).join('') + '</nav>' +
+      list.map(function (s) {
+        return '<h2 class="h2 sec-title">' + s.icon + ' ' + esc(s.name) + '</h2><div class="exo-grid">' +
+          s.lessons.filter(function (l) { return l.exo; }).map(function (l) { return exoCard(l, s); }).join('') + '</div>';
+      }).join('');
+  }
 
   /* ----- Vérification des corrigés : chaque test, question par question ----- */
   var VERIF_TESTS = [

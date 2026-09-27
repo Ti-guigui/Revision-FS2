@@ -609,3 +609,21 @@ table.verif td:nth-child(3) { min-width: 140px; }
 tr.v-ecart td { background: var(--mid-bg) !important; }
 tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, transparent) !important; }
 .v-note { color: var(--mid); }
+/* ---------- Exercices bien visibles ---------- */
+.bottom-nav { grid-template-columns: repeat(6, 1fr); }
+.bottom-nav a { font-size: .66rem; }
+.seg-tabs { border: 0; background: var(--surface-2); padding: 4px; border-radius: 12px; gap: 4px; flex-wrap: nowrap; }
+.seg-tabs a { flex: 1; text-align: center; border-radius: 9px; margin: 0; border: 0; padding: 10px 8px; font-size: .95rem; }
+.seg-tabs a.on { background: var(--surface); color: var(--primary); box-shadow: 0 1px 4px rgba(15,29,61,.15); }
+.seg-tabs a:not(.on):last-child { background: var(--accent); color: #1f1300; }
+.exo-btn { background: var(--accent); color: #1f1300; border-color: var(--accent); }
+.exo-cta { border-left-color: var(--accent); }
+.exo-filter .chip.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+.exo-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); margin: 10px 0 18px; }
+.exo-card { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--c); border-radius: 12px; box-shadow: var(--shadow); }
+.exo-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.exo-title { font-weight: 800; color: var(--text); text-decoration: none; font-size: 1.02rem; line-height: 1.3; }
+.exo-card .exo-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.exo-card .exo-actions .btn { min-height: 38px; padding: 6px 12px; font-size: .9rem; flex: 1; }
+.badge { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: .7rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: #fff; background: #475569; }
+.b-uv2 { background: #7c3aed; } .b-tf { background: #c81e1e; } .b-cah { background: #15803d; } .b-sym { background: #0e7490; } .b-test { background: #c2410c; } .b-livre { background: #1d4ed8; } .b-exo { background: #475569; }
