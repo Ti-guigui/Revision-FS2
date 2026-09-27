@@ -116,13 +116,13 @@ REV.add({
 <li><b>SIM@T</b> : planifier, préparer, effectuer, suivre. On crée des IT, on déclare les indisponibilités, on planifie. Le chef d’équipe commande et consomme les pièces, pointe ses heures.</li>
 <li>Statuts RDC : retardé, différé, accepté. AISM = article individualisé à suivi de maintenance.</li>
 <li><b>MICAM</b> : contrôle administratif et mécanique. Classement : A apte / AR apte avec restriction / I inapte.</li>
-<li><b>COS</b> : valable 1 an ; sur ordre, une fois par an, en <b>sortie de remisage &gt; 6 mois</b>, au retour d’une RIP, en sortie de station-service ou d’atelier. Réalisé par un <b>BM2 Mobilité terrestre affecté au RDC</b> (par un FS2 Mobter si besoin urgent, ponctuel, local). Celui qui signe engage sa responsabilité.</li></ul>
+<li><b>COS</b> : valable 1 an ; sur ordre, une fois par an, en <b>sortie de remisage &gt; 6 mois</b> (sauf ENU). <b>Pas après une RIP</b> : le prestataire doit rendre le véhicule apte et conforme au code de la route (on ne repasse jamais derrière). Réalisé par un <b>BM2 Mobilité terrestre affecté au RDC</b> (par un FS2 Mobter si besoin urgent, ponctuel, local). Celui qui signe engage sa responsabilité.</li></ul>
 <div class="tw"><table><tr><th>Question (contrôle RDC)</th><th>Réponse</th></tr>
-<tr><td>RDC fermé 2 semaines</td><td>Faire contrôler par un BSTAT d’un autre atelier</td></tr>
-<tr><td>Fiche de visite prise…</td><td>Sur SIM@T</td></tr>
+<tr><td>RDC fermé 2 semaines (chef d’atelier PL)</td><td>Attendre que le RDC soit ouvert</td></tr>
+<tr><td>Fiche de visite récupérée…</td><td>Sur le site documentaire (toujours à jour)</td></tr>
 <tr><td>Qui répartit les travaux (phase 2) ?</td><td>Le RDC</td></tr>
 <tr><td>GBC 180 : COS + visite station + NTI1</td><td>NTI1, puis station, puis COS</td></tr>
-<tr><td>Qui valide la partie 4 du DIT dans tous les cas ?</td><td>La CDM</td></tr>
+<tr><td>Qui valide la partie 4 du DIT dans tous les cas ?</td><td>L’ECM (équipe de conduite de la maintenance = CDM)</td></tr>
 <tr><td>Visite périodique valant COS : qui l’enregistre au MAT 10004 ?</td><td>Le RDC</td></tr></table></div>
 `,
       retenir: ['7 étapes ; le RDC en prend 4.', 'DIT = 4 phases : réception, diagnostic, intervention, contrôle.', 'COS : 1 an ; sortie de remisage > 6 mois ; BM2 Mobilité terrestre affecté au RDC.', 'Préparation = chef d’atelier.'],
@@ -157,9 +157,9 @@ REV.add({
     { l: 'reparation', q: 'Combien d’étapes dans la réparation des matériels complets ?', c: ['7', '4', '5', '3'], e: 'Mise en réparation, diagnostic, préparation, approvisionnement, réparation, contrôles, restitution.', src: 'QCM Test FS2' },
     { l: 'reparation', q: 'Quelle cellule prend en charge 4 étapes sur 7 ?', c: ['Le RDC', 'L’atelier', 'La CDM', 'La cellule approvisionnement'], e: 'Mise en réparation, diagnostic, contrôles, restitution.', src: 'QCM Test FS2' },
     { l: 'reparation', q: 'Qui s’occupe de la phase « préparation » ?', c: ['Le chef d’atelier', 'Le RDC', 'Le chef BML', 'Le détenteur'], e: 'AQA 03 (7 étapes) : la préparation est définie par le chef d’atelier (modes opératoires, personnel, outillage, documentation).', src: 'AQA 03 indice R' },
-    { l: 'reparation', q: 'Dans quel cas faut-il un COS ?', c: ['Sortie de remisage de plus de 6 mois ; sur ordre, une fois par an', 'Après chaque plein de carburant', 'Tous les 3 mois', 'Uniquement après un accident'], e: 'Aussi : retour de RIP, sortie de station-service ou d’atelier. Un COS est valable 1 an.', src: 'Contrôle RDC' },
+    { l: 'reparation', q: 'Dans quel cas faut-il un COS ?', c: ['Sortie de remisage de plus de 6 mois ; sur ordre, une fois par an', 'Après chaque plein de carburant', 'Tous les 3 mois', 'Uniquement après un accident'], e: 'COS : sur ordre, une fois par an, après un remisage de plus de 6 mois (sauf ENU). Pas après une RIP : le prestataire rend le véhicule apte et conforme.', src: 'Contrôle RDC' },
     { l: 'reparation', q: 'Conditions pour réaliser un COS ?', c: ['Être BM2 Mobilité terrestre et affecté au RDC', 'Être chef de corps', 'Être CDU', 'Avoir le permis PL'], e: 'Celui qui signe engage sa responsabilité.', src: 'Contrôle RDC' },
-    { l: 'reparation', q: 'RDC fermé 2 semaines, un COS est nécessaire. Que faire ?', c: ['Faire contrôler par un BSTAT d’un autre atelier', 'Reporter le COS', 'Le faire signer par le chef d’atelier PL', 'Rendre le véhicule sans COS'], e: 'Le contrôle doit être fait par une personne habilitée.', src: 'Contrôle RDC' },
+    { l: 'reparation', q: 'Chef d’atelier poids lourd, le RDC est fermé pour 2 semaines. Que faire ?', c: ['Attendre que le RDC soit ouvert', 'Sortir le véhicule soi-même', 'Demander à l’ECM de faire sortir le véhicule', 'Demander la validation du chef BML'], e: 'Seul le RDC contrôle et fait sortir le véhicule : on attend sa réouverture.', src: 'Contrôle RDC' },
     { l: 'reparation', q: 'GBC 180 : dans quel ordre faire le COS, la visite station et la NTI1 ?', c: ['NTI1, puis station, puis COS', 'COS, puis NTI1, puis station', 'Station, puis COS, puis NTI1', 'Peu importe'], e: 'Le COS valide un véhicule en état : il vient en dernier.', src: 'Contrôle RDC' },
     { l: 'reparation', q: 'Les 4 phases du DIT (MAT 4486) ?', c: ['Réception, diagnostic, intervention technique, contrôle', 'Commande, livraison, montage, essai', 'Préparation, approvisionnement, réparation, restitution', 'Planifier, préparer, effectuer, suivre'], e: '« Planifier, préparer, effectuer, suivre » décrit SIM@T.' },
     { l: 'reparation', q: 'Qui ouvre et clôture le MAT 4486 (DIT) ?', c: ['La conduite de la maintenance (CDM)', 'La station-service', 'Le détenteur'], e: 'La CDM pilote les activités de maintenance : elle ouvre et clôture le DIT ; le RDC l’ouvre à la réception et le remplit.', src: 'Ta fiche « Environnement maintenance »' },

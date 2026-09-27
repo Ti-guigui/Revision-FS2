@@ -47,8 +47,9 @@ REV.add({
     {
       id: 'circuits', title: 'Circuits, Tristop et VNAE',
       html: `
-<div class="tw"><table><tr><th>Circuit avant</th><th>Circuit arrière</th><th>Circuit remorque</th></tr>
+<div class="tw"><table><tr><th>Circuit avant</th><th>Circuit arrière</th><th>Circuit parc / remorque (un seul circuit)</th></tr>
 <tr><td>Robinet de frein de service · valve de desserrage rapide · cylindre simple effet (ou vase à diaphragme)</td><td>Robinet de frein · valve de desserrage rapide · valve relais simple pilotage · correcteur · cylindre à verrou ou Tristop + VNAE</td><td>VCR avec/sans rupture · robinet de frein de remorque · mains d’accouplement · VRU · valve de desserrage · vases · valve de barrage</td></tr></table></div>
+<p>⚠ Le <b>circuit de frein de parc et le circuit remorque sont un seul et même circuit</b> : la même réserve alimente les chambres à ressort des Tristop et la VCR (main rouge). En diagnostic, on les traite ensemble.</p>
 <ul><li><b>Cylindre à verrou</b> : 2 entrées (11, 12), 1 pilotage (4).</li>
 <li><b>Tristop</b> : vase à diaphragme (service) + ressort (parc/secours) : <b>pression = défreiné, vidange = freiné</b>.</li>
 <li><b>VNAE</b> (valve de non-addition des efforts) = valve relais double pilotage : évite d’additionner l’effort du frein de service et celui du ressort sur un Tristop.</li></ul>

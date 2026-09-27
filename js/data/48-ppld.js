@@ -139,7 +139,7 @@
 <div class="tw"><table><tr><th></th><th>Stabilisateurs (CETOP)</th><th>RMU (télescopage)</th><th>Grue (rotation)</th></tr>
 <tr><td>Neutre</td><td>30 × 1 / 600 = <b>0,05 kW</b> (1 L/min : gicleur anti-pompage)</td><td>30 × 2 / 600 = <b>0,1 kW</b> (2 L/min : anti-pompage + gicleur LS)</td><td><b>0,1 kW</b> (2 L/min)</td></tr>
 <tr><td>Fonctionnement (40 L/min)</td><td>vérin 6,66 + régulateur 2 + gicleur 0,21 = <b>8,87 kW</b></td><td>vérin 6,99 + limiteur de débit 0,33 + distributeur 2 + gicleur LS 0,05 + gicleur 0,23 = <b>9,60 kW</b></td><td>moteur 6,66 + distributeur 2 + gicleur LS 0,05 + gicleur 0,21 = <b>8,92 kW</b></td></tr>
-<tr><td>Butée</td><td>LP piloté 220 × 40 = 14,66 + 2 + 0,41 = <b>17,07 kW</b></td><td>LPS 200 b → P service 230 b : 230 × 41 / 600 = <b>15,71 kW</b></td><td>LPS 210 b → 240 b : 240 × 41 / 600 = <b>16,40 kW</b></td></tr></table></div>
+<tr><td>Butée</td><td>LP piloté 220 × 40 / 600 = 14,66 + 2 + 0,41 = <b>17,07 kW</b></td><td>LPS 200 b → P service 230 b : 230 × 41 / 600 = <b>15,71 kW</b></td><td>LPS 210 b → 240 b : 240 × 41 / 600 = <b>16,40 kW</b></td></tr></table></div>
 <ul><li>Débit pompe en fonctionnement : <b>41 L/min</b> (40 pour le récepteur + 1 pour le gicleur anti-pompage).</li>
 <li>En butée, la pression LS n’atteint pas le DAD : pression de service = LPS + 30 b, le débit continue à passer par le limiteur (chaleur).</li></ul>`,
         retenir: ['P (kW) = p × Q / 600.', 'Neutre stabs 0,05 kW · RMU et grue 0,1 kW.', 'Butée : P service = LPS + 30 b.'],

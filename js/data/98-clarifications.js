@@ -15,6 +15,7 @@
       if (patch.q) q.q = typeof patch.q === 'function' ? patch.q(q.q) : patch.q;
       if (patch.c) Object.keys(patch.c).forEach(function (i) { q.c[i] = patch.c[i]; });
       if (patch.e) q.e = patch.e;
+      if (patch.r) q.r = patch.r;
     });
     if (!n && window.console) console.warn('98-clarifications : question introuvable', id, sub);
   }
@@ -87,12 +88,12 @@
   edit('tact', 'Portée maxi du CAESAR retenue dans tes tests', { q: 'Portée maxi du CAESAR ?' });
   edit('hydro', 'Q07 — Débit fourni par la pompe dans cette situation', { q: 'Q07 — Ripper (5 L/min) et orientation (15 L/min) en même temps, plus 1 L/min pour le pilotage LS. Débit fourni par la pompe ?' });
   edit('hydro', 'Q09 — Au neutre, ta fiche retient', { q: 'Q09 — Au neutre, la pompe LS reste à 50 b et débite 1 L/min. Puissance absorbée ?' });
-  edit('mcot', 'Q10 — Pour effectué un COS', { c: { 0: 'Être BM2 Mobilité terrestre et affecté au RDC' },
-    e: 'Le COS est fait par un BM2 Mobilité terrestre affecté au RDC (par un FS2 Mobter si besoin urgent, ponctuel, local) : celui qui signe engage sa responsabilité.' });
+  edit('mcot', 'Q10 — Pour effectué un COS', { c: { 0: 'Être titulaire du BM2 / BSTAT Mobter ou FS1 NG, avoir 2 ans d’atelier, la FA RDC/COS et être inscrit sur le DUO' },
+    e: 'Pour tenir le poste au RDC, un militaire doit être titulaire du BM2 / BSTAT Mobter ou du FS1 NG, avoir 2 ans d’atelier, la FA RDC/COS et être inscrit sur le DUO. Un FS2 Mobter peut faire le COS si le besoin est urgent, ponctuel, local.' });
   edit('mcot', 'Q09 — Dans quelle circonstance je doit éffectuer un COS', {
-    e: 'COS : sur ordre, une fois par an, en sortie de remisage de plus de 6 mois (sauf ENU), au retour de RIP, en sortie de station-service ou d’atelier. Un COS est valable 1 an.' });
+    c: { 0: 'Sur ordre, annuellement (bus : tous les 6 mois), après un remisage de plus de 6 mois (sauf ENU)' }, e: 'COS : sur ordre, une fois par an (bus : 6 mois), après un remisage de plus de 6 mois (sauf ENU). Pas après une RIP : le prestataire rend le véhicule apte et conforme.' });
   edit('mcot', 'Q06 — Qui réparti les différents travaux', { e: 'Le RDC distribue les différents travaux aux ateliers (phase 2 du DIT).' });
-  edit('mcot', 'Q07 — Dans tous les cas qui validera la partie 4 du DIT', { e: 'La CDM ouvre et clôture le DIT (MAT 4486) : c’est elle qui valide la partie 4 dans tous les cas, même si le contrôle est fait par le RDC ou le prestataire en RIP.' });
+  edit('mcot', 'Q07 — Dans tous les cas qui validera la partie 4 du DIT', { e: 'La CDM (ECM, équipe de conduite de la maintenance) ouvre et clôture le DIT (MAT 4486) : c’est elle qui valide la partie 4 dans tous les cas, pas le RDC.' });
 
   /* ---------- Questions qui dépendaient de la question précédente ou d'un schéma absent ---------- */
   subj('hydro').questions.forEach(function (q) { if (q.l === 'circuit-ferme' && !q.img) q.img = 'exo-hydro-ferme-schema.jpg'; });
@@ -108,7 +109,10 @@
   edit('equip', 'Batterie 12 V au repos : 12,2 V. Son état de charge', { q: 'Batterie 12 V au repos (stabilisée, sans charge depuis 1 h) : 12,2 V. Son état de charge ?' });
   edit('equip', '44) En actionnant le démarreur', { e: '12,2 V à vide = batterie chargée entre 20 et 60 % : on recharge d’abord. L’essai d’intensité au démarrage ne se fait que sur une batterie correctement rechargée.' });
   edit('equip', '24 V : 24,5 à 25,2 V à vide, 18,6 V sous démarreur', {
-    q: 'Réseau 24 V, batteries chargées (24,5 à 25,2 V au repos). Pendant le démarrage : 18,6 V aux batteries et entraînement faible. Que contrôlez-vous ?' });
+    q: 'Réseau 24 V : 24,5 V aux batteries à vide, 18,6 V pendant le démarrage, entraînement faible. Élément à incriminer ?',
+    c: { 0: 'Les batteries (déchargées)', 1: 'Lignes + et/ou − du démarreur' },
+    e: '18,6 V au démarrage < 19,2 V (80 % de 24 V) : les batteries s’effondrent. À vide, 24,5 V / 12 éléments = 2,04 V par élément (< 2,1 V) : pas complètement chargées. Corrigé du formateur : batteries déchargées.',
+    r: 'Sous 19,2 V au démarrage (24 V) = batteries.' });
   edit('pneu', 'Temps de remplissage de toutes les bouteilles selon ton cours', {
     q: 'Norme européenne : moteur au ralenti, en combien de temps toutes les bouteilles doivent-elles atteindre la pression de régulation ?' });
   edit('elec', 'Ex 42 — Moteur de 3 ch', {

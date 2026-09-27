@@ -807,20 +807,21 @@
 
   /* ----- Vérification des corrigés : chaque test, question par question ----- */
   var VERIF_TESTS = [
-    ['uv2-', 'UV2 — dossier d’évaluation n°1', 'Réponses vérifiées dans le cours ; les écarts avec le corrigé du dossier sont signalés.', 'ok'],
+    ['uv2-', 'UV2 — dossier d’évaluation n°1', 'Corrigé du formateur (quiz Socrative) ; les 2 écarts avec le cours sont signalés.', 'off'],
     ['tf-', 'Test final UV1 (sujet de préparation)', 'Correction officielle, vérifiée avec le cours.', 'off'],
     ['cah', 'Cahiers d’exercices (hydraulique, électricité)', 'Corrigés officiels des cahiers EMB.', 'off'],
     ['test-eee', 'Test équipement électrique et électronique embarquée', 'Pas de corrigé officiel : chaque réponse est tirée du cours (AGA 01, capteurs, LIN, CAN).', 'ok'],
     ['qcm-demarreur', 'QCM démarreur et batterie', 'Réponses du cours AGA 01.', 'ok'],
     ['microtracteur', 'Exercice microtracteur tondeuse', 'Copie corrigée avec le cours d’électricité.', 'ok'],
     ['moto', 'Exercice moto', 'Copie corrigée avec le cours d’électricité.', 'ok'],
-    ['controle-rdc', 'Contrôle des connaissances RDC n°1', 'Pas de corrigé officiel : réponses tirées du cours AQA 03 et de ta fiche.', 'ded'],
+    ['controle-rdc', 'Contrôle des connaissances RDC n°1', 'Corrigé du formateur (quiz RDC Socrative) et ta fiche.', 'off'],
+    ['quiz-rdc', 'Quiz RDC', 'Corrigé du formateur (Socrative).', 'off'],
     ['questions', 'PPLD — questions posées', 'Réponses surlignées sur ta feuille, vérifiées dans le cours AGE 12 ; Test n°1 sans case cochée : réponses déduites du cours.', 'ok']];
   // Questions dont la réponse du site n'est pas celle du corrigé, ou non confirmée
   var VERIF_FLAGS = [
-    [/^dsft\/uv2-dsft$/, /^6\)/, 'ecart', 'Corrigé du dossier : A. Le site retient B (V = recreusé).'],
-    [/^dsft\/uv2-dsft$/, /^16\)/, 'ecart', 'Corrigé du dossier : C. Le site retient A (6 à 11 minutes, cours).'],
-    [/^equip\/uv2-equip$/, /^44\)/, 'ecart', 'Corrigé du dossier : B. Le site retient C (recharger d’abord : 12,2 V = batterie à moitié chargée).'],
+    [/^(dsft\/uv2-dsft|hydro\/uv2-hydro|elec\/uv2-elec)$/, /^(1[2348]|21|5[3-9]|6[0-4])\)/, 'ok', 'Question absente du quiz Socrative : réponse vérifiée dans le cours.'],
+    [/^equip\/uv2-equip$/, /^46\)/, 'ecart', 'Corrigé Socrative du formateur : A (surtension). Le site garde C (cours AGA 01 : l’amorçage vient du + après contact, la lampe ne fait que signaler).'],
+    [/^moteur\/uv2-moteur$/, /^38\)/, 'ecart', 'Corrigé Socrative du formateur : A (réduire les HC). Le site garde C (cours GD 22 : l’accéléromètre recale l’injection pilote).'],
     [/^ppld\/questions$/, /(règle la pression maxi du circuit|je règle la pression de stand-by|Donner la bonne réponse|En sortie terrain)/, 'ded', 'Aucune case cochée sur ta feuille : réponse déduite du cours AGE 12.'],
     [/^ppld\/questions$/, /composant 6/, 'conf', 'Deux réponses marquées sur ta feuille (B et C) : à confirmer.']];
   var VERIF_LBL = { off: ['✅', 'Corrigé officiel'], ok: ['📘', 'Vérifié dans le cours'], ded: ['🟠', 'Déduit du cours'], ecart: ['⚠️', 'Écart avec le corrigé'], conf: ['❓', 'À confirmer'] };
