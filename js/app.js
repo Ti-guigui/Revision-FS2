@@ -797,7 +797,7 @@
     var subs = REV.subjects.filter(function (s) { return countExos(s); });
     var list = id ? subs.filter(function (s) { return s.id === id; }) : subs;
     var total = subs.reduce(function (n, s) { return n + countExos(s); }, 0);
-    return '<h1 class="h1">📝 Exercices corrigés</h1><p class="muted">Tests officiels, cahiers d’exercices, UV2, test final UV1 et exercices sur schéma : ' + total + ' exercices avec leur correction détaillée.</p>' +
+    return '<h1 class="h1">📝 Exercices corrigés</h1><p class="muted">Exercices sur schéma : ' + total + ' exercices avec leur correction détaillée. Les tests et les exemples d’exercices sont dans les QCM de chaque matière.</p>' +
       '<nav class="chips exo-filter"><a class="chip' + (id ? '' : ' on') + '" href="#/exercices">Tout (' + total + ')</a>' +
       subs.map(function (s) { return '<a class="chip' + (id === s.id ? ' on' : '') + '" href="#/exercices/' + s.id + '">' + s.icon + ' ' + esc(s.name) + ' (' + countExos(s) + ')</a>'; }).join('') + '</nav>' +
       list.map(function (s) {
