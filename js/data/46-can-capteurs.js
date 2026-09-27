@@ -45,7 +45,13 @@
 <li>Niveau logique = H − L : NL0 → 3,5 − 1,5 = <b>2 V</b> ; NL1 → 2,5 − 2,5 = <b>0 V</b>.</li>
 <li><b>Interface CAN</b> (amplificateur différentiel) : elle fait H − L puis amplifie × 2,5 → NL0 : 2 V × 2,5 = <b>5 V</b> ; NL1 : 0 V × 2,5 = <b>0 V</b>.</li></ul>
 <h3>Diagnostic CAN HS à la prise OBD</h3>
-<p>Broche <b>6 = CAN H</b> · broche <b>14 = CAN L</b> · broche <b>4 = masse châssis</b> · broche 16 = + batterie.</p>
+<p>Broche <b>6 = CAN H</b> · broche <b>14 = CAN L</b> · broches <b>4 et 5 = masse</b> · broche <b>16 = + batterie</b>.</p>
+<h3>Valeurs données ≠ valeurs lues au voltmètre</h3>
+<div class="tw"><table><tr><th></th><th>Valeurs données (sur la trame, à l’oscilloscope)</th><th>Valeurs lues au voltmètre (prise OBD, sous tension)</th></tr>
+<tr><td><b>CAN H</b></td><td>3,5 V = bit 0 (dominant) · 2,5 V = bit 1 (récessif)</td><td>Entre <b>2,4 et 3,2 V</b> (broche 6 / masse), ex. 2,6 V</td></tr>
+<tr><td><b>CAN L</b></td><td>2,5 V = bit 1 (récessif) · 1,5 V = bit 0 (dominant)</td><td>Entre <b>1,8 et 2,6 V</b> (broche 14 / masse), ex. 2,4 V</td></tr>
+<tr><td><b>Entre H et L</b></td><td>2 V (bit 0) ou 0 V (bit 1)</td><td><b>0,5 à 0,7 V</b> (jusqu’à 0,9 V) ; <b>au-dessus de 0,9 V ou 1 V = réseau saturé</b></td></tr></table></div>
+<p><b>Pourquoi ce n’est pas pareil ?</b> Les bits changent des milliers de fois par seconde : le voltmètre ne peut pas les suivre et affiche une <b>moyenne</b> entre les deux niveaux. CAN H se lit donc un peu au-dessus de 2,5 V, CAN L un peu en dessous. Les vraies valeurs 3,5 / 2,5 / 1,5 V ne se voient qu’à l’<b>oscilloscope</b>.</p>
 <div class="tw"><table><tr><th>Test</th><th>Appareil et condition</th><th>Entre</th><th>Valeur</th></tr>
 <tr><td>Tension CAN H</td><td>Voltmètre, véhicule <b>sous tension</b></td><td>6 et 4</td><td><b>2,6 V</b></td></tr>
 <tr><td>Tension CAN L</td><td>Voltmètre, véhicule <b>sous tension</b></td><td>14 et 4</td><td><b>2,4 V</b></td></tr>
@@ -54,7 +60,7 @@
 <h3>Architecture du VLTP-NP (VT4)</h3>
 <ul><li><b>CAN</b> (Control Area Network) : HS-CAN1, HS-CAN2 et HS-CAN3 = haute vitesse, <b>500 kbit/s</b> ; MS-CAN = vitesse moyenne, <b>125 kbit/s</b>.</li>
 <li><b>LIN</b> (Local Interconnect Network) : ≈ <b>20 kbit/s</b> maxi.</li></ul>`,
-    retenir: ['CAN HS : 125 kb/s à 1 Mb/s, 2 à 30 nœuds, 5 V, 2 × 120 Ω.', 'NL0 (dominant) : H 3,5 V / L 1,5 V → H − L = 2 V ; NL1 (récessif) : 2,5 / 2,5 → 0 V. H + L = 5 V.', 'En cas d’émission simultanée, le NL0 s’impose.', 'OBD sous tension : 6-4 = 2,6 V · 14-4 = 2,4 V · 6-14 = 0,5 V ; hors tension : 6-14 = 60 Ω.'],
+    retenir: ['CAN HS : 125 kb/s à 1 Mb/s, 2 à 30 nœuds, 5 V, 2 × 120 Ω.', 'NL0 (dominant) : H 3,5 V / L 1,5 V → H − L = 2 V ; NL1 (récessif) : 2,5 / 2,5 → 0 V. H + L = 5 V.', 'En cas d’émission simultanée, le NL0 s’impose.', 'OBD sous tension : 6-4 = 2,6 V · 14-4 = 2,4 V · 6-14 = 0,5 V ; hors tension : 6-14 = 60 Ω.', 'Valeurs données : H 3,5 / 2,5 V · L 2,5 / 1,5 V. Au voltmètre : H 2,4 à 3,2 V · L 1,8 à 2,6 V · H−L 0,5 à 0,9 V.'],
     pieges: ['La résistance du bus se mesure véhicule HORS tension ; les tensions, véhicule SOUS tension.', 'CAN LS : au récessif, CAN H (1,75 V) est plus bas que CAN L (3,25 V).']
   });
 
@@ -157,6 +163,12 @@
     ex('can', { img: F + 'can-hs-diag-resistance.jpg', q: 'Test de résistance du bus CAN HS : appareil et condition ?', c: ['Ohmmètre entre 6 et 14, véhicule hors tension', 'Ohmmètre entre 6 et 14, véhicule sous tension', 'Voltmètre entre 6 et 4, véhicule sous tension'], e: 'On ne mesure jamais une résistance sous tension. Valeur attendue : 60 Ω.' }),
     ex('can', { img: F + 'can-hs-diag-resistance.jpg', q: 'Véhicule hors tension, ohmmètre entre les broches 6 et 14 de la prise OBD. Valeur normale ?', c: ['60 Ω', '120 Ω', '0 Ω'], e: 'Deux résistances de 120 Ω en parallèle = 60 Ω.' }),
     ex('can', { q: 'VLTP-NP : vitesse de transmission des réseaux HS-CAN1, HS-CAN2 et HS-CAN3 ?', c: ['500 kbit/s', '125 kbit/s', '20 kbit/s'], e: 'MS-CAN : 125 kbit/s (vitesse moyenne) ; LIN : ≈ 20 kbit/s maxi.' }),
+    ex('can', { img: F + 'can-hs-diag-h.jpg', q: 'Au voltmètre, sur la prise OBD sous tension, entre quelles valeurs doit se trouver CAN H (broche 6 / masse) ?', c: ['Entre 2,4 et 3,2 V', 'Exactement 3,5 V', 'Entre 1,8 et 2,6 V'], e: '3,5 V est une valeur donnée (bit dominant) : au voltmètre on lit une moyenne, ex. 2,6 V.' }),
+    ex('can', { img: F + 'can-hs-diag-l.jpg', q: 'Au voltmètre, sur la prise OBD sous tension, entre quelles valeurs doit se trouver CAN L (broche 14 / masse) ?', c: ['Entre 1,8 et 2,6 V', 'Exactement 1,5 V', 'Entre 2,4 et 3,2 V'], e: '1,5 V est une valeur donnée (bit dominant) : au voltmètre on lit une moyenne, ex. 2,4 V.' }),
+    ex('can', { img: F + 'can-hs-trame-oscillo.jpg', q: 'Pourquoi ne lit-on pas 3,5 V sur CAN H avec un voltmètre ?', c: ['Les bits changent trop vite : le voltmètre affiche une moyenne entre 2,5 et 3,5 V', 'Parce que le réseau est en panne', 'Parce que CAN H est alimenté en 12 V'], e: 'Les valeurs 3,5 / 2,5 / 1,5 V se voient à l’oscilloscope.' }),
+    ex('can', { img: F + 'can-hs-diag-ligne.jpg', q: 'Au voltmètre entre CAN H et CAN L, vous lisez 1 V. Conclusion ?', c: ['Réseau saturé (normal : 0,5 à 0,7 V, jusqu’à 0,9 V)', 'Réseau normal', 'Résistance de terminaison coupée'], e: 'Au-dessus de 0,9 V ou 1 V : réseau saturé → débrancher les calculateurs un par un.' }),
+    ex('can', { q: 'Prise OBD : quelles broches sont à la masse ?', c: ['4 et 5', '6 et 14', '16'], e: '6 = CAN H · 14 = CAN L · 16 = + batterie.' }),
+    ex('can', { img: F + 'can-hs-trame-oscillo.jpg', q: 'Valeurs données sur la trame : CAN H au bit 1 (récessif) ?', c: ['2,5 V', '3,5 V', '2,6 V'], e: '2,6 V est une valeur typique lue au VOLTMÈTRE, pas une valeur de trame.' }),
     ex('lin', { img: F + 'lin-pcm-alternateur.jpg', q: 'VLTP-NP : quel calculateur est maître LIN et sert de passerelle avec le HS-CAN1 ?', c: ['Le PCM (gestion moteur)', 'L’alternateur', 'Le capteur de courant'], e: 'L’alternateur est l’esclave LIN du PCM.' }),
     ex('lin', { img: F + 'lin-pcm-alternateur.jpg', q: 'Batteries déchargées ou forte consommation : que fait le PCM sur l’alternateur piloté par LIN ?', c: ['Il augmente la tension de régulation', 'Il réduit la tension de régulation', 'Il coupe l’alternateur'], e: 'Batteries chargées : il réduit la tension de régulation.' }),
 

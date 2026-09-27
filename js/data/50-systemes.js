@@ -48,7 +48,7 @@ REV.systemes = {
         ['Voyant ABS après changement des plaquettes AR', 'Capteur, faisceau ou cible abîmé ou mal remonté', 'Reposer correctement ou remplacer', 'P']] },
     { t: 'Le réseau CAN HS', img: [['fiches/can-hs-lecture-trame.jpg', 'Niveaux NL0 / NL1'], ['fiches/can-hs-diag-resistance.jpg', 'Résistance du bus : 60 Ω'], ['fiches/can-hs-diag-h.jpg', 'Tension CAN H : 2,6 V']],
       role: 'Faire circuler toutes les informations entre calculateurs sur une paire torsadée CAN H / CAN L.',
-      phases: [['Récessif (bit 1)', 'CAN H = CAN L = 2,5 V : écart 0 V.'], ['Dominant (bit 0)', 'CAN H 3,5 V · CAN L 1,5 V : écart 2 V. Il s’impose si deux nœuds émettent.'], ['Lecture', 'L’interface fait H − L et amplifie × 2,5 ; H + L = 5 V toujours.']],
+      phases: [['Récessif (bit 1)', 'CAN H = CAN L = 2,5 V : écart 0 V.'], ['Dominant (bit 0)', 'CAN H 3,5 V · CAN L 1,5 V : écart 2 V. Il s’impose si deux nœuds émettent.'], ['Lecture', 'L’interface fait H − L et amplifie × 2,5 ; H + L = 5 V toujours.'], ['Au voltmètre (OBD)', 'Le voltmètre lit une moyenne : CAN H 2,4 à 3,2 V · CAN L 1,8 à 2,6 V · H − L 0,5 à 0,9 V. Les 3,5 / 2,5 / 1,5 V ne se voient qu’à l’oscilloscope.']],
       pannes: [
         ['120 Ω entre 6 et 14 (hors tension)', 'Fil coupé, résistance de terminaison HS (parfois dans un calculateur)', 'Réparer le faisceau ou remplacer l’élément de terminaison', 'P'],
         ['≈ 0 Ω entre 6 et 14', 'CAN H et CAN L en court-circuit', 'Réparer le faisceau', 'P'],
