@@ -163,11 +163,13 @@
       });
     });
   });
-  /* Exercices corrigés : seuls le microtracteur tondeuse et la moto restent des exercices.
-     Les autres tests et exemples restent dans les QCM de révision, mais ne sont plus affichés comme exercices ni comme leçons. */
+  /* Exercices corrigés : on garde les exercices des livres et des cahiers d’exercices (+ microtracteur, moto,
+     circuits ouvert / fermé) et les tests des UV (dossier UV2, test final UV1). Les autres tests, les symboles et
+     les banques d’entraînement restent dans les QCM de révision, sans être affichés comme exercices ni comme leçons. */
+  var GARDER = /^(microtracteur|moto|circuit-ferme|circuit-ouvert|cah-e-.*|cahier-.*|aga03-.*|livre-.*|uv2-(elec|equip|moteur|hydro|dsft)|tf-.*)$/;
   REV.subjects.forEach(function (s) {
     s.lessons.forEach(function (l) {
-      if (l.exo && !/^(microtracteur|moto)$/.test(l.id)) { l.exo = false; l.hidden = true; l.num = 'QCM'; }
+      if (l.exo && !GARDER.test(l.id)) { l.exo = false; l.hidden = true; l.num = 'QCM'; }
     });
   });
   REV.subjects.forEach(function (s) { s.questions.forEach(function (q) { REV.qById[q.id] = q; }); });
