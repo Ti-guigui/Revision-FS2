@@ -52,3 +52,16 @@ REV.addExercises('mcot', {
     { l: 'quiz-rdc', fixed: true, a: 3, q: 'Q18 — Un VHL rentre en atelier pour une visite NTI1, station et COS, dans quel ordre logique sont effectuées les visites', c: ['NTI1, COS, station', 'COS, NTI1, station', 'station, COS, NTI1', 'NTI1, station, COS'], e: 'Ordre de priorité : 1. NTI1, 2. station, 3. COS (le COS vient en dernier sur un véhicule en état).' }
   ].map(function (q) { q.src = 'Quiz RDC — corrigé du formateur'; return q; })
 });
+
+/* Conditions officielles pour les contrôles (AQA 03 indice R, note SIMMT du 22 mai 2024). */
+REV.extendLesson('mcot/environnement', {
+  html: `
+<h3>Qui peut faire les contrôles avant remise en circulation (AQA 03)</h3>
+<div class="tw"><table><tr><th></th><th>Cas normal</th><th>Si la ressource manque</th></tr>
+<tr><td><b>Militaire</b></td><td>Détenteur de la <b>FS2 MOT</b></td><td>Sous-officier <b>FS1 NG MOT</b>, <b>2 ans</b> minimum d’atelier, <b>FA CTRL RDC COS</b> suivie à la DTM de l’ÉcoMAT</td></tr>
+<tr><td><b>Civil</b></td><td>Détenteur de la <b>FS2 MOT</b></td><td>OE G6 minimum, <b>FS1 ou FS1 NG</b>, <b>2 ans</b> minimum d’atelier militaire, <b>FA CTRL RDC COS</b></td></tr></table></div>
+<ul><li>L’activité de contrôle comprend : le <b>COS</b> et ses dérivés (CT, CTCV), le <b>contrôle après maintenance</b> (phase 4 du DIT, MAT 4486) et le contrôle après une <b>fiche de visite ayant valeur de COS</b> (VP + OS).</li>
+<li>Contrôles en cours et en fin d’acte technique : le <b>chef d’atelier</b>. <b>Contrôle final</b> : personnel qualifié et <b>nommément désigné du RDC</b>.</li>
+<li>La <b>restitution</b> du matériel est à la charge du RDC (ateliers MOT) : documents renseignés, AT et DATEC clôturés.</li></ul>`,
+  retenir: ['Contrôle avant remise en circulation : FS2 MOT ; à défaut FS1 NG MOT + 2 ans d’atelier + FA CTRL RDC COS.', 'Contrôle final = personnel nommément désigné du RDC.']
+});
