@@ -294,7 +294,8 @@
 
   /* ---------- Vues ---------- */
   function totalQuestions() { return REV.subjects.reduce(function (n, s) { return n + s.questions.length; }, 0); }
-  function totalLessons() { return REV.subjects.reduce(function (n, s) { return n + s.lessons.length; }, 0); }
+  function shownLessons(s) { return s.lessons.filter(function (l) { return !l.hidden; }); }
+  function totalLessons() { return REV.subjects.reduce(function (n, s) { return n + shownLessons(s).length; }, 0); }
   function allQuestions() { return REV.subjects.reduce(function (a, s) { return a.concat(s.questions); }, []); }
 
   function viewHome() {
@@ -344,7 +345,7 @@
     var sc = scoreOf(s.questions), lv = level(sc.pct);
     return '<a class="card subj" href="#/matiere/' + s.id + '" style="--c:' + s.color + ';--deco:' + decoUrl(s.id).replace(/"/g, '&quot;') + '">' +
       '<span class="subj-ic">' + s.icon + '</span>' +
-      '<span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">' + s.lessons.length +
+      '<span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">' + shownLessons(s).length +
       ' leçons · ' + s.questions.length + ' questions</span>' + bar(sc.pct) + '</span>' +
       '<span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '—' : sc.pct + ' %') + '</span></a>';
   }
@@ -364,7 +365,7 @@
     var sc = scoreOf(s.questions);
     var exos = s.lessons.filter(function (l) { return l.exo; });
     var showExos = tab === 'exercices' && exos.length;
-    var shown = s.lessons.filter(function (l) { return !!l.exo === !!showExos; });
+    var shown = shownLessons(s).filter(function (l) { return !!l.exo === !!showExos; });
     return crumbs([['#/cours', 'Cours'], [null, s.name]]) +
       '<header class="subj-head" style="--c:' + s.color + '"><span class="subj-ic xl">' + s.icon + '</span><div><h1 class="h1">' +
         esc(s.name) + '</h1><p class="muted">' + esc(s.desc || '') + '</p></div></header>' +
@@ -376,7 +377,7 @@
         (sc.pct !== null ? '<span class="pill ' + level(sc.pct).cls + '">' + level(sc.pct).dot + ' ' + sc.pct + ' %</span>' : '') +
       '</div>' +
       (exos.length ? '<nav class="tabs seg-tabs">' +
-        '<a href="#/matiere/' + s.id + '"' + (showExos ? '' : ' class="on"') + '>📖 Leçons (' + (s.lessons.length - exos.length) + ')</a>' +
+        '<a href="#/matiere/' + s.id + '"' + (showExos ? '' : ' class="on"') + '>📖 Leçons (' + (shownLessons(s).length - exos.length) + ')</a>' +
         '<a href="#/matiere/' + s.id + '/exercices"' + (showExos ? ' class="on"' : '') + '>📝 Exercices corrigés (' + exos.length + ')</a></nav>' : '') +
       (showExos ? '<p class="muted small">Chaque exercice se travaille seul : ouvre-le pour le schéma et la correction détaillée, ou lance directement son QCM.</p>' : '') +
       (showExos ? '<div class="exo-grid">' + shown.map(function (l) { return exoCard(l, s); }).join('') + '</div>' : '<ol class="lesson-list">' + shown.map(function (l) {
@@ -414,7 +415,7 @@
     if (!l) return viewCours();
     var s = subj(l.subject);
     store.lessonsSeen[key] = Date.now(); save();
-    var group = s.lessons.filter(function (x) { return !!x.exo === !!l.exo; }); // les exercices ne s'enchaînent qu'entre eux
+    var group = s.lessons.filter(function (x) { return !!x.exo === !!l.exo && !!x.hidden === !!l.hidden; }); // les exercices ne s'enchaînent qu'entre eux
     var idx = group.indexOf(l);
     var prev = group[idx - 1], next = group[idx + 1];
     var qn = lessonQuestions(key).length;
@@ -920,7 +921,7 @@
           }).join('') + '</div>';
       }
       html += '<h2 class="h2 sec-title" id="m-lecons">' + s.icon + ' ' + esc(s.name) + (id ? ' — aide-mémoire par leçon' : '') + '</h2><div class="memo-grid">' +
-        s.lessons.map(function (l) { return '<div id="m-' + l.id + '">' + memoHtml(l, s, true) + '</div>'; }).join('') + '</div>';
+        shownLessons(s).map(function (l) { return '<div id="m-' + l.id + '">' + memoHtml(l, s, true) + '</div>'; }).join('') + '</div>';
     });
     setTimeout(function () {
       var m = location.hash.match(/#m-([\w-]+)$/);
@@ -953,8 +954,8 @@
     }
     var s = subj(id);
     if (!s) return viewFiches();
-    var cours = s.lessons.filter(function (l) { return !l.exo; });
-    var exos = s.lessons.filter(function (l) { return l.exo; });
+    var cours = shownLessons(s).filter(function (l) { return !l.exo; });
+    var exos = s.lessons.filter(function (l) { return l.exo || (l.hidden && /^sym/.test(l.id)); });
     var syms = exos.filter(function (l) { return /^sym/.test(l.id); });
     var autres = exos.filter(function (l) { return !/^sym/.test(l.id); });
     var html = crumbs([['#/cours', 'Cours'], ['#/fiches', 'Fiches de révision'], [null, s.name]]) +

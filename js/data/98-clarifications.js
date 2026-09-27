@@ -163,5 +163,12 @@
       });
     });
   });
+  /* Exercices corrigés : seuls le microtracteur tondeuse et la moto restent des exercices.
+     Les autres tests et exemples restent dans les QCM de révision, mais ne sont plus affichés comme exercices ni comme leçons. */
+  REV.subjects.forEach(function (s) {
+    s.lessons.forEach(function (l) {
+      if (l.exo && !/^(microtracteur|moto)$/.test(l.id)) { l.exo = false; l.hidden = true; l.num = 'QCM'; }
+    });
+  });
   REV.subjects.forEach(function (s) { s.questions.forEach(function (q) { REV.qById[q.id] = q; }); });
 })();
