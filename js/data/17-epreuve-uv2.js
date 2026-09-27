@@ -184,7 +184,7 @@ REV.addExercises('elec', {
 <h3>Correction détaillée question par question</h3>
 <ol class="corr">
 <li><b>57) C : RK1 = 120Ω</b> Transistor saturé : les 24 V sont aux bornes de la bobine. RK1 = U / Ic = 24 / 0,2 = 120 Ω.</li>
-<li><b>58) B : IbQ1 = 2mA</b> Ib = Ic / β = 200 mA / 100 = 2 mA.</li>
+<li><b>58) B : Ib = 2mA</b> Ib = Ic / β = 200 mA / 100 = 2 mA.</li>
 <li><b>59) B : UR1 = 4,4V</b> UR1 = tension de commande − Vbe = 5 − 0,6 = 4,4 V.</li>
 <li><b>60) A : RK1 = 30Ω</b> R2 est en parallèle sur la jonction base-émetteur : R2 = Vbe / IR2 = 0,6 / 0,020 = 30 Ω.</li>
 <li><b>61) C : UL1 = 127V</b> Entre une phase et le neutre, on a la tension simple : V = U / √3 = 220 / 1,732 ≈ 127 V.</li>
@@ -202,7 +202,7 @@ REV.addExercises('elec', {
     { l: 'uv2-elec', fixed: true, a: 0, q: '55) (question de remplacement : le schéma du dossier n’est pas fourni) Simplifiez l’équation S = B̄ · D · (M · H̄)‾.', c: ['S = B̄ · D · (M̄ + H)', 'S = B̄ · D · (M + H)', 'S = B̄ · D · (M + H̄)'], e: 'De Morgan : (M · H̄)‾ = M̄ + H̿ = M̄ + H. Donc S = B̄ · D · (M̄ + H).', w: 'Ne pas oublier la double barre : H̄ inversé redonne H.', src: 'UV2 — dossier d’évaluation n°1' },
     { l: 'uv2-elec', fixed: true, a: 0, q: '56) (question de remplacement : le schéma du dossier n’est pas fourni) Avec S = B̄ · D · (M̄ + H), pour la combinaison M = 0 ; H = 1 ; D = 0 ; B = 0, indiquez la tension au point S (logique 5 V).', c: ['S = 0V', 'S = 0,6V', 'S = 5V'], e: 'D = 0 → le produit B̄ · D · (…) vaut 0 quoi qu’il arrive → S = 0 → 0 V.', src: 'UV2 — dossier d’évaluation n°1' },
     { l: 'uv2-elec', fixed: true, a: 2, q: '57) Déterminez la résistance RK1 du relais K1 pour saturer le transistor (Vce = 0V). (Données reprises du corrigé : alimentation 24 V ; Ic = 200 mA ; β = 100 ; tension de commande 5 V ; Vbe = 0,6 V ; IR2 = 10 × Ib.)', c: ['RK1 = 1,2Ω', 'RK1 = 12Ω', 'RK1 = 120Ω'], e: 'Transistor saturé : les 24 V sont aux bornes de la bobine. RK1 = U / Ic = 24 / 0,2 = 120 Ω.', src: 'UV2 — dossier d’évaluation n°1' },
-    { l: 'uv2-elec', fixed: true, a: 1, q: '58) Déterminez IbQ1. (Ic = 200 mA ; β = 100.)', c: ['IbQ1 = 0,2mA', 'IbQ1 = 2mA', 'IbQ1 = 20mA'], e: 'Ib = Ic / β = 200 mA / 100 = 2 mA.', src: 'UV2 — dossier d’évaluation n°1' },
+    { l: 'uv2-elec', fixed: true, a: 1, q: '58) Déterminez Ib. (Ic = 200 mA ; β = 100.)', c: ['Ib = 0,2mA', 'Ib = 2mA', 'Ib = 20mA'], e: 'Ib = Ic / β = 200 mA / 100 = 2 mA.', src: 'UV2 — dossier d’évaluation n°1' },
     { l: 'uv2-elec', fixed: true, a: 1, q: '59) Déterminez UR1. (Tension de commande 5 V ; Vbe = 0,6 V.)', c: ['UR1 = 5V', 'UR1 = 4,4V', 'UR1 = 0,6V'], e: 'UR1 = tension de commande − Vbe = 5 − 0,6 = 4,4 V.', src: 'UV2 — dossier d’évaluation n°1' },
     { l: 'uv2-elec', fixed: true, a: 0, q: '60) Déterminez la valeur de R2. (Vbe = 0,6 V ; IR2 = 20 mA.)', c: ['RK1 = 30Ω', 'RK1 = 300Ω', 'RK1 = 3000Ω'], e: 'R2 est en parallèle sur la jonction base-émetteur : R2 = Vbe / IR2 = 0,6 / 0,020 = 30 Ω.', w: 'Sur la copie, les propositions sont écrites « RK1 = … » : coquille, c’est bien R2.', src: 'UV2 — dossier d’évaluation n°1' },
     { l: 'uv2-elec', fixed: true, a: 2, q: '61) (question de remplacement : le schéma du dossier n’est pas fourni) Sur un réseau triphasé, la tension entre deux phases est de 220 V. Déterminez la tension d’alimentation d’un voyant L1 branché entre une phase et le neutre.', c: ['UL1 = 220V', 'UL1 = 155V', 'UL1 = 127V'], e: 'Entre une phase et le neutre, on a la tension simple : V = U / √3 = 220 / 1,732 ≈ 127 V.', src: 'UV2 — dossier d’évaluation n°1' },

@@ -147,7 +147,7 @@
       ['carrossage est hors tolérance', D + 'usure-lisse.svg'], ['parallélisme est hors tolérance', D + 'usure-rugueuse.svg'], ['Usure rugueuse à l’intérieur', D + 'usure-rugueuse-int.svg'], ['Usure rugueuse à l’extérieur', D + 'usure-rugueuse-ext.svg'],
       ['Usure lisse à l’intérieur', D + 'usure-lisse-int.svg'], ['Usure lisse à l’extérieur', D + 'usure-lisse-ext.svg'], ['pas le même à gauche et à droite', D + 'var-tirage.svg'], ['a changé après un choc', S + 'p37-1.png'],
       ['Angle inclus identique des deux côtés', L + 'd038_0.jpg'], ['retour en ligne droite', S + 'p38-1.png'], ['Ordre de réglage d’un train avant', D + 'alfa-uv2.svg'], ['inclinaison de pivot entraîne', S + 'p34-3.png'],
-      ['Pivot constructeur 9°45′', D + 'var-pivot.svg'], ['Carrossage constructeur −0°30′', D + 'var-carrossage.svg'], ['gauche −0°50′, droite −0°05′', D + 'var-tirage.svg'], ['Gauche : carrossage −0°20′', D + 'var-triangle.svg'],
+      ['Pivot constructeur 9°45′', D + 'var-pivot.svg'], ['Carrossage constructeur −0°30′', D + 'var-carrossage.svg'], ['gauche −0°50′, droite −0°05′', D + 'var-tirage.svg'], ['D’après ce relevé d’angles (valeurs constructeur', D + 'var-triangle.svg'],
       ['couronne menante (Zc = 60 dents)', D + 'train-c900-p-fixe.svg'], ['Planétaire menant (Zp = 20)', D + 'train-p1200-c-fixe.svg'], ['Porte-satellites fixe, planétaire menant (Zp = 30)', D + 'train-p900-ps-fixe.svg'],
       ['Usure lisse sur le côté intérieur', D + 'usure-lisse-int.svg'], ['DOT 0519', D + 'pneu-dot0519.svg'],
       ['144 km/h ; g = 10', D + 'arret-144.svg'], ['216 km/h', D + 'arret-216.svg'], ['à 72 km/h', D + 'arret-72.svg'], ['Si la vitesse double', D + 'arret-vitesse.svg']

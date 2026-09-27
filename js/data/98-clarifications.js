@@ -68,6 +68,11 @@
     });
   });
 
+  /* pneumatique : le schéma transmis (GBC 180 ADR) pour les questions du dossier qui ne citent pas de numéro d’élément */
+  subj('dsft').questions.forEach(function (q) {
+    if (q.lkey === 'dsft/uv2-dsft' && /^1[5-8]\)/.test(q.q)) q.img = 'pneu/gbc180-freinage-couleurs.jpg';
+  });
+
   /* ---------- Références retirées de l'énoncé ---------- */
   each(function (q) {
     q.q = q.q.replace(/\s*\(question à rédiger sur la copie\)/g, '')
