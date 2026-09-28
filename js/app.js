@@ -31,6 +31,8 @@
     q.good = Array.isArray(q.a) ? q.a : [q.a]; // plusieurs bonnes réponses possibles (« 2 rép. »)
     q.multi = q.good.length > 1 && !q.any; // q.any : une seule case à cocher, plusieurs réponses acceptées
     q.id = s.id + ':' + hash(q.q + '|' + q.good.map(function (i) { return q.c[i]; }).join('+'));
+    // q.cimg : une image par proposition (symboles A, B, C…), affichée dans la réponse elle-même
+    if (q.cimg) q.c = q.c.map(function (t, i) { return q.cimg[i] ? '<img class="c-img" src="img/' + q.cimg[i] + '" alt="' + t + '"><span class="c-cap">' + t + '</span>' : t; });
     if (!REV.lessonById[q.lkey]) console.warn('Leçon inconnue pour la question', q);
     REV.qById[q.id] = q;
     return q;
