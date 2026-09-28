@@ -212,7 +212,9 @@
       if (done[g]) return;
       done[g] = 1;
       var list = subj(q.subject).questions;
-      (complete ? list : qs).filter(function (o) { return isExoQ(o) && exoGroup(o) === g; })
+      var full = list.filter(function (o) { return isExoQ(o) && exoGroup(o) === g; });
+      // exercice court (≤ 12 questions) : repris en entier ; long (ex. 34 repères d’un schéma) : seulement les questions tirées
+      (complete && full.length <= 12 ? full : qs.filter(function (o) { return isExoQ(o) && exoGroup(o) === g; }))
         .sort(function (x, y) { return list.indexOf(x) - list.indexOf(y); })
         .forEach(function (o) { out.push(o); });
     });
