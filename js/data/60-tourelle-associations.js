@@ -4,17 +4,17 @@
   /* 1. Associations de composants : à connaître par cœur. */
   REV.extendLesson('hydro/ls', {
     html: `
-<div class="box retenir"><b>★ Associations de composants</b><div class="tw"><table><tr><th>Association</th><th>Assimilée à</th></tr>
+<div class="box retenir"><b>★ Associations de composants</b><p>Un même composant change de nom selon sa place dans le circuit : une balance de pression placée <b>en série avant un distributeur</b> est une <b>balance individuelle de pression (BIP)</b> ; placée <b>à l’entrée, en dérivation vers la bâche</b>, c’est une <b>balance d’entrée</b>.</p><div class="tw"><table><tr><th>Association</th><th>Assimilée à</th></tr>
 <tr><td>Balance d’entrée + tête pilote</td><td><b>Limiteur de pression à commande pilotée</b></td></tr>
-<tr><td>Balance de pression (en série) + distributeur</td><td><b>Régulateur de débit 2 voies à débit variable</b>, sensible à la viscosité</td></tr>
+<tr><td>Balance individuelle de pression (BIP) + distributeur</td><td><b>Régulateur de débit 2 voies réglable, sensible à la viscosité</b></td></tr>
 <tr><td>Distributeur + balance d’entrée</td><td><b>Régulateur de débit 3 voies</b></td></tr></table></div></div>`,
-    retenir: ['Balance d’entrée + tête pilote = limiteur de pression à commande pilotée.', 'Balance de pression en série + distributeur = régulateur de débit 2 voies à débit variable (sensible à la viscosité).', 'Distributeur + balance d’entrée = régulateur de débit 3 voies.']
+    retenir: ['Balance d’entrée + tête pilote = limiteur de pression à commande pilotée.', 'Balance individuelle de pression (BIP) + distributeur = régulateur de débit 2 voies réglable, sensible à la viscosité.', 'Distributeur + balance d’entrée = régulateur de débit 3 voies.']
   });
   REV.addExercises('hydro', {
     lessons: [],
     questions: [
       { l: 'ls', q: 'L’association d’une balance d’entrée et d’une tête pilote peut être assimilée à :', c: ['Un limiteur de pression à commande pilotée', 'Un régulateur de débit 2 voies', 'Un régulateur de débit 3 voies', 'Un réducteur de pression'], e: 'La balance d’entrée (étage principal) évacue le gros débit, la tête pilote (étage pilote) fixe la pression : ensemble, c’est un limiteur de pression à commande pilotée. Pression maxi = tarage de la tête pilote + ressort de la balance.', r: 'Balance d’entrée + tête pilote = limiteur de pression à commande pilotée.' },
-      { l: 'ls', q: 'L’association d’une balance de pression montée en série et d’un distributeur peut être assimilée à :', c: ['Un régulateur de débit 2 voies à débit variable, sensible à la viscosité', 'Un régulateur de débit 3 voies', 'Un limiteur de pression à commande pilotée', 'Un diviseur de débit'], e: 'La balance de pression est en série avant le distributeur et garde une ΔP constante à ses bornes. Le distributeur joue le rôle du limiteur de débit réglable : régulateur de débit 2 voies à débit variable, sensible à la viscosité.', r: 'Balance en série + distributeur = régulateur 2 voies.' },
+      { l: 'ls', q: 'L’association d’une balance individuelle de pression (BIP) et d’un distributeur peut être assimilée à :', c: ['Un régulateur de débit 2 voies réglable, sensible à la viscosité', 'Un régulateur de débit 3 voies', 'Un limiteur de pression à commande pilotée', 'Un diviseur de débit'], e: 'La BIP est placée en série avant le distributeur et garde une ΔP constante à ses bornes : l’ensemble est un régulateur de débit 2 voies réglable, sensible à la viscosité.', r: 'BIP + distributeur = régulateur de débit 2 voies réglable, sensible à la viscosité.' },
       { l: 'ls', q: 'L’association d’un distributeur et d’une balance d’entrée peut être assimilée à :', c: ['Un régulateur de débit 3 voies', 'Un régulateur de débit 2 voies', 'Un limiteur de pression à commande pilotée', 'Un réducteur de pression'], e: 'La balance d’entrée est en dérivation et renvoie le surplus de débit à la bâche : c’est la 3ᵉ voie. Distributeur + balance d’entrée = régulateur de débit 3 voies.', r: 'Balance en dérivation (vers la bâche) = 3 voies.' }
     ]
   });
