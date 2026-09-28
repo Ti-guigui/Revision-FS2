@@ -39,7 +39,7 @@ REV.systemes = {
         ['Alternateur LIN : tension fixe 13,2 V', 'Bus LIN coupé : mode secours', 'Réparer le bus LIN (contrôle à l’oscilloscope)', 'P']] },
     { t: 'Les capteurs', img: [['fiches/cap-inductif-slide.jpg', 'Capteur inductif (actif)'], ['fiches/cap-hall-slide.jpg', 'Capteur à effet Hall (passif)'], ['fiches/eq-cap-passif.jpg', 'Capteur passif : alimentation, signal, masse']],
       role: 'Informer le calculateur qui commande ensuite les actionneurs.',
-      phases: [['Actif', 'Il fabrique sa tension (inductif, piézo-électrique) : 2 fils, pas d’alimentation.'], ['Passif', 'Alimenté en 5 V par le calculateur (CTN, CTP, potentiomètre, capacitif, piézo-résistif, Hall) : 3 fils.'], ['Signal', 'Inductif : sinusoïde (fréquence et amplitude variables) · Hall : carré d’amplitude fixe.']],
+      phases: [['Actif', 'Il produit son propre courant, pas d’alimentation extérieure : seul l’inductif.'], ['Passif', 'Il reçoit un courant du calculateur (CTN, CTP, potentiomètre, capacitif, piézo-résistif, piézo-électrique, Hall).'], ['Signal', 'Inductif : sinusoïde (fréquence et amplitude variables) · Hall : carré d’amplitude fixe.']],
       pannes: [
         ['Pas de signal d’un capteur passif', 'Contrôler alimentation 5 V et masse ; signal ≈ 4,80 V capteur débranché (pull-up)', 'Ordre : capteur → connecteur → faisceau ; réparer le faisceau ou remplacer le capteur', 'P'],
         ['Capteur inductif suspect', 'Résistance 100 à 2 000 Ω + isolement ; branché : voltmètre en alternatif', 'Remplacer le capteur', 'R'],

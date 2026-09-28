@@ -294,7 +294,7 @@ REV.add({
       id: 'capteurs', title: 'Les capteurs',
       html: `
 <ul>
-<li><b>Actif</b> = génère sa propre tension, se comporte comme un <b>générateur</b> (inductif, piézo-électrique). <b>Passif</b> = doit être alimenté, 99 % en 5 V (CTN, CTP, potentiomètre, capacitif, piézo-résistif, effet Hall).</li>
+<li><b>Actif</b> = produit son propre courant, se comporte comme un <b>générateur</b>, sans alimentation extérieure : <b>seul l’inductif</b>. <b>Passif</b> = tout capteur qui reçoit un courant (alimenté), 99 % en 5 V (CTN, CTP, potentiomètre, capacitif, piézo-électrique, piézo-résistif, effet Hall).</li>
 <li>Passif 3 fils : 5 V · signal · 0 V. Résistance de pull-up ≈ 4,80–4,90 V : stabilise le signal et renseigne sur son état.</li>
 <li>Ordre de contrôle : capteur → connecteur → faisceau. Signal analogique = peut prendre une multitude de valeurs.</li>
 </ul>
@@ -307,7 +307,7 @@ REV.add({
 <tr><td>Piézo-résistif</td><td>Passif</td><td>Relevé de pression par déformation</td></tr>
 <tr><td>Inductif</td><td>Actif</td><td>Sinusoïde : fréquence ET amplitude variables. Contrôle statique : sa résistance vs valeur constructeur</td></tr>
 <tr><td>Effet Hall</td><td>Passif</td><td>Carré : fréquence variable, amplitude fixe (5 V). Contrôle : alim/signal/masse + test dynamique au voltmètre avec un aimant ; idéal : oscilloscope</td></tr>
-<tr><td>Piézo-électrique</td><td>Actif</td><td>Pics de tension sur choc (cliquetis) ; oscilloscope</td></tr>
+<tr><td>Piézo-électrique</td><td>Passif</td><td>Pics de tension sur choc (cliquetis) ; oscilloscope</td></tr>
 <tr><td>MAP (pression absolue)</td><td>Passif</td><td>Signal continu proportionnel à la pression ; 250 kPa ≈ 4,65 V ; 100 kPa = pression atmosphérique</td></tr>
 <tr><td>MAF (film chaud)</td><td>—</td><td>Mesure le refroidissement d’un fil chauffé → masse d’air</td></tr></table></div>
 <ul><li>Rotation : <b>inductif ou effet Hall</b>. Pression : <b>capacitif ou piézo-résistif</b>.</li>
@@ -334,9 +334,9 @@ REV.add({
 <li><b>Piézo-résistivité</b> : certains corps <b>modifient leur résistance</b> sous une contrainte mécanique. <b>Piézo-électricité</b> : certains corps <b>produisent une ddp</b> sur leurs faces sous une contrainte mécanique.</li>
 <li><b>Pont de Wheatstone</b> : il est à l’équilibre quand la ddp entre ses deux points milieux A et B est <b>nulle</b> ; la résistance sensible à la pression le déséquilibre.</li>
 <li><b>Opto-électrique</b> : un émetteur et un récepteur <b>infrarouge</b> (invisible pour l’œil). Le récepteur (phototransistor) devient <b>conducteur</b> quand il reçoit l’onde, <b>isolant</b> quand elle disparaît.</li></ul>`,
-      retenir: ['Passifs = CTN, CTP, effet Hall (pas l’inductif).', 'Sonde lambda : riche ≈ 900 mV, pauvre ≈ 100 mV, efficace à 300 °C.', 'Hall et opto-électrique : carré à amplitude fixe → oscilloscope.', 'Inductif = sinus à amplitude variable ; Hall = carré à amplitude fixe.', 'Actif = se comporte comme un générateur, pas d’alimentation.'],
+      retenir: ['Seul l’inductif est actif ; tous les autres (CTN, CTP, effet Hall, piézo…) sont passifs.', 'Sonde lambda : riche ≈ 900 mV, pauvre ≈ 100 mV, efficace à 300 °C.', 'Hall et opto-électrique : carré à amplitude fixe → oscilloscope.', 'Inductif = sinus à amplitude variable ; Hall = carré à amplitude fixe.', 'Actif = se comporte comme un générateur, pas d’alimentation.'],
       pieges: ['Le capteur à effet Hall est PASSIF (convention du cours), même si une fiche mémoire dit actif.', 'CTN : vérifier que R ET la tension baissent quand la température monte.'],
-      memo: { cle: 'ACTIF = GÉNÉRATEUR · PASSIF = ALIMENTÉ 5 V', points: ['Actifs : inductif, piézo-électrique', 'Passifs : CTN, CTP, Hall, potentiomètre, capacitif, piézo-résistif', 'Inductif → sinus ; Hall → carré 5 V', 'CTN : T° ↑ → R ↓'], astuce: 'CTN = Coefficient de Température Négatif : quand ça chauffe, la résistance descend.' }
+      memo: { cle: 'ACTIF = GÉNÉRATEUR · PASSIF = ALIMENTÉ 5 V', points: ['Actif : l’inductif seulement', 'Passifs : CTN, CTP, Hall, potentiomètre, capacitif, piézo-résistif, piézo-électrique', 'Inductif → sinus ; Hall → carré 5 V', 'CTN : T° ↑ → R ↓'], astuce: 'CTN = Coefficient de Température Négatif : quand ça chauffe, la résistance descend.' }
     },
     {
       id: 'can', title: 'Multiplexage et réseau CAN',
@@ -462,7 +462,7 @@ REV.add({
     { l: 'diagnostic', q: 'La zone de diagnostic (ZD) peut-elle inclure la masse ?', c: ['Jamais', 'Toujours', 'Seulement en 24 V', 'Seulement si un relais est présent'], e: 'Règle du cours : la masse ne fait jamais partie de la ZD.' },
     { l: 'diagnostic', q: 'Le fusible saute dès l’appui sur la commande. Où se situe la ZD ?', c: ['Du milieu de l’organe de commande jusqu’avant la masse', 'Après le fusible jusqu’au milieu de la commande', 'Uniquement sur le récepteur', 'Sur la masse'], e: 'Le court-circuit n’apparaît qu’une fois la commande fermée : il est donc en aval de celle-ci.', r: 'Avant l’appui → après le fusible jusqu’au milieu de la commande.' },
     { l: 'diagnostic', q: 'Plusieurs composants sont HS en même temps. Que chercher ?', c: ['Leur point commun (+ ou masse)', 'Plusieurs pannes indépendantes', 'Le composant le plus cher', 'Le fusible général uniquement'], e: 'Une seule panne à la fois : on cherche le point commun, la ZD commence et finit à ce point.' },
-    { l: 'capteurs', q: 'Parmi ces capteurs, lequel est ACTIF ?', c: ['Inductif', 'CTN', 'Effet Hall', 'Potentiomètre'], e: 'Un capteur actif génère sa propre tension (inductif, piézo-électrique). CTN, Hall, potentiomètre sont passifs (alimentés en 5 V).', r: 'Actif = se comporte comme un générateur.', src: 'OVI114 Q14' },
+    { l: 'capteurs', q: 'Parmi ces capteurs, lequel est ACTIF ?', c: ['Inductif', 'CTN', 'Effet Hall', 'Potentiomètre'], e: 'Seul l’inductif est actif : il produit son propre courant comme un générateur. CTN, Hall, potentiomètre sont passifs (alimentés en 5 V).', r: 'Actif = se comporte comme un générateur.', src: 'OVI114 Q14' },
     { l: 'capteurs', q: 'Le capteur à effet Hall est, selon ton cours :', c: ['Passif, alimenté en 5 V, signal carré', 'Actif, signal sinusoïdal', 'Actif, signal carré', 'Passif, signal sinusoïdal'], e: 'Hall : passif (alimenté), signal carré à fréquence variable et amplitude fixe (5 V).', w: 'Une fiche mémoire dit « actif » : la convention du cours (et de l’OVI114) est « passif ».', src: 'OVI114 Q3, CT1 Q16' },
     { l: 'capteurs', q: 'Comment contrôler un capteur INDUCTIF en statique ?', c: ['Mesurer sa résistance et la comparer à la valeur constructeur', 'Vérifier son alimentation 5 V', 'Test dynamique avec un aimant', 'Mesurer sa pression'], e: 'L’inductif n’est pas alimenté : en statique on contrôle sa résistance à l’ohmmètre.', r: 'Hall : alim/signal/masse + test dynamique.', src: 'OVI114 Q2' },
     { l: 'capteurs', q: 'CTN : quand la température augmente…', c: ['La résistance ET la tension diminuent', 'La résistance augmente', 'La résistance diminue mais la tension augmente', 'Rien ne change'], e: 'CTN = coefficient de température négatif : R ↓ et tension ↓ quand T° ↑. Il faut vérifier les deux.', src: 'OVI114 Q31' },
