@@ -98,7 +98,7 @@
     { t: '🔺 Les formules en triangles', html: tris([
       { t: 'Puissance', top: 'P', l: 'C', r: 'ω', tu: 'W', lu: 'N·m', ru: 'rad/s', m: 'ω = 2π × N / 60 → P = C × 2π × N / 60.' },
       { t: 'Cylindrée totale', top: 'Vtot', l: 'Vu', r: 'n', tu: 'cm³', lu: 'cm³', m: 'n = nombre de cylindres.' }
-    ]) + '<p class="small">Cylindrée unitaire : Vu = π × A² / 4 × C (A = alésage, C = course, en cm) · rapport volumétrique : ρ = (Vu + v) / v → v = Vu / (ρ − 1) · 1 CV = 736 W · ρ : essence 7/1 à 12/1, diesel 13/1 à 24/1.</p>' },
+    ]) + '<p class="small">Cylindrée unitaire : Vu = π × A² / 4 × C (A = alésage, C = course, en cm) · rapport volumétrique : ρ = (Vu + v) / v → v = Vu / (ρ − 1) · 1 CV = 736 W · ρ : essence 6/1 à 12/1, diesel 13/1 à 24/1.</p>' },
     { t: '📈 Cycles essence et diesel superposés', html: `
 <figure class="cycles"><svg viewBox="0 0 360 290" role="img" aria-label="Diagrammes pression-volume des cycles essence et diesel superposés">
 <path class="cy-ax" d="M50 270 L50 18 M50 270 L340 270"/><text class="cy-t" x="40" y="20">P</text><text class="cy-t" x="334" y="286">V</text>
