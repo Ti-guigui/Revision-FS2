@@ -1,75 +1,67 @@
-/* Dépollution : essence ou diesel ? (Motorisation Tome 1, chapitre 12 « La pollution automobile »).
-   Objectif : ne pas confondre les dispositifs du moteur essence et ceux du moteur diesel. */
+/* Dépollution : essence ou diesel ? Limité à ce qui est vu en cours et aux tests (catalyseurs, FAP, EGR, SCR),
+   confirmé par le livre Motorisation Tome 1, chapitre 12 « La pollution automobile ».
+   + Réseau CAN : état logique (théorique) ou mesure au voltmètre / ohmmètre sur la prise OBD (notes + AGA 01). */
 (function () {
-  var SRC = 'Motorisation Tome 1, ch. 12 La pollution automobile';
+  var SRC = 'Cours dépollution (confirmé par Motorisation Tome 1, ch. 12)';
 
   REV.extendLesson('moteur/depollution', {
     html: `
 <h3>Essence ou diesel : ne pas confondre</h3>
 <div class="tw"><table class="cmp"><tr><th></th><th>⛽ ESSENCE</th><th>🛢️ DIESEL</th></tr>
-<tr><td>Mélange</td><td>Richesse <b>1</b> (λ entre <b>0,97 et 1,03</b>)</td><td>Toujours <b>pauvre</b> : λ de 0,3 à 1,5 (dosage 1/20 à 1/30)</td></tr>
-<tr><td>Polluants surtout</td><td>CO, HC, NOx (selon la richesse)</td><td><b>Particules (suies)</b> : 10 à 20 fois plus qu’un essence ; NOx</td></tr>
-<tr><td>Catalyseur</td><td><b>3 voies (trifonctionnel)</b> : oxyde CO et HC, <b>réduit les NOx</b> ; amorçage ≈ 250 °C ; efficace seulement à richesse 1</td><td><b>D’oxydation</b> : CO et HC seulement</td></tr>
-<tr><td>Sonde lambda</td><td>Régule la richesse (riche ≈ 0,8 V, pauvre ≈ 0,1 V) et surveille le catalyseur</td><td>Sonde <b>proportionnelle bicellulaire</b> (cellule de Nernst + cellule de pompage)</td></tr>
-<tr><td>Particules</td><td>—</td><td><b>FAP</b> : piège puis brûle les suies (≈ 550 °C)</td></tr>
-<tr><td>NOx</td><td>EGR</td><td>EGR + <b>SCR (AdBlue)</b> sur les véhicules industriels</td></tr>
-<tr><td>Vapeurs de carburant</td><td><b>Canister</b> (charbon actif) + électrovanne de purge</td><td>—</td></tr>
-<tr><td>Montée en température du catalyseur</td><td><b>Postcombustion thermique</b> : injection d’air (pulsair) à l’échappement, &gt; 600 °C</td><td><b>Post-injection</b> de gazole (régénération du FAP)</td></tr>
-<tr><td>Contrôle technique</td><td>—</td><td><b>Opacité</b> des fumées : 2,5 m⁻¹ (atmo) / 3 m⁻¹ (turbo) de 1980 à 06/2008 ; 1,5 m⁻¹ depuis le 01/07/2008</td></tr></table></div>
-<p><b>Commun aux deux</b> : EGR (RGE), coupure d’injection en décélération, surveillance OBD / EOBD.</p>
-<h3>Les dispositifs, en détail</h3>
-<ul>
-<li><b>Catalyseur 3 voies</b> (essence, depuis 1993) : métaux précieux (platine, rhodium, palladium) ; transforme CO, HC, NOx en CO₂, H₂O et N₂. Mélange riche → CO et HC mal traités ; mélange pauvre → NOx mal traités.</li>
-<li><b>EGR / RGE</b> (vers 1996, Euro II) : N₂ + O₂ → NOx quand la combustion dépasse <b>2 000 °C</b>. On réintroduit des gaz brûlés à l’admission (jusqu’à 25 %) : moins d’oxygène, combustion moins chaude, moins de NOx. Vanne tout ou rien (dépression) ou progressive (électrovanne en <b>RCO</b>). En diesel : grippage par les particules et l’humidité ; <b>vanne bloquée ouverte = grosse perte de puissance</b>.</li>
-<li><b>FAP</b> (diesel) : monolithe en carbure de silicium, canaux bouchés un sur deux ; capteurs de pression en entrée et sortie → le calculateur décide la <b>régénération</b>. Il faut ≈ <b>550 °C</b> (gaz en ville : 150 à 250 °C) ; ne pas dépasser <b>1 000 °C</b> (casse). Stratégies : post-injection seule (la plus répandue), post-injection + additif (cérine / Eolys : régénération à 450 °C), 5ᵉ injecteur. Régénération forcée ≈ 800 °C.</li>
-<li><b>SCR / AdBlue</b> (diesel, véhicules industriels, Euro 4 et 5) : réduit les NOx en azote et eau. Catalyseur, réservoir d’AdBlue, injecteur dans le silencieux, pompe, témoins. L’AdBlue <b>gèle à −11,5 °C</b> (réchauffeur). Niveau insuffisant → réduction de puissance d’au moins 40 %, sauf véhicules militaires d’intervention et tactiques.</li>
-<li><b>Canister</b> (essence) : retient les vapeurs d’essence du réservoir et les renvoie à l’admission par une électrovanne pilotée par le calculateur.</li>
-<li><b>OBD</b> : essence → ratés d’allumage, catalyseur, richesse, injection d’air, EGR ; diesel → catalyseur, <b>piège à particules</b>, pré/postchauffage, EGR, débit et avance.</li></ul>`,
-    retenir: ['Essence = catalyseur 3 voies + sonde lambda (richesse 1) + canister.', 'Diesel = catalyseur d’oxydation (CO, HC) + FAP (suies) + SCR/AdBlue (NOx).', 'EGR : essence ET diesel, contre les NOx (combustion > 2 000 °C).'],
-    pieges: ['Le FAP et l’AdBlue n’existent pas sur un moteur essence ; le canister n’existe pas sur un diesel.', 'Catalyseur d’oxydation (diesel) : pas de NOx. Seul le 3 voies (essence) réduit les NOx.', 'Le diesel fonctionne toujours en excès d’air : pas de régulation à richesse 1.']
+<tr><td>Mélange</td><td>Richesse <b>1</b></td><td>Toujours <b>pauvre</b> (excès d’air)</td></tr>
+<tr><td>Catalyseur</td><td><b>3 voies</b> : CO, HC <b>et NOx</b></td><td><b>D’oxydation</b> : CO et HC seulement</td></tr>
+<tr><td>Particules</td><td>—</td><td><b>FAP</b> : filtre puis brûle les suies (≈ 550 °C)</td></tr>
+<tr><td>NOx</td><td>EGR</td><td>EGR + <b>SCR (AdBlue)</b></td></tr></table></div>
+<p><b>Commun aux deux : l’EGR.</b> La recirculation des gaz par l’EGR se fait à partir de ≈ <b>1 300 °C</b> ; elle fait baisser la température de combustion, donc les NOx (le livre : N₂ + O₂ → NOx au-delà de 2 000 °C).</p>`,
+    retenir: ['Essence = catalyseur 3 voies (CO, HC, NOx).', 'Diesel = catalyseur d’oxydation (CO, HC) + FAP (suies) + SCR/AdBlue (NOx).', 'EGR : essence ET diesel ; recirculation à partir de ≈ 1 300 °C.'],
+    pieges: ['Le FAP et l’AdBlue n’existent pas sur un moteur essence.', 'Catalyseur d’oxydation (diesel) : pas de NOx. Seul le 3 voies (essence) traite les NOx.']
   });
 
   var qs = [
-    { q: 'Un catalyseur 3 voies (trifonctionnel) équipe :', c: ['Le moteur essence', 'Le moteur diesel', 'Les deux indifféremment'], e: 'Le 3 voies oxyde CO et HC et réduit les NOx ; il ne fonctionne bien qu’à richesse 1, donc sur l’essence. Le diesel (toujours pauvre) a un catalyseur d’oxydation.', r: 'Essence = 3 voies · diesel = oxydation.' },
-    { q: 'Quels polluants traite le catalyseur 3 voies (essence) ?', c: ['CO, HC et NOx', 'CO et HC seulement', 'Les particules (suies)', 'Les NOx seulement'], e: 'Il oxyde CO et HC (en CO₂ et H₂O) et réduit les NOx (en N₂).' },
-    { q: 'Quels polluants traite le catalyseur d’oxydation (diesel) ?', c: ['CO et HC', 'CO, HC et NOx', 'Les suies', 'Les NOx seulement'], e: 'En diesel il y a toujours de l’oxygène en excès : on ne peut pas réduire les NOx dans le catalyseur. Les NOx sont traités par l’EGR et la SCR.' },
-    { q: 'Pourquoi le catalyseur 3 voies ne convient-il pas au diesel ?', c: ['Il ne fonctionne bien qu’à richesse 1, alors que le diesel fonctionne toujours en mélange pauvre', 'Parce que le diesel ne rejette pas de CO', 'Parce qu’il est trop cher', 'Parce qu’il bouche le FAP'], e: 'Mélange pauvre = excès d’oxygène : les NOx ne sont plus réduits. Diesel : λ de 0,3 à 1,5 (dosage 1/20 à 1/30).' },
-    { q: 'À quelle température s’amorce un catalyseur ?', c: ['≈ 250 °C', '≈ 550 °C', '≈ 1 000 °C', '≈ 80 °C'], e: 'Température d’amorçage ≈ 250 °C. (550 °C = régénération du FAP.)' },
-    { q: 'Sur un moteur essence, entre quelles valeurs doit rester le lambda pour que le catalyseur soit efficace ?', c: ['0,97 et 1,03', '0,3 et 1,5', '1/20 et 1/30', '0,5 et 0,8'], e: 'Moteur au ralenti accéléré : λ entre 0,97 et 1,03 (richesse 1). 0,3 à 1,5 = diesel.' },
-    { q: 'Sonde lambda (essence) : tension en mélange riche ?', c: ['≈ 0,8 V', '≈ 0,1 V', '≈ 5 V', '≈ 12 V'], e: 'Riche : peu d’oxygène dans les gaz → tension élevée (≈ 0,8 V). Pauvre ≈ 0,1 V.' },
-    { q: 'Rôle de la sonde lambda sur un moteur essence ?', c: ['Mesurer l’oxygène restant dans les gaz pour corriger la richesse à 1 et surveiller le catalyseur', 'Mesurer la température des gaz pour régénérer le FAP', 'Doser l’AdBlue', 'Commander la vanne EGR'], e: 'Le calculateur corrige immédiatement la quantité injectée pour revenir à R = 1 ; la sonde aval surveille l’efficacité du catalyseur.' },
-    { q: 'Sonde à oxygène d’un moteur diesel ?', c: ['Sonde proportionnelle bicellulaire (cellule de Nernst + cellule de pompage)', 'La même sonde tout ou rien que l’essence, réglée à λ = 1', 'Il n’y a jamais de sonde sur un diesel', 'Un capteur de pression différentielle'], e: 'Le diesel travaille loin de λ = 1 : il faut une sonde proportionnelle qui mesure un large domaine.' },
-    { q: 'Le filtre à particules (FAP) équipe :', c: ['Le moteur diesel', 'Le moteur essence', 'Les deux'], e: 'Le diesel rejette 10 à 20 fois plus de particules que l’essence.' },
-    { q: 'Température nécessaire pour brûler les suies du FAP (régénération) ?', c: ['≈ 550 °C', '≈ 250 °C', '≈ 150 °C', '≈ 2 000 °C'], e: 'En ville les gaz ne sont qu’à 150 à 250 °C : il faut une stratégie de montée en température (post-injection).' },
-    { q: 'Température maximale à ne pas dépasser pendant la régénération du FAP ?', c: ['1 000 °C', '550 °C', '250 °C', '2 000 °C'], e: 'Au-delà de 1 000 °C le FAP casse. La régénération forcée atteint ≈ 800 °C.' },
-    { q: 'Comment le calculateur sait-il que le FAP est colmaté ?', c: ['Par les capteurs de pression en entrée et en sortie du FAP', 'Par la sonde lambda', 'Par le capteur de PMH', 'Par le niveau d’AdBlue'], e: 'La différence de pression renseigne sur le colmatage ; le calculateur décide alors la régénération.' },
-    { q: 'Stratégie de régénération du FAP la plus répandue ?', c: ['La post-injection seule', 'L’injection d’air à l’échappement (pulsair)', 'Le canister', 'L’injection d’AdBlue'], e: 'Autres stratégies : post-injection + additif (cérine / Eolys, régénération à 450 °C) et 5ᵉ injecteur.' },
-    { q: 'Rôle de l’additif (cérine / Eolys) sur certains FAP ?', c: ['Faire brûler les suies à 450 °C au lieu de 550 °C', 'Réduire les NOx', 'Augmenter l’indice de cétane', 'Éviter le gel du gazole'], e: 'Il est ajouté dans le gazole sans agir sur la combustion ; il abaisse la température de combustion des suies.' },
+    { q: 'Un catalyseur 3 voies équipe :', c: ['Le moteur essence', 'Le moteur diesel', 'Les deux indifféremment'], e: 'Le 3 voies traite CO, HC et NOx ; il fonctionne à richesse 1, donc sur l’essence. Le diesel (toujours pauvre) a un catalyseur d’oxydation.', r: 'Essence = 3 voies · diesel = oxydation.' },
+    { q: 'Quels polluants traite le catalyseur 3 voies (essence) ?', c: ['CO, HC et NOx', 'CO et HC seulement', 'Les particules (suies)', 'Les NOx seulement'], e: 'Il oxyde CO et HC et réduit les NOx.' },
+    { q: 'Quels polluants traite le catalyseur d’oxydation (diesel) ?', c: ['CO et HC', 'CO, HC et NOx', 'Les suies', 'Les NOx seulement'], e: 'En diesel, les NOx sont traités par l’EGR et la SCR (AdBlue), pas par le catalyseur d’oxydation.' },
+    { q: 'Pourquoi le catalyseur 3 voies ne convient-il pas au diesel ?', c: ['Il fonctionne à richesse 1, alors que le diesel fonctionne toujours en mélange pauvre', 'Parce que le diesel ne rejette pas de CO', 'Parce qu’il bouche le FAP'], e: 'Mélange pauvre = excès d’oxygène : les NOx ne sont plus traités par le catalyseur.' },
+    { q: 'Le filtre à particules (FAP) équipe :', c: ['Le moteur diesel', 'Le moteur essence', 'Les deux'], e: 'Les suies viennent du diesel ; le FAP les filtre puis les brûle (régénération ≈ 550 °C).' },
+    { q: 'La SCR (AdBlue) équipe :', c: ['Le moteur diesel', 'Le moteur essence', 'Les deux'], e: 'Elle réduit les NOx du diesel dans l’échappement.' },
     { q: 'L’EGR (recyclage des gaz d’échappement) équipe :', c: ['Les moteurs essence ET diesel', 'Le diesel seulement', 'L’essence seulement'], e: 'Commun aux deux : il réduit les NOx en diminuant la température de combustion.' },
-    { q: 'À partir de quelle température de combustion se forment les NOx (livre) ?', c: ['Plus de 2 000 °C', 'Plus de 250 °C', 'Plus de 550 °C', 'Plus de 1 000 °C'], e: 'N₂ + O₂ → NOx si la température de combustion dépasse 2 000 °C. L’EGR fait baisser cette température.' },
-    { q: 'Quel pourcentage de gaz brûlés un moteur peut-il accepter dans son mélange (EGR) ?', c: ['Jusqu’à 25 %', 'Jusqu’à 5 %', 'Jusqu’à 50 %', 'Jusqu’à 90 %'], e: 'Au-delà, la combustion est perturbée ; le calculateur module la quantité selon les phases de fonctionnement.' },
-    { q: 'Diesel : la vanne EGR reste bloquée ouverte. Conséquence ?', c: ['Grosse perte de puissance', 'Augmentation des NOx', 'Le FAP se régénère en permanence', 'Aucune conséquence'], e: 'Hors du champ de dépollution la vanne doit être fermée. Cause fréquente : grippage par les particules et l’humidité.' },
-    { q: 'Comment est commandée une vanne EGR progressive (électrovanne intégrée) ?', c: ['Par le calculateur, avec un signal RCO', 'Par un câble relié à la pédale', 'Par la pression de rampe', 'Par la sonde lambda directement'], e: 'Tout ou rien : dépression + capteur différentiel ; progressif : électrovanne pilotée en RCO.' },
-    { q: 'La SCR (AdBlue) équipe :', c: ['Les moteurs diesel (véhicules industriels)', 'Les moteurs essence', 'Les deux'], e: 'Elle réduit les NOx dans l’échappement (azote + eau) ; elle permet de respecter Euro 4 et Euro 5.' },
-    { q: 'À quelle température gèle l’AdBlue ?', c: ['−11,5 °C', '0 °C', '−30 °C', '−5 °C'], e: 'C’est une solution à base d’eau : un réchauffeur évite le gel.' },
-    { q: 'Niveau d’AdBlue insuffisant : que prévoit la législation ?', c: ['Une réduction d’au moins 40 % de la puissance (sauf véhicules militaires d’intervention et tactiques)', 'L’arrêt immédiat du moteur', 'Aucune conséquence', 'Le passage en mode essence'], e: 'Les véhicules d’intervention et tactiques ne sont pas soumis à cette réduction de couple.' },
-    { q: 'Le canister équipe :', c: ['Le moteur essence', 'Le moteur diesel', 'Les deux'], e: 'Il retient les vapeurs d’essence (charbon actif) et les renvoie à l’admission par une électrovanne de purge pilotée par le calculateur.' },
-    { q: 'La postcombustion thermique (injection d’air à l’échappement) sert à :', c: ['Chauffer plus vite le catalyseur d’un moteur essence', 'Régénérer le FAP d’un diesel', 'Réduire les NOx', 'Refroidir l’échappement'], e: 'Au-dessus de 600 °C, HC et CO brûlent avec l’air insufflé : le catalyseur chauffe plus vite et la régulation de richesse démarre plus tôt.' },
-    { q: 'Contrôle de pollution d’un diesel au contrôle technique ?', c: ['La mesure d’opacité des fumées', 'La mesure du CO au ralenti', 'La mesure de la sonde lambda', 'La pesée du FAP'], e: 'Depuis le 01/07/2008 : 1,5 m⁻¹. Avant (1980 à 06/2008) : 2,5 m⁻¹ en atmosphérique, 3 m⁻¹ en suralimenté.' },
-    { q: 'Quel dispositif est commun aux moteurs essence et diesel ?', c: ['L’EGR (recyclage des gaz d’échappement)', 'Le FAP', 'Le canister', 'La SCR (AdBlue)'], e: 'Essence : 3 voies, lambda, canister. Diesel : oxydation, FAP, SCR. Les deux : EGR, coupure d’injection en décélération, OBD.' },
-    { q: 'Surveillance OBD : lequel est surveillé sur un diesel mais pas sur un essence ?', c: ['Le piège à particules', 'Les ratés d’allumage', 'Le contrôle automatique de richesse', 'Le catalyseur'], e: 'Diesel : catalyseur, piège à particules, pré/postchauffage, EGR, débit et avance. Essence : ratés d’allumage, catalyseur, richesse, injection d’air, EGR.' },
-    { q: 'Moteur diesel : d’où viennent les polluants émis ?', c: ['75 % de l’échappement, 25 % du carter moteur (vapeurs d’huile)', '100 % de l’échappement', '50 % de l’échappement, 50 % du réservoir', '25 % de l’échappement, 75 % du carter'], e: 'Répartition globale des polluants d’un moteur diesel.' },
-    { q: 'Moteur essence : un mélange riche augmente surtout…', c: ['Le CO et les HC', 'Les NOx', 'Les particules', 'Le SO₂'], e: 'Manque d’air : combustion incomplète. Un mélange pauvre augmente les NOx (excès d’oxygène, température élevée).' }
+    { q: 'Quel dispositif est commun aux moteurs essence et diesel ?', c: ['L’EGR', 'Le FAP', 'La SCR (AdBlue)', 'Le catalyseur d’oxydation'], e: 'Essence : catalyseur 3 voies. Diesel : catalyseur d’oxydation, FAP, SCR. Les deux : EGR.' },
+    { q: 'À partir de quelle température se fait la recirculation des gaz par l’EGR ?', c: ['≈ 1 300 °C', '≈ 550 °C', '≈ 180 °C', '≈ 250 °C'], e: 'La recirculation se fait à partir de ≈ 1 300 °C pour faire baisser la température de combustion et limiter les NOx. (550 °C = régénération du FAP ; 180 °C = catalyseur pour la SCR.)' }
   ];
   REV.addExercises('moteur', { lessons: [], questions: qs.map(function (q) { q.l = 'depollution'; q.src = SRC; return q; }) });
 
-  /* Formulaire : moyen mnémotechnique */
   var F = REV.formulaires;
   if (F && F.moteur) F.moteur.push({ t: '🌿 Dépollution : essence ou diesel ?', html: `
 <div class="tw"><table><tr><th>⛽ Essence</th><th>🛢️ Diesel</th></tr>
 <tr><td>Catalyseur <b>3 voies</b> (CO, HC, NOx)</td><td>Catalyseur d’<b>oxydation</b> (CO, HC)</td></tr>
-<tr><td>Sonde lambda, richesse 1</td><td>Sonde proportionnelle, mélange pauvre</td></tr>
-<tr><td>Canister, postcombustion (air)</td><td><b>FAP</b> 550 °C (max 1 000 °C), <b>SCR / AdBlue</b> (gèle à −11,5 °C)</td></tr>
-<tr><td colspan="2" style="text-align:center">Les deux : <b>EGR</b> (NOx, combustion &gt; 2 000 °C), coupure en décélération, OBD</td></tr></table></div>
-<p>💡 « L’essence a <b>3 voies et un canister</b> ; le diesel <b>s’encrasse</b> (FAP) et <b>boit de l’AdBlue</b>. L’EGR, tout le monde l’a. »</p>` });
+<tr><td>—</td><td><b>FAP</b> ≈ 550 °C · <b>SCR / AdBlue</b> (NOx)</td></tr>
+<tr><td colspan="2" style="text-align:center">Les deux : <b>EGR</b> (recirculation à partir de ≈ 1 300 °C)</td></tr></table></div>
+<p>💡 « L’essence a <b>3 voies</b> ; le diesel <b>s’encrasse</b> (FAP) et <b>boit de l’AdBlue</b>. L’EGR, tout le monde l’a. »</p>` });
+
+  /* ---------- Réseau CAN : état logique ou mesure sur la prise OBD ---------- */
+  REV.extendLesson('equip/can', {
+    html: `
+<h3>CAN H / CAN L : état logique ou mesure ?</h3>
+<p>Ne pas mélanger les <b>états logiques</b> (valeurs théoriques du bus) et ce qu’on <b>lit au voltmètre</b> sur la prise OBD : le voltmètre ne suit pas les bits qui changent très vite, il affiche une valeur entre les deux états.</p>
+<div class="tw"><table class="cmp"><tr><th></th><th>État logique (théorique)</th><th>Mesure sur la prise OBD</th></tr>
+<tr><td>CAN H</td><td>3,5 V = <b>0</b> (dominant)<br>2,5 V = <b>1</b> (récessif)</td><td><b>Voltmètre</b>, broche <b>6</b> ↔ broche <b>4 ou 5</b> (masse) : <b>2,4 à 3,2 V</b></td></tr>
+<tr><td>CAN L</td><td>2,5 V = <b>1</b> (récessif)<br>1,5 V = <b>0</b> (dominant)</td><td><b>Voltmètre</b>, broche <b>14</b> ↔ broche <b>4 ou 5</b> (masse) : <b>1,8 à 2,6 V</b></td></tr>
+<tr><td>Entre H et L</td><td>Dominant : H − L = 2 V<br>Récessif : H − L = 0 V</td><td><b>Voltmètre</b>, broche 14 ↔ broche 6 : <b>0,5 à 0,7 / 0,9 V</b> ; au-delà de 0,9 V ou 1 V = <b>réseau saturé</b></td></tr>
+<tr><td>Résistance</td><td>2 × 120 Ω (une à chaque extrémité)</td><td><b>Ohmmètre, batterie débranchée</b>, broche 6 ↔ broche 14 : <b>60 Ω</b> (60 ± 5 Ω)</td></tr></table></div>
+<ul><li>Prise OBD : <b>6 = CAN H</b> · <b>14 = CAN L</b> · <b>4 et 5 = masse</b> · <b>16 = +BAT</b>.</li>
+<li>Tension d’alimentation : <b>5 V</b> · courant de sortie : <b>25 à 50 mA sur 60 Ω</b> · CAN LS = confort habitacle.</li></ul>`,
+    retenir: ['Au voltmètre sur l’OBD : 6/masse (4 ou 5) = 2,4 à 3,2 V ; 14/masse = 1,8 à 2,6 V ; 14/6 = 0,5 à 0,9 V.', 'États logiques : H 3,5 V = 0 / 2,5 V = 1 ; L 2,5 V = 1 / 1,5 V = 0.', 'Ohmmètre batterie débranchée, 6-14 : 60 Ω.']
+  });
+  var cs = 'Notes de cours multiplexage (confirmé par AGA 01)';
+  var can = [
+    { q: 'Au voltmètre, entre la broche 14 (CAN L) et la broche 4 ou 5 (masse) de la prise OBD, on doit trouver :', c: ['Entre 1,8 et 2,6 V', 'Entre 2,4 et 3,2 V', 'Entre 0,5 et 0,9 V', '60 Ω'], e: 'Mesure réelle au voltmètre sur CAN L : 1,8 à 2,6 V. Ce ne sont pas les états logiques (1,5 V = 0 ; 2,5 V = 1) : le voltmètre affiche une valeur entre les deux.', r: 'CAN L / masse (14 ↔ 4 ou 5) = 1,8 à 2,6 V.' },
+    { q: 'Au voltmètre, entre la broche 6 (CAN H) et la broche 4 ou 5 (masse) de la prise OBD, on doit trouver :', c: ['Entre 2,4 et 3,2 V', 'Entre 1,8 et 2,6 V', 'Exactement 3,5 V', 'Exactement 5 V'], e: 'Mesure réelle au voltmètre sur CAN H : 2,4 à 3,2 V. Les états logiques sont 3,5 V (0) et 2,5 V (1).', r: 'CAN H / masse (6 ↔ 4 ou 5) = 2,4 à 3,2 V.' },
+    { q: 'Au voltmètre, entre la broche 14 (CAN L) et la broche 6 (CAN H), on trouve 1,2 V. Diagnostic ?', c: ['Réseau saturé (au-delà de 0,9 V ou 1 V)', 'Réseau normal', 'Résistance de terminaison coupée', 'Batterie déchargée'], e: 'Normal : 0,5 à 0,7 / 0,9 V entre H et L. Au-delà de 0,9 V ou 1 V : réseau saturé.' },
+    { q: 'État logique : sur le fil CAN L, 1,5 V correspond à…', c: ['Un 0 (niveau dominant)', 'Un 1 (niveau récessif)', 'Un défaut du bus'], e: 'CAN L : 2,5 V = 1 (récessif) ; 1,5 V = 0 (dominant). C’est une valeur théorique, pas une mesure au voltmètre.' },
+    { q: 'État logique : sur le fil CAN H, 3,5 V correspond à…', c: ['Un 0 (niveau dominant)', 'Un 1 (niveau récessif)', 'Un défaut du bus'], e: 'CAN H : 3,5 V = 0 (dominant) ; 2,5 V = 1 (récessif).' },
+    { q: 'Comment mesure-t-on les 60 Ω de la ligne de bus CAN ?', c: ['À l’ohmmètre, batterie débranchée, entre les broches 6 et 14 de la prise OBD', 'Au voltmètre, contact mis, entre les broches 6 et 16', 'À l’ohmmètre, moteur tournant, entre les broches 4 et 5', 'À l’ampèremètre sur la broche 16'], e: 'Deux résistances de terminaison de 120 Ω en parallèle = 60 Ω (60 ± 5 Ω).' },
+    { q: 'Tension d’alimentation d’une interface CAN ?', c: ['5 V', '12 V', '24 V', '3,5 V'], e: 'Alimentation 5 V ; courant de sortie 25 à 50 mA sur 60 Ω.' },
+    { q: 'Courant de sortie d’une interface CAN high speed (mode émission) ?', c: ['25 à 50 mA sur 60 Ω', '2 à 5 A sur 120 Ω', '1 mA sur 60 Ω', '500 mA sur 5 V'], e: 'Caractéristiques du bus CAN high speed : 25 à 50 mA sur 60 Ω, alimentation 5 V, 2 × 120 Ω.' }
+  ];
+  REV.addExercises('equip', { lessons: [], questions: can.map(function (q) { q.l = 'can'; q.src = cs; return q; }) });
 })();

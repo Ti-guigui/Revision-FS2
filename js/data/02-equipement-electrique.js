@@ -352,12 +352,12 @@ REV.add({
 <div class="tw"><table><tr><th>Caractéristique</th><th>Valeur</th></tr>
 <tr><td>Débit</td><td>125 kb/s à 1 Mb/s</td></tr><tr><td>Nœuds</td><td>2 à 30</td></tr><tr><td>Alimentation</td><td>5 V</td></tr>
 <tr><td>Terminaison</td><td>2 × 120 Ω en parallèle → ligne = 60 Ω (60 ± 5 Ω)</td></tr>
-<tr><td>Dominant (0)</td><td>CAN H = 3,5 V · CAN L = 1,5 V</td></tr><tr><td>Récessif (1)</td><td>CAN H = CAN L = 2,5 V (somme toujours 5 V)</td></tr></table></div>
+<tr><td>Dominant (0) — état logique</td><td>CAN H = 3,5 V · CAN L = 1,5 V</td></tr><tr><td>Récessif (1) — état logique</td><td>CAN H = CAN L = 2,5 V (somme toujours 5 V)</td></tr></table></div>
 <div class="tw"><table><tr><th>Mesure à la prise OBD</th><th>Normal</th><th>Anomalie</th></tr>
-<tr><td>Résistance 6-14 (batterie débranchée)</td><td>60 Ω</td><td>120 Ω = fil coupé ou terminaison HS · ≈ 0 Ω = H et L en court-circuit</td></tr>
-<tr><td>Tension 14-6 (L/H)</td><td>0,5 à 0,9 V</td><td>≥ 1 V = réseau saturé (interface de ligne)</td></tr>
-<tr><td>Broche 6 / masse (CAN H)</td><td>2,4 à 3,2 V</td><td>Hors plage = interface de ligne H HS</td></tr>
-<tr><td>Broche 14 / masse (CAN L)</td><td>1,8 à 2,6 V</td><td>Hors plage = interface de ligne L HS</td></tr></table></div>
+<tr><td>Ohmmètre : broches 6-14 (batterie débranchée)</td><td>60 Ω</td><td>120 Ω = fil coupé ou terminaison HS · ≈ 0 Ω = H et L en court-circuit</td></tr>
+<tr><td>Voltmètre : broches 14-6 (L/H)</td><td>0,5 à 0,7 / 0,9 V</td><td>≥ 1 V = réseau saturé (interface de ligne)</td></tr>
+<tr><td>Voltmètre : broche 6 / broche 4 ou 5 (CAN H / masse)</td><td>2,4 à 3,2 V</td><td>Hors plage = interface de ligne H HS</td></tr>
+<tr><td>Voltmètre : broche 14 / broche 4 ou 5 (CAN L / masse)</td><td>1,8 à 2,6 V</td><td>Hors plage = interface de ligne L HS</td></tr></table></div>
 <ul>
 <li>Calculateur défaillant : débrancher les calculateurs un par un jusqu’à retrouver 0,5 V entre 14 et 6.</li>
 <li>Trame (7 champs) : initial 1 bit · statut 12 · contrôle 6 · données 0 à 64 · sécurité 16 · confirmation 2 · fin 7.</li>
@@ -369,7 +369,7 @@ REV.add({
 <li>Pourquoi multiplexer : de plus en plus de calculateurs (45 à 70 sur une Audi A8) ; une porte conducteur en filaire classique demande 33 fils. Le multiplexage réduit longueur de câble, connexions et fusibles.</li>
 <li>Le bus peut être filaire, optique ou hertzien (le plus souvent filaire). Protocoles : <b>CAN, VAN, LIN, MOST, FlexRay</b> ; les plus répandus : CAN puis VAN.</li>
 <li>Un message (trame) est fait d’octets (1 octet = 8 bits) ; le protocole envoie le message au bon boîtier et écarte les messages incorrects.</li>
-<li>CAN High Speed : 2,5 V &lt; CAN H &lt; 3,5 V et 1,5 V &lt; CAN L &lt; 2,5 V ; un message ne part que si le bus est libre depuis un certain temps (temps de latence).</li>
+<li>CAN High Speed (états logiques) : 2,5 V &lt; CAN H &lt; 3,5 V et 1,5 V &lt; CAN L &lt; 2,5 V ; un message ne part que si le bus est libre depuis un certain temps (temps de latence).</li>
 <li>Calculateur : l’étage d’entrée convertit les signaux (souvent analogiques) en numérique ; le micro-ordinateur ne comprend que le numérique ; l’étage de sortie renvoie des signaux analogiques (12 V, 0 V…) aux actionneurs ; le gestionnaire de protocole fait la conversion série ↔ parallèle et contrôle les trames. Le calculateur moteur <b>intègre</b> allumage, injection, refroidissement, dépollution.</li>
 <li><b>Conversion décimal → binaire</b> : diviser par 2 jusqu’à un quotient de 1, puis lire du dernier quotient vers le premier reste. 13 = 1101 (8 + 4 + 0 + 1).</li>
 </ul>
@@ -471,11 +471,11 @@ REV.add({
     { l: 'capteurs', q: 'Quel type de signal délivre un capteur de pression absolue (MAP) ?', c: ['Continu, proportionnel à la pression', 'Carré', 'Sinusoïdal', 'Numérique LIN'], e: 'Signal continu : 100 kPa = pression atmosphérique, 250 kPa ≈ 4,65 V.', src: 'OVI114 étendu' },
     { l: 'can', q: 'Résistance mesurée entre les broches 6 et 14 de la prise OBD (batterie débranchée) sur un réseau CAN HS sain ?', c: ['60 Ω (± 5 Ω)', '120 Ω', '0 Ω', '240 Ω'], e: 'Deux résistances de terminaison de 120 Ω en parallèle = 60 Ω. 120 Ω = fil coupé ou terminaison HS.', r: 'Ligne = 60 Ω ; une résistance = 120 Ω.', src: 'OVI114 Q1' },
     { l: 'can', q: 'Valeur d’UNE résistance de terminaison CAN HS ?', c: ['120 Ω', '60 Ω', '30 Ω', '240 Ω'], e: 'Chaque extrémité du bus porte 120 Ω pour éviter les échos du signal.', src: 'UV2 Q51, OVI114 Q19' },
-    { l: 'can', q: 'Au niveau DOMINANT, que valent CAN H et CAN L ?', c: ['H = 3,5 V ; L = 1,5 V', 'H = 2,5 V ; L = 2,5 V', 'H = 5 V ; L = 0 V', 'H = 3,2 V ; L = 1,8 V'], e: 'Dominant (bit 0) : écart de 2 V. Récessif (bit 1) : les deux à 2,5 V. La somme vaut toujours 5 V.', w: 'Une fiche indiquait 3,2 V : la valeur retenue est 3,5 V.' },
+    { l: 'can', q: 'État logique : au niveau DOMINANT, que valent CAN H et CAN L ?', c: ['H = 3,5 V ; L = 1,5 V', 'H = 2,5 V ; L = 2,5 V', 'H = 5 V ; L = 0 V', 'H = 3,2 V ; L = 1,8 V'], e: 'Dominant (bit 0) : écart de 2 V. Récessif (bit 1) : les deux à 2,5 V. La somme vaut toujours 5 V.', w: 'Une fiche indiquait 3,2 V : la valeur retenue est 3,5 V.' },
     { l: 'can', q: 'Pourquoi les fils CAN H et CAN L sont-ils torsadés ?', c: ['Pour rejeter les perturbations électromagnétiques', 'Pour augmenter le débit', 'Pour réduire la résistance', 'Pour économiser du cuivre'], e: 'Un parasite décale les deux fils de la même façon : la différence lue par le récepteur ne change pas.', src: 'UV2 Q52' },
     { l: 'can', q: 'Le protocole CAN est :', c: ['Série différentiel, multi-maître', 'Parallèle, maître-esclave', 'Monofilaire, 1 maître', 'Analogique'], e: 'Paire différentielle torsadée, série asynchrone, multi-maître (contrairement au LIN).', src: 'CT1 Q20, OVI114 Q25' },
     { l: 'can', q: 'Sur quel réseau sont les calculateurs moteur, boîte de vitesses, ABS et direction ?', c: ['CAN HS', 'CAN confort (LS)', 'LIN', 'K-Line'], e: 'Fonctions rapides et sécuritaires → CAN haute vitesse. Le combiné d’instruments est sur le réseau confort.', src: 'OVI114 Q32, CT1 Q21' },
-    { l: 'can', q: 'Tension normale entre CAN L et CAN H (broches 14-6) ?', c: ['0,5 à 0,9 V', '2,4 à 3,2 V', '1,8 à 2,6 V', '≥ 1 V'], e: '0,5–0,9 V normal ; ≥ 1 V = réseau saturé (interface de ligne).', r: 'H/masse 2,4–3,2 V · L/masse 1,8–2,6 V.', src: 'OVI114 Q16' },
+    { l: 'can', q: 'Au voltmètre, tension normale entre CAN L et CAN H (broches 14 et 6 de la prise OBD) ?', c: ['0,5 à 0,9 V', '2,4 à 3,2 V', '1,8 à 2,6 V', '≥ 1 V'], e: '0,5–0,9 V normal ; ≥ 1 V = réseau saturé (interface de ligne).', r: 'H/masse 2,4–3,2 V · L/masse 1,8–2,6 V.', src: 'OVI114 Q16' },
     { l: 'can', q: 'Quel étage du calculateur reçoit les informations des capteurs ?', c: ['L’étage d’entrée', 'L’étage de sortie', 'L’interface de ligne', 'Le contrôleur de protocole'], e: 'Étage d’entrée (avec convertisseur analogique/numérique) → micro-ordinateur → étage de sortie (actionneurs).', src: 'UV2 Q49' },
     { l: 'can', q: 'Un calculateur multiplexé comporte :', c: ['Un étage d’entrée et un étage de sortie', 'Uniquement un étage de sortie', 'Un alternateur et un régulateur', 'Une seule résistance de 60 Ω'], e: 'Entrée (capteurs), traitement, sortie (actionneurs).', src: 'Test final Q45 (officiel)' },
     { l: 'can', q: 'Comment tester un réseau CAN au voltmètre ?', c: ['H/masse, L/masse et H/L', 'Uniquement H/L', 'Uniquement la résistance 6-14', 'Entre +BAT et CAN H'], e: 'Trois mesures : H/masse (2,4–3,2 V), L/masse (1,8–2,6 V), L/H (0,5–0,9 V).', src: 'CT1 Q22' },
