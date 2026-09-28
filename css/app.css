@@ -695,3 +695,9 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .c-img { display: block; width: auto; max-width: 100%; max-height: 190px; height: auto; border-radius: 8px; background: #fff; padding: 6px; margin: 2px auto 6px; box-sizing: border-box; }
 .c-cap { display: block; text-align: center; font-size: .85rem; color: var(--muted); }
 .choice .ct:has(.c-img) { flex: 1; text-align: center; }
+/* Tableau comparatif compact (essence / diesel) */
+@media (max-width: 640px) {
+  table.cmp { table-layout: fixed; width: 100%; }
+  table.cmp th, table.cmp td { font-size: .78rem; padding: 5px 4px; word-break: normal; overflow-wrap: anywhere; }
+  table.cmp th:first-child, table.cmp td:first-child { width: 24%; font-weight: 700; }
+}

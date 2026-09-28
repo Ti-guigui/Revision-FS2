@@ -76,7 +76,7 @@
   })();
 
   /* ---------- Électricité : périmètre ---------- */
-  dropLessons('elec', ['generateurs', 'exos-ct1', 'cah-e-quantite', 'cah-e-resistivite', 'cah-e-generateurs', 'aga03-puissance', 'aga03-generateurs', 'aga03-condensateur']);
+  dropLessons('elec', ['generateurs', 'exos-ct1', 'aga03-puissance', 'aga03-generateurs', 'aga03-condensateur']);
   dropQuestions('elec', function (q) {
     if (/^Ex (5|6|1[1-35-9]) —/.test(q.q) && /^aga03-/.test(q.l)) return true;             // section, Ah, code couleurs, résistivité
     if (q.l === 'lois' && /3 mm²|96 Ah|ρ = 1,6/.test(q.q)) return true;

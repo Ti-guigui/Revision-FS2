@@ -223,7 +223,7 @@ REV.add({
 <tr><td>SCR (AdBlue)</td><td>NOx ; actif si T° catalyseur &gt; 180 °C, couple &gt; 5 %, T° moteur &gt; 40 °C, régime &gt; 400 tr/min</td></tr></table></div>
 <ul><li><b>4 principaux polluants</b> : CO (mortel), HC (cancérigènes), NOx (irritants), particules de carbone (cancérigènes).</li>
 <li><b>Pot catalytique</b> : 2 réactions chimiques — réduction des NOx et oxydation du CO et des HC. Diesel (oxydation) : CO et HC ; essence (3 voies) : CO, HC et NOx.</li>
-<li><b>EGR</b> : les NOx se forment à partir de ≈ 1 300 °C ; on fait recirculer une partie des gaz d’échappement dans l’admission.</li>
+<li><b>EGR</b> : les NOx se forment quand la combustion dépasse <b>2 000 °C</b> ; on fait recirculer une partie des gaz d’échappement dans l’admission.</li>
 <li><b>FAP</b> : filtre les particules (tamis de 1 micron) puis les brûle.</li>
 <li><b>SCR / AdBlue</b> : urée 32,5 % + eau déminéralisée 67,5 % ; libère de l’ammoniac (NH3) qui réduit les NOx. Durée de vie du catalyseur ≈ 1 million de km, capteur NOx ≈ 500 000 km.</li>
 <li>CO et HC plus importants avec un <b>dosage riche</b> (manque d’air pour tout brûler).</li>
