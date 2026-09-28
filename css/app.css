@@ -689,3 +689,5 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
   .ftab td.f-lab::before { content: attr(data-l) " : "; font-size: .72rem; text-transform: uppercase; color: var(--muted); }
   .ftab td.f-more::before { content: attr(data-l) " : "; font-weight: 700; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; }
 }
+.q-ctx figcaption { font-size: .8rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; text-align: left; }
+.q-ctx { margin-bottom: 10px; }

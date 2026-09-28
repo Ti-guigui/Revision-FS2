@@ -36,7 +36,7 @@ REV.uv2Fiches = {
         pts: ['7 = clapet anti-retour : garde la pression en cas de fuite en amont.', '13 = VNAE (valve de non-addition des efforts).', '12 = têtes d’accouplement : rouge = automatique, jaune = directe.'],
         qr: [['Élément 13', 'valve de non addition des efforts (VNAE)'], ['Rôle de l’élément 7 (circuit parc)', 'garder la pression si fuite en amont']] },
       { t: 'Repères et codes couleur', img: [['livres/l-p011_0.jpg', 'Code chiffré des orifices'], ['sym/agb03r-p71-15.png', 'Valve relais simple pilotage : 1, 2, 3, 4']],
-        pts: ['1 = alimentation · 2 = utilisation · 3 = échappement · 4 = pilotage (41, 42, 43…).', '43 = pilotage par absence d’air (frein de parc).', 'Trait plein = pression constante ; tirets = pression délivrée ; alterné jaune = pilotage.'] },
+        pts: ['1 = alimentation · 2 = utilisation · 3 = échappement · 4 = pilotage (41, 42, 43…).', '43 = pilotage par absence d’air (reçoit l’information du frein de parc).', 'Trait plein = pression constante ; tirets = pression délivrée ; alterné jaune = pilotage.'] },
       { t: 'Production et stockage de l’air', img: [['livres/l-p013_0.jpg', 'Compresseur'], ['livres/l-p021_0.jpg', 'Dessiccateur : phase de dessiccation'], ['livres/l-p015_0.jpg', 'Valve de protection 4 circuits']],
         pts: ['Compresseur → régulateur → dessiccateur → valve de protection → réservoirs.', 'Dessiccateur : air sec, plus besoin d’antigel.', 'Valve de protection : isole un circuit défaillant.'],
         qr: [['Temps de remplissage (norme européenne, ralenti)', '6 à 11 minutes'], ['Temps de réponse', '0,6 seconde']] },

@@ -145,6 +145,10 @@
     }
     return a;
   }
+  /* Schéma de référence (« votre schéma ») affiché au-dessus de la question pour comparer. */
+  function ctxImg(q) {
+    return q.ctx ? '<figure class="q-img q-ctx"><figcaption>🗺️ Votre schéma (touche pour agrandir)</figcaption><a href="img/' + q.ctx + '" target="_blank" rel="noopener"><img src="img/' + q.ctx + '" alt="Schéma de référence"></a></figure>' : '';
+  }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -539,7 +543,7 @@
           qs.map(function (q) {
             var r = store.q[q.id] || { ko: 0 };
             return '<details class="rev-q"><summary>❌ ' + clean(q.q) + ' <span class="muted small">(ratée ' + r.ko + ' fois)</span></summary>' +
-              (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
+              ctxImg(q) + (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
               '<p class="fb-good">' + (q.good.length > 1 ? (q.any ? 'Réponses acceptées : ' : 'Bonnes réponses : ') : 'Bonne réponse : ') + q.good.map(function (g) { return '<b>' + q.c[g] + '</b>'; }).join(' / ') + '</p>' +
               (q.e ? '<p>💡 ' + q.e + '</p>' : '') + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') + (q.w ? '<p>⚠️ ' + q.w + '</p>' : '') + '</details>';
           }).join('') +
@@ -608,7 +612,7 @@
     var enonce = l.exo && (l.html.match(/<h3>Énoncé<\/h3>([\s\S]*?)<h3>/) || [])[1];
     var body = '<div class="q-card">' +
       (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
-      '<h1 class="q-text">' + q.q + '</h1>' +
+      ctxImg(q) + '<h1 class="q-text">' + q.q + '</h1>' +
       (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
       (q.multi && !ans ? '<p class="muted small">☑️ ' + q.good.length + ' réponses à cocher, puis « Valider ».</p>' : '') +
       '<div class="choices" role="group" aria-label="Réponses">' + perm.map(function (orig, k) {
@@ -1154,7 +1158,7 @@
         '<div class="progress"><span style="width:' + Math.round(nb * 100 / n) + '%"></span></div></div>' +
       '<div class="q-card">' +
         (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
-        '<h1 class="q-text">' + exText(q) + '</h1>' +
+        ctxImg(q) + '<h1 class="q-text">' + exText(q) + '</h1>' +
         (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
         '<div class="choices" role="group" aria-label="Réponses">' + session.perm[i].map(function (orig, k) {
           return '<button class="choice' + (sel === orig ? ' picked' : '') + '" data-action="answer" data-k="' + k + '" aria-pressed="' + (sel === orig) + '">' +
@@ -1204,7 +1208,7 @@
         var st = a.blank ? '⚪' : a.ok ? '✅' : '❌';
         var good = q.good.map(function (g) { return '<b>' + LETTERS[perm.indexOf(g)] + '</b> — ' + q.c[g]; }).join('<br>');
         return '<details class="card err' + (a.ok ? ' ok' : '') + '"><summary>' + st + ' <b>Q' + (j + 1) + '</b> — ' + exText(q) + '</summary>' +
-          (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
+          ctxImg(q) + (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
           (a.blank ? '<p class="muted">Pas de réponse (0 point)</p>' : '<p>Ta réponse : <b>' + LETTERS[perm.indexOf(a.chosen)] + '</b> — ' + q.c[a.chosen] + (a.ok ? ' ✅ (+ 1)' : ' ❌ (− 0,5)') + '</p>') +
           (a.ok ? '' : '<p class="fb-good">' + (q.good.length > 1 ? (q.any ? 'Réponses acceptées : ' : 'Bonnes réponses : ') : 'Bonne réponse : ') + good + '</p>') +
           '<p>💡 ' + q.e + '</p>' + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') +
