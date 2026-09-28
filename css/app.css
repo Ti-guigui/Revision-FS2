@@ -707,3 +707,5 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .q-prev ol { margin: 8px 0 0; padding-left: 24px; max-height: 38vh; overflow-y: auto; }
 .q-prev li { margin: 6px 0; font-size: .88rem; }
 .q-prev .qp-q { color: var(--muted); }
+/* Barre englobante au-dessus de barres individuelles (ex. (Ā + B̄)‾) : la grande barre passe au-dessus */
+.ov:has(.ov) { text-decoration: none; border-top: 2px solid currentColor; padding-top: 4px; }
