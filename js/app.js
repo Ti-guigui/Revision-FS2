@@ -195,6 +195,35 @@
 
   // Exercices corrigés : les questions suivent l'ordre du sujet (Q01, Q02…) ; ailleurs elles sont mélangées.
   function isExoQ(q) { var l = REV.lessonById[q.lkey]; return !!(l && l.exo); }
+  // Un exercice = les questions d'une même leçon d'exercice ; dans un cahier, celles d'un même « Ex N ».
+  function exoGroup(q) { var m = /^Ex (\d+)/.exec(q.q); return q.lkey + (m ? '#' + m[1] : ''); }
+  function exoPrev(q) {
+    if (!isExoQ(q)) return [];
+    var g = exoGroup(q), list = subj(q.subject).questions, i = list.indexOf(q);
+    return list.slice(0, i).filter(function (o) { return o.lkey === q.lkey && exoGroup(o) === g; });
+  }
+  // Dans un QCM mélangé, les questions d'un même exercice restent groupées et dans l'ordre du sujet.
+  function regroupExo(qs) {
+    var out = [], done = {};
+    qs.forEach(function (q) {
+      if (!isExoQ(q)) { out.push(q); return; }
+      var g = exoGroup(q);
+      if (done[g]) return;
+      done[g] = 1;
+      var list = subj(q.subject).questions;
+      qs.filter(function (o) { return isExoQ(o) && exoGroup(o) === g; })
+        .sort(function (x, y) { return list.indexOf(x) - list.indexOf(y); })
+        .forEach(function (o) { out.push(o); });
+    });
+    return out;
+  }
+  function prevBox(q) {
+    var prev = exoPrev(q);
+    if (!prev.length) return '';
+    return '<details class="q-prev" open><summary>📝 Questions précédentes de l’exercice (' + prev.length + ')</summary><ol>' +
+      prev.map(function (o) { return '<li><span class="qp-q">' + o.q + '</span><br>✅ <b>' + o.good.map(function (g) { return o.c[g]; }).join(' / ') + '</b></li>'; }).join('') +
+      '</ol></details>';
+  }
   function arrange(qs, count) {
     qs = shuffle(qs);
     if (!qs.length) return qs;
@@ -209,7 +238,7 @@
   }
 
   function startSession(opts) {
-    var qs = opts.questions.slice(0, opts.count || opts.questions.length);
+    var qs = regroupExo(opts.questions.slice(0, opts.count || opts.questions.length));
     if (!qs.length) { toast('Aucune question disponible pour ce choix.'); return; }
     session = {
       mode: opts.mode, title: opts.title, subject: opts.subject || null, lesson: opts.lesson || null,
@@ -496,7 +525,7 @@
   function viewQuiz() {
     return '<h1 class="h1">⚡ Quiz éclair</h1>' +
       '<div class="card pad"><p><b>10 questions</b> tirées au hasard dans <b>toutes les matières</b>.</p>' +
-      '<p>⏱️ <b>' + QUIZ_SECONDS + ' secondes</b> par question : si le temps est écoulé, la question compte comme ratée — et la correction s’affiche quand même.</p>' +
+      '<p>⏱️ <b>' + QUIZ_SECONDS + ' secondes</b> par question : si le temps est écoulé, la question compte comme ratée — et la correction s’affiche quand même. Les questions d’exercice (qui s’enchaînent) ne sont pas chronométrées.</p>' +
       '<p class="muted">Idéal pour 5 minutes de révision dans les transports ou en pause.</p>' +
       '<div class="row-actions"><button class="btn primary big" data-action="quiz" data-timer="1">⚡ Lancer le quiz chronométré</button>' +
       '<button class="btn" data-action="quiz" data-timer="0">Sans chrono</button></div></div>';
@@ -609,12 +638,12 @@
       '<div class="q-meta"><span>' + s.icon + ' ' + esc(s.name) + '</span><span class="muted">📖 ' + esc(l.title) + '</span></div>' +
       '<div class="q-count"><b>Question ' + (session.i + 1) + ' / ' + n + '</b><span class="muted small">' + esc(session.title) + '</span></div>' +
       '<div class="progress"><span style="width:' + Math.round(session.i * 100 / n) + '%"></span></div>' +
-      (session.timer && !ans ? '<div class="timer"><span id="timer-bar"></span><b id="timer-txt">' + QUIZ_SECONDS + ' s</b></div>' : '') +
+      (session.timer && !ans && !isExoQ(q) ? '<div class="timer"><span id="timer-bar"></span><b id="timer-txt">' + QUIZ_SECONDS + ' s</b></div>' : '') +
       '</div>';
     var enonce = l.exo && (l.html.match(/<h3>Énoncé<\/h3>([\s\S]*?)<h3>/) || [])[1];
     var body = '<div class="q-card">' +
       (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
-      ctxImg(q) + '<h1 class="q-text">' + q.q + '</h1>' +
+      prevBox(q) + ctxImg(q) + '<h1 class="q-text">' + q.q + '</h1>' +
       (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
       (q.multi && !ans ? '<p class="muted small">☑️ ' + q.good.length + ' réponses à cocher, puis « Valider ».</p>' : '') +
       '<div class="choices" role="group" aria-label="Réponses">' + perm.map(function (orig, k) {
@@ -674,7 +703,9 @@
       return;
     }
     window.scrollTo(0, 0);
-    if (session && session.timer) {
+    var qpl = document.querySelector('.q-prev ol'); if (qpl) qpl.scrollTop = qpl.scrollHeight;
+    // pas de chrono sur une question d’exercice : on a besoin des réponses précédentes
+    if (session && session.timer && !isExoQ(REV.qById[session.qids[session.i]])) {
       var left = QUIZ_SECONDS, t0 = Date.now();
       var barEl = document.getElementById('timer-bar'), txt = document.getElementById('timer-txt');
       timerId = setInterval(function () {
@@ -1160,7 +1191,7 @@
         '<div class="progress"><span style="width:' + Math.round(nb * 100 / n) + '%"></span></div></div>' +
       '<div class="q-card">' +
         (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
-        ctxImg(q) + '<h1 class="q-text">' + exText(q) + '</h1>' +
+        prevBox(q) + ctxImg(q) + '<h1 class="q-text">' + exText(q) + '</h1>' +
         (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
         '<div class="choices" role="group" aria-label="Réponses">' + session.perm[i].map(function (orig, k) {
           return '<button class="choice' + (sel === orig ? ' picked' : '') + '" data-action="answer" data-k="' + k + '" aria-pressed="' + (sel === orig) + '">' +
