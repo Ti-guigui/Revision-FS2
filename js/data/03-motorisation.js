@@ -11,11 +11,14 @@ REV.add({
 <tr><td>Rapport volumétrique</td><td>ρ = (Vu + v) / v → v = Vu / (ρ − 1) (v = chambre de combustion)</td></tr>
 <tr><td>Puissance</td><td>P (W) = C (N·m) × 2π × N (tr/min) / 60 · 1 CV = 736 W</td></tr>
 <tr><td>ρ diesel</td><td>13/1 à 24/1 (auto-inflammation)</td></tr>
-<tr><td>A &lt; C / A = C / A &gt; C</td><td>Course longue / carré / super-carré</td></tr></table></div>
+<tr><td>A &lt; C / A = C / A &gt; C</td><td>Course longue (<b>moteur lent</b>) / carré / super-carré</td></tr>
+<tr><td>Cycle 4 temps</td><td>1 cycle complet = <b>2 tours de vilebrequin = 720°</b> ; l’arbre à cames tourne à demi-vitesse (2 tours vilebrequin = 1 tour arbre à cames)</td></tr>
+<tr><td>Régularité cyclique</td><td><b>R = 720° / n</b> (n = nombre de cylindres) : ex. 4 cylindres → une combustion tous les 180°</td></tr>
+<tr><td>Taux de remplissage τ</td><td>Moteur atmosphérique : <b>0,7 &lt; τ &lt; 0,9</b> (≈ 0,9 au ralenti, ≈ 0,7 à régime élevé)</td></tr></table></div>
 <p>La <b>puissance réelle mesurée au banc</b> est proportionnelle <b>au couple et à la vitesse de rotation</b> (P = C × ω).</p>`,
       retenir: ['Alésage = diamètre du cylindre ; course = distance parcourue par le piston.', 'ρ = (Vu + v) / v.', 'P = C × ω.'],
       pieges: ['ρ se calcule avec la chambre de combustion v, pas avec Vtot.'],
-      memo: { cle: 'P = C × ω', points: ['Vu = π × A²/4 × C', 'ρ = (Vu + v)/v', 'Diesel 13–24', '1 CV = 736 W'], astuce: 'A < C : course longue (le piston voyage plus qu’il n’est large).' }
+      memo: { cle: 'P = C × ω', points: ['Vu = π × A²/4 × C', 'ρ = (Vu + v)/v', 'Diesel 13–24', '1 CV = 736 W', 'R = 720° / n', 'τ atmo : 0,7 à 0,9'], astuce: 'A < C : course longue (le piston voyage plus qu’il n’est large).' }
     },
     {
       id: 'cycle', title: 'Les gaz et le cycle 4 temps',
@@ -236,6 +239,10 @@ REV.add({
   questions: [
     { l: 'caracteristiques', q: 'La puissance réelle mesurée au banc est proportionnelle…', c: ['Au couple et à la vitesse de rotation', 'À la cylindrée seule', 'Au rapport volumétrique', 'À la consommation'], e: 'P = C × ω : la puissance est le produit du couple par la vitesse angulaire.', src: 'QCM moteur Q2' },
     { l: 'caracteristiques', q: 'Rapport volumétrique courant d’un moteur diesel ?', c: ['13/1 à 24/1', '6/1 à 12/1', '2/1 à 5/1', '30/1 à 40/1'], e: 'Le diesel a besoin d’une forte compression pour chauffer l’air jusqu’à l’auto-inflammation. Essence : 6 à 12.', r: 'ρ = (Vu + v) / v.' },
+    { l: 'caracteristiques', q: 'Régularité cyclique d’un moteur 4 temps 6 cylindres (R = 720° / n) ?', c: ['120°', '180°', '90°', '60°'], e: 'Un cycle complet = 2 tours de vilebrequin = 720°. R = 720 / 6 = 120° entre deux combustions (4 cylindres : 180°).', r: 'R = 720° / n.' },
+    { l: 'caracteristiques', q: 'Un cycle moteur 4 temps complet correspond à :', c: ['2 tours de vilebrequin (720°)', '1 tour de vilebrequin (360°)', '4 tours de vilebrequin', '2 tours d’arbre à cames'], e: 'Admission, compression, combustion-détente, échappement : 4 courses de piston = 2 tours de vilebrequin = 1 tour d’arbre à cames.' },
+    { l: 'caracteristiques', q: 'Taux de remplissage d’un moteur atmosphérique ?', c: ['Entre 0,7 et 0,9', 'Entre 0,9 et 1,2', 'Exactement 1', 'Entre 0,3 et 0,5'], e: 'Rapport entre la quantité de mélange réellement admise et la quantité théorique. ≈ 0,9 au ralenti, ≈ 0,7 à régime élevé.' },
+    { l: 'caracteristiques', q: 'Un moteur à course longue (A < C) est plutôt :', c: ['Un moteur lent', 'Un moteur rapide', 'Un moteur super-carré', 'Un moteur 2 temps'], e: 'Alésage < course : moteur à course longue (moteur lent). A = C : carré ; A > C : super-carré.' },
     { l: 'caracteristiques', q: 'Un moteur dont l’alésage est inférieur à la course est dit :', c: ['À course longue', 'Carré', 'Super-carré', 'Isochore'], e: 'A < C = course longue ; A = C = carré ; A > C = super-carré.' },
     { l: 'caracteristiques', q: 'Pour calculer le rapport volumétrique ρ, on utilise :', c: ['La cylindrée unitaire et le volume de la chambre de combustion', 'La cylindrée totale et l’alésage', 'La course et le régime', 'La cylindrée totale seule'], e: 'ρ = (Vu + v) / v, avec v le volume de la chambre de combustion.', w: 'Ne pas utiliser Vtot.' },
     { l: 'cycle', q: 'Comment appelle-t-on la combustion qui continue après la fin de l’injection ?', c: ['Combustion diffusante', 'Combustion isochore', 'Cliquetis', 'Auto-allumage'], e: 'Une fois l’injection terminée, le carburant restant continue de brûler en se diffusant dans l’air.', src: 'Test final Q5 (officiel)' },
