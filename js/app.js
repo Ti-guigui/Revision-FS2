@@ -203,7 +203,8 @@
     return list.slice(0, i).filter(function (o) { return o.lkey === q.lkey && exoGroup(o) === g; });
   }
   // Dans un QCM mélangé, les questions d'un même exercice restent groupées et dans l'ordre du sujet.
-  function regroupExo(qs) {
+  // complete : on reprend l'exercice en entier (aucune question sautée) ; sinon seulement celles tirées.
+  function regroupExo(qs, complete) {
     var out = [], done = {};
     qs.forEach(function (q) {
       if (!isExoQ(q)) { out.push(q); return; }
@@ -211,7 +212,7 @@
       if (done[g]) return;
       done[g] = 1;
       var list = subj(q.subject).questions;
-      qs.filter(function (o) { return isExoQ(o) && exoGroup(o) === g; })
+      (complete ? list : qs).filter(function (o) { return isExoQ(o) && exoGroup(o) === g; })
         .sort(function (x, y) { return list.indexOf(x) - list.indexOf(y); })
         .forEach(function (o) { out.push(o); });
     });
@@ -223,6 +224,22 @@
     return '<details class="q-prev" open><summary>📝 Questions précédentes de l’exercice (' + prev.length + ')</summary><ol>' +
       prev.map(function (o) { return '<li><span class="qp-q">' + o.q + '</span><br>✅ <b>' + o.good.map(function (g) { return o.c[g]; }).join(' / ') + '</b></li>'; }).join('') +
       '</ol></details>';
+  }
+  // QCM (hors épreuve UV2) : questions précédentes de la session, avec ta réponse et la bonne réponse.
+  // Pour un exercice : seulement celles du même exercice (ouvert) ; sinon toutes (replié).
+  function sessionPrevBox(q) {
+    if (!session) return '';
+    var exo = isExoQ(q), items = [];
+    for (var j = 0; j < session.i; j++) {
+      var o = REV.qById[session.qids[j]], a = session.answers[j];
+      if (!o || (exo && (!isExoQ(o) || exoGroup(o) !== exoGroup(q)))) continue;
+      var mine = !a ? '⚪ pas de réponse' : a.chosen === -1 ? '⏱️ temps écoulé' :
+        (a.ok ? '✅ ' : '❌ ') + [].concat(a.chosen).map(function (g) { return o.c[g]; }).join(' / ');
+      items.push('<li><span class="qp-q">' + o.q + '</span><br>' + mine +
+        (a && a.ok ? '' : '<br>✔️ Bonne réponse : <b>' + o.good.map(function (g) { return o.c[g]; }).join(' / ') + '</b>') + '</li>');
+    }
+    if (!items.length) return '';
+    return '<details class="q-prev"' + (exo ? ' open' : '') + '><summary>📝 ' + (exo ? 'Questions précédentes de l’exercice' : 'Réponses précédentes') + ' (' + items.length + ')</summary><ol>' + items.join('') + '</ol></details>';
   }
   function arrange(qs, count) {
     qs = shuffle(qs);
@@ -238,7 +255,7 @@
   }
 
   function startSession(opts) {
-    var qs = regroupExo(opts.questions.slice(0, opts.count || opts.questions.length));
+    var qs = regroupExo(opts.questions.slice(0, opts.count || opts.questions.length), opts.mode !== 'revision');
     if (!qs.length) { toast('Aucune question disponible pour ce choix.'); return; }
     session = {
       mode: opts.mode, title: opts.title, subject: opts.subject || null, lesson: opts.lesson || null,
@@ -643,7 +660,7 @@
     var enonce = l.exo && (l.html.match(/<h3>Énoncé<\/h3>([\s\S]*?)<h3>/) || [])[1];
     var body = '<div class="q-card">' +
       (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
-      prevBox(q) + ctxImg(q) + '<h1 class="q-text">' + q.q + '</h1>' +
+      sessionPrevBox(q) + ctxImg(q) + '<h1 class="q-text">' + q.q + '</h1>' +
       (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
       (q.multi && !ans ? '<p class="muted small">☑️ ' + q.good.length + ' réponses à cocher, puis « Valider ».</p>' : '') +
       '<div class="choices" role="group" aria-label="Réponses">' + perm.map(function (orig, k) {
