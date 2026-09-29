@@ -197,11 +197,6 @@
   function isExoQ(q) { var l = REV.lessonById[q.lkey]; return !!(l && l.exo); }
   // Un exercice = les questions d'une même leçon d'exercice ; dans un cahier, celles d'un même « Ex N ».
   function exoGroup(q) { var m = /^Ex (\d+)/.exec(q.q); return q.lkey + (m ? '#' + m[1] : ''); }
-  function exoPrev(q) {
-    if (!isExoQ(q)) return [];
-    var g = exoGroup(q), list = subj(q.subject).questions, i = list.indexOf(q);
-    return list.slice(0, i).filter(function (o) { return o.lkey === q.lkey && exoGroup(o) === g; });
-  }
   // Dans un QCM mélangé, les questions d'un même exercice restent groupées et dans l'ordre du sujet.
   // complete : on reprend l'exercice en entier (aucune question sautée) ; sinon seulement celles tirées.
   function regroupExo(qs, complete) {
@@ -219,13 +214,6 @@
         .forEach(function (o) { out.push(o); });
     });
     return out;
-  }
-  function prevBox(q) {
-    var prev = exoPrev(q);
-    if (!prev.length) return '';
-    return '<details class="q-prev" open><summary>📝 Questions précédentes de l’exercice (' + prev.length + ')</summary><ol>' +
-      prev.map(function (o) { return '<li><span class="qp-q">' + o.q + '</span><br>✅ <b>' + o.good.map(function (g) { return o.c[g]; }).join(' / ') + '</b></li>'; }).join('') +
-      '</ol></details>';
   }
   // QCM (hors épreuve UV2) : questions précédentes de la session, avec ta réponse et la bonne réponse.
   // Pour un exercice : seulement celles du même exercice (ouvert) ; sinon toutes (replié).
@@ -1210,7 +1198,7 @@
         '<div class="progress"><span style="width:' + Math.round(nb * 100 / n) + '%"></span></div></div>' +
       '<div class="q-card">' +
         (enonce ? '<details class="q-enonce"><summary>📋 Énoncé de l’exercice</summary>' + enonce + '</details>' : '') +
-        prevBox(q) + ctxImg(q) + '<h1 class="q-text">' + exText(q) + '</h1>' +
+        ctxImg(q) + '<h1 class="q-text">' + exText(q) + '</h1>' +
         (q.img ? '<figure class="q-img"><a href="img/' + q.img + '" target="_blank" rel="noopener"><img src="img/' + q.img + '" alt="Schéma de la question"></a></figure>' : '') +
         '<div class="choices" role="group" aria-label="Réponses">' + session.perm[i].map(function (orig, k) {
           return '<button class="choice' + (sel === orig ? ' picked' : '') + '" data-action="answer" data-k="' + k + '" aria-pressed="' + (sel === orig) + '">' +

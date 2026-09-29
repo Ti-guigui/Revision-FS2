@@ -17,17 +17,18 @@ REV.add({
       id: 'angles', title: 'Direction et angles du train',
       html: `
 <ul><li><b>Barre d’accouplement</b> = règle la VALEUR du parallélisme. <b>Barre de direction</b> = règle sa RÉPARTITION.</li>
-<li><b>Parallélisme</b> : différence d’écartement avant/arrière des roues d’un essieu, vue de dessus. (−) = ouverture, (+) = pincement.</li>
-<li><b>Déport</b> : distance au sol entre l’axe de pivot et le plan de roue, vue de face.</li>
-<li><b>Carrossage</b> : angle entre le plan de roue et la verticale (= axe de fusée et horizontale), vue de face.</li>
-<li><b>Inclinaison de pivot</b> : angle entre la verticale et l’axe de pivot, plan TRANSVERSAL, vue de face.</li>
-<li><b>Chasse</b> : angle entre la verticale et l’axe de pivot, plan LONGITUDINAL, vue de côté. Elle assure l’<b>auto-stabilité (rappel)</b> de la direction.</li>
-<li><b>Angle inclus</b> = carrossage + pivot : angle de diagnostic, pas de réglage. Bon (identique G/D) → triangle, berceau ou châssis ; pas bon → fusée, porte-fusée et/ou jambe de force.</li></ul>
+<li><b>Le parallélisme</b> : est la différence d’écartement entre l’avant et l’arrière des roues d’un même essieu, mesurée à hauteur du moyeu, <b>vue de dessus</b>. (−) = ouverture, (+) = pincement.</li>
+<li><b>Le déport</b> : est la distance entre l’axe de pivot et le plan de la roue au sol, <b>vue de face</b>.</li>
+<li><b>Le carrossage</b> :<br>– est l’angle formé par le plan de rotation de la roue et la verticale au sol, <b>vue de face</b> ;<br>– est l’angle formé par l’axe géométrique de la fusée et l’horizontale au sol, <b>vue de face</b>.</li>
+<li><b>L’angle d’inclinaison de pivot</b> : est l’angle formé par la verticale au sol et l’axe de pivot dans le plan <b>TRANSVERSAL</b> du véhicule, <b>vu de face</b>.</li>
+<li><b>L’angle inclus</b> : le déport est fonction de 2 angles, ① l’angle d’inclinaison de pivot et ② l’angle de carrossage. Ces deux angles sont indissociables, ils forment l’angle inclus : <b>① + 90° + ② = angle inclus</b>. L’angle inclus est un angle de <b>diagnostic</b> : il détermine la forme du porte-fusée. Bon (identique G/D) → triangle, berceau ou châssis ; pas bon → fusée, porte-fusée et/ou jambe de force.</li>
+<li><b>L’angle de chasse</b> : est l’angle formé par la verticale au sol et l’axe de pivot dans le plan <b>LONGITUDINAL</b> du véhicule, <b>vue de côté</b>. Elle assure l’<b>auto-stabilité (rappel)</b> de la direction.</li></ul>
+<p class="small muted">Pour comparer gauche et droite dans un tableau de relevés, le 90° est le même des deux côtés : on compare simplement pivot + carrossage.</p>
 <div class="tw"><table><tr><th>Angle</th><th>Vue</th><th>Référence</th><th>Signe / défaut</th></tr>
 <tr><td>Carrossage</td><td>De face</td><td>Verticale / plan de roue</td><td>+ ou − · faux = usure LISSE</td></tr>
 <tr><td>Pivot</td><td>De face</td><td>Verticale / axe de pivot</td><td>Toujours positif</td></tr>
 <tr><td>Chasse</td><td>De côté</td><td>Verticale / axe de pivot</td><td>+ ou −</td></tr>
-<tr><td>Angle inclus</td><td>—</td><td>Carrossage + pivot</td><td>Angle de diagnostic</td></tr>
+<tr><td>Angle inclus</td><td>De face</td><td>Pivot + 90° + carrossage</td><td>Angle de diagnostic</td></tr>
 <tr><td>Parallélisme</td><td>De dessus</td><td>Ouverture (−) / pincement (+)</td><td>Faux = usure RUGUEUSE</td></tr></table></div>
 <div class="box retenir"><b>★ Lire l’usure d’un pneu</b><div class="tw"><table><tr><th>Type d’usure</th><th>Angle en cause</th></tr>
 <tr><td><b>Usure LISSE</b></td><td><b>Carrossage</b> pas bon</td></tr>

@@ -178,7 +178,7 @@ REV.add({
   ],
   questions: [
     { l: 'unites', q: '500 µA exprimés en ampères, cela donne :', c: ['0,000 5 A', '0,5 A', '0,05 A', '0,005 A'], e: 'µ = micro = 10⁻⁶ : 500 × 10⁻⁶ = 0,000 5 A.', r: 'milli = 10⁻³, micro = 10⁻⁶.', w: 'Confondre µ et m donne un résultat 1 000 fois trop grand (0,5 A).' },
-    { l: 'unites', q: '24 minutes exprimées en heures, cela donne :', c: ['0,4 h', '0,24 h', '2,4 h', '0,04 h'], e: '24 / 60 = 0,4 h. On convertit les minutes en heures pour calculer des Ah.', r: 'Toujours convertir en unité de base avant de calculer.' },
+    { l: 'unites', q: 'Convertir 24 minutes en heures (nombre décimal, sachant que 1 h = 60 min) :', c: ['0,4 h', '0,24 h', '2,4 h', '0,04 h'], e: 'Une heure fait 60 minutes : on divise par 60. 24 ÷ 60 = <b>0,4 h</b>. Piège : 0,24 h n’est PAS 24 minutes (0,24 × 60 = 14,4 min). Exemple : 2 h 24 min = 2 + 0,4 = 2,4 h. On convertit en heures pour calculer des Ah ou des Wh.', r: 'Toujours convertir en unité de base avant de calculer.' },
     { l: 'unites', q: 'Tension aux bornes d’une résistance de 35 kΩ traversée par 0,003 A ?', c: ['105 V', '10,5 V', '0,105 V', '1 050 V'], e: 'U = R × I = 35 000 × 0,003 = 105 V. 35 kΩ = 35 000 Ω.', r: 'kilo = ×1 000.', src: 'Test final Q15 (officiel)' },
     { l: 'lois', q: 'Courant maximal admissible dans un conducteur de 3 mm² ?', c: ['15 A', '3 A', '30 A', '9 A'], e: 'Règle de cours : environ 5 A par mm² → 3 × 5 = 15 A.', r: '≈ 5 A par mm² de section.', src: 'Test final Q11 (officiel)' },
     { l: 'lois', q: 'Quel courant fournit une batterie de 96 Ah pendant 32 h ?', c: ['3 A', '0,33 A', '64 A', '3 072 A'], e: 'Q = I × t → I = Q / t = 96 / 32 = 3 A.', r: 'Q (Ah) = I (A) × t (h).', src: 'Test final Q12 (officiel)' },
