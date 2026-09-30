@@ -56,4 +56,14 @@
   REV.addExercises('ppld', { lessons: [], questions: build('reperes') });
   REV.addLessons('uv3', 'ppld', [lesson('ppld-reperes')]);
   REV.addExercises('uv3', { lessons: [], questions: build('ppld-reperes') });
+  /* Schéma DAD / stand-by (tiroir LS de la pompe) */
+  var DAD = { images: [{ src: I + 'dad-standby.jpg', cap: 'Régulation de la pompe : tiroir LS, ressort de stand-by (30 b), DAD (320 b), gicleurs et vérin de commande du plateau' }],
+    html: '<h3>Stand-by et DAD : lecture du schéma</h3><ul>' +
+      '<li>Le <b>tiroir LS</b> reçoit d’un côté la <b>pression de service (PS)</b>, de l’autre la <b>pression LS</b> + le <b>ressort de stand-by (30 b)</b>.</li>' +
+      '<li><b>Stand-by</b> : distributeurs au neutre, LS = 0 : dès que PS dépasse 30 b, le tiroir se déplace et envoie la pression au <b>vérin de commande</b> qui ramène le <b>plateau</b> vers la cylindrée mini : la pompe maintient <b>30 b</b> sans débiter.</li>' +
+      '<li><b>Travail</b> : la pression LS (reflet de la charge) s’ajoute au ressort : le tiroir équilibre <b>PS = LS + 30 b</b> et la cylindrée s’adapte au besoin.</li>' +
+      '<li><b>DAD (320 b)</b> : clapet taré sur la chambre du ressort. Récepteur en butée, LS monte jusqu’à 320 b : le DAD s’ouvre vers la bâche (≈ 1 L/min), la pression LS est plafonnée à 320 b, donc <b>PS maxi = 320 + 30 = 350 b</b> et le plateau revient en cylindrée mini (débit annulé, pression maintenue).</li>' +
+      '<li><b>Gicleur 0,5 L/min</b> sur l’arrivée LS : il limite le débit qui entre dans la chambre, pour que le DAD puisse décharger la pression. <b>Gicleur anti-pompage</b> (vers la bâche) : il amortit les mouvements du tiroir pour éviter les oscillations (pompage).</li></ul>' };
+  REV.extendLesson('ppld/generation', DAD);
+  REV.extendLesson('uv3/ppld', DAD);
 })();
