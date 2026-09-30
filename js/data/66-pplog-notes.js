@@ -4,7 +4,7 @@
    ne sont pas publiés. */
 (function () {
   var ECB = ['ECM (calculateur moteur EDC 17)', 'Interface du capteur NOx', 'DCU (module de dosage AdBlue)', 'VCM (passerelle)', 'Prise OBD II'];
-  var VDB = ['VCM (passerelle)', 'IC (tableau de bord)', 'IBC (calculateur de caisse)', 'EM (module d’expansion, PTO)', 'DTCO (chronotachygraphe)', 'SWI (commandes au volant)', 'ABS', 'Astronic 2 (boîte automatisée)', 'Intarder 3 (ralentisseur)'];
+  var VDB = ['VCM (passerelle)', 'IC (tableau de bord)', 'IBC (calculateur de caisse)', 'EM (module d’expansion, PTO)', 'DTCO (chronotachygraphe)', 'SWI (commandes au volant)', 'ABS', 'Astronic 2 (boîte automatisée)', 'Intarder 3 (ralentisseur)', 'MIRROR (rétroviseurs)'];
   function li(a) { return '<ul>' + a.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>'; }
 
   var L = [
