@@ -198,7 +198,7 @@ REV.systemes = {
       pannes: [] },
     { t: 'Commande électrique et arrêt d’urgence', img: [['ppld/schema-auto-maintien.jpg', 'Ton schéma'], ['ppld/elec-arret-urgence.jpg', 'Arrêt d’urgence']],
       role: 'Alimenter l’équipement selon le mode choisi (Radio, Manu, Stab).',
-      phases: [['PTO', 'Batterie → 40 A → interrupteur PTO → 5 A → relais R6 → 20 A → façade éclairée.'], ['Réarmement', 'Le bouton colle le relais d’auto-maintien.'], ['Sélecteur 3 voies', 'Radio : radiocommande · Manu : façade + by-pass RSQ 240 · Stab : coffrets + by-pass CETOP.'], ['Arrêt d’urgence', '3 coups de poing (coffre 6, coffre 1, radio) : auto-maintien désexcité, système isolé.']],
+      phases: [['PTO', 'Batterie → 40 A → interrupteur PTO → 5 A → relais R6 → 20 A → façade éclairée.'], ['Réarmement', 'Le bouton colle le relais d’auto-maintien.'], ['Sélecteur 3 voies', 'Radio : radiocommande · Manu : façade + électrovanne by-pass RSQ 240 · Stab : coffrets + électrovanne by-pass CETOP.'], ['Arrêt d’urgence', '3 coups de poing (coffre 6, coffre 1, radio) : auto-maintien désexcité, système isolé.']],
       pannes: [
         ['Voyant de réarmement resté allumé', 'Pas d’alimentation sur le sélecteur', 'Désenclencher le coup de poing et réarmer (coffre 6)', 'C'],
         ['Façade éteinte', 'Ligne PTO : fusibles, relais R6', 'Contrôler les fusibles du boîtier près des batteries', 'P'],
@@ -208,10 +208,10 @@ REV.systemes = {
       phases: [['Questions', 'Force ou vitesse ? Un ou tous les récepteurs ? Un sens ou deux ?'], ['Relevé', 'Pression en M, au manomètre HYDAC, dans chaque sens.'], ['Conclusion', 'Du plus simple au plus compliqué, du moins cher au plus cher.']],
       pannes: [
         ['Grue : télescopage bloqué en charge ; 5XX dans les 2 sens, 240 b en butée des 2 côtés', 'Distributeur et électrovanne bons', 'Contrôler les capteurs d’angle, longueur, pression : étalonnage sur la console Mentor', 'G'],
-        ['Aucun stab ne bouge, 0 b en M', 'Tous les récepteurs, 2 sens', 'Régulateur de débit 3 voies (shunter P et A) ou vanne by-pass (solénoïde au multimètre)', 'R'],
+        ['Aucun stab ne bouge, 0 b en M', 'Tous les récepteurs, 2 sens', 'Régulateur de débit 3 voies (shunter P et A) ou électrovanne by-pass (solénoïde au multimètre)', 'R'],
         ['Correcteur d’assiette ne descend pas ; 30 b en descente', 'Distributeur (solénoïde A) ou vanne manuelle grippée ouverte', 'Mode manuel pour confirmer ; solénoïde au multimètre ; échanger les vannes', 'R'],
         ['Treuil de halage déroule mais n’enroule pas ; 30 b en enroulement', 'Distributeur, solénoïde B', 'Mode manuel pour confirmer ; solénoïde B et ligne au multimètre', 'R'],
-        ['PPLD bloqué, stabs au sol, boîtiers non éclairés', 'Commande électrique des stabs', 'Forcer la vanne by-pass CETOP (capuchon + molette), shunter le solénoïde de décharge LS, manipulateurs de secours', 'P']] }
+        ['PPLD bloqué, stabs au sol, boîtiers non éclairés', 'Commande électrique des stabs', 'Forcer l’électrovanne by-pass CETOP (capuchon + molette), shunter le solénoïde de décharge LS, manipulateurs de secours', 'P']] }
   ],
 
   elec: [

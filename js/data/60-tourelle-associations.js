@@ -83,6 +83,6 @@
     images: [{ src: 'ppld/stabilisateurs.jpg', cap: 'Les stabilisateurs : régulateur de débit 40 l/min en amont, étage principal 20 b + étage pilote 200 b, gicleurs 0,5 et 0,7, solénoïde de décharge LS' }]
   });
   REV.extendLesson('ppld/diagnostic', {
-    images: [{ src: 'ppld/schema-electrique.jpg', cap: 'Schéma électrique : électrovannes (by-pass RSQ 240 et CETOP, push pull, treuils), capteurs de fin de course, radiocommande, solénoïde de décharge LS' }]
+    images: [{ src: 'ppld/schema-electrique.jpg', cap: 'Schéma électrique : électrovannes (électrovannes by-pass RSQ 240 et CETOP, push pull, treuils), capteurs de fin de course, radiocommande, solénoïde de décharge LS' }]
   });
 })();

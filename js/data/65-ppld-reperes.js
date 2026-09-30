@@ -20,7 +20,7 @@
     ['rmu', 13, 'Bloc de freinage', 'Maîtriser la rentrée du vérin correcteur d’assiette (qui abaisse le télescope) et le bloquer en cas de chute de pression.', true],
     ['treuil', 9, 'Électrovanne de fin de course', 'Couper l’alimentation du récepteur quand une limite est atteinte (5 spires mini sur le tambour, secteur de travail, abaques) ; elle est commandée par le CEC.', true],
     ['treuil', 10, 'Limiteur de pression à commande pilotée principal', null, true],
-    ['treuil', 11, 'Électro by-pass CETOP', 'Vanne de sécurité en amont du bloc CETOP : pilotée (sélecteur sur STAB), elle autorise l’alimentation des stabilisateurs ; non pilotée, aucune fonction du bloc ne peut être commandée.', true],
+    ['treuil', 11, 'Électrovanne by-pass RSQ 240', 'Électrovanne de sécurité en amont du distributeur RSQ 240 : pilotée par nous via le sélecteur 3 voies (MANU ou RADIO), elle autorise l’alimentation du RSQ 240 (grue, treuils, RMU) ; non pilotée, aucune fonction de ce bloc ne peut être commandée. (L’électrovanne by-pass CETOP, elle, est sur le circuit des stabilisateurs.)', true],
     ['cetop', 1, 'Balance d’entrée', null, false],
     ['cetop', 2, 'Tête pilote', null, false],
     ['cetop', 3, 'Bouchon', null, false],
@@ -49,7 +49,7 @@
     return { id: id, title: 'Rôle et désignation des repères (fiches)',
       images: [{ src: F.rmu.img, cap: 'Fiche RMU : repères 1 à 8 et 13' }, { src: F.treuil.img, cap: 'Fiche Treuils + push pull : repères 9 à 11' }, { src: F.cetop.img, cap: 'Section d’entrée (bloc CETOP) : repères 1 à 7' }],
       html: '<p>Les repères des fiches à connaître : <b>désignation</b> de chaque repère, et <b>rôle</b> des repères demandés à l’examen (RMU : 1, 2, 3, 4, 7, 8 et 13 ; treuils : 9 et 11 ; section d’entrée : 6 et 7).</p>' + table('rmu') + table('treuil') + table('cetop'),
-      retenir: ['RMU : 3 = réducteur 3 voies 25 b (pilotage des tiroirs) ; 4 = gicleur de déséquilibre ; 5 + 6 = balance d’entrée + tête pilote.', 'Gicleur LS → stand-by ; solénoïde de décharge LS → monte LS en travail, décharge au neutre.', 'By-pass CETOP piloté (STAB) = stabilisateurs alimentés.'] };
+      retenir: ['RMU : 3 = réducteur 3 voies 25 b (pilotage des tiroirs) ; 4 = gicleur de déséquilibre ; 5 + 6 = balance d’entrée + tête pilote.', 'Gicleur LS → stand-by ; solénoïde de décharge LS → monte LS en travail, décharge au neutre.', 'Électrovanne by-pass RSQ 240 (repère 11, MANU / RADIO) = grue, treuils, RMU ; électrovanne by-pass CETOP (STAB) = stabilisateurs.'] };
   }
 
   REV.addLessons('ppld', 'fonctions', [lesson('reperes')]);

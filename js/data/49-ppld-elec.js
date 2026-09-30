@@ -8,7 +8,7 @@
     images: [im('schema-auto-maintien', 'Schéma de principe : batterie, fusibles 40 A / 5 A / 20 A, interrupteur PTO cabine, relais R6, relais d’auto-maintien, réarmement, arrêt d’urgence, sélecteur 3 voies'),
       im('elec-auto-maintien', 'Façade (A) et sélecteur Auto/Manu/Stab (B) : alimentation par le relais d’auto-maintien'),
       im('elec-mode-radio', 'Mode Radio : le boîtier de radiocommande (C) est alimenté'),
-      im('elec-mode-manu', 'Mode Manu (secours) : la vanne by-pass RSQ 240 (C) est alimentée'),
+      im('elec-mode-manu', 'Mode Manu (secours) : l’électrovanne by-pass RSQ 240 (C) est alimentée'),
       im('elec-mode-stabs', 'Mode Stabilisateurs : seuls les coffrets de stabs gauches (C) et droits (D) sont alimentés'),
       im('elec-arret-urgence', 'Arrêt d’urgence : coups de poing (A), réarmement (B), sélecteur (C), relais d’auto-maintien (D)'),
       im('elec-schema-complet', 'Schéma électrique complet de l’équipement')],
@@ -21,14 +21,14 @@
 <h3>Les 3 modes du sélecteur</h3>
 <div class="tw"><table><tr><th>Mode</th><th>Ce qui est alimenté</th><th>Inopérant</th></tr>
 <tr><td><b>Radio</b> (mode normal)</td><td>Le boîtier de la radiocommande : mise en œuvre normale depuis la radiocommande</td><td>—</td></tr>
-<tr><td><b>Manu</b> (mode secours)</td><td>Les sélecteurs et boutons poussoirs de la façade (coffre n° 6) ; la <b>vanne by-pass RSQ 240</b> est alimentée dès la sélection du mode Manu</td><td>La radiocommande</td></tr>
+<tr><td><b>Manu</b> (mode secours)</td><td>Les sélecteurs et boutons poussoirs de la façade (coffre n° 6) ; l’<b>électrovanne by-pass RSQ 240</b> est alimentée dès la sélection du mode Manu</td><td>La radiocommande</td></tr>
 <tr><td><b>Stab</b></td><td>Seulement les coffrets des stabilisateurs droits et gauches : coffrets éclairés, joysticks et sélecteurs 3 positions alimentés ; électrovanne <b>by-pass CETOP</b></td><td>Le panneau et la radiocommande</td></tr></table></div>
 <h3>Arrêt d’urgence</h3>
 <ul><li><b>3 coups de poing</b> : coffre n° 6, coffre n° 1 et radiocommande.</li>
 <li>Coup de poing enclenché → le <b>relais d’auto-maintien est désexcité</b> → le sélecteur 3 positions n’est plus alimenté : le système est isolé. Le voyant du bouton <b>réarmement</b> s’éclaire.</li>
 <li>Pour réalimenter : <b>désenclencher</b> le coup de poing <b>et réarmer</b> depuis le panneau du coffre n° 6.</li>
 <li>Le voyant « réarmement » s’éclaire dès qu’une action sur le bouton réarmement est nécessaire. Voyant resté allumé = pas d’alimentation sur le sélecteur.</li></ul>`,
-    retenir: ['L’arrêt d’urgence coupe l’alimentation du relais d’auto-maintien, donc des électrovannes by-pass CETOP et RSQ 240.', 'C’est nous qui pilotons les by-pass CETOP et RSQ 240 via le sélecteur de circuit 3 voies.', 'Manu = secours : radiocommande inopérante, by-pass RSQ 240 alimentée.', 'Stab = seuls les coffrets de stabs : by-pass CETOP.', 'Façade éclairée = relais R6 correct.'],
+    retenir: ['L’arrêt d’urgence coupe l’alimentation du relais d’auto-maintien, donc des électrovannes by-pass CETOP et RSQ 240.', 'C’est nous qui pilotons les électrovannes by-pass CETOP et RSQ 240 via le sélecteur de circuit 3 voies.', 'Manu = secours : radiocommande inopérante, électrovanne by-pass RSQ 240 alimentée.', 'Stab = seuls les coffrets de stabs : électrovanne by-pass CETOP.', 'Façade éclairée = relais R6 correct.'],
     memo: { cle: 'RÉARMEMENT → AUTO-MAINTIEN → SÉLECTEUR 3 VOIES', flow: ['PTO (fusibles 40 A, 5 A)', 'Relais R6 (20 A) → façade', 'Réarmement → auto-maintien', 'AU (NC) → sélecteur Stab / Manu / Radio'], points: ['3 coups de poing : coffre 6, coffre 1, radio', 'Voyant réarmement allumé = sélecteur non alimenté'], astuce: 'Après un coup de poing : désenclencher PUIS réarmer.' }
   }]);
 
@@ -60,10 +60,10 @@
   var ex = function (l, q) { q.l = l; return q; };
   REV.addExercises('ppld', { lessons: [], questions: [
     ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'Qu’est-ce que coupe l’arrêt d’urgence du PPLD ?', c: ['L’alimentation du relais d’auto-maintien, donc de l’électrovanne by-pass CETOP et de l’électrovanne by-pass RSQ 240', 'Uniquement l’électrovanne by-pass CETOP', 'L’alimentation de la pompe', 'Le moteur du porteur'], e: 'Le relais d’auto-maintien n’est plus alimenté : le sélecteur 3 voies, et donc les électrovannes by-pass CETOP et RSQ 240, ne sont plus alimentés. Plus aucun mouvement hydraulique.' }),
-    ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'Qui pilote les électrovannes by-pass CETOP et RSQ 240 ?', c: ['C’est nous qui les pilotons, via le sélecteur de circuit 3 voies (Stab / Manu / Radio)', 'Le CEC', 'La pompe'], e: 'Stab → by-pass CETOP ; Manu ou Radio → by-pass RSQ 240.' }),
+    ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'Qui pilote les électrovannes by-pass CETOP et RSQ 240 ?', c: ['C’est nous qui les pilotons, via le sélecteur de circuit 3 voies (Stab / Manu / Radio)', 'Le CEC', 'La pompe'], e: 'Stab → électrovanne by-pass CETOP ; Manu ou Radio → électrovanne by-pass RSQ 240.' }),
     ex('electrique', { img: I + 'elec-arret-urgence.jpg', q: 'Combien de coups de poing d’arrêt d’urgence, et où ?', c: ['3 : coffre n° 6, coffre n° 1 et radiocommande', '1 : sur la façade', '2 : en cabine et sur la radiocommande'], e: 'Un coup de poing enclenché désexcite le relais d’auto-maintien.' }),
     ex('electrique', { img: I + 'elec-arret-urgence.jpg', q: 'Après un arrêt d’urgence, comment réalimenter la dépanneuse ?', c: ['Désenclencher le coup de poing et réarmer depuis le panneau du coffre n° 6', 'Couper et remettre le contact', 'Changer de mode au sélecteur'], e: 'Le voyant réarmement s’éclaire tant qu’une action sur le bouton est nécessaire.' }),
-    ex('electrique', { img: I + 'elec-mode-manu.jpg', q: 'Mode Manu : que se passe-t-il ?', c: ['La radiocommande est inopérante, on commande depuis la façade du coffre n° 6 et la vanne by-pass RSQ 240 est alimentée', 'Seuls les coffrets des stabilisateurs sont alimentés', 'La radiocommande commande la grue'], e: 'C’est le mode de secours.' }),
+    ex('electrique', { img: I + 'elec-mode-manu.jpg', q: 'Mode Manu : que se passe-t-il ?', c: ['La radiocommande est inopérante, on commande depuis la façade du coffre n° 6 et l’électrovanne by-pass RSQ 240 est alimentée', 'Seuls les coffrets des stabilisateurs sont alimentés', 'La radiocommande commande la grue'], e: 'C’est le mode de secours.' }),
     ex('electrique', { img: I + 'elec-mode-stabs.jpg', q: 'Mode Stabilisateurs : que se passe-t-il ?', c: ['Seuls les coffrets des stabs droits et gauches sont alimentés ; panneau et radiocommande inopérants', 'Tout l’équipement est alimenté', 'Seule la radiocommande fonctionne'], e: 'Coffrets éclairés, joysticks et sélecteurs 3 positions alimentés.' }),
     ex('electrique', { img: I + 'elec-mode-radio.jpg', q: 'Quel est le mode de fonctionnement normal de la dépanneuse ?', c: ['Le mode Radio', 'Le mode Manu', 'Le mode Stab'], e: 'Le mode Manu est le mode de secours.' }),
     ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'La façade de commande est éclairée. Que peut-on en déduire ?', c: ['Le relais R6 est correct : la ligne électrique arrive à la façade', 'Le relais d’auto-maintien est collé', 'La pompe débite'], e: 'Batterie → 40 A → PTO → 5 A → R6 → 20 A → façade.' }),
