@@ -1,0 +1,21 @@
+.mdf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px 18px; }
+.mdf-f { display: flex; flex-direction: column; gap: 4px; }
+.mdf-f > span:first-child { font-weight: 600; font-size: .92rem; }
+.mdf-f small { color: var(--muted, #6b7280); font-size: .8rem; }
+.mdf-in { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.mdf-in input, .mdf-f select, .mdf-tab input, .mdf-tab select { padding: 8px 10px; border: 1px solid var(--line, #d1d5db); border-radius: 8px; background: var(--card, #fff); color: inherit; font: inherit; max-width: 100%; }
+.mdf-in input { width: 9em; }
+.mdf-in em { font-style: normal; color: var(--muted, #6b7280); }
+.mdf-check { display: flex; align-items: center; gap: 8px; font-size: .92rem; }
+.mdf-tab td { vertical-align: middle; }
+.mdf-step h3 { display: flex; align-items: center; gap: 10px; margin-top: 0; }
+.mdf-step ul { margin: 6px 0; padding-left: 20px; }
+.mdf-step li { margin: 3px 0; }
+.mdf-l { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--primary, #1e3a8a); color: #fff; font-weight: 800; }
+.mdf-svg svg { display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line, #d1d5db); }
+.mdf-ko td { background: rgba(220, 38, 38, .12); }
+@media print { .topbar, .diag-top, .row-actions, .card.pad:not(.mdf-step):not(.mdf-svg), h2.h2:not(:last-of-type) { display: none !important; } }
+.mdf-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.mdf-scroll svg { min-width: 760px; }
+.mdf-tab input[data-p$=".nom"] { width: 8em; }
+.mdf-tab th, .mdf-tab td { white-space: nowrap; }
