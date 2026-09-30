@@ -76,7 +76,7 @@
       return '<tr><td><input type="checkbox" data-a="ecu-on" data-i="' + i + '"' + (e.on ? ' checked' : '') + '></td><td>' + esc(e.nom) + '</td><td>' + esc(e.bus) + '</td><td class="num-c"><input type="checkbox" data-a="ecu-term" data-i="' + i + '"' + (e.term ? ' checked' : '') + ' title="Résistance de terminaison 120 Ω"></td></tr>';
     }).join('');
     var cons = Object.keys(v.cons || {}).map(function (k) { var M = D.MEASURES[k]; return M ? '<tr><td>' + esc(M.label) + '</td><td>' + range({ min: v.cons[k].min, max: v.cons[k].max == null ? Infinity : v.cons[k].max }, M.unit) + '</td><td><button class="btn ghost small" data-a="cons-del" data-k="' + k + '">Retirer</button></td></tr>' : ''; }).join('');
-    var hist = (v.hist || []).slice().reverse().map(function (h, j) { var i = v.hist.length - 1 - j; return '<a class="card review-cta" href="#/hist/' + v.id + '/' + i + '"><span class="big">' + (h.v === 'ok' ? '✅' : h.v === 'bad' ? '❌' : '⚠️') + '</span><span><b>' + esc(h.titre) + '</b><br><span class="muted small">' + esc(new Date(h.date).toLocaleString('fr-FR')) + ' · ' + esc(D.MODULES[h.module] ? D.MODULES[h.module].titre : h.module) + '</span></span><span class="chev">›</span></a>'; }).join('');
+    var hist = (v.hist || []).slice().reverse().map(function (h, j) { var i = v.hist.length - 1 - j; return '<a class="card review-cta" href="#/hist/' + v.id + '/' + i + '"><span class="big">' + (h.v === 'ok' ? '✅' : h.v === 'bad' ? '❌' : h.v === 'info' ? 'ℹ️' : '⚠️') + '</span><span><b>' + esc(h.titre) + '</b><br><span class="muted small">' + esc(new Date(h.date).toLocaleString('fr-FR')) + ' · ' + esc(D.MODULES[h.module] ? D.MODULES[h.module].titre : h.module) + '</span></span><span class="chev">›</span></a>'; }).join('');
     return crumbs([['Diagnostic', '#/'], [vname(v)]]) + '<h1 class="h1">🚗 ' + esc(vname(v)) + '</h1>' +
       '<div class="card pad"><p><b>' + esc([v.marque, v.modele].filter(Boolean).join(' ')) + '</b> ' + esc([v.moteur, v.annee, v.km ? v.km + ' km' : ''].filter(Boolean).join(' · ')) + '</p>' +
       (v.moteurs ? '<p class="small">Motorisations fréquentes sur ce modèle (à vérifier) : ' + esc(v.moteurs) + '</p>' : '') +
@@ -165,7 +165,9 @@
       (run.trace.length ? '<button class="btn ghost small" data-a="back">⬅️ Étape précédente</button>' : '') + '</div>';
     var body = '<div class="q-card"><h1 class="q-text">' + esc(s.title) + '</h1>';
     if (s.type === 'end') {
-      body += '<div class="box ' + (s.v === 'ok' ? 'retenir' : 'piege') + '">' + s.html + '</div>' +
+      body += '<div class="box ' + (s.v === 'ok' ? 'retenir' : s.v === 'bad' ? 'piege' : 'explic') + '">' + s.html + '</div>' +
+        (s.dep ? '<div class="box explic"><b>🛠️ Dépannage : ce qu’on peut faire pour repartir</b>' + s.dep + '</div>' : '') +
+        (s.noApres ? '' : '<details class="diag-why"><summary>✅ Après le diagnostic : réparation et remise en service</summary>' + (m.apres || '') + (D.APRES || '') + '</details>') +
         '<h2 class="h2">Récapitulatif</h2>' + traceHtml(run.trace) +
         '<div class="row-actions">' + (v ? '<button class="btn primary" data-a="save-hist">💾 Enregistrer dans l’historique de ' + esc(vname(v)) + '</button>' : '') +
         '<button class="btn" data-a="restart">↻ Nouveau diagnostic</button><a class="btn ghost" href="#/">Accueil diagnostic</a></div></div>';
