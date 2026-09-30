@@ -39,12 +39,30 @@
   function noCons(mid) { var v = run && run.vid ? veh(run.vid) : null; return (run && run.nocons[mid]) || (v && v.nocons && v.nocons[mid]); }
 
   /* ---------- Vues ---------- */
+  function elPrefs() { try { return JSON.parse(sessionStorage.getItem('diag-el')) || {}; } catch (e) { return {}; } }
+  function viewEl() {
+    var pr = elPrefs(), groups = {};
+    (D.ELEMENTS || []).forEach(function (e) { (groups[e[0]] = groups[e[0]] || []).push(e); });
+    var vs = store.vehicles.map(function (v) { return '<option value="' + v.id + '"' + (pr.vid === v.id ? ' selected' : '') + '>' + esc(vname(v)) + '</option>'; }).join('');
+    return crumbs([['Diagnostic', '#/'], ['Contrôle direct']]) + '<h1 class="h1">🎯 Contrôle direct d’un élément</h1>' +
+      '<div class="card pad"><p>Va directement au contrôle d’un <b>capteur</b>, d’un <b>actionneur</b> ou d’un <b>organe</b>, sans passer par les symptômes. Tu arrives sur l’étape de mesure, puis le site continue le diagnostic à partir de là.</p>' +
+      '<div class="row-actions"><select data-a="el-opt" name="el-vid"><option value="">Sans véhicule</option>' + vs + '</select><select data-a="el-opt" name="el-tension"><option value="12">Réseau 12 V (VL)</option><option value="24"' + (pr.t === '24' ? ' selected' : '') + '>Réseau 24 V (PL)</option></select></div>' +
+      '<input class="diag-search" type="search" placeholder="🔎 Rechercher : injecteur, turbo, capteur PMH, EGR…" data-a="filter"></div>' +
+      Object.keys(groups).map(function (g) {
+        return '<div class="diag-group"><h2 class="h2">' + esc(g) + '</h2>' + groups[g].map(function (e) {
+          var m = D.MODULES[e[3]];
+          return '<a class="card review-cta diag-brand" data-s="' + esc((e[2] + ' ' + (e[5] || '') + ' ' + g).toLowerCase()) + '" href="#/el/' + e[1] + '"><span><b>' + esc(e[2]) + '</b><br><span class="small muted">' + esc(e[5] || '') + (m ? ' · ' + m.icon + ' ' + esc(m.titre) : '') + '</span></span><span class="chev">›</span></a>';
+        }).join('') + '</div>';
+      }).join('');
+  }
+
   function viewHome() {
     var mods = Object.keys(D.MODULES).map(function (k) { var m = D.MODULES[k]; return '<a class="card review-cta" href="#/mod/' + k + '"><span class="big">' + m.icon + '</span><span><b>' + esc(m.titre) + '</b><br>' + esc(m.sous) + '</span><span class="chev">›</span></a>'; }).join('');
     var soon = ''; var _old = ['⛽ Moteur diesel common rail', '🌫️ Antipollution (EGR, FAP, SCR)', '📐 DSFT : géométrie et usure des pneus', '🛑 Freinage et banc de freinage'].map(function (t) { return '<div class="card pad diag-soon">' + t + ' <span class="muted small">— bientôt</span></div>'; }).join('');
     var vs = store.vehicles.length ? store.vehicles.map(function (v) { return '<a class="card review-cta" href="#/veh/' + v.id + '"><span class="big">🚗</span><span><b>' + esc(vname(v)) + '</b><br><span class="muted small">' + esc([v.moteur, v.annee, v.km ? v.km + ' km' : ''].filter(Boolean).join(' · ')) + ' · ' + (v.hist || []).length + ' diagnostic(s)</span></span><span class="chev">›</span></a>'; }).join('') : '<p class="muted">Aucun véhicule pour l’instant.</p>';
     return '<h1 class="h1">🔧 Coin diagnostic</h1>' +
       '<div class="card pad"><p>Diagnostic guidé pas à pas : à chaque étape, <b>ce qu’on contrôle et pourquoi</b>, <b>comment mesurer</b>, puis tu <b>entres tes mesures</b> et le site te donne le verdict et l’étape suivante.</p><p class="small muted">Les valeurs de référence sont des valeurs types (cours, documentation constructeur publique) : si tu as la <b>valeur constructeur</b> de ton véhicule, saisis-la, elle prime. Tout reste dans ton navigateur.</p></div>' +
+      '<a class="card review-cta" href="#/el"><span class="big">🎯</span><span><b>Contrôle direct d’un élément</b><br>Aller directement au contrôle d’un capteur, d’un actionneur ou d’un organe (injecteur, turbo, EGR, capteur PMH…)</span><span class="chev">›</span></a>' +
       '<a class="card review-cta" href="#/marques"><span class="big">🏷️</span><span><b>Marques et architectures</b><br>' + D.MARQUES.length + ' marques : groupe, boîtier passerelle, réseaux, passerelle sécurisée, pièces partagées</span><span class="chev">›</span></a>' +
       '<h2 class="h2">Modules</h2>' + mods + soon +
       '<h2 class="h2">Mes véhicules</h2>' + vs +
@@ -277,6 +295,7 @@
   main.addEventListener('change', function (ev) {
     var t = ev.target, a = t.getAttribute('data-a'), v = veh(currentVid());
     if (a === 'import') return importFile(t.files[0]);
+    if (a === 'el-opt') { var pr = elPrefs(); if (t.name === 'el-vid') { pr.vid = t.value; var vv = veh(t.value); if (vv && vv.archi === 'pl_j1939') { pr.t = '24'; var ts = main.querySelector('[name=el-tension]'); if (ts) ts.value = '24'; } } else pr.t = t.value; try { sessionStorage.setItem('diag-el', JSON.stringify(pr)); } catch (e) { /* ignore */ } return; }
     if (!v) return;
     var i = +t.getAttribute('data-i');
     if (a === 'net-on') v.reseaux[i].on = t.checked;
@@ -342,6 +361,8 @@
     else if (p[0] === 'marque') html = viewMarque(p[1]);
     else if (p[0] === 'veh') html = viewVeh(p[1]);
     else if (p[0] === 'mod') html = viewMod(p[1]);
+    else if (p[0] === 'el' && p[1]) { var el = (D.ELEMENTS || []).filter(function (e) { return e[1] === p[1]; })[0], pr = elPrefs(); if (el) { startRun(el[3], veh(pr.vid) ? pr.vid : '', pr.t === '24'); run.cur = el[4]; saveRun(); } history.replaceState(null, '', '#/run'); html = viewRun(); }
+    else if (p[0] === 'el') html = viewEl();
     else if (p[0] === 'run' && p[1]) { if (!run || run.module !== p[1] || run.vid !== (p[2] || '') || (p[3] === '24' && !run.v24)) startRun(p[1], p[2], p[3] === '24'); history.replaceState(null, '', '#/run'); html = viewRun(); }
     else if (p[0] === 'run') html = viewRun();
     else if (p[0] === 'hist') html = viewHist(p[1], +p[2]);
