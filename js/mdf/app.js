@@ -10,6 +10,16 @@
   var st; try { st = JSON.parse(localStorage.getItem(KEY)) || DEF(); } catch (e) { st = DEF(); }
   var out = null; if (!st.stock.elingues) st.stock.elingues = [];
   function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { /* ignore */ } }
+  /* Historique : chaque modification validée peut être annulée / rétablie (conservé même après rechargement de la page) */
+  var H; try { H = JSON.parse(localStorage.getItem(KEY + '-hist')) || { past: [], future: [] }; } catch (e) { H = { past: [], future: [] }; }
+  var last = JSON.stringify(st);
+  function saveH() { try { localStorage.setItem(KEY + '-hist', JSON.stringify(H)); } catch (e) { /* ignore */ } }
+  function commit() { var now = JSON.stringify(st); if (now === last) return; H.past.push(last); if (H.past.length > 80) H.past.shift(); H.future = []; last = now; save(); saveH(); bar(); }
+  function jump(from, to) { if (!H[from].length) return; H[to].push(JSON.stringify(st)); st = JSON.parse(H[from].pop()); if (!st.stock.elingues) st.stock.elingues = []; last = JSON.stringify(st); save(); saveH(); var y = window.scrollY, had = !!out; out = had ? MDF.calculer(clean(st)) : null; render(); window.scrollTo(0, y); toast(from === 'past' ? '↶ Modification annulée' : '↷ Modification rétablie'); }
+  function saves() { try { return JSON.parse(localStorage.getItem(KEY + '-saves')) || []; } catch (e) { return []; } }
+  function setSaves(a) { try { localStorage.setItem(KEY + '-saves', JSON.stringify(a)); } catch (e) { /* ignore */ } }
+  function toast(t) { var el = document.getElementById('toast'); if (!el) return; el.textContent = t; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(function () { el.classList.remove('show'); }, 1800); }
+  function bar() { var b = document.getElementById('mdf-bar'); if (!b) return; b.innerHTML = '<button type="button" class="btn small" data-a="undo"' + (H.past.length ? '' : ' disabled') + '>↶ Annuler' + (H.past.length ? ' (' + H.past.length + ')' : '') + '</button><button type="button" class="btn small" data-a="redo"' + (H.future.length ? '' : ' disabled') + '>↷ Rétablir' + (H.future.length ? ' (' + H.future.length + ')' : '') + '</button><span class="small muted">💾 Enregistré automatiquement</span>'; }
 
   function opt(v, list, cur) { return list.map(function (o) { return '<option value="' + o[0] + '"' + (String(cur) === String(o[0]) ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join(''); }
   var SOLS = Object.keys(MDF.SOLS).map(function (k) { var s = MDF.SOLS[k]; return [k, s.nom + (k === 'enlise' ? '' : ' (fa ' + s.fa + ' · fr ' + s.fr + ')')]; });
@@ -102,7 +112,12 @@
       '<div class="card pad mdf-step"><h3>🦺 Avant de tirer</h3><ul><li>Faire évacuer le polygone défini par les câbles, les points fixes, les tracteurs et le fardeau.</li><li>Mettre le dispositif en légère tension et contrôler chaque agrès avant l’effort.</li><li>Ne pas franchir les câbles en tension ni stationner dans leur prolongement ; se tenir éloigné des points fixes.</li><li>Ne pas frapper à plus de trois sur le même piquet d’un point fixe.</li><li>Gants, lunettes, pas de bagues ni de montres ; ne pas guider un câble en le laissant glisser dans la main.</li><li>Commandements convenus avant la manœuvre (voix, sifflet, geste) ; le chef de manœuvre voit et est vu.</li></ul><p class="small muted">Calcul fait avec la méthode et les coefficients du cours AGB 08 ind. e. La décision finale appartient au chef de manœuvre, après reconnaissance du terrain et contrôle du matériel (état, CMU marquée).</p></div>';
   }
 
-  function render() { main.innerHTML = form(); results(); }
+  function savesHtml() {
+    var a = saves();
+    return '<div class="card pad"><h3>📁 Mes manœuvres enregistrées</h3><div class="row-actions"><input id="mdf-nom" placeholder="Nom (ex. VAB dans le fossé)" style="flex:1;min-width:10em;padding:8px 10px;border:1px solid var(--line,#d1d5db);border-radius:8px;background:var(--card,#fff);color:inherit"><button type="button" class="btn small" data-a="sv">💾 Enregistrer sous ce nom</button></div>' +
+      (a.length ? '<ul class="mdf-saves">' + a.map(function (x, i) { return '<li><span><b>' + esc(x.nom) + '</b> <span class="small muted">' + esc(new Date(x.date).toLocaleString('fr-FR')) + '</span></span><span><button type="button" class="btn small" data-a="sv-load" data-i="' + i + '">Ouvrir</button> <button type="button" class="btn small ghost" data-a="sv-del" data-i="' + i + '">✕</button></span></li>'; }).join('') + '</ul>' : '<p class="small muted">Aucune manœuvre enregistrée. Tes saisies en cours sont de toute façon gardées automatiquement.</p>') + '</div>';
+  }
+  function render() { main.innerHTML = '<div id="mdf-bar" class="mdf-bar"></div>' + form().replace('<h2 class="h2">S — Le fardeau</h2>', savesHtml() + '<h2 class="h2">S — Le fardeau</h2>'); bar(); results(); }
   function num(x) { return String(x).replace(',', '.'); }
 
   main.addEventListener('input', function (e) {
@@ -111,16 +126,21 @@
   });
   main.addEventListener('change', function (e) {
     var p = e.target.getAttribute('data-p'); if (!p) return;
-    set(p, e.target.type === 'checkbox' ? e.target.checked : num(e.target.value)); save();
+    set(p, e.target.type === 'checkbox' ? e.target.checked : num(e.target.value)); save(); commit();
     if (e.target.tagName === 'SELECT' || e.target.type === 'checkbox' || /stock\.pf/.test(p)) { var y = window.scrollY; render(); window.scrollTo(0, y); }
   });
   main.addEventListener('click', function (e) {
     var b = e.target.closest('[data-a]'); if (!b) return; var a = b.getAttribute('data-a'), k = b.getAttribute('data-k'), y = window.scrollY;
-    if (a === 'add') { st.stock[k].push(k === 'pf' ? { type: 'arbre', essence: 'chene', d: '' } : { nom: '', cmu: '', n: 1, lc: '' }); save(); render(); window.scrollTo(0, y); }
-    if (a === 'del') { st.stock[k].splice(+b.getAttribute('data-i'), 1); save(); render(); window.scrollTo(0, y); }
-    if (a === 'estim') { var v = +num(st.fardeau.vol), d = +num(st.fardeau.dens); if (v > 0) { st.fardeau.poids = String(Math.round(v * d * 1000)); save(); render(); window.scrollTo(0, y); } }
-    if (a === 'reset' && confirm('Effacer toutes les données saisies ?')) { st = DEF(); out = null; save(); render(); }
-    if (a === 'ex') { st = example(); out = null; save(); render(); }
+    if (a === 'add') { st.stock[k].push(k === 'pf' ? { type: 'arbre', essence: 'chene', d: '' } : { nom: '', cmu: '', n: 1, lc: '' }); save(); commit(); render(); window.scrollTo(0, y); }
+    if (a === 'del') { st.stock[k].splice(+b.getAttribute('data-i'), 1); save(); commit(); render(); window.scrollTo(0, y); }
+    if (a === 'estim') { var v = +num(st.fardeau.vol), d = +num(st.fardeau.dens); if (v > 0) { st.fardeau.poids = String(Math.round(v * d * 1000)); save(); commit(); render(); window.scrollTo(0, y); } }
+    if (a === 'reset' && confirm('Effacer toutes les données saisies ? (tu pourras revenir en arrière avec « Annuler »)')) { st = DEF(); out = null; save(); commit(); render(); }
+    if (a === 'undo') jump('past', 'future');
+    if (a === 'redo') jump('future', 'past');
+    if (a === 'sv') { var nm = (document.getElementById('mdf-nom').value || '').trim() || ('Manœuvre du ' + new Date().toLocaleDateString('fr-FR')); var l = saves(); l.unshift({ nom: nm, date: Date.now(), data: clean(st) }); setSaves(l.slice(0, 30)); render(); window.scrollTo(0, y); toast('💾 « ' + nm + ' » enregistrée'); }
+    if (a === 'sv-load') { var it = saves()[+b.getAttribute('data-i')]; if (it) { st = clean(it.data); if (!st.stock.elingues) st.stock.elingues = []; out = null; save(); commit(); render(); window.scrollTo(0, y); toast('📂 « ' + it.nom + ' » ouverte (Annuler pour revenir)'); } }
+    if (a === 'sv-del') { var l2 = saves(), i2 = +b.getAttribute('data-i'); if (l2[i2] && confirm('Supprimer « ' + l2[i2].nom + ' » ?')) { l2.splice(i2, 1); setSaves(l2); render(); window.scrollTo(0, y); } }
+    if (a === 'ex') { st = example(); out = null; save(); commit(); render(); }
     if (a === 'calc') { out = MDF.calculer(clean(st)); results(); var o = document.getElementById('mdf-out'); if (o) o.scrollIntoView({ behavior: 'smooth' }); }
     if (a === 'dl') { var svg = document.querySelector('.mdf-svg svg'); if (svg) { var blob = new Blob([svg.outerHTML], { type: 'image/svg+xml' }), u = URL.createObjectURL(blob), l = document.createElement('a'); l.href = u; l.download = 'mouflage.svg'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 1000); } }
     if (a === 'print') window.print();
@@ -133,5 +153,10 @@
     d.stock = { pf: [{ type: 'arbre', essence: 'chene', d: '50' }, { type: 'holmes3', solDur: false }, { type: 'arbre', essence: 'sapin', d: '40' }], cables: [{ nom: 'Câble Ø 16', lc: '40', cmu: '5000', n: 2 }], poulies: [{ nom: '', cmu: '8000', n: 4 }, { nom: '', cmu: '12000', n: 2 }], manilles: [{ nom: '', cmu: '8500', n: 6 }, { nom: '', cmu: '12000', n: 3 }], elingues: [{ nom: 'Élingue ronde', cmu: '10000', n: 4 }] };
     return d;
   }
+  document.addEventListener('keydown', function (e) {
+    if (!(e.ctrlKey || e.metaKey) || /INPUT|SELECT|TEXTAREA/.test((document.activeElement || {}).tagName || '')) return;
+    var k = e.key.toLowerCase();
+    if (k === 'z' && !e.shiftKey) { e.preventDefault(); jump('past', 'future'); } else if (k === 'y' || (k === 'z' && e.shiftKey)) { e.preventDefault(); jump('future', 'past'); }
+  });
   render();
 })();
