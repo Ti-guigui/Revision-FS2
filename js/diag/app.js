@@ -39,6 +39,7 @@
     var vs = store.vehicles.length ? store.vehicles.map(function (v) { return '<a class="card review-cta" href="#/veh/' + v.id + '"><span class="big">🚗</span><span><b>' + esc(vname(v)) + '</b><br><span class="muted small">' + esc([v.moteur, v.annee, v.km ? v.km + ' km' : ''].filter(Boolean).join(' · ')) + ' · ' + (v.hist || []).length + ' diagnostic(s)</span></span><span class="chev">›</span></a>'; }).join('') : '<p class="muted">Aucun véhicule pour l’instant.</p>';
     return '<h1 class="h1">🔧 Coin diagnostic</h1>' +
       '<div class="card pad"><p>Diagnostic guidé pas à pas : à chaque étape, <b>ce qu’on contrôle et pourquoi</b>, <b>comment mesurer</b>, puis tu <b>entres tes mesures</b> et le site te donne le verdict et l’étape suivante.</p><p class="small muted">Les valeurs de référence sont des valeurs types (cours, documentation constructeur publique) : si tu as la <b>valeur constructeur</b> de ton véhicule, saisis-la, elle prime. Tout reste dans ton navigateur.</p></div>' +
+      '<a class="card review-cta" href="#/marques"><span class="big">🏷️</span><span><b>Marques et architectures</b><br>' + D.MARQUES.length + ' marques : groupe, boîtier passerelle, réseaux, passerelle sécurisée, pièces partagées</span><span class="chev">›</span></a>' +
       '<h2 class="h2">Modules</h2>' + mods + soon +
       '<h2 class="h2">Mes véhicules</h2>' + vs +
       '<div class="row-actions"><a class="btn primary" href="#/veh/new">➕ Ajouter un véhicule</a><button class="btn" data-a="export">⬇️ Exporter</button><label class="btn">⬆️ Importer<input type="file" accept=".json,application/json" data-a="import" hidden></label></div>';
@@ -46,10 +47,13 @@
 
   function viewNew() {
     var opts = D.CATALOGUE.map(function (c) { return '<option value="' + c.id + '">' + esc(c.marque + ' ' + c.modele + ' (' + c.annees + ')') + '</option>'; }).join('');
-    var arch = Object.keys(D.ARCHI).map(function (k) { return '<option value="' + k + '">' + esc(D.ARCHI[k].nom) + '</option>'; }).join('');
+    var pre = marque(location.hash.split('?m=')[1]);
+    var mq = D.MARQUES.map(function (m) { return '<option value="' + m.id + '"' + (pre && pre.id === m.id ? ' selected' : '') + '>' + esc(m.nom) + '</option>'; }).join('');
+    var arch = '<option value="">Automatique (selon la marque)</option>' + Object.keys(D.ARCHI).map(function (k) { return '<option value="' + k + '">' + esc(D.ARCHI[k].nom) + '</option>'; }).join('');
     return crumbs([['Diagnostic', '#/'], ['Nouveau véhicule']]) + '<h1 class="h1">➕ Nouveau véhicule</h1>' +
       '<form class="card pad diag-form" data-a="create">' +
       '<label>Modèle (liste des véhicules les plus courants en France)<select name="cat"><option value="">— Autre véhicule (saisie libre) —</option>' + opts + '</select></label>' +
+      '<label>Marque (si autre véhicule)<select name="mq"><option value="">—</option>' + mq + '</select></label>' +
       '<label>Architecture multiplexée (si autre véhicule)<select name="archi">' + arch + '</select></label>' +
       '<label>Nom de la fiche (ex. « Clio de Paul »)<input name="nom" maxlength="60"></label>' +
       '<div class="diag-2"><label>Marque<input name="marque" maxlength="30"></label><label>Modèle<input name="modele" maxlength="40"></label></div>' +
@@ -74,6 +78,7 @@
       '<div class="card pad"><p><b>' + esc([v.marque, v.modele].filter(Boolean).join(' ')) + '</b> ' + esc([v.moteur, v.annee, v.km ? v.km + ' km' : ''].filter(Boolean).join(' · ')) + '</p>' +
       (v.moteurs ? '<p class="small">Motorisations fréquentes sur ce modèle (à vérifier) : ' + esc(v.moteurs) + '</p>' : '') +
       '<div class="row-actions">' + Object.keys(D.MODULES).map(function (k) { return '<a class="btn primary" href="#/run/' + k + '/' + v.id + '">' + D.MODULES[k].icon + ' Diagnostic ' + esc(D.MODULES[k].titre.toLowerCase()) + '</a>'; }).join('') + '</div></div>' +
+      brandBox(marqueDe(v.marque)) +
       '<h2 class="h2">🔌 Réseau multiplexé</h2><div class="card pad"><p><b>' + esc(A.nom || 'Architecture personnalisée') + '</b>' + (A.passerelle ? ' · passerelle : ' + esc(A.passerelle) : '') + '</p>' + (A.note ? '<p class="small">' + esc(A.note) + '</p>' : '') +
       '<p class="small muted">Pré-rempli d’après l’architecture habituelle du modèle : <b>à vérifier</b> sur le schéma du véhicule. Décoche ce qui n’existe pas, ajoute ce qui manque.</p>' +
       '<h3>Réseaux</h3><div class="tw"><table><tr><th></th><th>Réseau</th><th>Type</th></tr>' + nets + '</table></div>' +
@@ -83,6 +88,43 @@
       '<h2 class="h2">📏 Valeurs constructeur enregistrées</h2><div class="card pad">' + (cons ? '<div class="tw"><table><tr><th>Mesure</th><th>Valeur constructeur</th><th></th></tr>' + cons + '</table></div>' : '<p class="muted">Aucune pour l’instant : pendant un diagnostic, clique sur « J’ai la valeur constructeur » et coche « Enregistrer dans la fiche ».</p>') + '</div>' +
       '<h2 class="h2">🗂️ Historique des diagnostics</h2>' + (hist || '<p class="muted">Aucun diagnostic enregistré.</p>') +
       '<div class="row-actions"><button class="btn danger" data-a="veh-del" data-id="' + v.id + '">Supprimer ce véhicule</button></div>';
+  }
+
+  function marque(id) { return D.MARQUES.find(function (m) { return m.id === id; }); }
+  function marqueDe(nom) { var n = String(nom || '').toLowerCase(); if (!n) return null; return D.MARQUES.find(function (m) { return m.nom.toLowerCase().split(/[\s/()-]+/).some(function (w) { return w.length > 2 && n.indexOf(w) >= 0; }); }); }
+  function brandBox(m) {
+    if (!m) return '';
+    return '<h2 class="h2">🏷️ ' + esc(m.nom) + ' : à savoir pour le diagnostic</h2><div class="card pad">' +
+      '<p><b>Boîtier passerelle / servitude :</b> ' + esc(m.boitier) + '</p>' +
+      '<p><b>🔒 Passerelle sécurisée :</b> ' + esc(m.sgw) + '</p>' +
+      '<p><b>🔁 Pièces et moteurs partagés :</b> ' + esc(m.partages) + '</p>' +
+      '<p class="small muted"><a href="#/marque/' + m.id + '">Voir la fiche de la marque</a></p></div>';
+  }
+  function viewMarques() {
+    var groups = {};
+    D.MARQUES.forEach(function (m) { (groups[m.groupe] = groups[m.groupe] || []).push(m); });
+    return crumbs([['Diagnostic', '#/'], ['Marques']]) + '<h1 class="h1">🏷️ Marques et architectures</h1>' +
+      '<div class="card pad"><p>Les marques rencontrées en atelier en France : groupe, boîtier passerelle, architecture multiplexée probable, passerelle de diagnostic sécurisée et <b>pièces ou moteurs partagés</b> avec d’autres marques. Informations indicatives, <b>à vérifier</b> sur la documentation du véhicule.</p>' +
+      '<input class="diag-search" type="search" placeholder="🔎 Rechercher une marque, un modèle…" data-a="filter"></div>' +
+      Object.keys(groups).map(function (g) {
+        return '<div class="diag-group"><h2 class="h2">' + esc(g) + '</h2>' + groups[g].map(function (m) {
+          return '<a class="card review-cta diag-brand" data-s="' + esc((m.nom + ' ' + m.groupe + ' ' + m.modeles + ' ' + m.pays).toLowerCase()) + '" href="#/marque/' + m.id + '"><span><b>' + esc(m.nom) + '</b> <span class="muted small">' + esc(m.pays) + '</span><br><span class="small">' + esc(m.modeles) + '</span></span><span class="chev">›</span></a>';
+        }).join('') + '</div>';
+      }).join('');
+  }
+  function viewMarque(id) {
+    var m = marque(id); if (!m) return '<p>Marque introuvable.</p>';
+    var A = D.ARCHI[m.archi] || {};
+    return crumbs([['Diagnostic', '#/'], ['Marques', '#/marques'], [m.nom]]) + '<h1 class="h1">🏷️ ' + esc(m.nom) + '</h1>' +
+      '<div class="card pad"><p><b>Pays :</b> ' + esc(m.pays) + ' · <b>Groupe :</b> ' + esc(m.groupe) + '</p><p><b>Modèles courants :</b> ' + esc(m.modeles) + '</p>' +
+      '<p><b>Boîtier passerelle / servitude :</b> ' + esc(m.boitier) + '</p><p><b>🔒 Passerelle de diagnostic sécurisée :</b> ' + esc(m.sgw) + '</p>' +
+      '<p><b>🔁 Pièces et moteurs partagés :</b> ' + esc(m.partages) + '</p></div>' +
+      '<h2 class="h2">🔌 Architecture multiplexée probable</h2><div class="card pad"><p><b>' + esc(A.nom || '') + '</b> · passerelle : ' + esc(A.passerelle || '') + '</p>' +
+      '<div class="tw"><table><tr><th>Réseau</th><th>Type</th></tr>' + (A.reseaux || []).map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc((D.NET_TYPES[r[1]] || {}).court || r[1]) + '</td></tr>'; }).join('') + '</table></div>' +
+      '<div class="tw"><table><tr><th>Calculateur</th><th>Réseau</th><th>120 Ω</th></tr>' + (A.ecus || []).map(function (e) { return '<tr><td>' + esc(e[0]) + '</td><td>' + esc(e[1]) + '</td><td class="num-c">' + (e[2] ? '✔' : '') + '</td></tr>'; }).join('') + '</table></div>' +
+      (A.note ? '<p class="small">' + esc(A.note) + '</p>' : '') + '<p class="small muted">À vérifier sur le schéma du véhicule.</p></div>' +
+      (/⚡|électrique|hybride/i.test(m.partages + m.sgw + (A.note || '')) ? '<div class="box piege"><b>⚡ Haute tension</b><p>Sur les véhicules hybrides et électriques, toute intervention sur ou à proximité du circuit haute tension demande une <b>habilitation électrique</b> adaptée (B0L, B1VL, B2VL, BCL…) et la consignation du véhicule.</p></div>' : '') +
+      '<div class="row-actions"><a class="btn primary" href="#/veh/new?m=' + m.id + '">➕ Créer un véhicule ' + esc(m.nom) + '</a></div>';
   }
 
   function viewMod(k) {
@@ -180,8 +222,9 @@
   /* ---------- Actions ---------- */
   function createVeh(f) {
     var c = D.CATALOGUE.find(function (x) { return x.id === f.cat.value; });
-    var ak = c ? c.archi : f.archi.value, A = D.ARCHI[ak];
-    var v = { id: 'v' + Date.now().toString(36), nom: f.nom.value.trim(), marque: f.marque.value.trim() || (c ? c.marque : ''), modele: f.modele.value.trim() || (c ? c.modele : ''),
+    var mq = marque(f.mq.value);
+    var ak = c ? c.archi : (f.archi.value || (mq ? mq.archi : 'generique')), A = D.ARCHI[ak];
+    var v = { id: 'v' + Date.now().toString(36), nom: f.nom.value.trim(), marque: f.marque.value.trim() || (c ? c.marque : (mq ? mq.nom : '')), modele: f.modele.value.trim() || (c ? c.modele : ''),
       moteur: f.moteur.value.trim(), annee: f.annee.value.trim(), km: f.km.value.trim(), archi: ak, moteurs: c ? c.moteurs : '',
       reseaux: A.reseaux.map(function (r) { return { nom: r[0], type: r[1], on: true }; }), ecus: A.ecus.map(function (e) { return { nom: e[0], bus: e[1], term: !!e[2], on: true }; }),
       cons: {}, nocons: {}, hist: [] };
@@ -206,6 +249,13 @@
       if (miss.length) return toast('Entre toutes les mesures (OL = circuit ouvert)');
       run.vals = vals; decideNow(); render();
     }
+  });
+
+  main.addEventListener('input', function (ev) {
+    if (ev.target.getAttribute('data-a') !== 'filter') return;
+    var q = ev.target.value.toLowerCase().trim();
+    main.querySelectorAll('.diag-brand').forEach(function (a) { a.style.display = !q || a.getAttribute('data-s').indexOf(q) >= 0 ? '' : 'none'; });
+    main.querySelectorAll('.diag-group').forEach(function (g) { g.style.display = g.querySelector('.diag-brand:not([style*="none"])') ? '' : 'none'; });
   });
 
   main.addEventListener('change', function (ev) {
@@ -270,7 +320,9 @@
 
   function render() {
     var p = location.hash.replace(/^#\/?/, '').split('/'), html;
-    if (p[0] === 'veh' && p[1] === 'new') html = viewNew();
+    if (p[0] === 'veh' && /^new/.test(p[1])) html = viewNew();
+    else if (p[0] === 'marques') html = viewMarques();
+    else if (p[0] === 'marque') html = viewMarque(p[1]);
     else if (p[0] === 'veh') html = viewVeh(p[1]);
     else if (p[0] === 'mod') html = viewMod(p[1]);
     else if (p[0] === 'run' && p[1]) { if (!run || run.module !== p[1] || run.vid !== (p[2] || '')) startRun(p[1], p[2]); history.replaceState(null, '', '#/run'); html = viewRun(); }

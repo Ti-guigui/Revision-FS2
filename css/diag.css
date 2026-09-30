@@ -27,3 +27,4 @@
 .diag-trace p { margin: 4px 0; }
 .diag-soon { opacity: .7; margin: 8px 0; }
 .diag-main table input[type=checkbox] { width: 20px; height: 20px; }
+.diag-search { width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); }
