@@ -122,6 +122,8 @@
       '<div class="card pad"><p><b>Pays :</b> ' + esc(m.pays) + ' · <b>Groupe :</b> ' + esc(m.groupe) + '</p><p><b>Modèles courants :</b> ' + esc(m.modeles) + '</p>' +
       '<p><b>Boîtier passerelle / servitude :</b> ' + esc(m.boitier) + '</p><p><b>🔒 Passerelle de diagnostic sécurisée :</b> ' + esc(m.sgw) + '</p>' +
       '<p><b>🔁 Pièces et moteurs partagés :</b> ' + esc(m.partages) + '</p></div>' +
+      (m.outil ? '<h2 class="h2">🧰 Méthode de contrôle</h2><div class="card pad"><p><b>Outil constructeur :</b> ' + esc(m.outil) + '</p>' + (m.methode || '') + '</div>' : '') +
+      (m.capteurs ? '<h2 class="h2">📡 Alimentation des capteurs</h2><div class="card pad">' + m.capteurs + '</div>' : '') +
       '<h2 class="h2">🔌 Architecture multiplexée probable</h2><div class="card pad"><p><b>' + esc(A.nom || '') + '</b> · passerelle : ' + esc(A.passerelle || '') + '</p>' +
       '<div class="tw"><table><tr><th>Réseau</th><th>Type</th></tr>' + (A.reseaux || []).map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc((D.NET_TYPES[r[1]] || {}).court || r[1]) + '</td></tr>'; }).join('') + '</table></div>' +
       '<div class="tw"><table><tr><th>Calculateur</th><th>Réseau</th><th>120 Ω</th></tr>' + (A.ecus || []).map(function (e) { return '<tr><td>' + esc(e[0]) + '</td><td>' + esc(e[1]) + '</td><td class="num-c">' + (e[2] ? '✔' : '') + '</td></tr>'; }).join('') + '</table></div>' +
