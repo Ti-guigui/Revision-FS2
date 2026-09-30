@@ -40,7 +40,7 @@ REV.add({
       id: 'adblue', title: 'AdBlue, OPEX et divers',
       html: `
 <div class="tw"><table><tr><th>Question</th><th>Réponse</th></tr>
-<tr><td>Circuit d’air à la pression de régulation (10,5 bar)</td><td>L’APU commande l’économie d’énergie du compresseur : plus de compression, décharge vers l’alimentation</td></tr>
+<tr><td>Circuit d’air à la pression de régulation (10,3 bar)</td><td>L’APU commande l’économie d’énergie du compresseur : plus de compression, décharge vers l’alimentation</td></tr>
 <tr><td>Vanne multivoies 4/2</td><td>Vidange et remplissage de l’AdBlue</td></tr>
 <tr><td>Conditions d’activation de l’AdBlue</td><td>T° moteur &gt; 40 °C · T° catalyseur &gt; 180 °C · régime &gt; 400 tr/min · couple &gt; 5 %</td></tr>
 <tr><td>Procédure OPEX (neutralisation)</td><td>Neutraliser l’AdBlue ; désactiver le coupe-circuit extérieur</td></tr>
@@ -48,7 +48,7 @@ REV.add({
 <tr><td>Changer la pile du chronotachygraphe</td><td>Le retirer sans le débrancher (il reste alimenté)</td></tr>
 <tr><td>Remplacer un injecteur-pompe</td><td>Programmer dans la centrale le code gravé sur l’injecteur</td></tr></table></div>`,
       retenir: ['AdBlue : 40 °C moteur, 180 °C cata, 400 tr/min, 5 % de couple.', 'Vanne 4/2 = vidange/remplissage AdBlue.', 'OPEX : neutraliser l’AdBlue + désactiver le coupe-circuit extérieur.'],
-      memo: { cle: 'ADBLUE : 40 · 180 · 400 · 5 %', points: ['OPEX : 2 télérupteurs à neutraliser', 'Pile du chrono : retirer sans débrancher', 'APU : économie d’énergie du compresseur à 10,5 bar'], astuce: 'En OPEX, on coupe l’AdBlue : pas de station AdBlue dans le désert.' }
+      memo: { cle: 'ADBLUE : 40 · 180 · 400 · 5 %', points: ['OPEX : 2 télérupteurs à neutraliser', 'Pile du chrono : retirer sans débrancher', 'APU : économie d’énergie du compresseur à 10,3 bar'], astuce: 'En OPEX, on coupe l’AdBlue : pas de station AdBlue dans le désert.' }
     }
   ],
   questions: [
@@ -67,6 +67,6 @@ REV.add({
     { l: 'adblue', q: 'Procédure OPEX (neutralisation) :', c: ['Neutraliser l’AdBlue et désactiver le coupe-circuit extérieur', 'Déposer le FAP', 'Couper l’ABS', 'Débrancher le chronotachygraphe'], e: 'En opération, l’AdBlue est neutralisé et le coupe-circuit extérieur désactivé.' },
     { l: 'adblue', q: 'Changement de la pile du chronotachygraphe :', c: ['Le retirer sans le débrancher (il reste alimenté)', 'Débrancher la batterie', 'Débrancher le chronotachygraphe', 'Le faire en atelier agréé uniquement'], e: 'Il doit rester alimenté pendant l’opération.' },
     { l: 'adblue', q: 'Combien de télérupteurs à neutraliser en OPEX, et comment ?', c: ['2, en débranchant le connecteur derrière la console de commande de la BV', '1, en retirant son fusible', '4, en coupant la batterie', 'Aucun'], e: 'Réponse de la fiche PPLOG.' },
-    { l: 'adblue', q: 'À la pression de régulation (10,5 bar), que commande l’APU ?', c: ['L’économie d’énergie du compresseur (décharge)', 'Le remplissage d’AdBlue', 'Le turbo VGT', 'L’ASR'], e: 'Plus de compression : le compresseur décharge vers l’alimentation.' }
+    { l: 'adblue', q: 'À la pression de régulation (10,3 bar), que commande l’APU ?', c: ['L’économie d’énergie du compresseur (décharge)', 'Le remplissage d’AdBlue', 'Le turbo VGT', 'L’ASR'], e: 'Plus de compression : le compresseur décharge vers l’alimentation.' }
   ]
 });
