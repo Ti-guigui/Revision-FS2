@@ -14,9 +14,12 @@
   function veh(id) { return store.vehicles.find(function (v) { return v.id === id; }); }
   function vname(v) { return v.nom || ((v.marque || '') + ' ' + (v.modele || '')).trim() || 'Véhicule'; }
   function num(n) { if (n === Infinity || n === null) return '∞'; var r = Math.round(n * 1000) / 1000; return String(r).replace('.', ','); }
-  function range(r, u) { if (r.max === Infinity) return '≥ ' + num(r.min) + ' ' + u; if (r.min === 0) return '≤ ' + num(r.max) + ' ' + u; return num(r.min) + ' à ' + num(r.max) + ' ' + u; }
-  function parse(s) { s = String(s || '').trim().toLowerCase().replace(',', '.').replace(/\s/g, ''); if (!s) return NaN; if (/^(ol|∞|inf|infini)$/.test(s)) return Infinity; if (/k$/.test(s)) return parseFloat(s) * 1000; if (/m$/.test(s)) return parseFloat(s) * 1e6; return parseFloat(s); }
+  function deg(n) { if (n === Infinity || n == null || isNaN(n)) return num(n); var sg = n < 0 ? '−' : '', a = Math.abs(n), d = Math.floor(a), m = Math.round((a - d) * 60); if (m === 60) { d++; m = 0; } return sg + d + '°' + (m < 10 ? '0' : '') + m + '′'; }
+  function fmt(n, u) { return u === '°' ? deg(n) : num(n) + (u ? ' ' + u : ''); }
+  function range(r, u) { if (r.min == null) return 'valeur à relever'; if (u === '°') return deg(r.min) + ' à ' + deg(r.max); if (r.max === Infinity) return '≥ ' + num(r.min) + ' ' + u; if (r.min === 0) return '≤ ' + num(r.max) + ' ' + u; return num(r.min) + ' à ' + num(r.max) + ' ' + u; }
+  function parse(s) { s = String(s || '').trim().toLowerCase().replace(/,/g, '.').replace(/\s/g, '').replace(/[−–]/g, '-'); var dm = s.match(/^([+-]?)(\d+(?:\.\d+)?)°(?:(\d+(?:\.\d+)?)['′]?)?$/); if (dm) { var d = parseFloat(dm[2]) + (dm[3] ? parseFloat(dm[3]) / 60 : 0); return dm[1] === '-' ? -d : d; } if (!s) return NaN; if (/^(ol|∞|inf|infini)$/.test(s)) return Infinity; if (/k$/.test(s)) return parseFloat(s) * 1000; if (/m$/.test(s)) return parseFloat(s) * 1e6; return parseFloat(s); }
   function statusOf(v, r) {
+    if (r.min == null) return { st: 'ok', dir: null };
     if (v >= r.min && v <= r.max) return { st: 'ok', dir: null };
     var low = v < r.min, ref = low ? r.min : r.max, tol = Math.abs(ref) * 0.1;
     return { st: Math.abs(v - ref) <= tol ? 'warn' : 'bad', dir: low ? 'low' : 'high' };
@@ -35,7 +38,7 @@
   /* ---------- Vues ---------- */
   function viewHome() {
     var mods = Object.keys(D.MODULES).map(function (k) { var m = D.MODULES[k]; return '<a class="card review-cta" href="#/mod/' + k + '"><span class="big">' + m.icon + '</span><span><b>' + esc(m.titre) + '</b><br>' + esc(m.sous) + '</span><span class="chev">›</span></a>'; }).join('');
-    var soon = ['⛽ Moteur diesel common rail', '🌫️ Antipollution (EGR, FAP, SCR)', '📐 DSFT : géométrie et usure des pneus', '🛑 Freinage et banc de freinage'].map(function (t) { return '<div class="card pad diag-soon">' + t + ' <span class="muted small">— bientôt</span></div>'; }).join('');
+    var soon = ''; var _old = ['⛽ Moteur diesel common rail', '🌫️ Antipollution (EGR, FAP, SCR)', '📐 DSFT : géométrie et usure des pneus', '🛑 Freinage et banc de freinage'].map(function (t) { return '<div class="card pad diag-soon">' + t + ' <span class="muted small">— bientôt</span></div>'; }).join('');
     var vs = store.vehicles.length ? store.vehicles.map(function (v) { return '<a class="card review-cta" href="#/veh/' + v.id + '"><span class="big">🚗</span><span><b>' + esc(vname(v)) + '</b><br><span class="muted small">' + esc([v.moteur, v.annee, v.km ? v.km + ' km' : ''].filter(Boolean).join(' · ')) + ' · ' + (v.hist || []).length + ' diagnostic(s)</span></span><span class="chev">›</span></a>'; }).join('') : '<p class="muted">Aucun véhicule pour l’instant.</p>';
     return '<h1 class="h1">🔧 Coin diagnostic</h1>' +
       '<div class="card pad"><p>Diagnostic guidé pas à pas : à chaque étape, <b>ce qu’on contrôle et pourquoi</b>, <b>comment mesurer</b>, puis tu <b>entres tes mesures</b> et le site te donne le verdict et l’étape suivante.</p><p class="small muted">Les valeurs de référence sont des valeurs types (cours, documentation constructeur publique) : si tu as la <b>valeur constructeur</b> de ton véhicule, saisis-la, elle prime. Tout reste dans ton navigateur.</p></div>' +
@@ -144,7 +147,7 @@
   function traceHtml(tr) {
     return tr.map(function (t, n) {
       return '<div class="card pad diag-trace ' + (t.v || '') + '"><b>' + (n + 1) + '. ' + esc(t.title) + '</b>' + (t.choice ? '<p>→ ' + esc(t.choice) + '</p>' : '') +
-        (t.meas || []).map(function (x) { return '<p class="small">' + esc(x.label) + ' : <b>' + num(x.val) + ' ' + esc(x.unit) + '</b> (attendu ' + esc(x.exp) + ', ' + (x.src === 'cons' ? 'constructeur' : 'référence') + ') ' + badge(x.st) + '</p>'; }).join('') +
+        (t.meas || []).map(function (x) { return '<p class="small">' + esc(x.label) + ' : <b>' + esc(fmt(x.val, x.unit)) + '</b>' + (x.exp === 'valeur à relever' ? '' : ' (attendu ' + esc(x.exp) + ', ' + (x.src === 'cons' ? 'constructeur' : 'référence') + ') ' + badge(x.st)) + '</p>'; }).join('') +
         (t.msg ? '<p>' + badge(t.v) + ' ' + esc(t.msg) + '</p>' : '') + '</div>';
     }).join('');
   }
@@ -169,6 +172,10 @@
       return head + body;
     }
     if (s.why) body += '<details class="diag-why" open><summary>💡 Pourquoi et fonctionnement</summary>' + s.why + '</details>';
+    if (s.type === 'info') {
+      body += (s.html || '') + '<div class="row-actions"><button class="btn primary" data-a="info-next">➡️ ' + esc(s.bouton || 'Étape suivante') + '</button></div></div>';
+      return head + body;
+    }
     if (s.type === 'choice' || s.type === 'network') {
       body += '<div class="choices">' + s.choices.map(function (c, i) {
         var extra = '';
@@ -199,7 +206,8 @@
     var M = D.MEASURES[mid], e = expected(mid), val = run.vals && run.vals[mid];
     var src = e.src === 'cons' ? '<span class="diag-tag cons">Valeur constructeur</span>' : '<span class="diag-tag ref">Valeur de référence</span>';
     var consUi = '';
-    if (run.editing[mid]) {
+    if (M.min == null) { src = '<span class="diag-tag ref">À relever</span>'; }
+    else if (run.editing[mid]) {
       consUi = '<div class="diag-cons"><b>Valeur constructeur</b><div class="diag-2"><label>Mini<input name="cmin-' + mid + '" inputmode="decimal" value="' + (e.src === 'cons' ? num(e.min) : '') + '"></label><label>Maxi (vide = pas de maxi)<input name="cmax-' + mid + '" inputmode="decimal" value="' + (e.src === 'cons' && e.max !== Infinity ? num(e.max) : '') + '"></label></div>' +
         (run.vid ? '<label class="diag-check"><input type="checkbox" name="csave-' + mid + '" checked> Enregistrer dans la fiche du véhicule</label>' : '') +
         '<div class="row-actions"><button type="button" class="btn small primary" data-a="cons-ok" data-k="' + mid + '">Utiliser cette valeur</button><button type="button" class="btn small ghost" data-a="cons-cancel" data-k="' + mid + '">Annuler</button></div></div>';
@@ -212,9 +220,9 @@
     }
     var st = val != null && !isNaN(val) ? statusOf(val, e) : null;
     return '<div class="diag-meas' + (st ? ' ' + st.st : '') + '"><label><b>' + esc(M.label) + '</b>' +
-      '<span class="diag-exp">Attendu : <b>' + range(e, M.unit) + '</b> ' + src + '</span>' +
-      (e.src === 'ref' ? '<span class="small muted">' + esc(M.note) + '</span>' : '') +
-      '<span class="diag-in"><input name="v-' + mid + '" inputmode="decimal" autocomplete="off" placeholder="Ta mesure" value="' + (val != null && !isNaN(val) ? num(val) : '') + '"' + (run.res ? ' disabled' : '') + '> ' + esc(M.unit) + (st ? ' <b>' + badge(st.st) + '</b>' : '') + '</span></label>' + consUi + '</div>';
+      (M.min == null ? '<span class="diag-exp">' + src + '</span>' : '<span class="diag-exp">Attendu : <b>' + range(e, M.unit) + '</b> ' + src + '</span>') +
+      (e.src === 'ref' && M.note ? '<span class="small muted">' + esc(M.note) + '</span>' : '') +
+      '<span class="diag-in"><input name="v-' + mid + '" inputmode="decimal" autocomplete="off" placeholder="Ta mesure" value="' + (val != null && !isNaN(val) ? (M.unit === '°' ? deg(val) : num(val)) : '') + '"' + (run.res ? ' disabled' : '') + '> ' + esc(M.unit) + (st && M.min != null ? ' <b>' + badge(st.st) + '</b>' : '') + '</span></label>' + consUi + '</div>';
   }
 
   function crumbs(items) { return '<nav class="crumbs">' + items.map(function (it) { return it[1] ? '<a href="' + it[1] + '">' + esc(it[0]) + '</a>' : '<span>' + esc(it[0]) + '</span>'; }).join(' › ') + '</nav>'; }
@@ -232,7 +240,8 @@
   }
   function decideNow() {
     var s = D.MODULES[run.module].steps[run.cur];
-    var res = s.decide(function (mid) { var e = expected(mid), v = run.vals[mid], st = statusOf(v, e); return { v: v, st: st.st, dir: st.dir, min: e.min, max: e.max }; });
+    var res = s.decide(function (mid) {
+      if (mid === '*') return run.vals; var e = expected(mid), v = run.vals[mid], st = statusOf(v, e); return { v: v, st: st.st, dir: st.dir, min: e.min, max: e.max }; });
     run.res = res; saveRun();
   }
 
@@ -282,6 +291,7 @@
       run.trace.push({ step: run.cur, title: st.title, v: run.res.v, msg: run.res.msg, meas: st.measures.map(function (mid) { var e = expected(mid), M = D.MEASURES[mid], x = run.vals[mid]; return { id: mid, label: M.label, unit: M.unit, val: x, exp: range(e, M.unit), src: e.src, st: statusOf(x, e).st }; }) });
       run.cur = run.res.next; run.res = null; run.vals = null; saveRun(); window.scrollTo(0, 0); return render();
     }
+    if (a === 'info-next') { var si = D.MODULES[run.module].steps[run.cur]; run.trace.push({ step: run.cur, title: si.title }); run.cur = si.next; saveRun(); window.scrollTo(0, 0); return render(); }
     if (a === 'redo') { run.res = null; saveRun(); return render(); }
     if (a === 'back') { var last = run.trace.pop(); run.cur = last.step; run.res = null; run.vals = null; saveRun(); return render(); }
     if (a === 'restart') { startRun(run.module, run.vid); return render(); }
