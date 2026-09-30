@@ -371,6 +371,7 @@
         (toReview ? toReview + ' erreur' + (toReview > 1 ? 's' : '') + ' à comprendre et à refaire, leçon par leçon' : 'Tes erreurs des tests, expliquées leçon par leçon') + '</span><span class="chev">›</span></a>' +
       '<a class="card review-cta" href="#/formules"><span class="big">📐</span><span><b>Formules, valeurs et conversions</b><br>Par matière, avec les méthodes de calcul (distance de freinage, manœuvre de force…)</span><span class="chev">›</span></a>' +
       '<a class="card review-cta exo-cta" href="#/exercices"><span class="big">✍️</span><span><b>Exercices corrigés</b><br>Livres, cahiers d’exercices, dossier d’évaluation et test final</span><span class="chev">›</span></a>' +
+      '<a class="card review-cta" href="diagnostic.html"><span class="big">🔧</span><span><b>Coin diagnostic</b><br>Diagnostic guidé pas à pas sur tes véhicules : tu entres tes mesures, le site te guide</span><span class="chev">›</span></a>' +
       '<a class="card review-cta uv2-cta" href="#/uv2"><span class="big">📝</span><span><b>Test UV2 — 60 questions, 2 h</b><br>Le dossier transmis, des UV2 blancs et les fiches mémoire illustrées</span><span class="chev">›</span></a>' +
       '<h2 class="h2 h2-atelier">🧰 Les postes de l’atelier</h2>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
