@@ -5,7 +5,7 @@
 
   REV.addLessons('ppld', 'diagnostic', [{
     id: 'electrique', title: 'Partie électrique : modes et arrêt d’urgence',
-    images: [im('notes-schema-electrique', 'Schéma de principe : batterie, fusibles 40 A / 5 A / 20 A, interrupteur PTO cabine, relais R6, relais d’auto-maintien, réarmement, arrêt d’urgence, sélecteur 3 voies'),
+    images: [im('schema-auto-maintien', 'Schéma de principe : batterie, fusibles 40 A / 5 A / 20 A, interrupteur PTO cabine, relais R6, relais d’auto-maintien, réarmement, arrêt d’urgence, sélecteur 3 voies'),
       im('elec-auto-maintien', 'Façade (A) et sélecteur Auto/Manu/Stab (B) : alimentation par le relais d’auto-maintien'),
       im('elec-mode-radio', 'Mode Radio : le boîtier de radiocommande (C) est alimenté'),
       im('elec-mode-manu', 'Mode Manu (secours) : la vanne by-pass RSQ 240 (C) est alimentée'),
@@ -59,14 +59,14 @@
 
   var ex = function (l, q) { q.l = l; return q; };
   REV.addExercises('ppld', { lessons: [], questions: [
-    ex('electrique', { img: I + 'notes-schema-electrique.jpg', q: 'Qu’est-ce que coupe l’arrêt d’urgence du camion ?', c: ['L’alimentation du relais d’auto-maintien', 'L’alimentation de la pompe', 'Le moteur du porteur'], e: 'Le sélecteur 3 positions n’est plus alimenté : le système est isolé.' }),
-    ex('electrique', { img: I + 'notes-schema-electrique.jpg', q: 'Qui pilote les électrovannes by-pass CETOP et RSQ 240 ?', c: ['Nous, via le sélecteur 3 voies', 'Le CEC', 'La pompe'], e: 'Stab → by-pass CETOP ; Manu ou Radio → by-pass RSQ 240.' }),
+    ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'Qu’est-ce que coupe l’arrêt d’urgence du camion ?', c: ['L’alimentation du relais d’auto-maintien', 'L’alimentation de la pompe', 'Le moteur du porteur'], e: 'Le sélecteur 3 positions n’est plus alimenté : le système est isolé.' }),
+    ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'Qui pilote les électrovannes by-pass CETOP et RSQ 240 ?', c: ['Nous, via le sélecteur 3 voies', 'Le CEC', 'La pompe'], e: 'Stab → by-pass CETOP ; Manu ou Radio → by-pass RSQ 240.' }),
     ex('electrique', { img: I + 'elec-arret-urgence.jpg', q: 'Combien de coups de poing d’arrêt d’urgence, et où ?', c: ['3 : coffre n° 6, coffre n° 1 et radiocommande', '1 : sur la façade', '2 : en cabine et sur la radiocommande'], e: 'Un coup de poing enclenché désexcite le relais d’auto-maintien.' }),
     ex('electrique', { img: I + 'elec-arret-urgence.jpg', q: 'Après un arrêt d’urgence, comment réalimenter la dépanneuse ?', c: ['Désenclencher le coup de poing et réarmer depuis le panneau du coffre n° 6', 'Couper et remettre le contact', 'Changer de mode au sélecteur'], e: 'Le voyant réarmement s’éclaire tant qu’une action sur le bouton est nécessaire.' }),
     ex('electrique', { img: I + 'elec-mode-manu.jpg', q: 'Mode Manu : que se passe-t-il ?', c: ['La radiocommande est inopérante, on commande depuis la façade du coffre n° 6 et la vanne by-pass RSQ 240 est alimentée', 'Seuls les coffrets des stabilisateurs sont alimentés', 'La radiocommande commande la grue'], e: 'C’est le mode de secours.' }),
     ex('electrique', { img: I + 'elec-mode-stabs.jpg', q: 'Mode Stabilisateurs : que se passe-t-il ?', c: ['Seuls les coffrets des stabs droits et gauches sont alimentés ; panneau et radiocommande inopérants', 'Tout l’équipement est alimenté', 'Seule la radiocommande fonctionne'], e: 'Coffrets éclairés, joysticks et sélecteurs 3 positions alimentés.' }),
     ex('electrique', { img: I + 'elec-mode-radio.jpg', q: 'Quel est le mode de fonctionnement normal de la dépanneuse ?', c: ['Le mode Radio', 'Le mode Manu', 'Le mode Stab'], e: 'Le mode Manu est le mode de secours.' }),
-    ex('electrique', { img: I + 'notes-schema-electrique.jpg', q: 'La façade de commande est éclairée. Que peut-on en déduire ?', c: ['Le relais R6 est correct : la ligne électrique arrive à la façade', 'Le relais d’auto-maintien est collé', 'La pompe débite'], e: 'Batterie → 40 A → PTO → 5 A → R6 → 20 A → façade.' }),
+    ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'La façade de commande est éclairée. Que peut-on en déduire ?', c: ['Le relais R6 est correct : la ligne électrique arrive à la façade', 'Le relais d’auto-maintien est collé', 'La pompe débite'], e: 'Batterie → 40 A → PTO → 5 A → R6 → 20 A → façade.' }),
     ex('electrique', { img: I + 'elec-auto-maintien.jpg', q: 'Rôle du relais d’auto-maintien ?', c: ['Rester alimenté après l’appui sur le réarmement et alimenter le sélecteur 3 voies', 'Commander la pompe', 'Allumer l’éclairage des coffres'], e: 'L’arrêt d’urgence coupe son alimentation.' }),
     ex('generation', { img: I + 'notes-pompe.jpg', q: 'Pression maxi du circuit ?', c: ['350 b (DAD 320 b + stand-by 30 b)', '320 b', '220 b'], e: 'Récepteur en butée : 320 + 30 = 350 b.' }),
     ex('generation', { img: I + 'notes-pompe.jpg', q: 'Distributeur ouvert à fond : que vaut la pression de service ?', c: ['Ps = P LS, débit maxi 100 L/min', 'Ps = P LS + 30 b', 'Ps = 350 b'], e: 'En fonctionnement partiel : Ps = P LS + 30 b.' }),

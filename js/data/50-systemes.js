@@ -196,7 +196,7 @@ REV.systemes = {
       role: 'La pompe ne donne que le débit et la pression demandés par le récepteur le plus chargé.',
       phases: [['Neutre', '30 b de stand-by, 1 L/min (gicleur anti-pompage).'], ['Ouvert à fond', 'Ps = P LS : débit maxi 100 L/min.'], ['Fonctionnement', 'Ps = P LS + 30 b.'], ['Butée', 'DAD 320 b + 30 b = 350 b, débit nul.']],
       pannes: [] },
-    { t: 'Commande électrique et arrêt d’urgence', img: [['ppld/notes-schema-electrique.jpg', 'Ton schéma'], ['ppld/elec-arret-urgence.jpg', 'Arrêt d’urgence']],
+    { t: 'Commande électrique et arrêt d’urgence', img: [['ppld/schema-auto-maintien.jpg', 'Ton schéma'], ['ppld/elec-arret-urgence.jpg', 'Arrêt d’urgence']],
       role: 'Alimenter l’équipement selon le mode choisi (Radio, Manu, Stab).',
       phases: [['PTO', 'Batterie → 40 A → interrupteur PTO → 5 A → relais R6 → 20 A → façade éclairée.'], ['Réarmement', 'Le bouton colle le relais d’auto-maintien.'], ['Sélecteur 3 voies', 'Radio : radiocommande · Manu : façade + by-pass RSQ 240 · Stab : coffrets + by-pass CETOP.'], ['Arrêt d’urgence', '3 coups de poing (coffre 6, coffre 1, radio) : auto-maintien désexcité, système isolé.']],
       pannes: [
