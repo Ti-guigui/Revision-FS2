@@ -19,3 +19,4 @@
 .mdf-scroll svg { min-width: 760px; }
 .mdf-tab input[data-p$=".nom"] { width: 8em; }
 .mdf-tab th, .mdf-tab td { white-space: nowrap; }
+.mdf-warn { color: var(--bad, #b91c1c); font-weight: 600; }

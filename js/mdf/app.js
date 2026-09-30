@@ -6,9 +6,9 @@
   var nf = function (x) { return String(Math.round(x)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); };
   var DEF = function () { return { fardeau: { poids: '', mode: 'roule', sol: 'route', sens: 'plat', pente: '', trou: false, deplacement: '', vol: '', dens: '1' },
     tracteur: { type: 'treuil', poids: '', sol: 'route', ft: '', beches: false, lc: '', ls: '', cmuCable: '', pm: '', pmUnit: 'kW', v: '5', ponts: 'tous', sensT: 'plat', penteT: '', renverse: false, lg: '5', lbm: '5' },
-    stock: { pf: [], cables: [], poulies: [], manilles: [] } }; };
+    stock: { pf: [], cables: [], poulies: [], manilles: [], elingues: [] } }; };
   var st; try { st = JSON.parse(localStorage.getItem(KEY)) || DEF(); } catch (e) { st = DEF(); }
-  var out = null;
+  var out = null; if (!st.stock.elingues) st.stock.elingues = [];
   function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { /* ignore */ } }
 
   function opt(v, list, cur) { return list.map(function (o) { return '<option value="' + o[0] + '"' + (String(cur) === String(o[0]) ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join(''); }
@@ -24,7 +24,7 @@
 
   function stockRows(kind) {
     var rows = st.stock[kind];
-    var head = { pf: '<tr><th>Point fixe</th><th>Détail</th><th>Résistance</th><th></th></tr>', cables: '<tr><th>Nom</th><th>Longueur (m)</th><th>CMU (daN)</th><th>Qté</th><th></th></tr>', poulies: '<tr><th>Nom</th><th>CMU (daN)</th><th>Qté</th><th></th></tr>', manilles: '<tr><th>Nom</th><th>CMU (daN)</th><th>Qté</th><th></th></tr>' }[kind];
+    var head = { pf: '<tr><th>Point fixe</th><th>Détail</th><th>Résistance</th><th></th></tr>', cables: '<tr><th>Nom</th><th>Longueur (m)</th><th>CMU (daN)</th><th>Qté</th><th></th></tr>', poulies: '<tr><th>Nom</th><th>CMU (daN)</th><th>Qté</th><th></th></tr>', manilles: '<tr><th>Nom</th><th>CMU (daN)</th><th>Qté</th><th></th></tr>', elingues: '<tr><th>Nom</th><th>CMU (daN)</th><th>Qté</th><th></th></tr>' }[kind];
     var body = rows.map(function (r, i) {
       var p = 'stock.' + kind + '.' + i + '.', del = '<td><button type="button" class="btn ghost small" data-a="del" data-k="' + kind + '" data-i="' + i + '">✕</button></td>';
       if (kind === 'pf') {
@@ -52,7 +52,11 @@
       inp('fardeau.sens', 'Terrain', { sel: [['plat', 'horizontal'], ['monte', 'on tire en montée'], ['descend', 'on retient en descente']] }) +
       (f.sens !== 'plat' ? inp('fardeau.pente', 'Pente', { u: '%' }) : '') +
       inp('fardeau.deplacement', 'Déplacement à réaliser', { u: 'm', h: 'Facultatif : pour savoir s’il faudra plusieurs reprises.' }) +
-      inp('fardeau.trou', 'Frottement des brins en sommet de pente (fardeau dans un trou) : EMT − 10 %', { check: 1 }) + '</div>' +
+      inp('fardeau.trou', 'Frottement des brins en sommet de pente (fardeau dans un trou) : EMT − 10 %', { check: 1 }) +
+      inp('fardeau.longueur', 'Longueur du véhicule / fardeau', { u: 'm', h: 'Pour la zone à évacuer et le schéma.' }) + '</div>' +
+      '<h2 class="h2">Ambiance locale</h2><div class="card pad mdf-grid">' +
+      inp('fardeau.meteo', 'Météo', { sel: [['sec', 'temps sec'], ['pluie', 'pluie / sol mouillé'], ['gel', 'gel / verglas'], ['neige', 'neige'], ['vent', 'vent fort']] }) +
+      inp('fardeau.nuit', 'De nuit', { check: 1 }) + inp('fardeau.blesses', 'Présence de blessés', { check: 1 }) + inp('fardeau.bulle', 'Contexte opérationnel (bulle de sécurité)', { check: 1 }) + '</div>' +
       '<h2 class="h2">E — Le tracteur</h2><div class="card pad mdf-grid">' +
       inp('tracteur.type', 'Effort fourni par', { sel: [['treuil', 'le treuil'], ['crochet', 'la traction au crochet (pas de treuil)']] }) +
       inp('tracteur.poids', 'Poids du tracteur', { u: 'daN' }) + inp('tracteur.sol', 'Sol sous le tracteur', { sel: SOLS.filter(function (s) { return s[0] !== 'enlise'; }) }) +
@@ -66,6 +70,7 @@
       '<div class="card pad"><h3>Câbles (hors câble du treuil)</h3>' + stockRows('cables') + '</div>' +
       '<div class="card pad"><h3>Poulies</h3>' + stockRows('poulies') + '</div>' +
       '<div class="card pad"><h3>Manilles</h3>' + stockRows('manilles') + '</div>' +
+      '<div class="card pad"><h3>Élingues / sangles</h3>' + stockRows('elingues') + '<p class="small muted">Autour d’un arbre ou de la roue de secours, et pour accrocher les poulies / le dormant sur le fardeau (sinon anneau de remorquage de CMU suffisante).</p></div>' +
       '<div class="row-actions"><button type="button" class="btn primary big" data-a="calc">🧮 Calculer la manœuvre</button></div><div id="mdf-out"></div>';
   }
 
@@ -80,10 +85,11 @@
     if (out.err) { o.innerHTML = '<div class="box piege"><b>⚠️ ' + esc(out.err) + '</b></div>'; return; }
     var res = out.res, t = st.tracteur, ag = out.ag, mf = res.mouflage;
     var schema = res.factors.length === 1 ? 'Mouflage simple ' + res.n + ' brins' : 'Mouflage composé ' + res.n + ' brins (' + res.factors.join(' × ') + ', le ' + res.factors[0] + ' côté fardeau)';
-    var svg = MDF.svg(out, t);
+    var svg = MDF.svg(out, Object.assign({ longueur: st.fardeau.longueur }, t));
     o.innerHTML = '<h2 class="h2">Résultat</h2>' +
       '<div class="box ' + (out.ok ? 'retenir' : 'piege') + '"><b>' + (out.ok ? '✅ Manœuvre réalisable avec ton matériel' : '❌ Manœuvre à revoir : voir les lignes en rouge') + '</b><p>' + schema + (t.renverse ? ', traction renversée' : ', traction droite') + ' · EMT ' + nf(mf.EMT) + ' daN pour R = ' + nf(out.R.R) + ' daN · sécurité ' + String(res.S).replace('.', ',') + ' %.</p></div>' +
       '<div class="card pad mdf-svg"><div class="mdf-scroll">' + svg + '</div><p class="small muted">Fais glisser le schéma sur téléphone, ou télécharge-le pour l’agrandir.</p><div class="row-actions"><button type="button" class="btn small" data-a="dl">⬇️ Télécharger le schéma</button><button type="button" class="btn small ghost" data-a="print">🖨️ Imprimer</button></div></div>' +
+      ((out.amb.a.length || out.amb.w.length) ? '<div class="card pad mdf-step"><h3>🌦️ Ambiance locale et terrain</h3><ul>' + out.amb.w.map(function (x) { return '<li class="mdf-warn">⚠️ ' + fr(x) + '</li>'; }).join('') + out.amb.a.map(function (x) { return '<li>' + fr(x) + '</li>'; }).join('') + '</ul></div>' : '') +
       card('S', 'Somme des résistances du fardeau', out.R.steps, '<p><b>R = ' + nf(out.R.R) + ' daN</b></p>') +
       card('E', 'Effort moteur disponible', out.E.steps, '<p><b>EMD = ' + nf(out.E.EMD) + ' daN</b></p>') +
       card('N', 'Nombre de brins', res.nb.steps) +
@@ -91,7 +97,7 @@
       card('E', 'Effort moteur total (perte de 10 % par poulie)', mf.steps, '<p><b>EMT = ' + nf(mf.EMT) + ' daN</b></p>') +
       card('S', 'Sécurité (15 % ≤ S ≤ 70 %)', res.steps.slice(res.nb.steps.length)) +
       '<div class="card pad mdf-step"><h3><span class="mdf-l">R</span> Résistance des points fixes et agrès</h3><p class="small">Chaque point fixe, poulie et manille doit résister à la somme des efforts qui passent par lui ; le câble doit avoir une CMU ≥ l’effort du brin le plus chargé.</p>' +
-      '<h4>Points fixes</h4>' + tab(ag.pfs, ['PF', 'Détail', 'Effort']) + '<h4>Poulies</h4>' + tab(ag.poulies, ['Poulie', 'Emplacement', 'Effort']) + '<h4>Manilles</h4>' + tab(ag.manilles, ['Manille', 'Emplacement', 'Effort']) + '<h4>Câbles</h4>' + tab(ag.cables.map(function (c) { return { id: c.id, lieu: c.treuil ? 'câble du treuil' : 'mouflage ' + c.stage, load: c.load, ok: c.ok, item: c.item }; }), ['Câble', 'Emploi', 'Effort maxi']) + '</div>' +
+      '<h4>Points fixes</h4>' + tab(ag.pfs, ['PF', 'Détail', 'Effort']) + '<h4>Poulies</h4>' + tab(ag.poulies, ['Poulie', 'Emplacement', 'Effort']) + '<h4>Manilles</h4>' + tab(ag.manilles, ['Manille', 'Emplacement', 'Effort']) + '<h4>Élingues / accrochages</h4>' + tab(ag.elingues, ['Élingue', 'Emplacement', 'Effort']) + '<h4>Câbles</h4>' + tab(ag.cables.map(function (c) { return { id: c.id, lieu: c.treuil ? 'câble du treuil' : 'mouflage ' + c.stage, load: c.load, ok: c.ok, item: c.item }; }), ['Câble', 'Emploi', 'Effort maxi']) + '</div>' +
       card('D', 'Distances', out.D.steps, out.D.err ? '<div class="box piege">' + esc(out.D.err) + '</div>' : '') +
       '<div class="card pad mdf-step"><h3>🦺 Avant de tirer</h3><ul><li>Faire évacuer le polygone défini par les câbles, les points fixes, les tracteurs et le fardeau.</li><li>Mettre le dispositif en légère tension et contrôler chaque agrès avant l’effort.</li><li>Ne pas franchir les câbles en tension ni stationner dans leur prolongement ; se tenir éloigné des points fixes.</li><li>Ne pas frapper à plus de trois sur le même piquet d’un point fixe.</li><li>Gants, lunettes, pas de bagues ni de montres ; ne pas guider un câble en le laissant glisser dans la main.</li><li>Commandements convenus avant la manœuvre (voix, sifflet, geste) ; le chef de manœuvre voit et est vu.</li></ul><p class="small muted">Calcul fait avec la méthode et les coefficients du cours AGB 08 ind. e. La décision finale appartient au chef de manœuvre, après reconnaissance du terrain et contrôle du matériel (état, CMU marquée).</p></div>';
   }
@@ -122,9 +128,9 @@
   function clean(s) { return JSON.parse(JSON.stringify(s)); }
   function example() {
     var d = DEF();
-    d.fardeau = { poids: '12000', mode: 'roule', sol: 'meuble', sens: 'monte', pente: '20', trou: false, deplacement: '20', vol: '', dens: '1' };
+    d.fardeau = { poids: '12000', mode: 'roule', sol: 'meuble', sens: 'monte', pente: '20', trou: false, deplacement: '20', vol: '', dens: '1', longueur: '7', meteo: 'pluie', nuit: false };
     d.tracteur = { type: 'treuil', poids: '14000', sol: 'route', ft: '3500', beches: false, lc: '60', ls: '5', cmuCable: '8000', pm: '', pmUnit: 'kW', v: '5', ponts: 'tous', sensT: 'plat', penteT: '', renverse: false, lg: '5', lbm: '5' };
-    d.stock = { pf: [{ type: 'arbre', essence: 'chene', d: '50' }, { type: 'holmes3', solDur: false }, { type: 'arbre', essence: 'sapin', d: '40' }], cables: [{ nom: 'Câble Ø 16', lc: '40', cmu: '5000', n: 2 }], poulies: [{ nom: '', cmu: '8000', n: 4 }, { nom: '', cmu: '12000', n: 2 }], manilles: [{ nom: '', cmu: '8500', n: 6 }, { nom: '', cmu: '12000', n: 3 }] };
+    d.stock = { pf: [{ type: 'arbre', essence: 'chene', d: '50' }, { type: 'holmes3', solDur: false }, { type: 'arbre', essence: 'sapin', d: '40' }], cables: [{ nom: 'Câble Ø 16', lc: '40', cmu: '5000', n: 2 }], poulies: [{ nom: '', cmu: '8000', n: 4 }, { nom: '', cmu: '12000', n: 2 }], manilles: [{ nom: '', cmu: '8500', n: 6 }, { nom: '', cmu: '12000', n: 3 }], elingues: [{ nom: 'Élingue ronde', cmu: '10000', n: 4 }] };
     return d;
   }
   render();

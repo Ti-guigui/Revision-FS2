@@ -188,10 +188,10 @@
     });
     assign(pul, stock.poulies, 'poulie'); assign(man, stock.manilles, 'manille');
     /* Points fixes */
-    var pool = (stock.pf || []).map(function (p, i) { var x = MDF.pfResistance(p); x.i = i; x.used = false; return x; }).sort(function (a, b) { return a.r - b.r; });
+    var pool = (stock.pf || []).map(function (p, i) { var x = MDF.pfResistance(p); x.i = i; x.used = false; x.type = p.type; return x; }).sort(function (a, b) { return a.r - b.r; });
     pfs.slice().sort(function (a, b) { return b.load - a.load; }).forEach(function (nd) {
       var ok = pool.filter(function (p) { return !p.used && p.r >= nd.load; })[0];
-      if (ok) { ok.used = true; nd.ok = true; nd.item = ok.nom + ' (' + ok.calc + ')'; } else { nd.ok = false; nd.item = 'Aucun point fixe disponible ≥ ' + nd.load + ' daN'; }
+      if (ok) { ok.used = true; nd.ok = true; nd.item = ok.nom + ' (' + ok.calc + ')'; nd.court = ok.nom; nd.type = ok.type; } else { nd.ok = false; nd.item = 'Aucun point fixe disponible ≥ ' + nd.load + ' daN'; }
     });
     /* Câbles : le treuil utilise son câble ; les autres mouflages prennent le plus long câble de CMU suffisante */
     var cpool = []; (stock.cables || []).forEach(function (c) { for (var j = 0; j < (+c.n || 1); j++) cpool.push({ lc: +c.lc || 0, cmu: +c.cmu || 0, nom: c.nom || '', used: false }); });
@@ -201,7 +201,13 @@
       var ok = cpool.filter(function (p) { return !p.used && p.cmu >= c.load; })[0];
       if (ok) { ok.used = true; c.lc = ok.lc; c.cmu = ok.cmu; c.ok = true; c.item = (ok.nom ? ok.nom + ' — ' : '') + ok.lc + ' m, CMU ' + ok.cmu + ' daN'; } else { c.ok = false; c.item = 'Aucun câble de CMU ≥ ' + c.load + ' daN'; }
     });
-    return { poulies: pul, manilles: man, pfs: pfs, cables: cab };
+    /* Élingues / sangles : autour des points fixes naturels ou de la roue de secours, et points d’accrochage sur le fardeau */
+    var eli = [], ec = 0;
+    pfs.forEach(function (q) { if (q.ok && !/^holmes/.test(q.type || '')) eli.push({ id: 'E' + (++ec), load: q.load, lieu: 'autour du point fixe ' + q.id + ' (' + (q.court || '') + ')' }); });
+    var s1 = S[0]; s1.poulies.forEach(function (p) { if (p.side === 'bloc') eli.push({ id: 'E' + (++ec), load: r0(p.load), lieu: 'accrochage de la poulie ' + p.id + ' sur le fardeau (ou anneau de remorquage de CMU suffisante)' }); });
+    if (s1.dormant.side === 'bloc') eli.push({ id: 'E' + (++ec), load: r0(s1.dormant.load), lieu: 'accrochage du dormant sur le fardeau (ou anneau de remorquage)' });
+    assign(eli, stock.elingues, 'élingue');
+    return { poulies: pul, manilles: man, pfs: pfs, cables: cab, elingues: eli };
   };
 
   /* D — Distances (§10 à §12) */
@@ -238,13 +244,30 @@
     }
   };
 
+  /* Ambiance locale et terrain (§1.2, §3) : précautions, zone à évacuer */
+  MDF.ambiance = function (d, D) {
+    var f = d.fardeau, a = [], w = [];
+    if (f.nuit) a.push('Nuit : éclairer la zone, transmettre les commandements par moyens visuels (phares, projecteurs) et doubler les moyens de transmission ; le chef de manœuvre doit voir et être vu.');
+    if (f.meteo === 'pluie') { a.push('Pluie : sol glissant et moins porteur.'); if (f.sol === 'macadam' || f.sol === 'route') w.push('Il pleut mais le sol choisi est sec : prends plutôt « terrain humide » ou « meuble » (coefficients plus défavorables).'); }
+    if (f.meteo === 'gel' || f.meteo === 'neige') { a.push('Gel / neige : adhérence du tracteur réduite, sol parfois dur en surface mais meuble dessous ; câbles et agrès raides, gants obligatoires.'); w.push('Le cours ne donne pas de coefficient pour la neige ou le verglas : prends le coefficient d’adhérence le plus défavorable (boue profonde, fa 0,3) et les valeurs mini des points fixes.'); }
+    if (f.meteo === 'vent') a.push('Vent fort : attention aux fardeaux suspendus ou instables.');
+    if (f.blesses) a.push('Présence de blessés : précautions particulières, ne pas déplacer brutalement le fardeau.');
+    if (f.bulle) a.push('Contexte opérationnel : bulle de sécurité autour de la manœuvre.');
+    if ((d.stock.pf || []).some(function (p) { return /^holmes/.test(p.type) && p.solDur; }) && (f.meteo === 'pluie' || f.sol === 'meuble' || f.sol === 'boue' || f.sol === 'humide')) w.push('Tu as pris la valeur MAXI d’un lot Holmès alors que le sol est humide ou meuble : prends la valeur mini.');
+    var L = +f.longueur || 0, zone = null;
+    if (D && D.dpf) { var mx = Math.max.apply(null, Object.keys(D.dpf).map(function (k) { return D.dpf[k]; }).concat([D.DT || 0])); if (mx > 0) zone = r2(mx + L); }
+    if (zone) a.push('Zone à évacuer (polygone câbles – points fixes – tracteur – fardeau) : au moins ' + zone + ' m de long' + (L ? ' (longueur du véhicule ' + L + ' m comprise)' : '') + ', plus le prolongement des câbles.');
+    if (L && D && D.dpf) a.push('Longueur du véhicule à dépanner : ' + L + ' m. Les distances DPF sont mesurées à partir du point d’accrochage sur le fardeau.');
+    return { a: a, w: w, zone: zone };
+  };
+
   MDF.calculer = function (d) {
     var R = MDF.resistance(d.fardeau); if (R.err) return { err: R.err };
     var E = MDF.emd(d.tracteur); if (E.err) return { err: E.err, R: R, E: E };
     var t = d.tracteur, res = MDF.choisir(R.R, E.EMD, !!t.renverse, !!d.fardeau.trou);
     var ag = MDF.agres(res, t, d.stock || {}), D = MDF.distances(res, ag, t, d.fardeau);
-    var ok = ag.poulies.concat(ag.manilles, ag.pfs, ag.cables).every(function (x) { return x.ok !== false; }) && !D.err && res.S >= 15;
-    return { R: R, E: E, res: res, ag: ag, D: D, ok: ok };
+    var ok = ag.poulies.concat(ag.manilles, ag.pfs, ag.cables, ag.elingues).every(function (x) { return x.ok !== false; }) && !D.err && res.S >= 15;
+    return { R: R, E: E, res: res, ag: ag, D: D, ok: ok, amb: MDF.ambiance(d, D) };
   };
 
   if (typeof module !== 'undefined') module.exports = MDF; else root.MDF = MDF;

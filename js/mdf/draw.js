@@ -11,10 +11,10 @@
     var ag = out.ag, D = out.D, parts = [], y = 100, lanes = {}, stageTop = {}, stageBot = {};
     /* lanes : stage 1 en haut ; dans un stage, le dormant (k max) en haut et le garant (k = 0) en bas */
     S.forEach(function (st) { stageTop[st.s] = y; for (var k = st.E.length - 1; k >= 0; k--) { lanes[st.s + ':' + k] = y; y += g; } stageBot[st.s] = y - g; if (rev && st.s === m && m === 1) stageBot[st.s] = lanes[st.s + ':1']; y += 22; });
-    var H = y + 150 + m * 34, W = 1010;
+    var H = y + 150 + m * 34, W = 1060;
     var X0 = rev ? 150 : 0; W += X0;
-    var bx = function (s) { return X0 + 190 + (s - 1) * 150; };
-    var px = function (s) { return X0 + 640 + (s - 1) * 60; };
+    var bx = function (s) { return X0 + 250 + (s - 1) * 150; };
+    var px = function (s) { return X0 + 680 + (s - 1) * 60; };
     var pRx = px(m) + 110;
     var ly = function (s, k) { return lanes[s + ':' + k]; };
     function line(x1, y1, x2, y2, c, w, dash) { parts.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + c + '" stroke-width="' + (w || 3) + '"' + (dash ? ' stroke-dasharray="6 5"' : '') + ' stroke-linecap="round"/>'); }
@@ -40,7 +40,7 @@
     var FX = X0 + 40, FX2 = X0 + 150;
     parts.push('<rect x="' + FX + '" y="' + fy1 + '" width="110" height="' + (fy2 - fy1) + '" fill="#f3f4f6" stroke="#111827" stroke-width="3"/>');
     line(FX, fy1, FX2, fy2, '#111827', 2); line(FX2, fy1, FX, fy2, '#111827', 2);
-    text(FX + 55, fy1 - 8, 'FARDEAU ' + nf(out.R.R) + ' daN', { b: 1, s: 12 });
+    text(FX, fy1 - 8, 'FARDEAU · R = ' + nf(out.R.R) + ' daN' + (+tr.longueur ? ' · L = ' + df(+tr.longueur) + ' m' : ''), { b: 1, s: 12, a: 'start' });
     S.forEach(function (st) {
       var s = st.s, c = COL[(s - 1) % COL.length], last = st.E.length - 1, isM = s === m;
       var pfR = px(s) + r + 8;
@@ -60,25 +60,25 @@
       st.poulies.forEach(function (p) {
         var x = p.side === 'bloc' ? bx(s) : p.side === 'pf' ? px(s) : pRx, cy = (ly(s, p.k) + ly(s, p.k + 1)) / 2;
         circle(x, cy, r, c); parts.push('<circle cx="' + x + '" cy="' + cy + '" r="3.5" fill="' + c + '"/>');
-        text(x + (p.side === 'bloc' ? -r - 3 : -r - 6), p.side === 'bloc' ? cy - r + 4 : cy + 4, p.id, { s: 12, b: 1, c: c, a: 'end' });
+        text(x + (p.side === 'bloc' ? -r - 3 : -r - 6), p.side === 'bloc' ? cy - 5 : cy + 4, p.id + ' ≥ ' + nf(p.load), { s: 11, b: 1, c: c, a: 'end' });
         if (p.side === 'bloc') blocYs.push(cy);
       });
       var dy = ly(s, last), dSide = st.dormant.side;
       if (dSide === 'bloc') { parts.push('<circle cx="' + bx(s) + '" cy="' + dy + '" r="5" fill="' + c + '"/>'); blocYs.push(dy); }
       if (s === 1) blocYs.forEach(function (yy) { line(FX2, yy, bx(1), yy, '#111827', 2.5); });
-      else if (blocYs.length) { var y1 = Math.min.apply(null, blocYs), y2 = Math.max.apply(null, blocYs); if (y2 > y1) line(bx(s), y1, bx(s), y2, '#111827', 3); text(bx(s) - r - 6, y1 + 4, 'moufle M' + (s - 1), { s: 11, a: 'end' }); }
+      else if (blocYs.length) { var y1 = Math.min.apply(null, blocYs), y2 = Math.max.apply(null, blocYs); if (y2 > y1) line(bx(s), y1, bx(s), y2, '#111827', 3); text(bx(s), y2 + r + 30, 'moufle M' + (s - 1), { s: 11 }); }
       /* point fixe du mouflage */
       var pfYs = st.poulies.filter(function (p) { return p.side === 'pf'; }).map(function (p) { return (ly(s, p.k) + ly(s, p.k + 1)) / 2; });
       if (dSide === 'pf') { pfYs.push(dy); parts.push('<circle cx="' + px(s) + '" cy="' + dy + '" r="5" fill="' + c + '"/>'); line(px(s), dy, pfR, dy, c, 3); }
       if (pfYs.length) {
         var need = ag.pfs.filter(function (q) { return q.id === 'PF' + s; })[0] || {};
         pfYs.forEach(function (yy) { line(px(s) + (dSide === 'pf' && yy === dy ? 0 : r), yy, pfR, yy, '#111827', 2.5); });
-        pf(pfR, Math.min.apply(null, pfYs), Math.max.apply(null, pfYs), 'PF' + s + ' ≥ ' + nf(st.pf) + ' daN', need.ok === false ? '⚠ à trouver' : '', need.ok);
+        pf(pfR, Math.min.apply(null, pfYs), Math.max.apply(null, pfYs), 'PF' + s + ' ≥ ' + nf(st.pf) + ' daN', need.ok === false ? '⚠ à trouver' : (need.court || ''), need.ok);
       }
       if (st.renvoi) {
         var ry = (ly(s, 0) + ly(s, 1)) / 2, nR = ag.pfs.filter(function (q) { return q.id === 'PF renvoi'; })[0] || {};
         line(pRx + r, ry, pRx + r + 8, ry, '#111827', 2.5);
-        pf(pRx + r + 8, ry - 4, ry + 4, 'PF renvoi ≥ ' + nf(st.renvoi) + ' daN', nR.ok === false ? '⚠ à trouver' : '', nR.ok);
+        pf(pRx + r + 8, ry - 4, ry + 4, 'PF renvoi ≥ ' + nf(st.renvoi) + ' daN', nR.ok === false ? '⚠ à trouver' : (nR.court || ''), nR.ok);
       }
       /* tracteur / treuil */
       if (isM) {
