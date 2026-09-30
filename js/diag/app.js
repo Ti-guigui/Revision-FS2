@@ -31,8 +31,11 @@
     var M = D.MEASURES[mid], v = run && run.vid ? veh(run.vid) : null;
     if (run && run.over[mid]) return { min: run.over[mid].min, max: run.over[mid].max == null ? Infinity : run.over[mid].max, src: 'cons' };
     if (v && v.cons && v.cons[mid]) return { min: v.cons[mid].min, max: v.cons[mid].max == null ? Infinity : v.cons[mid].max, src: 'cons' };
+    var r24 = run && run.v24 && D.V24 && D.V24[mid]; if (r24) return { min: r24[0], max: r24[1], src: 'ref' };
     return { min: M.min, max: M.max, src: 'ref' };
   }
+  function lab(mid) { var M = D.MEASURES[mid], r = run && run.v24 && D.V24 && D.V24[mid]; return (r && r[3]) || M.label; }
+  function note(mid) { var M = D.MEASURES[mid], r = run && run.v24 && D.V24 && D.V24[mid]; return (r && r[2]) || M.note; }
   function noCons(mid) { var v = run && run.vid ? veh(run.vid) : null; return (run && run.nocons[mid]) || (v && v.nocons && v.nocons[mid]); }
 
   /* ---------- Vues ---------- */
@@ -136,7 +139,7 @@
     var m = D.MODULES[k]; if (!m) return '<p>Module inconnu.</p>';
     var vs = store.vehicles.map(function (v) { return '<option value="' + v.id + '">' + esc(vname(v)) + '</option>'; }).join('');
     return crumbs([['Diagnostic', '#/'], [m.titre]]) + '<h1 class="h1">' + m.icon + ' ' + esc(m.titre) + '</h1>' +
-      '<div class="card pad"><form class="row-actions" data-a="start" data-m="' + k + '"><select name="vid"><option value="">Sans véhicule (valeurs de référence)</option>' + vs + '</select><button class="btn primary">▶️ Commencer le diagnostic</button></form></div>' +
+      '<div class="card pad"><form class="row-actions" data-a="start" data-m="' + k + '"><select name="vid"><option value="">Sans véhicule (valeurs de référence)</option>' + vs + '</select><select name="tension"><option value="12">Réseau de bord 12 V (VL)</option><option value="24"' + (k === 'pl' ? ' selected' : '') + '>Réseau de bord 24 V (PL)</option></select><button class="btn primary">▶️ Commencer le diagnostic</button></form><p class="small muted">Une fiche véhicule poids lourd passe automatiquement en 24 V.</p></div>' +
       '<h2 class="h2">📖 Comprendre</h2><div class="card pad lesson">' + m.comprendre + '</div>';
   }
 
@@ -155,7 +158,7 @@
   }
 
   /* ---------- Diagnostic guidé ---------- */
-  function startRun(k, vid) { run = { module: k, vid: vid || '', cur: D.MODULES[k].start, trace: [], over: {}, nocons: {}, res: null, editing: {} }; saveRun(); }
+  function startRun(k, vid, v24) { var vv = vid ? veh(vid) : null; run = { module: k, vid: vid || '', v24: !!(v24 || (vv && (vv.v24 || vv.archi === 'pl_j1939'))), cur: D.MODULES[k].start, trace: [], over: {}, nocons: {}, res: null, editing: {} }; saveRun(); }
   function saveRun() { try { sessionStorage.setItem('diag-run', JSON.stringify(run)); } catch (e) { /* ignore */ } }
   function loadRun() { try { run = JSON.parse(sessionStorage.getItem('diag-run')); } catch (e) { run = null; } }
 
@@ -163,12 +166,12 @@
     if (!run) return '<p>Aucun diagnostic en cours.</p><a class="btn" href="#/">Retour</a>';
     var m = D.MODULES[run.module], s = m.steps[run.cur], v = run.vid ? veh(run.vid) : null;
     var head = crumbs([['Diagnostic', '#/'], [m.titre, '#/mod/' + run.module], ['Étape ' + (run.trace.length + 1)]]) +
-      '<div class="diag-head"><span>' + m.icon + ' ' + esc(m.titre) + (v ? ' · 🚗 ' + esc(vname(v)) : ' · sans véhicule') + '</span>' +
-      (run.trace.length ? '<button class="btn ghost small" data-a="back">⬅️ Étape précédente</button>' : '') + '</div>';
+      '<div class="diag-head"><span>' + m.icon + ' ' + esc(m.titre) + (v ? ' · 🚗 ' + esc(vname(v)) : ' · sans véhicule') + (run.v24 ? ' · 🚛 24 V' : '') + '</span>' +
+      (run.trace.length ? '<button class="btn ghost small" data-a="back">⬅️ Étape précédente</button>' : '') + '</div>' + (run.v24 ? '<p class="small muted">🚛 Mode 24 V : tensions de référence adaptées au réseau 24 V. Les capteurs restent alimentés en 5 V par les calculateurs et les niveaux CAN sont identiques au VL.</p>' : '');
     var body = '<div class="q-card"><h1 class="q-text">' + esc(s.title) + '</h1>';
     if (s.type === 'end') {
-      body += '<div class="box ' + (s.v === 'ok' ? 'retenir' : s.v === 'bad' ? 'piege' : 'explic') + '">' + s.html + '</div>' +
-        (s.dep ? '<div class="box explic"><b>🛠️ Dépannage : ce qu’on peut faire pour repartir</b>' + s.dep + '</div>' : '') +
+      body += '<div class="box ' + (s.v === 'ok' ? 'retenir' : s.v === 'bad' ? 'piege' : 'explic') + '">' + s.html.replace(/\{vid\}/g, run.vid || '') + '</div>' +
+        (s.dep ? '<div class="box explic"><b>🛠️ Dépannage : ce qu’on peut faire pour repartir</b>' + s.dep.replace(/\{vid\}/g, run.vid || '') + '</div>' : '') +
         (s.noApres ? '' : '<details class="diag-why"><summary>✅ Après le diagnostic : réparation et remise en service</summary>' + (m.apres || '') + (D.APRES || '') + '</details>') +
         '<h2 class="h2">Récapitulatif</h2>' + traceHtml(run.trace) +
         '<div class="row-actions">' + (v ? '<button class="btn primary" data-a="save-hist">💾 Enregistrer dans l’historique de ' + esc(vname(v)) + '</button>' : '') +
@@ -177,7 +180,7 @@
     }
     if (s.why) body += '<details class="diag-why" open><summary>💡 Pourquoi et fonctionnement</summary>' + s.why + '</details>';
     if (s.type === 'info') {
-      body += (s.html || '') + '<div class="row-actions"><button class="btn primary" data-a="info-next">➡️ ' + esc(s.bouton || 'Étape suivante') + '</button></div></div>';
+      body += (s.html || '').replace(/\{vid\}/g, run.vid || '') + '<div class="row-actions"><button class="btn primary" data-a="info-next">➡️ ' + esc(s.bouton || 'Étape suivante') + '</button></div></div>';
       return head + body;
     }
     if (s.type === 'choice' || s.type === 'network') {
@@ -223,9 +226,9 @@
       consUi = '<div class="row-actions"><button type="button" class="btn small ghost" data-a="cons-edit" data-k="' + mid + '">✏️ Finalement, j’ai la valeur constructeur</button></div>';
     }
     var st = val != null && !isNaN(val) ? statusOf(val, e) : null;
-    return '<div class="diag-meas' + (st ? ' ' + st.st : '') + '"><label><b>' + esc(M.label) + '</b>' +
+    return '<div class="diag-meas' + (st ? ' ' + st.st : '') + '"><label><b>' + esc(lab(mid)) + '</b>' +
       (M.min == null ? '<span class="diag-exp">' + src + '</span>' : '<span class="diag-exp">Attendu : <b>' + range(e, M.unit) + '</b> ' + src + '</span>') +
-      (e.src === 'ref' && M.note ? '<span class="small muted">' + esc(M.note) + '</span>' : '') +
+      (e.src === 'ref' && note(mid) ? '<span class="small muted">' + esc(note(mid)) + '</span>' : '') +
       '<span class="diag-in"><input name="v-' + mid + '" inputmode="decimal" autocomplete="off" placeholder="Ta mesure" value="' + (val != null && !isNaN(val) ? (M.unit === '°' ? deg(val) : num(val)) : '') + '"' + (run.res ? ' disabled' : '') + '> ' + esc(M.unit) + (st && M.min != null ? ' <b>' + badge(st.st) + '</b>' : '') + '</span></label>' + consUi + '</div>';
   }
 
@@ -252,7 +255,7 @@
   main.addEventListener('submit', function (ev) {
     var f = ev.target, a = f.getAttribute('data-a'); if (!a) return; ev.preventDefault();
     if (a === 'create') return createVeh(f);
-    if (a === 'start') { startRun(f.getAttribute('data-m'), f.vid.value); location.hash = '#/run'; return render(); }
+    if (a === 'start') { startRun(f.getAttribute('data-m'), f.vid.value, f.tension && f.tension.value === '24'); location.hash = '#/run'; return render(); }
     var v = veh(currentVid());
     if (a === 'net-add' && v && f.nom.value.trim()) { v.reseaux.push({ nom: f.nom.value.trim(), type: f.type.value, on: true }); save(); return render(); }
     if (a === 'ecu-add' && v && f.nom.value.trim()) { v.ecus.push({ nom: f.nom.value.trim(), bus: f.bus.value, term: false, on: true }); save(); return render(); }
@@ -292,7 +295,7 @@
     }
     if (a === 'next') {
       var st = D.MODULES[run.module].steps[run.cur];
-      run.trace.push({ step: run.cur, title: st.title, v: run.res.v, msg: run.res.msg, meas: st.measures.map(function (mid) { var e = expected(mid), M = D.MEASURES[mid], x = run.vals[mid]; return { id: mid, label: M.label, unit: M.unit, val: x, exp: range(e, M.unit), src: e.src, st: statusOf(x, e).st }; }) });
+      run.trace.push({ step: run.cur, title: st.title, v: run.res.v, msg: run.res.msg, meas: st.measures.map(function (mid) { var e = expected(mid), M = D.MEASURES[mid], x = run.vals[mid]; return { id: mid, label: lab(mid), unit: M.unit, val: x, exp: range(e, M.unit), src: e.src, st: statusOf(x, e).st }; }) });
       run.cur = run.res.next; run.res = null; run.vals = null; saveRun(); window.scrollTo(0, 0); return render();
     }
     if (a === 'info-next') { var si = D.MODULES[run.module].steps[run.cur]; run.trace.push({ step: run.cur, title: si.title }); run.cur = si.next; saveRun(); window.scrollTo(0, 0); return render(); }
@@ -339,7 +342,7 @@
     else if (p[0] === 'marque') html = viewMarque(p[1]);
     else if (p[0] === 'veh') html = viewVeh(p[1]);
     else if (p[0] === 'mod') html = viewMod(p[1]);
-    else if (p[0] === 'run' && p[1]) { if (!run || run.module !== p[1] || run.vid !== (p[2] || '')) startRun(p[1], p[2]); history.replaceState(null, '', '#/run'); html = viewRun(); }
+    else if (p[0] === 'run' && p[1]) { if (!run || run.module !== p[1] || run.vid !== (p[2] || '') || (p[3] === '24' && !run.v24)) startRun(p[1], p[2], p[3] === '24'); history.replaceState(null, '', '#/run'); html = viewRun(); }
     else if (p[0] === 'run') html = viewRun();
     else if (p[0] === 'hist') html = viewHist(p[1], +p[2]);
     else html = viewHome();
