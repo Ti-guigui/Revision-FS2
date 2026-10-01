@@ -573,7 +573,7 @@ a.card:hover { box-shadow: 0 6px 20px rgba(15, 29, 61, .10); }
 .steps li { counter-increment: st; position: relative; padding: 8px 12px 8px 46px; background: var(--surface-2); border-radius: 10px; }
 .steps li::before { content: counter(st); position: absolute; left: 10px; top: 8px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #fff; font-weight: 800; font-size: .85rem; }
 .steps li:not(:last-child)::after { content: ""; position: absolute; left: 22px; bottom: -9px; width: 2px; height: 10px; background: var(--c); }
-.steps b { display: block; }
+.steps li > b:has(+ span) { display: block; } /* titre d’étape suivi de son texte ; un mot en gras dans une phrase reste en ligne */
 .steps span { color: var(--text); font-size: .95rem; }
 .flow-h { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 6px; margin: 0 16px; }
 .flow-h i { align-self: center; }

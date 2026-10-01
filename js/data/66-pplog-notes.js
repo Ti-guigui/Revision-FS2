@@ -9,8 +9,8 @@
 
   var L = [
     { id: 'presentation', title: 'Présentation du PPLOG',
-      html: li(['Boîte de vitesses <b>automatisée</b> (mécanique robotisée).', '<b>2 blocages de différentiels</b> : longitudinaux et transversaux.', 'Transmission <b>8×8 permanente</b>.', 'Peut être équipé d’un poste <b>PR4G</b>, d’une <b>dalle SITTEL</b> et d’un <b>GPS</b>.', 'Permis : <b>PL</b> pour le conduire ; avec la remorque : <b>SPL</b>.', 'Chargement : <b>16,5 t maxi</b>, <b>limité à 14 t en France</b>.', '<b>Chronotachygraphe</b> : pile à changer <b>tous les 2 ans</b> (le retirer sans le débrancher) ; une FT est sortie pour le supprimer.', '<b>Dépannage</b> : <b>jamais de tracté-levé par les chapes avant</b>.']),
-      retenir: ['8×8 permanent, BV automatisée, 2 blocages (longitudinaux + transversaux).', 'PL seul, SPL avec remorque.', '16,5 t maxi, 14 t en France.', 'Jamais de tracté-levé par les chapes avant.'] },
+      html: li(['Boîte de vitesses <b>automatisée</b> (mécanique robotisée).', 'Blocages de différentiels : <b>3 longitudinaux</b> (pont inter-AV, boîte de transfert, pont inter-AR) et <b>2 transversaux</b> (les 2 ponts arrière).', 'Transmission <b>8×8 permanente</b>.', 'Peut être équipé d’un poste <b>PR4G</b>, d’une <b>dalle SITTEL</b> et d’un <b>GPS</b>.', 'Permis : <b>PL</b> pour le conduire ; avec la remorque : <b>SPL</b>.', 'Chargement : <b>16,5 t maxi</b>, <b>limité à 14 t en France</b>.', '<b>Chronotachygraphe</b> : pile à changer <b>tous les 2 ans</b> (le retirer sans le débrancher) ; une FT est sortie pour le supprimer.', '<b>Dépannage</b> : <b>jamais de tracté-levé par les chapes avant</b>.']),
+      retenir: ['8×8 permanent, BV automatisée, blocages : 3 longitudinaux + 2 transversaux.', 'PL seul, SPL avec remorque.', '16,5 t maxi, 14 t en France.', 'Jamais de tracté-levé par les chapes avant.'] },
     { id: 'reseau', title: 'Réseau multiplexé : ECB et VDB',
       html: '<div class="tw"><table><tr><th>Bus</th><th>Qui dialogue dessus</th><th>Contrôle</th></tr><tr><td><b>ECB</b> (Engine Control Bus, châssis)</td><td>' + ECB.join(', ') + '</td><td>Prise de diagnostic <b>broches 6 et 14</b></td></tr><tr><td><b>VDB</b> (Vehicle Data Bus, cabine)</td><td>' + VDB.join(', ') + '</td><td>Prise de diagnostic <b>broches 21 et 22</b></td></tr></table></div>' +
         '<h3>Résistances de terminaison</h3>' + li(['Le réseau possède <b>4 résistances de terminaison</b> (120 Ω) :', '<b>1</b> dans le calculateur <b>EDC7</b> (ECM), <b>1</b> dans le <b>DTCO</b>, <b>2</b> dans le <b>VCM</b>.', 'Soit 2 par bus : ECB = EDC7 + VCM ; VDB = DTCO + VCM → 60 Ω mesurés sur chaque bus, contact coupé.', 'Le <b>VCM</b> fait la passerelle entre l’ECB et le VDB.']),
@@ -39,7 +39,7 @@
 
   var Q = [
     ['presentation', 'Type de transmission du PPLOG ?', ['8×8 permanente', '8×4 enclenchable', '6×6 permanente', '8×8 enclenchable']],
-    ['presentation', 'Combien de blocages de différentiels sur le PPLOG, et lesquels ?', ['2 : longitudinaux et transversaux', '1 : transversal', '3 : avant, central et arrière', '2 : avant et arrière']],
+    ['presentation', 'Combien de blocages de différentiels sur le PPLOG, et lesquels ?', ['5 : 3 longitudinaux (pont inter-AV, boîte de transfert, inter-AR) et 2 transversaux (2 ponts arrière)', '2 : un longitudinal et un transversal', '3 : avant, central et arrière', '4 : un par pont']],
     ['presentation', 'Quel permis faut-il pour conduire le PPLOG avec sa remorque ?', ['SPL', 'PL', 'B', 'SPL seulement sans remorque']],
     ['presentation', 'Chargement du PPLOG ?', ['16,5 t maxi, limité à 14 t en France', '14 t maxi, limité à 12 t en France', '18 t maxi', '16,5 t, sans limitation en France']],
     ['presentation', 'Équipements possibles du PPLOG ?', ['Poste PR4G, dalle SITTEL et GPS', 'Uniquement un GPS', 'Une tourelle téléopérée', 'Un treuil de halage de 18 t']],
