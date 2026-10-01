@@ -338,11 +338,15 @@
       case 'uv2': html = parts[1] === 'fiche' ? viewUV2Fiche(parts[2]) : viewUV2(); break;
       case 'a-revoir': html = viewARevoir(); break;
       case 'formules': html = viewFormules(parts[1]); break;
+      case 'recherche': html = viewRecherche(parts.slice(1).join('/')); break;
       default: html = viewHome();
     }
     main.innerHTML = html;
     setDecor(route, parts);
     if (route !== 'session') window.scrollTo(0, 0);
+    if (route === 'lecon') setTimeout(scrollToPart, 30);
+    var si = document.querySelector('form.top-search input');
+    if (si && route !== 'recherche' && document.activeElement !== si) si.value = '';
     if (route === 'session') afterSessionRender();
     main.focus({ preventScroll: true });
   }
@@ -492,6 +496,175 @@
       '</div>';
   }
 
+  // Recherche globale : matières, leçons (partie par partie), à retenir, schémas, questions, formules, fiches,
+  // Coin diagnostic (index js/search-diag.js) et calcul MDF. Texte normalisé caractère par caractère (même longueur)
+  // pour retrouver la position exacte du mot dans l'extrait.
+  var searchIdx = null;
+  function fold(s) {
+    return String(s || '').replace(/[\s\S]/g, function (c) {
+      var d = c.toLowerCase().normalize('NFD').charAt(0);
+      return /[a-z0-9]/.test(d) ? d : ' ';
+    });
+  }
+  function plain(h) {
+    return String(h || '').replace(/<(br|\/p|\/li|\/tr|\/td|\/th|\/h\d)[^>]*>/gi, ' · ').replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#39;|&apos;/g, '’').replace(/&quot;/g, '"')
+      .replace(/(\s*·\s*)+/g, ' · ').replace(/\s+/g, ' ').replace(/^ · | · $/g, '').trim();
+  }
+  function buildSearch() {
+    var idx = [];
+    function add(href, ico, t, c, x, w) { t = plain(t); x = plain(x); idx.push({ h: href, i: ico, t: t, c: c, x: x, w: w, nt: fold(t), nx: fold(x) }); }
+    [['#/cours', '📚', 'Cours', 'Toutes les matières'], ['#/exercices', '📝', 'Exercices corrigés', ''], ['#/qcm', '🧠', 'QCM', 'Questions par matière et par leçon'],
+      ['#/quiz', '⚡', 'Quiz', 'Questions au hasard'], ['#/resultats', '📊', 'Résultats', 'Scores et progression'], ['#/a-revoir', '🔁', 'À revoir', 'Questions ratées'],
+      ['#/formules', '📐', 'Formules, valeurs et conversions', 'Formulaire'], ['#/fiches', '📄', 'Fiches de révision', 'Imprimables'], ['#/uv2', '🎯', 'UV2', 'Dossier d’évaluation'],
+      ['diagnostic.html', '🔧', 'Coin diagnostic', 'Diagnostic guidé, capteurs, actionneurs, marques, véhicules'],
+      ['mdf.html', '🏗️', 'Calcul manœuvre de force', 'MDF : mouflage, ancrage, effort, poulies, manilles, élingues, Holmes, pente, sol']
+    ].forEach(function (p) { add(p[0], p[1], p[2], 'Page', p[3], 6); });
+    REV.subjects.forEach(function (s) {
+      add('#/matiere/' + s.id, s.icon, s.name, 'Matière', s.desc || '', 5);
+      s.lessons.forEach(function (l) {
+        if (l.hidden && !/^sym/.test(l.id)) return;
+        var where = s.name + (l.exo ? ' › Exercices' : '');
+        var parts = String(l.html || '').split(/<h3[^>]*>/i);
+        add('#/lecon/' + l.key, s.icon, l.num + ' — ' + l.title, where, parts[0] + ' ' + (l.retenir || []).join(' · ') + ' ' + (l.pieges || []).join(' · '), 4);
+        parts.slice(1).forEach(function (p, n) {
+          var k = p.search(/<\/h3>/i);
+          add('#/lecon/' + l.key + '#p-' + (n + 1), '§', k > 0 ? p.slice(0, k) : l.title, where + ' › ' + l.title, k > 0 ? p.slice(k) : p, 3);
+        });
+        (l.images || []).forEach(function (im) { add('#/lecon/' + l.key + '#schemas', '🖼️', im.cap, where + ' › ' + l.title, '', 2); });
+      });
+    });
+    var F = REV.formulaires || {};
+    Object.keys(F).forEach(function (id) { var s = subj(id); (F[id] || []).forEach(function (b) { add('#/formules/' + id, '📐', b.t, 'Formules › ' + (s ? s.name : id), b.html, 3); }); });
+    Object.keys(REV.fiches || {}).forEach(function (id) { var s = subj(id); add('#/fiche/' + id, '📄', 'Fiche de révision — ' + (s ? s.name : id.toUpperCase()), 'Fiches', REV.fiches[id].html, 2); });
+    Object.keys(REV.qById).forEach(function (id) {
+      var q = REV.qById[id], l = REV.lessonById[q.lkey];
+      if (!l || (l.hidden && !/^sym/.test(l.id))) return;
+      var good = (q.good || []).map(function (i) { return q.c[i]; }).join(' · ');
+      add('#/lecon/' + q.lkey, '❓', q.q, 'Question › ' + subj(l.subject).name + ' › ' + l.title, 'Réponse : ' + good + ' · ' + (q.e || ''), 1);
+    });
+    (window.SEARCH_DIAG || []).forEach(function (e) { add('diagnostic.html#/' + e[0], '🔧', e[1], e[2], e[3], 3); });
+    return idx;
+  }
+  function searchFind(query, max) {
+    if (!searchIdx) searchIdx = buildSearch();
+    var nq = fold(query).replace(/\s+/g, ' ').trim();
+    if (!nq) return [];
+    var toks = nq.split(' ').filter(function (t, i, a) { return a.indexOf(t) === i; });
+    var res = [];
+    searchIdx.forEach(function (e) {
+      var sc = e.w * 4, all = ' ' + e.nt + ' ' + e.nx + ' ';
+      for (var i = 0; i < toks.length; i++) {
+        var t = toks[i];
+        if (all.indexOf(t) < 0) return;
+        if ((' ' + e.nt + ' ').indexOf(' ' + t + ' ') >= 0) sc += 30;
+        else if ((' ' + e.nt).indexOf(' ' + t) >= 0) sc += 20;
+        else if (e.nt.indexOf(t) >= 0) sc += 10;
+        else if ((' ' + e.nx).indexOf(' ' + t) >= 0) sc += 3;
+      }
+      if (e.nt.indexOf(nq) >= 0) sc += 40 + (e.nt.trim() === nq ? 40 : 0);
+      else if (toks.length > 1 && e.nx.indexOf(nq) >= 0) sc += 15;
+      res.push({ e: e, s: (sc - e.w * 4) * (e.w === 1 ? 0.5 : 1) + e.w * 12 - Math.min(e.t.length, 120) / 30 }); // les questions passent après les parties de cours
+    });
+    res.sort(function (a, b) { return b.s - a.s; });
+    return max ? res.slice(0, max) : res;
+  }
+  // Met en gras les mots cherchés ; texte long → extrait centré sur le premier mot trouvé
+  function searchMark(text, nt, toks, len) {
+    var start = 0;
+    if (len && text.length > len) {
+      var p = -1;
+      toks.forEach(function (t) { var k = nt.indexOf(t); if (k >= 0 && (p < 0 || k < p)) p = k; });
+      start = Math.max(0, p - Math.round(len / 3));
+      if (start) { var sp = text.indexOf(' ', start); if (sp > 0 && sp - start < 15) start = sp + 1; }
+      text = text.slice(start, start + len); nt = nt.slice(start, start + len);
+    }
+    var on = new Array(text.length + 1).join('0').split('');
+    toks.forEach(function (t) { if (!t) return; var k = nt.indexOf(t); while (k >= 0) { for (var j = k; j < k + t.length; j++) on[j] = '1'; k = nt.indexOf(t, k + t.length); } });
+    var out = '', open = false;
+    for (var i = 0; i < text.length; i++) {
+      if (on[i] === '1' && !open) { out += '<mark>'; open = true; }
+      if (on[i] !== '1' && open) { out += '</mark>'; open = false; }
+      out += esc(text.charAt(i));
+    }
+    if (open) out += '</mark>';
+    return (start ? '… ' : '') + out + (len && text.length >= len ? ' …' : '');
+  }
+  function searchToks(query) { return fold(query).replace(/\s+/g, ' ').trim().split(' ').filter(Boolean); }
+  function searchItem(r, toks, full) {
+    var e = r.e;
+    return '<a class="search-res" href="' + esc(e.h) + '"><span class="sr-ic">' + e.i + '</span><span class="sr-body"><b>' + searchMark(e.t, e.nt, toks, full ? 0 : 90) + '</b>' +
+      '<span class="sr-ctx">' + esc(e.c) + '</span>' + (full && e.x ? '<span class="sr-x">' + searchMark(e.x, e.nx, toks, 180) + '</span>' : '') + '</span></a>';
+  }
+  function viewRecherche(query) {
+    query = query || '';
+    var res = query ? searchFind(query) : [], toks = searchToks(query);
+    var groups = [['Pages et matières', function (e) { return e.w >= 5; }], ['Cours', function (e) { return e.w >= 2 && e.w <= 4 && e.h.charAt(0) === '#'; }],
+      ['Coin diagnostic', function (e) { return /^diagnostic/.test(e.h) && e.w < 5; }], ['Questions', function (e) { return e.w === 1; }]];
+    var html = '<h1 class="h1">🔎 Recherche</h1>' +
+      '<form class="search-page" role="search" data-search-page><input type="search" name="q" value="' + esc(query) + '" placeholder="Un mot, un élément, une valeur… (ex. : RSQ 240, thermostat, 60 Ω)" autocomplete="off" aria-label="Rechercher"><button class="btn primary">Rechercher</button></form>';
+    if (!query) return html + '<p class="muted">Tape un mot : le nom d’un élément, d’un capteur, d’une leçon, une valeur… Les résultats t’envoient directement sur la bonne partie.</p>';
+    if (!res.length) return html + '<p class="muted">Aucun résultat pour « ' + esc(query) + ' ». Essaie un autre mot ou une orthographe plus courte.</p>';
+    html += '<p class="muted">' + res.length + ' résultat' + (res.length > 1 ? 's' : '') + ' pour « ' + esc(query) + ' ».</p>';
+    groups.map(function (g) { return [g[0], res.filter(function (r) { return g[1](r.e); })]; })
+      .filter(function (g) { return g[1].length; })
+      .sort(function (a, b) { return b[1][0].s - a[1][0].s; }) // la catégorie qui contient le meilleur résultat d'abord
+      .forEach(function (g) {
+      var list = g[1];
+      var shown = list.slice(0, 60);
+      html += '<h2 class="h2">' + g[0] + ' <span class="muted small">(' + list.length + ')</span></h2><div class="search-list">' +
+        shown.map(function (r) { return searchItem(r, toks, true); }).join('') + '</div>' +
+        (list.length > shown.length ? '<p class="muted small">… et ' + (list.length - shown.length) + ' autres : précise ta recherche.</p>' : '');
+    });
+    return html;
+  }
+  // Barre du haut : propositions en direct (flèches + Entrée), Entrée sans choix → page de résultats
+  function initSearchBar() {
+    var form = document.querySelector('form.top-search');
+    if (!form) return;
+    var input = form.querySelector('input'), pop = form.querySelector('.search-pop'), sel = -1, items = [];
+    function close() { pop.hidden = true; sel = -1; input.setAttribute('aria-expanded', 'false'); }
+    function show() {
+      var q = input.value.trim();
+      if (q.length < 2) { close(); return; }
+      var res = searchFind(q, 8), toks = searchToks(q);
+      pop.innerHTML = (res.length ? res.map(function (r) { return searchItem(r, toks, false); }).join('') : '<p class="sr-none">Aucun résultat</p>') +
+        '<a class="search-all" href="#/recherche/' + encodeURIComponent(q) + '">Voir tous les résultats ›</a>';
+      items = pop.querySelectorAll('a'); sel = -1; pop.hidden = false; input.setAttribute('aria-expanded', 'true');
+    }
+    function hilite() { Array.prototype.forEach.call(items, function (a, i) { a.classList.toggle('on', i === sel); }); if (items[sel]) items[sel].scrollIntoView({ block: 'nearest' }); }
+    var t;
+    input.addEventListener('input', function () { clearTimeout(t); t = setTimeout(show, 120); });
+    input.addEventListener('focus', function () { if (input.value.trim().length >= 2) show(); });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' && !pop.hidden) { sel = Math.min(items.length - 1, sel + 1); hilite(); e.preventDefault(); }
+      else if (e.key === 'ArrowUp' && !pop.hidden) { sel = Math.max(-1, sel - 1); hilite(); e.preventDefault(); }
+      else if (e.key === 'Escape') { close(); input.blur(); }
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var q = input.value.trim(); if (!q) return;
+      var href = items[sel] ? items[sel].getAttribute('href') : '#/recherche/' + encodeURIComponent(q);
+      close(); input.blur();
+      if (href.charAt(0) === '#') location.hash = href; else location.href = href;
+    });
+    pop.addEventListener('click', function (e) { if (e.target.closest('a')) { close(); input.blur(); } });
+    document.addEventListener('click', function (e) { if (!form.contains(e.target)) close(); });
+    document.addEventListener('submit', function (e) {
+      var f = e.target.closest('form[data-search-page]'); if (!f) return;
+      e.preventDefault(); var q = f.querySelector('input').value.trim(); if (q) location.hash = '#/recherche/' + encodeURIComponent(q);
+    });
+  }
+  // Après navigation vers une partie de leçon (#p-3) ou les schémas : on y va et on la fait clignoter
+  function scrollToPart() {
+    var m = location.hash.match(/#\/[^#]*#([\w-]+)$/);
+    if (!m) return;
+    var el = document.getElementById(m[1]);
+    if (!el) return;
+    el.scrollIntoView({ block: 'start' });
+    el.classList.remove('flash-part'); void el.offsetWidth; el.classList.add('flash-part');
+  }
+
   function viewLecon(key) {
     var l = REV.lessonById[key];
     if (!l) return viewCours();
@@ -506,8 +679,8 @@
       '<article class="lesson" style="--c:' + s.color + '">' +
       '<h1 class="h1"><span class="num">' + l.num + '</span> ' + esc(l.title) + '</h1>' +
       (ls.pct !== null ? '<p><span class="pill ' + level(ls.pct).cls + '">' + level(ls.pct).dot + ' Ton score : ' + ls.pct + ' %</span></p>' : '') +
-      '<div class="lesson-body">' + l.html + '</div>' +
-      (l.images ? l.images.map(function (im) {
+      '<div class="lesson-body">' + (function (n) { return l.html.replace(/<h3(?=[\s>])/gi, function () { return '<h3 id="p-' + (++n) + '"'; }); })(0) + '</div>' +
+      (l.images ? '<span id="schemas"></span>' + l.images.map(function (im) {
         return '<figure><a href="img/' + im.src + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + im.src + '" alt="' + esc(im.cap) + '"></a><figcaption>🖼️ ' + esc(im.cap) + ' <span class="muted">(toucher pour agrandir)</span></figcaption></figure>';
       }).join('') : '') +
       (l.retenir ? '<div class="box retenir"><b>★ À retenir</b><ul>' + l.retenir.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' : '') +
@@ -1498,6 +1671,7 @@
     document.getElementById('side-subjects').innerHTML = REV.subjects.map(function (s) {
       return '<a href="#/matiere/' + s.id + '"><span>' + s.icon + '</span>' + esc(s.name) + '</a>';
     }).join('');
+    initSearchBar();
     document.addEventListener('click', onClick);
     document.addEventListener('change', onChange);
     document.addEventListener('submit', onSubmit);
