@@ -709,3 +709,9 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .q-prev .qp-q { color: var(--muted); }
 /* Barre englobante au-dessus de barres individuelles (ex. (Ā + B̄)‾) : la grande barre passe au-dessus */
 .ov:has(.ov) { text-decoration: none; border-top: 2px solid currentColor; padding-top: 4px; }
+.exp-steps { margin: 6px 0; padding-left: 0; list-style: none; display: grid; gap: 5px; }
+.exp-steps li { position: relative; padding-left: 16px; line-height: 1.45; }
+.exp-steps li::before { content: "-"; position: absolute; left: 2px; font-weight: 800; color: var(--c, var(--primary)); }
+.exp-fonct { margin: 6px 0 8px; }
+.exp-h { margin: 4px 0; font-weight: 700; }
+.exp-fonct { margin: 6px 0 8px !important; } .exp-fonct li::before { background: var(--primary, #1e3a8a) !important; }

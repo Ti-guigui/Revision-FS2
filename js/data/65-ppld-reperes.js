@@ -7,27 +7,38 @@
     treuil: { img: I + 'fiche-treuil-pushpull.jpg', nom: 'Treuils + push pull' },
     cetop: { img: I + 'fiche-entree-cetop.jpg', nom: 'Section d’entrée (bloc CETOP)' }
   };
-  /* [fiche, repère, désignation, rôle (ou null si seule la désignation est demandée), demander la désignation] */
+  /* [fiche, repère, désignation, rôle court (ou null si seule la désignation est demandée), demander la désignation, étapes de fonctionnement] */
   var R = [
-    ['rmu', 1, 'Vanne de mise à flot', 'En tracté-tiré en terrain accidenté, une fois broché, elle libère le vérin correcteur d’assiette pour qu’il suive les mouvements ; il faut la refermer avant de débrocher.', true],
-    ['rmu', 2, 'Soupape de freinage', 'Maîtriser le mouvement du vérin de corps de flèche face à une charge entraînante et le maintenir en position en cas de chute de pression (rupture de flexible).', true],
-    ['rmu', 3, 'Réducteur de pression 3 voies', 'Donner la pression de pilotage des tiroirs (25 b) et amortir leurs déplacements (pas de pics de pression).', true],
-    ['rmu', 4, 'Gicleur de déséquilibre', 'Déséquilibrer l’étage principal (balance d’entrée) quand la tête pilote s’ouvre en butée, pour qu’il s’ouvre et évacue le débit.', true],
-    ['rmu', 5, 'Balance d’entrée', null, true],
-    ['rmu', 6, 'Tête pilote', null, true],
-    ['rmu', 7, 'Distributeur 4/3 LS centre fermé, à action progressive, commande électro-hydraulique proportionnelle et commande manuelle, rappel par ressort', 'Diriger l’huile vers la sortie A ou B du récepteur et en doser le débit (donc la vitesse) proportionnellement à la commande ; au neutre, centre fermé, le récepteur est isolé ; en travail, il renvoie la pression de charge à la ligne LS.', true],
-    ['rmu', 8, 'LPS (limiteur de pression secondaire)', 'Protéger une sortie (A ou B) d’un récepteur à une pression inférieure à la pression maxi : en butée, pression de service = LPS + 30 b.', true],
-    ['rmu', 13, 'Bloc de freinage', 'Maîtriser la rentrée du vérin correcteur d’assiette (qui abaisse le télescope) et le bloquer en cas de chute de pression.', true],
-    ['treuil', 9, 'Électrovanne de fin de course', 'Couper l’alimentation du récepteur quand une limite est atteinte (5 spires mini sur le tambour, secteur de travail, abaques) ; elle est commandée par le CEC.', true],
-    ['treuil', 10, 'Limiteur de pression à commande pilotée principal', null, true],
-    ['treuil', 11, 'Électrovanne by-pass RSQ 240', 'Électrovanne de sécurité en amont du distributeur RSQ 240 : pilotée par nous via le sélecteur 3 voies (MANU ou RADIO), elle autorise l’alimentation du RSQ 240 (grue, treuils, RMU) ; non pilotée, aucune fonction de ce bloc ne peut être commandée. (L’électrovanne by-pass CETOP, elle, est sur le circuit des stabilisateurs.)', true],
-    ['cetop', 1, 'Balance d’entrée', null, false],
-    ['cetop', 2, 'Tête pilote', null, false],
-    ['cetop', 3, 'Bouchon', null, false],
-    ['cetop', 4, 'Gicleur de déséquilibre', null, false],
-    ['cetop', 5, 'Limiteur de débit réglable double effet, sensible à la viscosité', null, false],
-    ['cetop', 6, 'Gicleur LS', 'Créer une différence de pression (ΔP) au neutre pour obtenir la pression de stand-by.', true],
-    ['cetop', 7, 'Solénoïde de décharge LS', 'Faire monter la pression LS en travail (il est piloté dès qu’on touche aux manipulateurs des stabilisateurs) et décharger la ligne LS au neutre.', true]
+    ['rmu', 1, 'Vanne de mise à flot', 'Libérer le vérin correcteur d’assiette en tracté-tiré.', true,
+      ['Le véhicule est broché en tracté-tiré, en terrain accidenté.', 'On ouvre la vanne : le vérin correcteur d’assiette n’est plus bloqué.', 'Le vérin suit librement les mouvements du véhicule remorqué.', 'On referme la vanne avant de débrocher.']],
+    ['rmu', 2, 'Soupape de freinage', 'Retenir la charge du vérin de corps de flèche.', true,
+      ['La charge pousse le vérin (charge entraînante).', 'La soupape freine : le vérin ne descend pas plus vite que le débit envoyé.', 'Si un flexible casse, la soupape reste fermée : le vérin est maintenu.']],
+    ['rmu', 3, 'Réducteur de pression 3 voies', 'Fournir la pression de pilotage des tiroirs (25 b).', true,
+      ['Il reçoit la pression du circuit.', 'Il la réduit à 25 b.', 'Ces 25 b pilotent les tiroirs des distributeurs.', 'Il amortit les déplacements des tiroirs : pas de pics de pression.']],
+    ['rmu', 4, 'Gicleur de déséquilibre', 'Faire ouvrir la balance d’entrée (étage principal) en butée.', true,
+      ['En butée, la tête pilote s’ouvre.', 'De l’huile passe par le gicleur : une différence de pression se crée.', 'La balance d’entrée est déséquilibrée et s’ouvre.', 'Elle évacue le débit à la bâche.']],
+    ['rmu', 5, 'Balance d’entrée', null, true, null],
+    ['rmu', 6, 'Tête pilote', null, true, null],
+    ['rmu', 7, 'Distributeur 4/3 LS centre fermé, à action progressive, commande électro-hydraulique proportionnelle et commande manuelle, rappel par ressort', 'Diriger l’huile vers A ou B et doser la vitesse du récepteur.', true,
+      ['Au neutre (centre fermé) : le récepteur est isolé, rien ne bouge.', 'On actionne la commande : le tiroir se déplace.', 'L’huile part vers la sortie A ou B.', 'Plus on actionne, plus le débit est grand : plus le récepteur va vite.', 'Le distributeur renvoie la pression de la charge sur la ligne LS (vers la pompe).', 'On relâche : le ressort ramène le tiroir au neutre.']],
+    ['rmu', 8, 'LPS (limiteur de pression secondaire)', 'Limiter la pression d’une sortie (A ou B) d’un récepteur.', true,
+      ['La pression monte dans la sortie (récepteur en butée).', 'Le LPS s’ouvre à sa valeur de tarage.', 'La pression de cette sortie ne dépasse plus le tarage.', 'Pression de service = LPS + 30 b.']],
+    ['rmu', 13, 'Bloc de freinage', 'Retenir et bloquer le vérin correcteur d’assiette.', true,
+      ['Le vérin correcteur rentre : le télescope s’abaisse.', 'Le bloc de freinage freine cette rentrée.', 'En cas de chute de pression, il bloque le vérin.']],
+    ['treuil', 9, 'Électrovanne de fin de course', 'Couper le mouvement quand une limite est atteinte.', true,
+      ['Le CEC surveille les limites : 5 spires mini sur le tambour, secteur de travail, abaques.', 'Une limite est atteinte.', 'Le CEC coupe l’électrovanne.', 'Le récepteur n’est plus alimenté : le mouvement s’arrête.']],
+    ['treuil', 10, 'Limiteur de pression à commande pilotée principal', null, true, null],
+    ['treuil', 11, 'Électrovanne by-pass RSQ 240', 'Autoriser l’alimentation du distributeur RSQ 240 (grue, treuils, RMU).', true,
+      ['On met le sélecteur 3 voies sur MANU ou RADIO.', 'L’électrovanne by-pass RSQ 240 est pilotée.', 'L’huile arrive au RSQ 240 : on peut commander la grue, les treuils et le RMU.', 'Non pilotée : aucune fonction du RSQ 240 ne bouge.', 'À ne pas confondre : l’électrovanne by-pass CETOP alimente les stabilisateurs (sélecteur sur STAB).']],
+    ['cetop', 1, 'Balance d’entrée', null, false, null],
+    ['cetop', 2, 'Tête pilote', null, false, null],
+    ['cetop', 3, 'Bouchon', null, false, null],
+    ['cetop', 4, 'Gicleur de déséquilibre', null, false, null],
+    ['cetop', 5, 'Limiteur de débit réglable double effet, sensible à la viscosité', null, false, null],
+    ['cetop', 6, 'Gicleur LS', 'Obtenir la pression de stand-by au neutre.', true,
+      ['Au neutre, un petit débit passe par le gicleur LS.', 'Le gicleur crée une différence de pression (ΔP).', 'Cette ΔP donne la pression de stand-by (30 b).']],
+    ['cetop', 7, 'Solénoïde de décharge LS', 'Monter la pression LS en travail, la vider au neutre.', true,
+      ['On touche aux manipulateurs des stabilisateurs : le solénoïde est piloté.', 'La pression LS monte : la pompe débite.', 'On relâche : le solénoïde n’est plus piloté.', 'La ligne LS est vidée : retour au stand-by.']]
   ];
 
   function others(pool, good, i) { var o = pool.filter(function (x) { return x !== good; }); var out = []; for (var k = 0; k < 3 && k < o.length; k++) out.push(o[(i + k * 2) % o.length]); return out; }
@@ -37,13 +48,13 @@
     var rolePool = R.filter(function (r) { return r[3]; }).map(function (r) { return r[3]; });
     R.forEach(function (r, i) {
       var f = F[r[0]];
-      if (r[4]) qs.push({ l: lesson, img: f.img, q: f.nom + ' — repère n° ' + r[1] + ' : quelle est sa désignation ?', c: [r[2]].concat(others(desPool(r[0]), r[2], i)), e: 'Repère ' + r[1] + ' (' + f.nom + ') : ' + r[2] + '.' + (r[3] ? ' Rôle : ' + r[3] : ''), src: 'Fiches « Rôle et désignation » (PPLD)' });
-      if (r[3]) qs.push({ l: lesson, img: f.img, q: f.nom + ' — repère n° ' + r[1] + ' : quel est son rôle ?', c: [r[3]].concat(others(rolePool, r[3], i)), e: 'Repère ' + r[1] + ' = ' + r[2] + '.', src: 'Fiches « Rôle et désignation » (PPLD) et cours PPLD' });
+      if (r[4]) qs.push({ l: lesson, img: f.img, q: f.nom + ' — repère n° ' + r[1] + ' : quelle est sa désignation ?', c: [r[2]].concat(others(desPool(r[0]), r[2], i)), e: 'Repère ' + r[1] + ' = ' + r[2] + '.', role: r[3] || null, fonct: r[5] || null, src: 'Fiches « Rôle et désignation » (PPLD)' });
+      if (r[3]) qs.push({ l: lesson, img: f.img, q: f.nom + ' — repère n° ' + r[1] + ' : quel est son rôle ?', c: [r[3]].concat(others(rolePool, r[3], i)), e: 'Repère ' + r[1] + ' = ' + r[2] + '.', role: r[3], fonct: r[5] || null, src: 'Fiches « Rôle et désignation » (PPLD) et cours PPLD' });
     });
     return qs;
   }
-  function table(f, withRole) {
-    return '<h3>' + F[f].nom + '</h3><div class="tw"><table><tr><th>N°</th><th>Désignation</th><th>Rôle</th></tr>' + R.filter(function (r) { return r[0] === f; }).map(function (r) { return '<tr><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + (r[3] || '—') + '</td></tr>'; }).join('') + '</table></div>';
+  function table(f) {
+    return '<h3>' + F[f].nom + '</h3><div class="tw"><table><tr><th>N°</th><th>Désignation</th><th>🎯 Rôle</th><th>⚙️ Fonctionnement</th></tr>' + R.filter(function (r) { return r[0] === f; }).map(function (r) { return '<tr><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + (r[3] || '—') + '</td><td>' + (r[5] ? '<ol class="steps">' + r[5].map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>' : '—') + '</td></tr>'; }).join('') + '</table></div>';
   }
   function lesson(id) {
     return { id: id, title: 'Rôle et désignation des repères (fiches)',

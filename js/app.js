@@ -24,6 +24,40 @@
     l.key = s.id + '/' + l.id;
     REV.lessonById[l.key] = l;
   }
+  /* Explications : rôle et fonctionnement séparés, et texte découpé en étapes courtes pour être lu facilement */
+  var ABBR = /(?:^|\s)(?:p|pp|ex|cf|env|n|art|réf|fig|M|min|max|etc|vol|chap|ind|cm|mm|kg|t)\.$/i;
+  function splitSteps(t) {
+    if (!t || /<(ul|ol|table|br|p|div|li)\b/i.test(t)) return null;
+    var out = [], cur = '';
+    for (var i = 0; i < t.length; i++) {
+      var ch = t[i]; cur += ch;
+      if ((ch === '.' || ch === '!' || ch === '?') && t[i + 1] === ' ' && /[A-ZÀ-ÖØ-Ý0-9«(“"]/.test(t[i + 2] || '') && !ABBR.test(cur.trim())) { out.push(cur.trim()); cur = ''; }
+    }
+    if (cur.trim()) out.push(cur.trim());
+    var res = [];
+    out.forEach(function (x) {
+      x.split(/\s;\s/).forEach(function (y) {
+        y = y.trim(); if (!y) return;
+        if ((y.match(/→/g) || []).length >= 2 && y.length > 50) { y.split(/\s*→\s*/).forEach(function (z, k) { if (z) res.push((k ? '→ ' : '') + z); }); }
+        else res.push(y);
+      });
+    });
+    res = res.map(function (x) { return /^[a-zà-öø-ÿ]/.test(x) ? x.charAt(0).toUpperCase() + x.slice(1) : x; });
+    res = res.map(function (x) { return x.replace(/^(Rôle|Fonctionnement|Attention|Nota|Remarque|Conséquence|Cause|Exemple)\s*:\s*/i, function (m, w) { return '<b>' + w + ' :</b> '; }); });
+    return res.length > 1 ? res : null;
+  }
+  function expHtml(q, icon) {
+    var h = '';
+    if (q.role) h += '<p><b>🎯 Rôle :</b> ' + q.role + '</p>';
+    if (q.fonct) h += '<p><b>⚙️ Fonctionnement :</b></p><ol class="steps exp-fonct">' + q.fonct.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>';
+    if (q.e) {
+      var st = splitSteps(q.e);
+      h += st ? (icon && !h ? '<p class="exp-h">' + icon + ' Explication</p>' : '') + '<ul class="exp-steps">' + st.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' : '<p>' + (icon && !h ? icon + ' ' : '') + q.e + '</p>';
+    }
+    return h;
+  }
+  REV.expHtml = expHtml;
+
   function prepQuestion(s, q) {
     if (q.a === undefined) q.a = 0; // par défaut, la bonne réponse est écrite en premier (l'ordre est mélangé à l'affichage)
     q.subject = s.id;
@@ -585,7 +619,7 @@
             return '<details class="rev-q"><summary>❌ ' + clean(q.q) + ' <span class="muted small">(ratée ' + r.ko + ' fois)</span></summary>' +
               ctxImg(q) + (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
               '<p class="fb-good">' + (q.good.length > 1 ? (q.any ? 'Réponses acceptées : ' : 'Bonnes réponses : ') : 'Bonne réponse : ') + q.good.map(function (g) { return '<b>' + q.c[g] + '</b>'; }).join(' / ') + '</p>' +
-              (q.e ? '<p>💡 ' + q.e + '</p>' : '') + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') + (q.w ? '<p>⚠️ ' + q.w + '</p>' : '') + '</details>';
+              (q.e || q.role ? expHtml(q, '💡') : '') + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') + (q.w ? '<p>⚠️ ' + q.w + '</p>' : '') + '</details>';
           }).join('') +
           '<div class="row-actions"><a class="btn" href="#/lecon/' + k + '">📖 Revoir la leçon</a>' +
           (l.hidden ? '' : '<a class="btn" href="#/memos/' + s.id + '#m-' + l.id + '">🧠 Aide-mémoire</a>') +
@@ -681,7 +715,7 @@
           (mine.length ? '<p>Ta réponse : ' + mine.map(function (c) { return '<b>' + lab(q, perm.indexOf(c)) + '</b> — ' + q.c[c]; }).join(' · ') + (ans.ok ? ' ✅' : ' ❌') + '</p>' : '') +
           (ans.ok ? '' : '<p class="fb-good">' + (q.multi ? 'Les bonnes réponses sont :<br>' : q.any ? 'Réponses acceptées :<br>' : 'La bonne réponse est : ') + goodTxt + '</p>') + '</div>' +
         (dev ? '<div class="fb-sec dev"><b>🧮 Développement de la réponse</b><p>' + dev + '</p></div>' : '') +
-        '<div class="fb-sec' + (l.exo && !dev ? ' dev' : '') + '"><b>' + (l.exo && !dev ? '🧮 Développement de la réponse' : '💡 Explication') + '</b><p>' + q.e + '</p></div>' +
+        '<div class="fb-sec' + (l.exo && !dev ? ' dev' : '') + '"><b>' + (l.exo && !dev ? '🧮 Développement de la réponse' : '💡 Explication') + '</b>' + expHtml(q) + '</div>' +
         (q.r ? '<div class="fb-sec retenir"><b>🧠 À retenir</b><p>' + q.r + '</p></div>' : '') +
         (q.w ? '<div class="fb-sec attention"><b>⚠️ Attention</b><p>' + q.w + '</p></div>' : '') +
         (q.src ? '<p class="muted small">Source : ' + esc(q.src) + '</p>' : '') +
@@ -828,7 +862,7 @@
       (wrong.length ? '<h2 class="h2">❌ Tes erreurs</h2>' + wrong.map(function (w) {
         return '<details class="card err"><summary>' + w.q.q + '</summary><p>✅ <b>' + w.q.good.map(function (g) { return w.q.c[g]; }).join(' + ') + '</b></p>' +
           (chosenList(w.a).length ? '<p class="muted">Ta réponse : ' + chosenList(w.a).map(function (c) { return w.q.c[c]; }).join(' + ') + '</p>' : '<p class="muted">Temps écoulé</p>') +
-          '<p>💡 ' + w.q.e + '</p>' + (w.q.r ? '<p>🧠 ' + w.q.r + '</p>' : '') + '</details>';
+          expHtml(w.q, '💡') + (w.q.r ? '<p>🧠 ' + w.q.r + '</p>' : '') + '</details>';
       }).join('') : '') +
 
       '<div class="row-actions center">' +
@@ -1253,7 +1287,7 @@
           ctxImg(q) + (q.img ? '<figure class="q-img"><img loading="lazy" src="img/' + q.img + '" alt=""></figure>' : '') +
           (a.blank ? '<p class="muted">Pas de réponse (0 point)</p>' : '<p>Ta réponse : <b>' + LETTERS[perm.indexOf(a.chosen)] + '</b> — ' + q.c[a.chosen] + (a.ok ? ' ✅ (+ 1)' : ' ❌ (− 0,5)') + '</p>') +
           (a.ok ? '' : '<p class="fb-good">' + (q.good.length > 1 ? (q.any ? 'Réponses acceptées : ' : 'Bonnes réponses : ') : 'Bonne réponse : ') + good + '</p>') +
-          '<p>💡 ' + q.e + '</p>' + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') +
+          expHtml(q, '💡') + (q.r ? '<p>🧠 ' + q.r + '</p>' : '') +
           '<a class="small" href="#/lecon/' + q.lkey + '">📖 Revoir la leçon</a></details>';
       }).join('');
       return '<h3 class="h3">' + subj(o.m.subj).icon + ' ' + esc(o.m.nom) + ' — ' + fr(o.pts) + ' / ' + o.n + '</h3>' + items;
