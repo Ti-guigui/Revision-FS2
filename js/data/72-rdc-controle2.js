@@ -1,6 +1,6 @@
 /* Contrôle des connaissances n°1 « Sensibilisation au contrôle RDC », copie en 12 questions (Q1 à Q12).
    Réponses : AQA 03 indice R (référence), quiz RDC corrigé par le formateur et cours RDC du site.
-   Q11 (passer d’une VP à une VP + OS) : réponse non trouvée dans les documents, pas publiée. */
+   Q11 (passer d’une VP à une VP + OS) : réponse donnée par le stagiaire (la VP + OS doit être marquée sur la fiche de visite). */
 (function () {
   var html = '<h3>Énoncé</h3><p>Copie de 12 questions : Q1 à Q10 en QCM (A / B / C, dans l’ordre de la copie), Q11 et Q12 à rédiger.</p>' +
     '<h3>Correction question par question</h3><ul class="corr">' +
@@ -14,6 +14,7 @@
     '<li><b>Q8 — A : la CDM.</b> Au niveau du BML, c’est la conduite de la maintenance qui pilote la maintenance.</li>' +
     '<li><b>Q9 — C : visite NTI1, station et COS.</b> On remet d’abord le véhicule en état (NTI1), puis la station ; le COS vient en dernier sur un véhicule en état.</li>' +
     '<li><b>Q10 — B : le RDC.</b> La visite périodique valant COS (VP + OS) est enregistrée au MAT 10004 par le RDC.</li>' +
+    '<li><b>Q11 — Passer d’une VP à une VP + OS :</b> il faut que ce soit <b>marqué sur la feuille de visite</b> (la fiche de visite comprend alors les opérations de contrôle du COS : elle a valeur de COS).</li>' +
     '<li><b>Q12 — Le COS (contrôle des organes de sécurité, MAT 4485) :</b><ul>' +
     '<li><b>Où :</b> à la cellule <b>RDC</b> (réception, diagnostic, contrôle) de la SMR.</li>' +
     '<li><b>Par qui, militaire :</b> détenteur de la <b>FS2 MOT</b> ; à défaut, sous-officier <b>FS1 NG MOT</b> avec <b>2 ans</b> minimum d’atelier et la <b>FA CTRL RDC COS</b> ; inscrit sur le <b>DUO</b> et nommément désigné au RDC.</li>' +
@@ -21,7 +22,7 @@
     '<li><b>Quand :</b> <b>tous les ans</b> (bus : tous les 6 mois), lors d’une <b>VP + OS</b>, <b>sur ordre</b>, en sortie de <b>remisage de plus de 6 mois</b> (sauf ENU). Pas après une RIP.</li>' +
     '<li><b>Pourquoi :</b> mettre le véhicule <b>en conformité avec le code de la route</b> (sécurité). Celui qui signe engage sa responsabilité.</li></ul></li></ul>';
   var lesson = { id: 'controle-rdc-2', title: 'Contrôle des connaissances n°1 RDC (copie en 12 questions)', html: html,
-    retenir: ['RDC fermé → attendre. Potentiel cumulé ≥ relevé.', 'COS encore valable → phase 4 du MAT 4486 seulement.', 'RIP : le prestataire renseigne, on ne repasse pas derrière.', 'RDC répartit les travaux ; CDM pilote et valide la partie 4 du DIT ; VP + OS enregistrée au MAT 10004 par le RDC.', 'COS : RDC ; FS2 MOT (à défaut FS1 NG + 2 ans + FA CTRL RDC COS) ; tous les ans, VP + OS, sur ordre, remisage > 6 mois ; conformité au code de la route.'] };
+    retenir: ['RDC fermé → attendre. Potentiel cumulé ≥ relevé.', 'COS encore valable → phase 4 du MAT 4486 seulement.', 'VP → VP + OS : seulement si c’est marqué sur la feuille de visite.', 'RIP : le prestataire renseigne, on ne repasse pas derrière.', 'RDC répartit les travaux ; CDM pilote et valide la partie 4 du DIT ; VP + OS enregistrée au MAT 10004 par le RDC.', 'COS : RDC ; FS2 MOT (à défaut FS1 NG + 2 ans + FA CTRL RDC COS) ; tous les ans, VP + OS, sur ordre, remisage > 6 mois ; conformité au code de la route.'] };
   var S = 'Contrôle des connaissances n°1 RDC (copie en 12 questions)';
   var QCM = [
     { a: 2, q: 'Q1 — Je suis chef d’atelier poids lourd, le RDC est fermé pour 2 semaines je peux :', c: ['Faire contrôler le VHL par un BSTAT d’un autre atelier', 'Sortir le VHL et valider la partie 4 du DIT (Mat 4486)', 'Attendre que le RDC soit ouvert'], e: 'Seul le RDC contrôle et fait sortir le véhicule : on attend qu’il soit ouvert.' },
@@ -36,6 +37,7 @@
     { a: 1, q: 'Q10 — Lors d’une VP + OS, qui enregistre le contrôle dans le MAT 10 004 ?', c: ['Le CDM', 'La RDC', 'L’atelier ayant réalisé la visite'], e: 'La visite périodique valant COS est enregistrée au MAT 10004 par le RDC.' }
   ].map(function (q) { q.l = 'controle-rdc-2'; q.fixed = true; q.src = S; return q; });
   var COS = [
+    { q: 'Q11 — Quelle condition pour passer d’une VP à une VP + OS ?', c: ['Que ce soit marqué sur la feuille de visite', 'Que le véhicule sorte de RIP', 'Que le dernier COS ait plus de 6 mois', 'Que la CDM le demande oralement'], e: 'La VP + OS doit être marquée sur la feuille de visite : la fiche comprend alors les opérations de contrôle du COS.' },
     { q: 'Q12 — Le COS : où (cellule) ?', c: ['À la cellule RDC (réception, diagnostic, contrôle)', 'À la CDM', 'À la station-service', 'À l’atelier qui a réparé'], e: 'Le COS est fait au RDC.' },
     { q: 'Q12 — Le COS : qui peut le faire (militaire) ?', c: ['FS2 MOT ; à défaut sous-officier FS1 NG MOT, 2 ans d’atelier mini, FA CTRL RDC COS', 'N’importe quel chef d’atelier', 'Un BSTAT de n’importe quelle spécialité', 'Le conducteur du véhicule'], e: 'AQA 03 : FS2 MOT ; à défaut FS1 NG MOT + 2 ans d’atelier + FA CTRL RDC COS ; inscrit sur le DUO, nommément désigné au RDC.' },
     { q: 'Q12 — Le COS : qui peut le faire (civil) ?', c: ['FS2 MOT ; à défaut OE G6 mini, FS1 ou FS1 NG, 2 ans d’atelier militaire, FA CTRL RDC COS', 'Tout personnel civil de l’atelier', 'Un prestataire RIP', 'Le chef de BML'], e: 'AQA 03 : FS2 MOT ; à défaut OE G6 mini, FS1 ou FS1 NG, 2 ans d’atelier militaire, FA CTRL RDC COS ; inscrit sur le DUO.' },

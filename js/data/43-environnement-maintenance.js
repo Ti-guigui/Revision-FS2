@@ -55,7 +55,7 @@ REV.addLessons('mcot', 'reparation', [{
 <h3>Opérations de contrôle</h3>
 <ul><li><b>CT</b> : − 3,5 t tous les 2 ans (antipollution tous les ans) · + 3,5 t tous les ans · bus tous les 6 mois.</li>
 <li>CTVC · VTG · <b>COS</b> · <b>MAT 4486 (ch. 4)</b> · <b>VP + OS</b>.</li>
-<li><b>Visite périodique (VP + OS)</b> : inscrite sur la fiche de visite, par un <b>BM2 ou BSTAT Mobter</b>.</li></ul>
+<li><b>Visite périodique (VP + OS)</b> : inscrite sur la fiche de visite, par un <b>BM2 ou BSTAT Mobter</b>. Une VP ne devient une VP + OS que si c’est <b>marqué sur la feuille de visite</b>.</li></ul>
 <h3>Opérations et demandes</h3>
 <ul><li><b>Demande de nouveau matériel pour l’atelier</b> : la justifier par l’augmentation de la DTO, la limitation des risques HSCT et la protection de l’environnement.</li>
 <li><b>Opération préventive</b> : si elle contient une vidange, elle s’écrit <b>en rouge</b> (⚠ attention au feuillet « OPÉRATIONS PRÉVENTIVES »).</li>
