@@ -701,6 +701,17 @@
     el.classList.remove('flash-part'); void el.offsetWidth; el.classList.add('flash-part');
   }
 
+  // Sommaire repliable d’une leçon : ses parties (titres h3, ancres p-1, p-2…) et ses schémas
+  function tocHtml(l, key) {
+    var t = [], re = /<h3[^>]*>([\s\S]*?)<\/h3>/gi, m;
+    while ((m = re.exec(l.html))) t.push(m[1].replace(/<[^>]+>/g, '').trim());
+    var ni = (l.images || []).length;
+    if (t.length < 3 && !(t.length && ni > 2)) return '';
+    return '<details class="toc"><summary>📑 Sommaire <span class="muted small">(' + t.length + ' parties' + (ni ? ' · ' + ni + ' schéma' + (ni > 1 ? 's' : '') : '') + ')</span></summary><ol>' +
+      t.map(function (x, i) { return '<li><a href="#/lecon/' + key + '#p-' + (i + 1) + '">' + esc(x) + '</a></li>'; }).join('') +
+      (ni ? '<li class="toc-sch"><a href="#/lecon/' + key + '#schemas">🖼️ Schémas</a></li>' : '') + '</ol></details>';
+  }
+
   function viewLecon(key) {
     var l = REV.lessonById[key];
     if (!l) return viewCours();
@@ -717,6 +728,7 @@
       '<h1 class="h1"><span class="num">' + l.num + '</span> ' + esc(l.title) + '</h1>' +
       (group.length > 1 ? '<p class="lesson-pos muted small">' + (l.exo ? 'Exercice ' : 'Leçon ') + (idx + 1) + ' / ' + group.length + ' · ✔ ' + readN + ' lue' + (readN > 1 ? 's' : '') + ' dans ' + esc(s.name) + '</p>' : '') +
       (ls.pct !== null ? '<p><span class="pill ' + level(ls.pct).cls + '">' + level(ls.pct).dot + ' Ton score : ' + ls.pct + ' %</span></p>' : '') +
+      tocHtml(l, key) +
       '<div class="lesson-body">' + (function (n) { return l.html.replace(/<h3(?=[\s>])/gi, function () { return '<h3 id="p-' + (++n) + '"'; }); })(0) + '</div>' +
       (l.images ? '<span id="schemas"></span>' + l.images.map(function (im) {
         return '<figure><a href="img/' + im.src + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + im.src + '" alt="' + esc(im.cap) + '"></a><figcaption>🖼️ ' + esc(im.cap) + ' <span class="muted">(toucher pour agrandir)</span></figcaption></figure>';
