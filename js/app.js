@@ -303,21 +303,25 @@
     toastEl._t = setTimeout(function () { toastEl.classList.remove('show'); }, 2600);
   }
 
-  function setActiveNav(route) {
-    var map = { '': 'home', cours: 'cours', matiere: 'cours', lecon: 'cours', memos: 'cours', fiche: 'cours', fiches: 'cours', verif: 'cours', exercices: 'exercices',
-      qcm: 'qcm', uv2: 'qcm', session: 'qcm', bilan: 'qcm', quiz: 'quiz', revision: 'qcm', resultats: 'resultats' };
-    var key = map[route] || 'home';
-    if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') key = 'quiz';
+  // Onglet(s) à allumer pour chaque route : barre du bas (home, cours, qcm = S’entraîner, resultats, plus) et barre latérale
+  function setActiveNav(route, parts) {
+    var map = { '': ['home'], cours: ['cours'], matiere: ['cours'], lecon: ['cours'], verif: ['cours'],
+      memos: ['memos', 'plus'], fiche: ['plus'], fiches: ['plus'], formules: ['formules', 'plus'], 'a-revoir': ['a-revoir', 'plus'], exercices: ['exercices', 'plus'], plus: ['plus'],
+      qcm: ['qcm'], uv2: ['qcm'], session: ['qcm'], bilan: ['qcm'], quiz: ['quiz', 'qcm'], revision: ['revision', 'qcm'], resultats: ['resultats'], recherche: [] };
+    var keys = map[route] || ['home'];
+    if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') keys = ['quiz', 'qcm'];
     document.querySelectorAll('[data-nav]').forEach(function (a) {
-      a.classList.toggle('active', a.getAttribute('data-nav') === key);
+      a.classList.toggle('active', keys.indexOf(a.getAttribute('data-nav')) >= 0);
     });
+    var sid = /^(matiere|qcm|memos|fiche|formules)$/.test(route) ? parts[1] : route === 'lecon' ? parts[1] : null;
+    document.querySelectorAll('#side-subjects a').forEach(function (a) { a.classList.toggle('active', !!sid && a.getAttribute('href') === '#/matiere/' + sid); });
   }
 
   function render() {
     clearInterval(timerId);
     var parts = location.hash.replace(/^#\/?/, '').replace(/#.*$/, '').split('/').map(decodeURIComponent);
     var route = parts[0] || '';
-    setActiveNav(route);
+    setActiveNav(route, parts);
     var html;
     switch (route) {
       case '': html = viewHome(); break;
@@ -339,6 +343,7 @@
       case 'a-revoir': html = viewARevoir(); break;
       case 'formules': html = viewFormules(parts[1]); break;
       case 'recherche': html = viewRecherche(parts.slice(1).join('/')); break;
+      case 'plus': html = viewPlus(); break;
       default: html = viewHome();
     }
     main.innerHTML = html;
@@ -380,15 +385,48 @@
   function totalLessons() { return REV.subjects.reduce(function (n, s) { return n + shownLessons(s).length; }, 0); }
   function allQuestions() { return REV.subjects.reduce(function (a, s) { return a.concat(s.questions); }, []); }
 
+  // Raccourcis vers les outils : accueil (grille compacte) et page « Plus » (liste)
+  var TOOLS = [['#/a-revoir', '📌', 'Leçons à revoir'], ['#/formules', '📐', 'Formules et conversions'], ['#/exercices', '✍️', 'Exercices corrigés'],
+    ['#/fiches', '📄', 'Fiches de révision'], ['#/memos', '💡', 'Aides-mémoires'], ['#/uv2', '📝', 'Test UV2'], ['#/fiche/uv2', '🎯', 'Fiche spéciale UV2'],
+    ['mdf.html', '🏗️', 'Calcul manœuvre de force'], ['diagnostic.html', '🔧', 'Coin diagnostic']];
+
+  // Bloc « Aujourd’hui » : ce qu’il y a de plus utile à faire maintenant (session en cours, lecture, erreurs, matière faible)
+  function todayHtml(all) {
+    var items = [];
+    if (session && session.answers.length < session.qids.length) {
+      items.push('<a class="today-main" href="#/session">▶️ <span><b>Reprendre le QCM</b><small>' + esc(session.title) + ' — question ' +
+        Math.min(session.answers.length + 1, session.qids.length) + ' / ' + session.qids.length + '</small></span><span class="chev">›</span></a>');
+    }
+    var lastKey = null, lastT = 0;
+    Object.keys(store.lessonsSeen || {}).forEach(function (k) { if (REV.lessonById[k] && store.lessonsSeen[k] > lastT) { lastT = store.lessonsSeen[k]; lastKey = k; } });
+    if (lastKey) {
+      var l = REV.lessonById[lastKey], ls = subj(l.subject);
+      var group = ls.lessons.filter(function (x) { return !!x.exo === !!l.exo && !!x.hidden === !!l.hidden; });
+      var nxt = group.slice(group.indexOf(l) + 1).filter(function (x) { return !store.lessonsSeen[x.key]; })[0];
+      items.push('<a class="today-item" href="#/lecon/' + lastKey + '">📖 <span><b>Continuer la lecture</b><small>' + ls.icon + ' ' + l.num + ' — ' + esc(l.title) + '</small></span><span class="chev">›</span></a>');
+      if (nxt) items.push('<a class="today-item" href="#/lecon/' + nxt.key + '">⏭️ <span><b>Leçon suivante non lue</b><small>' + nxt.num + ' — ' + esc(nxt.title) + '</small></span><span class="chev">›</span></a>');
+    }
+    var toReview = all.filter(needsReview).length;
+    if (toReview) items.push('<a class="today-item" href="#/revision">🔁 <span><b>Refaire mes ' + toReview + ' erreur' + (toReview > 1 ? 's' : '') + '</b><small>Elles reviennent jusqu’à 2 réussites de suite</small></span><span class="chev">›</span></a>');
+    var weak = REV.subjects.map(function (x) { return { s: x, sc: scoreOf(x.questions) }; })
+      .filter(function (o) { return o.sc.pct !== null && o.sc.seen >= 5 && o.sc.pct < 80; })
+      .sort(function (p, q) { return p.sc.pct - q.sc.pct; })[0];
+    if (weak) items.push('<a class="today-item" href="#/qcm/' + weak.s.id + '">🎯 <span><b>Renforcer ' + esc(weak.s.name) + '</b><small>Ta matière la plus faible : ' + weak.sc.pct + ' %</small></span><span class="chev">›</span></a>');
+    if (!items.length) {
+      var first = REV.subjects[0];
+      return '<section class="today"><h2 class="today-h">👋 Bienvenue</h2><ol class="today-steps">' +
+        '<li><b>Lis une leçon</b> dans une matière.</li><li><b>Fais son QCM</b> : correction et explication à chaque question.</li>' +
+        '<li><b>Tes erreurs reviennent</b> dans « Mes erreurs » jusqu’à ce que tu les maîtrises.</li></ol>' +
+        '<a class="btn primary big" href="#/matiere/' + first.id + '">' + first.icon + ' Commencer par ' + esc(first.name) + '</a></section>';
+    }
+    return '<section class="today"><h2 class="today-h">📅 Aujourd’hui</h2>' + items.slice(0, 4).join('') + '</section>';
+  }
+
   function viewHome() {
     var all = allQuestions();
     var sc = scoreOf(all);
-    var toReview = all.filter(needsReview).length;
-    var resume = session && session.answers.length < session.qids.length
-      ? '<a class="resume" href="#/session">▶️ Reprendre : <b>' + esc(session.title) + '</b> — question ' +
-        (Math.min(session.answers.length + 1, session.qids.length)) + ' / ' + session.qids.length + '</a>' : '';
-
     return '' +
+      todayHtml(all) +
       '<section class="atelier">' +
         '<div class="atelier-wall">' +
           '<div class="atelier-plaque"><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span>' +
@@ -398,29 +436,28 @@
         '<div class="atelier-outils" aria-hidden="true"></div>' +
         '<div class="servante" role="navigation" aria-label="Accès rapide">' +
           tile('#/cours', '📖', 'COURS', totalLessons() + ' leçons') +
-          tile('#/qcm', '🧠', 'QCM', 'par matière') +
+          tile('#/qcm', '🎯', 'S’ENTRAÎNER', 'QCM, quiz, examen') +
           tile('#/quiz', '⚡', 'QUIZ', 'éclair chronométré') +
           tile('#/resultats', '📊', 'MES RÉSULTATS', sc.pct === null ? 'pas encore de score' : 'niveau global ' + sc.pct + ' %') +
         '</div>' +
         '<div class="hazard" aria-hidden="true"></div>' +
       '</section>' +
-      resume +
-      '<a class="card review-cta" href="#/a-revoir"><span class="big">📌</span><span><b>Leçons à revoir</b><br>' +
-        (toReview ? toReview + ' erreur' + (toReview > 1 ? 's' : '') + ' à comprendre et à refaire, leçon par leçon' : 'Tes erreurs des tests, expliquées leçon par leçon') + '</span><span class="chev">›</span></a>' +
-      '<a class="card review-cta" href="#/formules"><span class="big">📐</span><span><b>Formules, valeurs et conversions</b><br>Par matière, avec les méthodes de calcul (distance de freinage, manœuvre de force…)</span><span class="chev">›</span></a>' +
-      '<a class="card review-cta exo-cta" href="#/exercices"><span class="big">✍️</span><span><b>Exercices corrigés</b><br>Livres, cahiers d’exercices, dossier d’évaluation et test final</span><span class="chev">›</span></a>' +
-      '<a class="card review-cta" href="mdf.html"><span class="big">🏗️</span><span><b>Calcul de manœuvre de force</b><br>Tu entres le fardeau, le tracteur et ton matériel : le site calcule tout (méthode SENSESRD) et dessine le mouflage</span><span class="chev">›</span></a>' +
-      '<a class="card review-cta" href="diagnostic.html"><span class="big">🔧</span><span><b>Coin diagnostic</b><br>Diagnostic guidé pas à pas sur tes véhicules : tu entres tes mesures, le site te guide</span><span class="chev">›</span></a>' +
-      '<a class="card review-cta uv2-cta" href="#/uv2"><span class="big">📝</span><span><b>Test UV2 — 60 questions, 2 h</b><br>Le dossier transmis, des UV2 blancs et les fiches mémoire illustrées</span><span class="chev">›</span></a>' +
       '<h2 class="h2 h2-atelier">🧰 Les postes de l’atelier</h2>' +
       '<div class="subject-grid">' + REV.subjects.map(subjectCard).join('') + '</div>' +
-      '<div class="home-foot">' +
-        '<a class="card mini" href="#/fiche/uv2">🎯 Fiche spéciale UV2</a>' +
-        '<a class="card mini" href="#/fiches">📄 Fiches de révision complètes</a>' +
-        '<a class="card mini" href="#/memos">🧠 Tous les aides-mémoires</a>' +
-      '</div>' +
+      '<h2 class="h2">🧭 Outils</h2>' +
+      '<div class="tool-grid">' + TOOLS.map(function (t) { return '<a class="card tool" href="' + t[0] + '"><span>' + t[1] + '</span>' + t[2] + '</a>'; }).join('') + '</div>' +
       '<p class="muted small center">' + totalQuestions() + ' questions · ' + totalLessons() +
         ' leçons · ' + REV.subjects.length + ' matières — progression enregistrée sur cet appareil, sans compte.</p>';
+  }
+
+  // Page « Plus » (onglet du bas sur téléphone) : tous les outils et pages annexes
+  function viewPlus() {
+    var toReview = allQuestions().filter(needsReview).length;
+    return '<h1 class="h1">☰ Plus</h1><p class="muted">Tous les outils de révision et les pages annexes.</p>' +
+      '<ul class="nav-list">' + TOOLS.concat([['#/verif', '✅', 'Vérification des corrigés']]).map(function (t) {
+        return '<li><a href="' + t[0] + '"><span class="nl-ic">' + t[1] + '</span><span>' + t[2] +
+          (t[0] === '#/a-revoir' && toReview ? ' <span class="badge-n">' + toReview + '</span>' : '') + '</span><span class="chev">›</span></a></li>';
+      }).join('') + '</ul>';
   }
   function tile(href, icon, label, sub) {
     return '<a class="tile" href="' + href + '"><span class="tile-ic">' + icon + '</span><span class="tile-l">' +
@@ -432,7 +469,7 @@
       '<span class="subj-ic">' + s.icon + '</span>' +
       '<span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">' + shownLessons(s).length +
       ' leçons · ' + s.questions.length + ' questions</span>' + bar(sc.pct) + '</span>' +
-      '<span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '—' : sc.pct + ' %') + '</span></a>';
+      '<span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '<span class="untested">Non testé</span>' : sc.pct + ' %') + '</span></a>';
   }
 
   function viewCours() {
@@ -454,12 +491,11 @@
     return crumbs([['#/cours', 'Cours'], [null, s.name]]) +
       '<header class="subj-head" style="--c:' + s.color + '"><span class="subj-ic xl">' + s.icon + '</span><div><h1 class="h1">' +
         esc(s.name) + '</h1><p class="muted">' + esc(s.desc || '') + '</p></div></header>' +
-      '<div class="row-actions">' +
+      '<div class="row-actions subj-actions">' +
         '<a class="btn primary" href="#/qcm/' + s.id + '">🧠 QCM ' + esc(s.name) + '</a>' +
         '<a class="btn" href="#/fiche/' + s.id + '">📄 Fiche de révision</a>' +
-        '<a class="btn" href="#/memos/' + s.id + '">🧠 Aides-mémoires</a>' +
+        '<a class="btn" href="#/memos/' + s.id + '">💡 Aides-mémoires</a>' +
         (REV.formulaires && REV.formulaires[s.id] ? '<a class="btn" href="#/formules/' + s.id + '">📐 Formules et conversions</a>' : '') +
-        (exos.length ? '<a class="btn exo-btn" href="#/matiere/' + s.id + '/exercices">📝 Exercices corrigés (' + exos.length + ')</a>' : '') +
         (sc.pct !== null ? '<span class="pill ' + level(sc.pct).cls + '">' + level(sc.pct).dot + ' ' + sc.pct + ' %</span>' : '') +
       '</div>' +
       (exos.length ? '<nav class="tabs seg-tabs">' +
@@ -470,7 +506,7 @@
         var lq = lessonQuestions(l.key), ls = scoreOf(lq), lv = level(ls.pct);
         return '<li><a href="#/lecon/' + l.key + '"><span class="num">' + l.num + '</span><span class="lt">' + esc(l.title) +
           '<span class="muted small">' + lq.length + ' questions' + (store.lessonsSeen[l.key] ? ' · ✔ lue' : '') + '</span></span>' +
-          '<span class="lscore ' + lv.cls + '">' + (ls.pct === null ? '—' : ls.pct + ' % ' + lv.dot) + '</span></a>' +
+          '<span class="lscore ' + lv.cls + '">' + (ls.pct === null ? '' : ls.pct + ' % ' + lv.dot) + '</span></a>' +
           (l.exo && lq.length ? '<div class="exo-actions"><a class="btn" href="#/lecon/' + l.key + '">📖 Schéma + corrigé</a>' +
             '<button class="btn primary" data-action="lesson-qcm" data-key="' + l.key + '">🧠 S’entraîner (' + lq.length + ')</button></div>' : '') +
           '</li>';
@@ -514,7 +550,7 @@
   function buildSearch() {
     var idx = [];
     function add(href, ico, t, c, x, w) { t = plain(t); x = plain(x); idx.push({ h: href, i: ico, t: t, c: c, x: x, w: w, nt: fold(t), nx: fold(x) }); }
-    [['#/cours', '📚', 'Cours', 'Toutes les matières'], ['#/exercices', '📝', 'Exercices corrigés', ''], ['#/qcm', '🧠', 'QCM', 'Questions par matière et par leçon'],
+    [['#/cours', '📚', 'Cours', 'Toutes les matières'], ['#/exercices', '📝', 'Exercices corrigés', ''], ['#/qcm', '🎯', 'S’entraîner (QCM)', 'QCM par matière, quiz, mes erreurs, examen blanc'], ['#/plus', '☰', 'Plus', 'Tous les outils'],
       ['#/quiz', '⚡', 'Quiz', 'Questions au hasard'], ['#/resultats', '📊', 'Résultats', 'Scores et progression'], ['#/a-revoir', '🔁', 'À revoir', 'Questions ratées'],
       ['#/formules', '📐', 'Formules, valeurs et conversions', 'Formulaire'], ['#/fiches', '📄', 'Fiches de révision', 'Imprimables'], ['#/uv2', '🎯', 'UV2', 'Dossier d’évaluation'],
       ['diagnostic.html', '🔧', 'Coin diagnostic', 'Diagnostic guidé, capteurs, actionneurs, marques, véhicules'],
@@ -675,9 +711,11 @@
     var prev = group[idx - 1], next = group[idx + 1];
     var qn = lessonQuestions(key).length;
     var ls = scoreOf(lessonQuestions(key));
+    var readN = group.filter(function (x) { return store.lessonsSeen[x.key]; }).length;
     return crumbs([['#/cours', 'Cours'], ['#/matiere/' + s.id, s.name]].concat(l.exo ? [['#/matiere/' + s.id + '/exercices', 'Exercices corrigés']] : []).concat([[null, l.num + ' — ' + l.title]])) +
       '<article class="lesson" style="--c:' + s.color + '">' +
       '<h1 class="h1"><span class="num">' + l.num + '</span> ' + esc(l.title) + '</h1>' +
+      (group.length > 1 ? '<p class="lesson-pos muted small">' + (l.exo ? 'Exercice ' : 'Leçon ') + (idx + 1) + ' / ' + group.length + ' · ✔ ' + readN + ' lue' + (readN > 1 ? 's' : '') + ' dans ' + esc(s.name) + '</p>' : '') +
       (ls.pct !== null ? '<p><span class="pill ' + level(ls.pct).cls + '">' + level(ls.pct).dot + ' Ton score : ' + ls.pct + ' %</span></p>' : '') +
       '<div class="lesson-body">' + (function (n) { return l.html.replace(/<h3(?=[\s>])/gi, function () { return '<h3 id="p-' + (++n) + '"'; }); })(0) + '</div>' +
       (l.images ? '<span id="schemas"></span>' + l.images.map(function (im) {
@@ -688,7 +726,8 @@
       '<h2 class="h2">🧠 Aide-mémoire</h2>' + memoHtml(l, s, false) +
       '</article>' +
       '<div class="row-actions sticky-actions">' +
-        (qn ? '<button class="btn primary" data-action="lesson-qcm" data-key="' + key + '">🧠 QCM sur cette leçon (' + qn + ')</button>' : '') +
+        (qn ? '<button class="btn primary" data-action="lesson-qcm" data-key="' + key + '">🧠 <span class="lbl-long">QCM sur cette leçon</span><span class="lbl-short">QCM</span> (' + qn + ')</button>' : '') +
+        (next ? '<a class="btn next-mobile" href="#/lecon/' + next.key + '">Suivante ›</a>' : '') +
         '<button class="btn" data-action="print">🖨️ Imprimer</button>' +
       '</div>' +
       '<div class="pager">' +
@@ -700,18 +739,20 @@
   function viewQcmChoice() {
     var all = allQuestions();
     var toReview = all.filter(needsReview).length;
-    return '<h1 class="h1">🧠 QCM</h1><p class="muted">Choisis une matière. Correction immédiate et explication après chaque question.</p>' +
+    return '<h1 class="h1">🎯 S’entraîner</h1>' +
+      '<div class="train-grid">' +
+        '<a class="card train" href="#/quiz"><span class="big">⚡</span><b>Quiz éclair</b><span class="muted small">10 questions, toutes matières</span></a>' +
+        '<a class="card train' + (toReview ? ' hot' : '') + '" href="#/revision"><span class="big">🔁</span><b>Mes erreurs</b><span class="muted small">' + (toReview ? toReview + ' question' + (toReview > 1 ? 's' : '') + ' à refaire' : 'Aucune pour l’instant') + '</span></a>' +
+        '<button class="card train" data-action="exam"><span class="big">🎓</span><b>Examen blanc</b><span class="muted small">40 questions toutes matières</span></button>' +
+        '<a class="card train" href="#/uv2"><span class="big">📝</span><b>Test UV2</b><span class="muted small">60 questions, 2 h</span></a>' +
+      '</div>' +
+      '<h2 class="h2">🧠 QCM par matière</h2><p class="muted">Correction immédiate et explication après chaque question.</p>' +
       '<div class="subject-grid">' + REV.subjects.map(function (s) {
         var sc = scoreOf(s.questions), lv = level(sc.pct);
         return '<a class="card subj" href="#/qcm/' + s.id + '" style="--c:' + s.color + '"><span class="subj-ic">' + s.icon +
           '</span><span class="subj-body"><b>' + esc(s.name) + '</b><span class="muted small">' + s.questions.length + ' questions</span>' + bar(sc.pct) +
-          '</span><span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '—' : sc.pct + ' %') + '</span></a>';
-      }).join('') + '</div>' +
-      '<div class="home-foot">' +
-        '<a class="card mini" href="#/uv2">📝 Test UV2 — 60 questions, 2 h</a>' +
-        '<button class="card mini" data-action="exam">🎓 Examen blanc — 40 questions toutes matières</button>' +
-        '<a class="card mini" href="#/revision">🔁 QCM de révision' + (toReview ? ' (' + toReview + ')' : '') + '</a>' +
-      '</div>';
+          '</span><span class="subj-score ' + lv.cls + '">' + (sc.pct === null ? '<span class="untested">Non testé</span>' : sc.pct + ' %') + '</span></a>';
+      }).join('') + '</div>';
   }
 
   function viewQcmSetup(id) {
@@ -719,7 +760,7 @@
     if (!s) return viewQcmChoice();
     var n = s.questions.length;
     var counts = [10, 20].filter(function (c) { return c < n; });
-    return crumbs([['#/qcm', 'QCM'], [null, s.name]]) +
+    return crumbs([['#/qcm', 'S’entraîner'], [null, s.name]]) +
       '<header class="subj-head" style="--c:' + s.color + '"><span class="subj-ic xl">' + s.icon + '</span><div><h1 class="h1">' + esc(s.name) + ' → QCM</h1>' +
       '<p class="muted">' + n + ' questions disponibles</p></div></header>' +
       '<form class="setup" data-subject="' + s.id + '">' +
@@ -727,6 +768,8 @@
           counts.map(function (c, i) { return '<label><input type="radio" name="count" value="' + c + '"' + (i === counts.length - 1 ? ' checked' : '') + '><span>' + c + '</span></label>'; }).join('') +
           '<label><input type="radio" name="count" value="' + n + '"' + (counts.length ? '' : ' checked') + '><span>Toutes (' + n + ')</span></label>' +
         '</div></fieldset>' +
+        '<button class="btn primary big" type="submit">▶️ Commencer</button>' +
+        '<details class="setup-more"><summary>⚙️ Choisir les leçons' + (s.questions.some(function (q) { return q.fixed; }) ? ' et le type de questions' : '') + ' <span class="muted small">(toutes par défaut)</span></summary>' +
         '<fieldset><legend>Leçons</legend><label class="chk"><input type="checkbox" name="all" checked data-action="toggle-all"> <b>Toutes les leçons</b></label>' +
           '<div class="lesson-checks">' + s.lessons.map(function (l) {
             var c = lessonQuestions(l.key).length;
@@ -734,7 +777,7 @@
             return '<label class="chk"><input type="checkbox" name="lesson" value="' + l.key + '" checked> ' + l.num + ' — ' + esc(l.title) + ' <span class="muted small">(' + c + ')</span></label>';
           }).join('') + '</div></fieldset>' +
         (s.questions.some(function (q) { return q.fixed; }) ? '<fieldset><legend>Type de questions</legend><label class="chk"><input type="checkbox" name="tests"> 📝 Seulement les questions des tests (recopiées de tes copies)</label></fieldset>' : '') +
-        '<button class="btn primary big" type="submit">▶️ Commencer</button>' +
+        '</details>' +
       '</form>';
   }
 
@@ -850,9 +893,10 @@
     var perm = session.perm[session.i];
     var ans = session.answers[session.i];
     var n = session.qids.length;
+    var nOk = session.answers.filter(function (a) { return a && a.ok; }).length, nKo = session.answers.filter(function (a) { return a && !a.ok; }).length;
     var head = '<div class="q-head" style="--c:' + s.color + '">' +
       '<div class="q-meta"><span>' + s.icon + ' ' + esc(s.name) + '</span><span class="muted">📖 ' + esc(l.title) + '</span></div>' +
-      '<div class="q-count"><b>Question ' + (session.i + 1) + ' / ' + n + '</b><span class="muted small">' + esc(session.title) + '</span></div>' +
+      '<div class="q-count"><b>Question ' + (session.i + 1) + ' / ' + n + '</b>' + (nOk + nKo ? '<span class="live-score">✅ ' + nOk + ' · ❌ ' + nKo + '</span>' : '') + '<span class="muted small">' + esc(session.title) + '</span></div>' +
       '<div class="progress"><span style="width:' + Math.round(session.i * 100 / n) + '%"></span></div>' +
       (session.timer && !ans && !isExoQ(q) ? '<div class="timer"><span id="timer-bar"></span><b id="timer-txt">' + QUIZ_SECONDS + ' s</b></div>' : '') +
       '</div>';

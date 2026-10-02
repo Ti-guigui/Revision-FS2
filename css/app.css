@@ -610,8 +610,8 @@ tr.v-ecart td { background: var(--mid-bg) !important; }
 tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, transparent) !important; }
 .v-note { color: var(--mid); }
 /* ---------- Exercices bien visibles ---------- */
-.bottom-nav { grid-template-columns: repeat(6, 1fr); }
-.bottom-nav a { font-size: .66rem; }
+.bottom-nav { grid-template-columns: repeat(5, 1fr); }
+.bottom-nav a { font-size: .74rem; }
 .seg-tabs { border: 0; background: var(--surface-2); padding: 4px; border-radius: 12px; gap: 4px; flex-wrap: nowrap; }
 .seg-tabs a { flex: 1; text-align: center; border-radius: 9px; margin: 0; border: 0; padding: 10px 8px; font-size: .95rem; }
 .seg-tabs a.on { background: var(--surface); color: var(--primary); box-shadow: 0 1px 4px rgba(15,29,61,.15); }
@@ -755,3 +755,83 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
   .top-search { max-width: none; }
   .top-search:focus-within .search-pop, .search-pop { position: fixed; top: calc(var(--top) + 4px); left: 8px; right: 8px; }
 }
+
+/* ==========================================================================
+   Ergonomie (Arena) : navigation, accueil « Aujourd’hui », téléphone
+   ========================================================================== */
+/* Variables utilisées par mdf.css et quelques blocs, jusqu’ici jamais définies (mode sombre cassé) */
+:root { --card: var(--surface); --line: var(--border); }
+/* Contour visible au clavier, et respect de « réduire les animations » */
+:where(a, button, input, select, summary, [tabindex]):focus-visible { outline: 3px solid var(--accent, #f59e0b); outline-offset: 2px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+
+/* Matière sans score : texte discret au lieu d’un tiret */
+.untested { font-size: .72rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+
+/* Bloc « Aujourd’hui » */
+.today { margin: 4px 0 16px; padding: 12px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: 0 2px 10px rgba(15, 29, 61, .06); }
+.today-h { margin: 0 0 8px; font-size: 1.05rem; letter-spacing: 0; text-transform: none; }
+.today-main, .today-item { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; text-decoration: none; color: var(--text); font-size: 1.3rem; min-height: 52px; }
+.today-main span, .today-item span { display: flex; flex-direction: column; font-size: 1rem; min-width: 0; }
+.today-main small, .today-item small { color: var(--muted); font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.today-main { background: var(--primary); color: var(--on-primary, #fff); margin-bottom: 6px; }
+.today-main small { color: inherit; opacity: .85; }
+.today-item + .today-item { border-top: 1px solid var(--border); border-radius: 0; }
+.today-item:hover { background: var(--surface-2); }
+.today .chev { margin-left: auto; font-size: 1.5rem; color: inherit; opacity: .6; }
+.today-steps { margin: 4px 0 12px; padding-left: 1.3em; }
+.today-steps li { margin: 4px 0; }
+
+/* Outils : grille compacte (accueil) et liste (page « Plus ») */
+.tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 18px; }
+@media (min-width: 700px) { .tool-grid { grid-template-columns: repeat(3, 1fr); } }
+.card.tool { display: flex; align-items: center; gap: 10px; padding: 12px; text-decoration: none; font-weight: 600; font-size: .92rem; line-height: 1.25; min-height: 56px; }
+.card.tool span { font-size: 1.3rem; }
+.nav-list { list-style: none; margin: 12px 0; padding: 0; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); overflow: hidden; }
+.nav-list li + li { border-top: 1px solid var(--border); }
+.nav-list a { display: flex; align-items: center; gap: 12px; padding: 14px; min-height: 54px; color: var(--text); text-decoration: none; font-weight: 600; }
+.nav-list a:hover { background: var(--surface-2); }
+.nl-ic { font-size: 1.3rem; width: 1.6em; text-align: center; }
+.nav-list .chev { margin-left: auto; color: var(--muted); font-size: 1.4rem; }
+.badge-n { display: inline-block; min-width: 1.6em; padding: 0 6px; border-radius: 99px; background: var(--bad, #dc2626); color: #fff; font-size: .78rem; text-align: center; margin-left: 6px; }
+
+/* Hub « S’entraîner » */
+.train-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0 20px; }
+@media (min-width: 900px) { .train-grid { grid-template-columns: repeat(4, 1fr); } }
+.card.train { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 14px; text-decoration: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; width: 100%; }
+.card.train .big { font-size: 1.6rem; margin-bottom: 4px; }
+.card.train.hot { border-color: var(--bad, #dc2626); box-shadow: inset 4px 0 0 var(--bad, #dc2626); }
+
+/* Réglage du QCM : options repliées sous le bouton Commencer */
+.setup-more { margin: 14px 0 4px; border: 1px solid var(--border); border-radius: 12px; padding: 0 12px; background: var(--surface); }
+.setup-more summary { cursor: pointer; font-weight: 700; padding: 12px 0; min-height: 44px; }
+.setup-more[open] summary { border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+
+/* Leçon : position dans la matière, bouton « Suivante » dans la barre (téléphone) */
+.lesson-pos { margin: -4px 0 10px; }
+.next-mobile { display: none; }
+@media (max-width: 899px) {
+  .sticky-actions { flex-wrap: nowrap; gap: 8px; box-shadow: 0 -6px 12px -8px rgba(0, 0, 0, .25); }
+  .sticky-actions .btn { flex: 1; justify-content: center; }
+  .sticky-actions [data-action="print"] { display: none; }
+  .next-mobile { display: inline-flex; }
+  .lbl-long { display: none; }
+}
+.lbl-short { display: none; }
+@media (max-width: 899px) { .lbl-short { display: inline; } }
+
+/* Session : score en direct, image limitée pour garder les réponses visibles */
+.live-score { font-weight: 700; font-size: .9rem; white-space: nowrap; }
+.q-img img { max-height: 38vh; width: auto; max-width: 100%; object-fit: contain; display: block; margin: 0 auto; }
+
+/* Accueil sur téléphone : bandeau atelier allégé */
+@media (max-width: 699px) {
+  .atelier-outils, .atelier-sub { display: none; }
+  .atelier-plaque strong { font-size: 1.5rem; }
+  .subj-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .subj-actions .btn { justify-content: center; text-align: center; }
+  .subj-actions .btn.primary, .subj-actions .pill { grid-column: 1 / -1; justify-self: stretch; text-align: center; }
+}
+.q-count { flex-wrap: wrap; }
+.q-count b { white-space: nowrap; }
+.q-count .muted.small { flex-basis: 100%; }
