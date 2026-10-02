@@ -744,3 +744,12 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .toc a { display: block; padding: 6px 0; text-decoration: none; }
 .toc .toc-sch { list-style: none; margin-left: -1.6em; border-top: 1px solid var(--border); margin-top: 6px; padding-top: 4px; }
 @media print { .toc { display: none; } }
+
+/* Calendrier du bloc « Aujourd’hui » : date du jour */
+.today-h { display: flex; align-items: center; gap: 10px; }
+.today-h > span:last-child { display: flex; flex-direction: column; line-height: 1.15; }
+.today-h small { font-size: .78rem; font-weight: 500; color: var(--muted); }
+.today-h small::first-letter { text-transform: uppercase; }
+.cal-ic { display: inline-flex; flex-direction: column; width: 38px; border-radius: 7px; overflow: hidden; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .25); text-align: center; flex: none; }
+.cal-m { background: #dc2626; color: #fff; font-size: .58rem; font-weight: 800; letter-spacing: .05em; padding: 2px 0 1px; }
+.cal-d { color: #111827; font-size: 1.05rem; font-weight: 800; line-height: 1.35; }

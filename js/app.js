@@ -419,7 +419,13 @@
         '<li><b>Tes erreurs reviennent</b> dans « Mes erreurs » jusqu’à ce que tu les maîtrises.</li></ol>' +
         '<a class="btn primary big" href="#/matiere/' + first.id + '">' + first.icon + ' Commencer par ' + esc(first.name) + '</a></section>';
     }
-    return '<section class="today"><h2 class="today-h">📅 Aujourd’hui</h2>' + items.slice(0, 4).join('') + '</section>';
+    return '<section class="today"><h2 class="today-h">' + calIcon() + '<span>Aujourd’hui<small>' + esc(new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })) + '</small></span></h2>' + items.slice(0, 4).join('') + '</section>';
+  }
+
+  // Petit calendrier avec la date du jour (mois abrégé + jour)
+  function calIcon() {
+    var d = new Date();
+    return '<span class="cal-ic" aria-hidden="true"><span class="cal-m">' + d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '').toUpperCase() + '</span><span class="cal-d">' + d.getDate() + '</span></span>';
   }
 
   function viewHome() {
