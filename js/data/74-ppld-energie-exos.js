@@ -107,28 +107,50 @@
   ];
 
   function num(n) { return String(n).replace('.', ','); }
-  function inp(v, show) { return '<input class="cx-in" inputmode="decimal" autocomplete="off" aria-label="valeur à compléter" data-v="' + v + '"' + (show ? ' data-show="' + show + '"' : '') + '>'; }
+  function inp(v, show) { return '<input class="cx-in" inputmode="decimal" autocomplete="off" aria-label="valeur à trouver" data-v="' + v + '"' + (show ? ' data-show="' + show + '"' : '') + '>'; }
+  function given(v) { return '<span class="cx-giv">' + num(v) + '</span>'; }
+  // Élément utile (le récepteur qui travaille) : tout le reste est transformé en chaleur
+  function useful(r) { return /vérin|moteur|^Pu-H$|^Pu-CF$/i.test(r.lab); }
   function phase(p) {
     var exact = function (r) { return r.t.reduce(function (s, x) { return s + x[0] * x[1]; }, 0) / 600; };
+    var tot = /total|pompe/i.test(p.rows[0].lab) ? exact(p.rows[0]) : null;
+    var parts = p.rows.filter(function (r) { return !/total|pompe/i.test(r.lab); });
+    var util = parts.filter(useful).reduce(function (s, r) { return s + exact(r); }, 0);
+    var sumParts = parts.reduce(function (s, r) { return s + exact(r); }, 0);
+    var f2 = function (x) { return (Math.round(x * 1000) / 1000).toString().replace('.', ','); };
     return '<div class="calc-ex" id="cx-' + p.id + '"><h3>' + p.t + '</h3>' +
       '<figure><a href="img/' + I + p.img + '.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/' + I + p.img + '.jpg" alt="Phase colorée : ' + p.t + '"></a>' +
       '<figcaption>' + (p.src === 'cahier' ? '📘 Phase colorée du cahier' : '✏️ Ta phase colorée') + ' <span class="muted">(toucher pour agrandir)</span></figcaption></figure>' +
       '<p class="cx-leg">' + p.leg.map(function (l) { return '<span><i style="background:' + COL[l[0]] + '"></i>' + l[1] + '</span>'; }).join('') + '</p>' +
-      '<p><b>Données :</b> ' + p.data + '</p>' +
-      '<div class="cx-rows">' + p.rows.map(function (r) {
+      '<p class="muted small">Lis les pressions (couleurs, tarages) et les débits sur le schéma, puis complète les cases vides.</p>' +
+      '<div class="cx-rows">' + p.rows.map(function (r, ri) {
+        var isTot = ri === 0 && /total|pompe/i.test(r.lab);
         return '<div class="cx-row"><b class="cx-lab">' + r.lab + '</b><span class="cx-f">= ' +
-          r.t.map(function (x) { return inp(x[0]) + ' × ' + inp(x[1]) + ' / 600'; }).join(' + ') + ' = ' + inp(exact(r), r.r) + ' kW</span></div>';
+          r.t.map(function (x, k) {
+            // ligne pompe : tout est à trouver ; autres lignes : une valeur donnée sur deux, l'autre à lire sur le schéma
+            var giveP = !isTot && (ri + k) % 2 === 1, giveQ = !isTot && !giveP && p.rows.length > 1;
+            return (giveP ? given(x[0]) : inp(x[0])) + ' × ' + (giveQ ? given(x[1]) : inp(x[1])) + ' / 600';
+          }).join(' + ') + ' = ' + inp(exact(r), r.r) + ' kW</span></div>';
       }).join('') + '</div>' +
+      '<details class="cx-hint"><summary>💡 Indice (si tu bloques)</summary><p>' + p.data + '</p></details>' +
       '<div class="row-actions cx-btns"><button class="btn primary" data-action="calc-check">✔ Vérifier</button><button class="btn" data-action="calc-show">📖 Correction</button><button class="btn ghost" data-action="calc-reset">↺ Recommencer</button></div>' +
       '<p class="cx-res" role="status"></p>' +
       '<div class="cx-sol" hidden><b>💡 Pourquoi chaque calcul</b><ol class="steps">' + p.rows.map(function (r) {
         return '<li><b>' + r.lab + ' = ' + r.t.map(function (x) { return num(x[0]) + ' × ' + num(x[1]) + ' / 600'; }).join(' + ') + ' = ' + r.r + ' kW</b><span>' + r.why + '</span></li>';
-      }).join('') + '</ol><p class="cx-sum">🧮 ' + p.sum + '</p>' + (p.note ? '<p class="cx-note">⚠️ ' + p.note + '</p>' : '') + '</div></div>';
+      }).join('') + '</ol><p class="cx-sum">🧮 ' + p.sum + '</p>' +
+      (parts.length ? '<div class="cx-bilan"><b>⚖️ Pourquoi l’addition donne la puissance totale</b><ul>' +
+        '<li>La <b>pompe</b> fournit toute la puissance du circuit' + (tot !== null ? ' : ' + f2(tot) + ' kW' : '') + '.</li>' +
+        '<li>Cette puissance ne disparaît pas : elle se <b>partage</b> entre tous les éléments que l’huile traverse. Chacun prend <b>sa chute de pression × le débit qui le traverse</b>.</li>' +
+        (util ? '<li>Le <b>récepteur</b> en garde ' + f2(util) + ' kW : c’est le <b>travail utile</b> (le mouvement).</li><li>Le reste, ' + f2(sumParts - util) + ' kW, part en <b>chaleur</b> dans les gicleurs, le régulateur, le distributeur ou les limiteurs.</li>'
+          : '<li>Aucun récepteur ne bouge : <b>toute</b> la puissance part en <b>chaleur</b> (limiteurs, gicleurs).</li>') +
+        '<li>Donc <b>somme des éléments = puissance de la pompe</b> (rien ne se perd, tout se transforme). Si ta somme ne tombe pas juste, tu as oublié un élément ou mal lu une pression ou un débit.</li></ul></div>' : '') +
+      (p.note ? '<p class="cx-note">⚠️ ' + p.note + '</p>' : '') + '</div></div>';
   }
   function lesson(id) {
     return { id: id, title: 'Analyse énergétique : exercices à compléter (phases colorées)',
-      html: '<p>Pour chaque phase : regarde le <b>schéma coloré</b> et sa légende, puis remplis les cases (pression en bar, débit en L/min, puissance en kW). Appuie sur <b>Vérifier</b> : les cases justes passent en vert, les fausses en rouge. L’explication de chaque calcul s’affiche quand tout est rempli (ou avec <b>Correction</b>).</p>' +
+      html: '<p>Pour chaque phase : regarde le <b>schéma coloré</b> et sa légende. Dans les calculs, certaines valeurs sont données, les autres sont <b>à trouver sur le schéma</b> (pression en bar, débit en L/min), puis tu calcules la puissance en kW. Un <b>indice</b> est caché sous chaque exercice si tu bloques. Appuie sur <b>Vérifier</b> : les cases justes passent en vert, les fausses en rouge. L’explication de chaque calcul s’affiche quand tout est rempli (ou avec <b>Correction</b>).</p>' +
         '<div class="box retenir"><b>★ La méthode</b><ol class="steps"><li>Pu (kW) = p (bar) × Q (L/min) / <b>600</b>.</li><li>Pression pompe = pression du récepteur (ou du limiteur) + <b>30 b</b> (stand-by / ΔP du tiroir LS ou du régulateur).</li><li>Débit pompe = débit du récepteur + <b>1 L/min</b> du gicleur anti-pompage (+ 1 L/min de gicleur LS au neutre du RSQ 240).</li><li>Chaque élément traversé consomme <b>sa ΔP × son débit</b>. La somme des éléments = puissance de la pompe : c’est ta vérification.</li></ol></div>' +
+        '<div class="box"><b>⚖️ Pourquoi on additionne tous ces calculs</b><p>La pompe est la seule source d’énergie du circuit. Tout ce qu’elle fournit (pression pompe × débit pompe / 600) est forcément « dépensé » quelque part : une partie fait bouger le récepteur (puissance utile), le reste se transforme en <b>chaleur</b> à chaque endroit où la pression chute (gicleurs, régulateur, distributeur, limiteurs). En additionnant la puissance de chaque élément, on retrouve donc exactement la puissance de la pompe. C’est ce qui permet de vérifier ses calculs et de voir où part l’énergie, donc où l’huile chauffe.</p></div>' +
         '<details class="cx-abr"><summary>🔤 Abréviations</summary><ul>' + ABR.map(function (a) { return '<li><b>' + a[0] + '</b> = ' + a[1] + '</li>'; }).join('') + '</ul></details>' +
         PH.map(function (p) { return p.grp ? '<h2 class="h2">' + p.grp + '</h2>' : phase(p); }).join(''),
       retenir: ['Pu (kW) = p × Q / 600 ; pompe = récepteur + 30 b ; débit pompe = récepteur + 1 L/min (GAP).', 'Somme des puissances des éléments = puissance de la pompe.', 'Butée sous le DAD : tout le débit passe par le limiteur → chaleur. DAD atteint (350 b) : débit annulé, presque pas de puissance.'] };

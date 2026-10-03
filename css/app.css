@@ -774,3 +774,7 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .cx-abr ul { columns: 2; font-size: .9rem; }
 @media (max-width: 640px) { .cx-abr ul { columns: 1; } }
 @media print { .cx-btns { display: none; } .cx-sol { display: block !important; } }
+.cx-giv { display: inline-block; min-width: 2.6em; padding: 6px 4px; text-align: center; font-weight: 700; border-radius: 8px; background: var(--info-bg); }
+.cx-hint { margin: 6px 0; } .cx-hint summary { cursor: pointer; font-weight: 600; color: var(--muted); }
+.cx-bilan { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--info-bg); }
+.cx-bilan ul { margin: 6px 0 0; padding-left: 1.2em; }
