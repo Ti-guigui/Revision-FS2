@@ -16,6 +16,14 @@
   // Questions de puissance / débit / pression de la pompe : schéma de la régulation dans l'explication
   var REG = ['ppld/dad-standby.jpg', 'Régulation de la pompe : tiroir LS, ressort de stand-by (30 b), DAD (320 b), gicleur anti-pompage (1 L/min), gicleur 0,5 L/min, vérin de commande du plateau'];
   var regRe = /puissance|kW|débit (de la|total de la|pompe)|neutre|butée|fin de course|stand-by|DAD|annulation de débit|pression de service|gicleur anti-pompage|pression maxi du circuit|tiroir LS|plateau/i;
+  // Toute question (toutes matières) qui parle du DAD, du gicleur LS ou du gicleur anti-pompage : même schéma dans l'explication
+  var keyRe = /\bDAD\b|gicleur (LS|low flow)|\bGLF\b|anti[- ]?pompage|\bGAP\b/i, ppldRe = /annulation de débit/i;
+  Object.keys(REV.qById).forEach(function (id) {
+    var q = REV.qById[id];
+    var all = [q.q, (q.c || []).join(' '), q.e || '', q.role || '', (q.fonct || []).join(' ')].join(' ').replace(/<[^>]+>/g, ' ');
+    var ppld = q.subject === 'ppld' || (q.subject === 'uv3' && /ppld/.test(q.lkey));
+    if (!q.eimg && (keyRe.test(all) || (ppld && ppldRe.test(all)))) q.eimg = REG;
+  });
   Object.keys(REV.qById).forEach(function (id) {
     var q = REV.qById[id];
     if (q.subject !== 'ppld' && !(q.subject === 'uv3' && /ppld/.test(q.lkey))) return;
