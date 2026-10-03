@@ -753,3 +753,24 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .cal-ic { display: inline-flex; flex-direction: column; width: 38px; border-radius: 7px; overflow: hidden; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .25); text-align: center; flex: none; }
 .cal-m { background: #dc2626; color: #fff; font-size: .58rem; font-weight: 800; letter-spacing: .05em; padding: 2px 0 1px; }
 .cal-d { color: #111827; font-size: 1.05rem; font-weight: 800; line-height: 1.35; }
+
+/* Exercices de calcul à compléter (analyse énergétique) */
+.calc-ex { margin: 18px 0 26px; padding: 12px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+.calc-ex h3 { margin-top: 0; }
+.cx-leg { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .9rem; font-weight: 600; }
+.cx-leg i { display: inline-block; width: 22px; height: 6px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+.cx-rows { display: grid; gap: 8px; margin: 10px 0; }
+.cx-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 8px; border-radius: 10px; background: var(--surface-2); }
+.cx-lab { min-width: 8.5em; }
+.cx-f { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.cx-in { width: 4.6em; padding: 6px; border: 2px dashed var(--muted); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; font-weight: 700; text-align: center; }
+.cx-in.good { border: 2px solid var(--good); background: var(--good-bg); }
+.cx-in.bad { border: 2px solid var(--bad); background: var(--bad-bg); }
+.cx-btns { margin: 8px 0 0; }
+.cx-res { font-weight: 700; min-height: 1.2em; }
+.cx-sol { border-top: 1px solid var(--border); padding-top: 10px; }
+.cx-sum { font-weight: 600; }
+.cx-note { background: var(--mid-bg); border-radius: 10px; padding: 8px 10px; }
+.cx-abr ul { columns: 2; font-size: .9rem; }
+@media (max-width: 640px) { .cx-abr ul { columns: 1; } }
+@media print { .cx-btns { display: none; } .cx-sol { display: block !important; } }

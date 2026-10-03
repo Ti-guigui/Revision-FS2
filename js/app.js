@@ -1593,10 +1593,34 @@
   }
 
   /* ---------- Actions ---------- */
+  // Exercices de calcul à compléter (cases data-v = valeur attendue) : vérifier, montrer la correction, recommencer
+  function calcEx(box, a) {
+    if (!box) return;
+    var ins = box.querySelectorAll('input.cx-in'), ok = 0, filled = 0;
+    Array.prototype.forEach.call(ins, function (inp) {
+      var want = +inp.getAttribute('data-v'), tol = Math.max(+(inp.getAttribute('data-tol') || 0), Math.abs(want) * 0.01, 0.006);
+      inp.classList.remove('good', 'bad');
+      if (a === 'calc-reset') { inp.value = ''; return; }
+      if (a === 'calc-show') { inp.value = String(inp.getAttribute('data-show') || want).replace('.', ','); inp.classList.add('good'); return; }
+      var v = parseFloat(inp.value.replace(/\s/g, '').replace(',', '.'));
+      if (inp.value.trim() === '' || isNaN(v)) return;
+      filled++;
+      var good = Math.abs(v - want) <= tol; if (good) ok++;
+      inp.classList.add(good ? 'good' : 'bad');
+    });
+    var res = box.querySelector('.cx-res'), sol = box.querySelector('.cx-sol');
+    if (a === 'calc-reset') { res.textContent = ''; sol.hidden = true; return; }
+    if (a === 'calc-show') { res.textContent = '📖 Correction affichée : lis le pourquoi de chaque calcul ci-dessous.'; sol.hidden = false; return; }
+    res.textContent = filled < ins.length ? ok + ' / ' + filled + ' cases justes — il reste ' + (ins.length - filled) + ' case' + (ins.length - filled > 1 ? 's' : '') + ' vide' + (ins.length - filled > 1 ? 's' : '') + '.'
+      : ok === ins.length ? '✅ Tout est juste ! Lis quand même les explications.' : '❌ ' + (ins.length - ok) + ' erreur' + (ins.length - ok > 1 ? 's' : '') + ' (en rouge). Corrige, ou affiche la correction.';
+    if (filled === ins.length) sol.hidden = false;
+  }
+
   function onClick(e) {
     var el = e.target.closest('[data-action]');
     if (!el || el.tagName === 'INPUT') return;
     var a = el.getAttribute('data-action');
+    if (a === 'calc-check' || a === 'calc-show' || a === 'calc-reset') return calcEx(el.closest('.calc-ex'), a);
     if (a === 'answer') answer(+el.getAttribute('data-k'));
     else if (a === 'validate') answer(-1);
     else if (a === 'next') next();

@@ -33,9 +33,15 @@
   }]);
 
   REV.extendLesson('ppld/generation', {
-    images: [im('notes-pompe', 'Notes de cours : pompe et régulation'), im('notes-cours', 'Notes de cours : capacités, système débit / système débit-pression')],
     html: `
-<h3>Notes de cours</h3>
+<h3>Notes de cours : capacités du PPLD</h3>
+<ul><li>Système de <b>levage</b> : <b>15 t</b>.</li><li>Système de <b>halage</b> : <b>18 t</b>.</li><li>Système de <b>remorquage</b> : cabestan.</li><li>Système de <b>stabilisation</b> : AV / AR.</li>
+<li>Remorquage : <b>12,5 t en tracté-levé</b>, <b>15 t en tracté-tiré</b>.</li>
+<li>Commande : arrêt d’urgence et réarmement, sélecteur 3 positions, électrovannes by-pass.</li>
+<li><b>RSQ 240</b> = système débit / pression ; <b>stabs</b> = système débit (on maintient une ΔP constante).</li></ul>
+<h3>Notes de cours : pompe et régulation</h3>
+<ul><li>Pompe à <b>cylindrée variable</b>, drainée externe, régulation <b>débit-pression Load Sensing</b>, débit maxi <b>100 L/min</b>.</li>
+<li><b>Tiroir LS : 30 b</b> = pression de stand-by au neutre.</li><li><b>Dispositif d’annulation de débit (DAD) : 320 b</b>.</li></ul>
 <div class="tw"><table><tr><th>Situation</th><th>Pression de service</th></tr>
 <tr><td>Neutre</td><td>30 b de stand-by, 1 L/min</td></tr>
 <tr><td>Distributeur ouvert à fond</td><td>Ps = P LS : débit maxi 100 L/min</td></tr>
@@ -49,7 +55,7 @@
   });
 
   REV.extendLesson('ppld/energie', {
-    images: [im('stabs-exemple-85b', 'Exemple : stabilisateur à 85 b (P service 115 b)'), im('stabs-schema-vierge', 'Schéma des stabilisateurs à colorier')],
+    images: [im('ph-stab-85b', 'Phase colorée : stabilisateur à 85 b (P service 115 b)'), im('stabs-schema-vierge', 'Schéma des stabilisateurs à colorier')],
     html: `
 <h3>Exemple : stabilisateur à 85 b</h3>
 <ul><li>Récepteur à 85 b → pression de service 85 + 30 = <b>115 b</b> ; débit pompe 40 + 1 = <b>41 L/min</b>.</li>
@@ -68,12 +74,12 @@
     ex('electrique', { img: I + 'elec-mode-radio.jpg', q: 'Quel est le mode de fonctionnement normal de la dépanneuse ?', c: ['Le mode Radio', 'Le mode Manu', 'Le mode Stab'], e: 'Le mode Manu est le mode de secours.' }),
     ex('electrique', { img: I + 'schema-auto-maintien.jpg', q: 'La façade de commande est éclairée. Que peut-on en déduire ?', c: ['Le relais R6 est correct : la ligne électrique arrive à la façade', 'Le relais d’auto-maintien est collé', 'La pompe débite'], e: 'Batterie → 40 A → PTO → 5 A → R6 → 20 A → façade.' }),
     ex('electrique', { img: I + 'elec-auto-maintien.jpg', q: 'Rôle du relais d’auto-maintien ?', c: ['Rester alimenté après l’appui sur le réarmement et alimenter le sélecteur 3 voies', 'Commander la pompe', 'Allumer l’éclairage des coffres'], e: 'L’arrêt d’urgence coupe son alimentation.' }),
-    ex('generation', { img: I + 'notes-pompe.jpg', q: 'Pression maxi du circuit ?', c: ['350 b (DAD 320 b + stand-by 30 b)', '320 b', '220 b'], e: 'Récepteur en butée : 320 + 30 = 350 b.' }),
-    ex('generation', { img: I + 'notes-pompe.jpg', q: 'Distributeur ouvert à fond : que vaut la pression de service ?', c: ['Ps = P LS, débit maxi 100 L/min', 'Ps = P LS + 30 b', 'Ps = 350 b'], e: 'En fonctionnement partiel : Ps = P LS + 30 b.' }),
-    ex('generation', { img: I + 'notes-cours.jpg', q: 'Système débit (stabilisateurs) : que ressent l’opérateur ?', c: ['Pas de ressenti de charge, la vitesse est constante', 'Un ressenti de charge, la vitesse change', 'Des à-coups'], e: 'Système débit/pression (RSQ 240) : ressenti de charge, changement de vitesse visible.' }),
-    ex('generation', { img: I + 'notes-cours.jpg', q: 'Système débit/pression (équipement RSQ 240) : que ressent l’opérateur ?', c: ['Un ressenti de charge, un changement de vitesse est visible', 'Aucun ressenti de charge', 'Une vitesse toujours constante'], e: 'Les stabilisateurs (système débit) gardent une vitesse constante.' }),
-    ex('energie', { img: I + 'stabs-exemple-85b.jpg', q: 'Stabilisateur à 85 b : pression de service ?', c: ['115 b', '85 b', '220 b'], e: '85 + 30 (tiroir LS) = 115 b.' }),
-    ex('energie', { img: I + 'stabs-exemple-85b.jpg', q: 'Stabilisateur à 85 b (40 L/min) : puissance fournie par la pompe ?', c: ['7,86 kW (115 × 41 / 600)', '5,67 kW', '2 kW'], e: 'Vérin 5,67 kW ; régulateur 2 kW ; gicleur 0,19 kW.' }),
-    ex('energie', { img: I + 'stabs-exemple-85b.jpg', q: 'Rôle de la balance de pression du régulateur de débit 3 voies ?', c: ['Maintenir une ΔP constante pour une vitesse constante', 'Limiter la pression maxi', 'Décharger la ligne LS'], e: 'Q = K × S × √ΔP : ΔP constante (30 b) → débit constant.' })
+    ex('generation', { img: I + 'pompe-phases.jpg', q: 'Pression maxi du circuit ?', c: ['350 b (DAD 320 b + stand-by 30 b)', '320 b', '220 b'], e: 'Récepteur en butée : 320 + 30 = 350 b.' }),
+    ex('generation', { img: I + 'pompe-phases.jpg', q: 'Distributeur ouvert à fond : que vaut la pression de service ?', c: ['Ps = P LS, débit maxi 100 L/min', 'Ps = P LS + 30 b', 'Ps = 350 b'], e: 'En fonctionnement partiel : Ps = P LS + 30 b.' }),
+    ex('generation', { img: I + 'stabs-fonctionnement.jpg', q: 'Système débit (stabilisateurs) : que ressent l’opérateur ?', c: ['Pas de ressenti de charge, la vitesse est constante', 'Un ressenti de charge, la vitesse change', 'Des à-coups'], e: 'Système débit/pression (RSQ 240) : ressenti de charge, changement de vitesse visible.' }),
+    ex('generation', { img: I + 'rmu-fonctionnement.jpg', q: 'Système débit/pression (équipement RSQ 240) : que ressent l’opérateur ?', c: ['Un ressenti de charge, un changement de vitesse est visible', 'Aucun ressenti de charge', 'Une vitesse toujours constante'], e: 'Les stabilisateurs (système débit) gardent une vitesse constante.' }),
+    ex('energie', { img: I + 'ph-stab-85b.jpg', q: 'Stabilisateur à 85 b : pression de service ?', c: ['115 b', '85 b', '220 b'], e: '85 + 30 (tiroir LS) = 115 b.' }),
+    ex('energie', { img: I + 'ph-stab-85b.jpg', q: 'Stabilisateur à 85 b (40 L/min) : puissance fournie par la pompe ?', c: ['7,86 kW (115 × 41 / 600)', '5,67 kW', '2 kW'], e: 'Vérin 5,67 kW ; régulateur 2 kW ; gicleur 0,19 kW.' }),
+    ex('energie', { img: I + 'ph-stab-85b.jpg', q: 'Rôle de la balance de pression du régulateur de débit 3 voies ?', c: ['Maintenir une ΔP constante pour une vitesse constante', 'Limiter la pression maxi', 'Décharger la ligne LS'], e: 'Q = K × S × √ΔP : ΔP constante (30 b) → débit constant.' })
   ] });
 })();

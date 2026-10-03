@@ -192,7 +192,7 @@ REV.systemes = {
   ],
 
   ppld: [
-    { t: 'Régulation de la pompe Load Sensing', img: [['ppld/pompe-phases.jpg', 'Les 4 phases'], ['ppld/notes-pompe.jpg', 'Tes notes']],
+    { t: 'Régulation de la pompe Load Sensing', img: [['ppld/pompe-phases.jpg', 'Les 4 phases']],
       role: 'La pompe ne donne que le débit et la pression demandés par le récepteur le plus chargé.',
       phases: [['Neutre', '30 b de stand-by, 1 L/min (gicleur anti-pompage).'], ['Ouvert à fond', 'Ps = P LS : débit maxi 100 L/min.'], ['Fonctionnement', 'Ps = P LS + 30 b.'], ['Butée', 'DAD 320 b + 30 b = 350 b, débit nul.']],
       pannes: [] },
