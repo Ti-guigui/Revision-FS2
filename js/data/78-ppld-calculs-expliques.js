@@ -8,7 +8,7 @@
     [/^RMU et grue au neutre : débit de la pompe/, 'Au neutre, la pompe ne débite que ce qui fuit en permanence ; 1 L/min par le gicleur anti-pompage (sur le vérin du plateau de la pompe) ; 1 L/min par le gicleur LS du bloc d’entrée du RSQ 240 ; Total : 1 + 1 = 2 L/min (puissance : 30 × 2 / 600 = 0,1 kW).'],
     [/^Récepteur alimenté à 40 L\/min : débit total de la pompe/, '40 L/min : le débit envoyé au récepteur (régulateur de débit 3 voies) ; 1 L/min : la fuite permanente du gicleur anti-pompage ; Débit pompe = 40 + 1 = 41 L/min.'],
     [/^Stabilisateurs en butée : puissance totale absorbée/, 'Pression du circuit : le vérin est en butée, la pression monte jusqu’au limiteur piloté du CETOP = tête pilote 200 b + balance 20 b = 220 b ; Pression pompe : 220 + 30 b (ΔP du régulateur de débit) = 250 b (rouge de la légende) ; Débit : le DAD (320 b) n’est pas atteint, la pompe débite toujours 40 + 1 = 41 L/min ; Limiteur piloté : 220 × 40 / 600 = 14,66 kW ; Régulateur : 30 × 40 / 600 = 2 kW ; Gicleur anti-pompage : 250 × 1 / 600 = 0,41 kW ; Total : 14,66 + 2 + 0,41 = 17,07 kW.'],
-    [/^Télescopage du RMU en butée \(LPS 200 b\) : pression de service/, '200 b : le vérin de télescopage est en butée, la pression monte jusqu’au LPS taré à 200 b (donné dans la question) ; + 30 b : le tiroir LS de la pompe garde toujours 30 b au-dessus de la pression LS ; Pression de service = 200 + 30 = 230 b ; Le DAD (320 b) n’est pas atteint : la pompe débite toujours 40 + 1 = 41 L/min, d’où 230 × 41 / 600 = 15,71 kW.'],
+    [/^Télescopage du RMU en butée \(LPS 200 b\) : pression de service/, '200 b : en sortie, le vérin de télescopage est en butée, la pression monte jusqu’au LPS taré à 200 b (donné dans la question) ; + 30 b : le tiroir LS de la pompe garde toujours 30 b au-dessus de la pression LS ; Pression de service = 200 + 30 = 230 b ; Le DAD (320 b) n’est pas atteint : la pompe débite toujours 40 + 1 = 41 L/min, d’où 230 × 41 / 600 = 15,71 kW.'],
     [/^Rotation de la grue en fin de course \(LPS 210 b\)/, '210 b : le moteur de rotation est en fin de course, la pression monte jusqu’au LPS taré à 210 b (donné dans la question) ; + 30 b : le tiroir LS de la pompe garde 30 b au-dessus de la pression LS → pression de service = 210 + 30 = 240 b ; 41 L/min : le DAD (320 b) n’est pas atteint, donc la pompe ne s’annule pas : 40 L/min passent par le LPS + 1 L/min pour le gicleur anti-pompage ; Puissance = 240 × 41 / 600 = 16,40 kW, entièrement transformée en chaleur.'],
     [/^Stabilisateur à 85 b : pression de service/, '85 b : la pression du vérin (donnée) ; + 30 b : la ΔP du régulateur de débit 3 voies, qui garde la vitesse constante ; Pression de service = 85 + 30 = 115 b.'],
     [/^Stabilisateur à 85 b \(40 L\/min\) : puissance fournie par la pompe|^Sortie d’un stabilisateur à 85 b : puissance fournie par la pompe/, 'Pression pompe : 85 b (vérin) + 30 b (ΔP du régulateur de débit) = 115 b ; Débit pompe : 40 L/min (régulateur) + 1 L/min (gicleur anti-pompage) = 41 L/min ; Puissance = 115 × 41 / 600 = 7,858 kW ; Vérification : vérin 85 × 40 / 600 = 5,667 + régulateur 30 × 40 / 600 = 2 + gicleur 115 × 1 / 600 = 0,192 → 7,858 kW.'],
@@ -20,6 +20,19 @@
     [/^Corps de flèche, 300 b au manomètre : pression dans les vérins/, '300 b : la pression lue au manomètre est celle de la pompe (pression de service) ; La pompe garde toujours 30 b au-dessus de la charge (tiroir LS) ; Pression dans les vérins = 300 − 30 = 270 b.'],
     [/^Corps de flèche en butée \(LPS 300 b\) : pression de la pompe/, '300 b : en butée, la pression monte jusqu’au LPS du corps de flèche taré à 300 b (donné) ; + 30 b : le tiroir LS ajoute toujours 30 b → pompe à 330 b ; Le signal LS (300 b) n’atteint pas le DAD (320 b) : le débit ne s’annule pas, il part en chaleur dans le LPS.']
   ];
+  /* Télescopage du RMU en sortie, en fonctionnement à 100 b (limiteur de débit en sortie : ΔP 10 b) */
+  var REG = ['ppld/dad-standby.jpg', 'Régulation de la pompe : tiroir LS, ressort de stand-by (30 b), DAD (320 b), gicleur anti-pompage (1 L/min), gicleur 0,5 L/min, vérin de commande du plateau'];
+  var T = 'Télescopage du RMU en sortie, en fonctionnement à 100 b (limiteur de débit en sortie de télescopage : ΔP 10 b)';
+  var NQ = [
+    [T + ' : pression de service ?', ['140 b', '110 b', '130 b', '100 b'], 'Vérin de télescopage : 100 b (donné) ; Le limiteur de débit en sortie de télescopage crée une ΔP de 10 b : l’autre vérin est donc à 100 + 10 = 110 b ; La pression LS recopie la plus forte : 110 b ; Le tiroir LS de la pompe ajoute 30 b : pression de service = 110 + 30 = 140 b.'],
+    [T + ' : pourquoi un des vérins est-il à 110 b ?', ['100 b du vérin + 10 b de ΔP du limiteur de débit en sortie de télescopage', '100 b + 10 b de ΔP du distributeur', '140 b − 30 b du tiroir LS', '110 b est la pression de stand-by'], 'Les 2 vérins jumelés reçoivent 20 L/min chacun ; Le limiteur de débit placé en sortie de télescopage freine l’huile : chute de 10 b ; Ce vérin travaille donc à 100 + 10 = 110 b.'],
+    [T + ' : puissance perdue dans le limiteur de débit ?', ['0,33 kW', '0,67 kW', '2 kW', '1,17 kW'], 'Chute de pression du limiteur : ΔP = 10 b ; Débit qui le traverse : 20 L/min (un des deux vérins) ; Puissance = 10 × 20 / 600 = 0,33 kW, transformée en chaleur.'],
+    [T + ' : puissance totale absorbée ?', ['9,60 kW', '6,99 kW', '15,71 kW', '7,86 kW'], 'Vérins : 100 × 20 / 600 + 110 × 20 / 600 = 6,99 kW (20 L/min chacun) ; Limiteur de débit : 10 × 20 / 600 = 0,33 kW ; Distributeur : 30 × 40 / 600 = 2 kW (ΔP 30 b du tiroir LS sur les 40 L/min) ; Gicleur LS : 30 × 1 / 600 = 0,05 kW ; Gicleur anti-pompage : 140 × 1 / 600 = 0,23 kW (sous la pression de la pompe, 140 b) ; Total = 6,99 + 0,33 + 2 + 0,05 + 0,23 = 9,60 kW.']
+  ];
+  function nq(l) { return NQ.map(function (x) { return { l: l, q: x[0], c: x[1], e: x[2], img: 'ppld/q/rmu-fonctionnement.jpg', eimg2: ['ppld/rmu-fonctionnement.jpg', 'Le schéma complet, avec les valeurs de la légende'], eimg: REG, src: 'Cours PPLD, analyse énergétique du RMU' }; }); }
+  REV.addExercises('ppld', { lessons: [], questions: nq('energie') });
+  REV.addExercises('uv3', { lessons: [], questions: nq('ppld') });
+
   Object.keys(REV.qById).forEach(function (id) {
     var q = REV.qById[id];
     if (q.subject !== 'ppld' && !(q.subject === 'uv3' && /ppld/.test(q.lkey))) return;
@@ -27,6 +40,7 @@
     for (var i = 0; i < E.length; i++) if (E[i][0].test(q.q)) { e = E[i][1]; break; }
     if (!e) return;
     q.e = e;
+    q.q = q.q.replace('Télescopage du RMU en butée (LPS 200 b)', 'Télescopage du RMU en butée en sortie (LPS 200 b)');
     var m = (q.img || '').match(/^ppld\/([\w-]+)\.jpg$/);
     if (m && MASK.indexOf(m[1]) >= 0) {
       q.eimg2 = ['ppld/' + m[1] + '.jpg', 'Le schéma complet, avec les valeurs de la légende'];
