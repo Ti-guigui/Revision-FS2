@@ -10,6 +10,7 @@
     ['Quelles sont les différentes opérations de contrôle sur un véhicule ?', ['CT, CTVC, COS, VP + OS, DIT chapitre 4', 'Seulement le COS', 'NTI1, NTI2, NTI3', 'BIMT et MICAM uniquement'], 'Contrôle technique, contrôle technique volontaire complet, COS, visite périodique avec opérations de sécurité, et chapitre 4 (contrôle) du DIT.'],
     ['Visite station-service SANS vidange : comment l’opération est-elle inscrite dans le chapitre préventif du MAT 10 004 ?', ['En noir', 'En rouge', 'En vert', 'Au crayon à papier'], 'Avec une vidange : en rouge. Sans vidange : en noir.'],
     ['Où doit-on enregistrer les FT (faits techniques) ?', ['Dans le chapitre des FT', 'Dans le chapitre préventif', 'Sur la fiche de visite', 'Dans le MAT 1015'], 'Chaque fait technique est inscrit dans son chapitre dédié.'],
+    ['Lors d’une visite périodique ayant valeur de COS (VP + OS), qui enregistre le contrôle dans le MAT 10 004 ?', ['Le chef d’atelier', 'Le RDC', 'La CDM', 'Le prestataire'], 'C’est le chef d’atelier (l’atelier qui a réalisé la visite) qui l’enregistre.'],
     ['Quels sont les deux types de COS ?', ['Générique et spécifique', 'Annuel et semestriel', 'Civil et militaire', 'Préventif et correctif'], 'AQA 03 : le COS MAT 4485 générique et ses dérivés spécifiques à certains véhicules.']
   ];
   var lesson = { id: 'rdc-complements', title: 'Questions RDC complémentaires',

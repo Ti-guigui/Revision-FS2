@@ -13,7 +13,7 @@
     '<li><b>Q7 — A : la CDM.</b> La CDM (ECM, équipe de conduite de la maintenance) ouvre, valide et clôture le DIT (MAT 4486).</li>' +
     '<li><b>Q8 — A : la CDM.</b> Au niveau du BML, c’est la conduite de la maintenance qui pilote la maintenance.</li>' +
     '<li><b>Q9 — C : visite NTI1, station et COS.</b> On remet d’abord le véhicule en état (NTI1), puis la station ; le COS vient en dernier sur un véhicule en état.</li>' +
-    '<li><b>Q10 — B : le RDC.</b> La visite périodique valant COS (VP + OS) est enregistrée au MAT 10004 par le RDC.</li>' +
+    '<li><b>Q10 — C : l’atelier ayant réalisé la visite.</b> La visite périodique valant COS (VP + OS) est enregistrée au MAT 10004 par le <b>chef d’atelier</b>.</li>' +
     '<li><b>Q11 — Passer d’une VP à une VP + OS :</b> il faut que ce soit <b>marqué sur la feuille de visite</b> (la fiche de visite comprend alors les opérations de contrôle du COS : elle a valeur de COS).</li>' +
     '<li><b>Q12 — Le COS (contrôle des organes de sécurité, MAT 4485) :</b><ul>' +
     '<li><b>Où :</b> à la cellule <b>RDC</b> (réception, diagnostic, contrôle) de la SMR.</li>' +
@@ -22,7 +22,7 @@
     '<li><b>Quand :</b> <b>tous les ans</b> (bus : tous les 6 mois), lors d’une <b>VP + OS</b>, <b>sur ordre</b>, en sortie de <b>remisage de plus de 6 mois</b> (sauf ENU). Pas après une RIP.</li>' +
     '<li><b>Pourquoi :</b> mettre le véhicule <b>en conformité avec le code de la route</b> (sécurité). Celui qui signe engage sa responsabilité.</li></ul></li></ul>';
   var lesson = { id: 'controle-rdc-2', title: 'Contrôle des connaissances n°1 RDC (copie en 12 questions)', html: html,
-    retenir: ['RDC fermé → attendre. Potentiel cumulé ≥ relevé.', 'COS encore valable → phase 4 du MAT 4486 seulement.', 'VP → VP + OS : seulement si c’est marqué sur la feuille de visite.', 'RIP : le prestataire renseigne, on ne repasse pas derrière.', 'RDC répartit les travaux ; CDM pilote et valide la partie 4 du DIT ; VP + OS enregistrée au MAT 10004 par le RDC.', 'COS : RDC ; FS2 MOT (à défaut FS1 NG + 2 ans + FA CTRL RDC COS) ; tous les ans, VP + OS, sur ordre, remisage > 6 mois ; conformité au code de la route.'] };
+    retenir: ['RDC fermé → attendre. Potentiel cumulé ≥ relevé.', 'COS encore valable → phase 4 du MAT 4486 seulement.', 'VP → VP + OS : seulement si c’est marqué sur la feuille de visite.', 'RIP : le prestataire renseigne, on ne repasse pas derrière.', 'RDC répartit les travaux ; CDM pilote et valide la partie 4 du DIT ; VP + OS enregistrée au MAT 10004 par le chef d’atelier.', 'COS : RDC ; FS2 MOT (à défaut FS1 NG + 2 ans + FA CTRL RDC COS) ; tous les ans, VP + OS, sur ordre, remisage > 6 mois ; conformité au code de la route.'] };
   var S = 'Contrôle des connaissances n°1 RDC (copie en 12 questions)';
   var QCM = [
     { a: 2, q: 'Q1 — Je suis chef d’atelier poids lourd, le RDC est fermé pour 2 semaines je peux :', c: ['Faire contrôler le VHL par un BSTAT d’un autre atelier', 'Sortir le VHL et valider la partie 4 du DIT (Mat 4486)', 'Attendre que le RDC soit ouvert'], e: 'Seul le RDC contrôle et fait sortir le véhicule : on attend qu’il soit ouvert.' },
@@ -34,7 +34,7 @@
     { a: 0, q: 'Q7 — Dans tous les cas, qui validera la partie 4 du DIT ?', c: ['Le CDM', 'La RDC', 'L’Off Maint'], e: 'La CDM (ECM) ouvre, valide et clôture le DIT.' },
     { a: 0, q: 'Q8 — Au niveau du BML qui pilote la maintenance ?', c: ['Le CDM', 'La RDC', 'L’Off Maint'], e: 'La conduite de la maintenance (CDM) pilote la maintenance.' },
     { a: 2, q: 'Q9 — Un GBC 180 doit rentrer en atelier pour effectuer un COS, une visite station et une visite NTI1. Dans quel ordre logique sont effectuées les visites ?', c: ['Visite station, NTI1 et COS', 'Visite NTI1, COS et station', 'Visite NTI1, station et COS'], e: 'NTI1, puis station, puis COS : le COS se fait sur un véhicule en état.' },
-    { a: 1, q: 'Q10 — Lors d’une VP + OS, qui enregistre le contrôle dans le MAT 10 004 ?', c: ['Le CDM', 'La RDC', 'L’atelier ayant réalisé la visite'], e: 'La visite périodique valant COS est enregistrée au MAT 10004 par le RDC.' }
+    { a: 2, q: 'Q10 — Lors d’une VP + OS, qui enregistre le contrôle dans le MAT 10 004 ?', c: ['Le CDM', 'La RDC', 'L’atelier ayant réalisé la visite'], e: 'La visite périodique valant COS est enregistrée au MAT 10004 par le chef d’atelier, donc l’atelier qui a réalisé la visite.' }
   ].map(function (q) { q.l = 'controle-rdc-2'; q.fixed = true; q.src = S; return q; });
   var COS = [
     { q: 'Q11 — Quelle condition pour passer d’une VP à une VP + OS ?', c: ['Que ce soit marqué sur la feuille de visite', 'Que le véhicule sorte de RIP', 'Que le dernier COS ait plus de 6 mois', 'Que la CDM le demande oralement'], e: 'La VP + OS doit être marquée sur la feuille de visite : la fiche comprend alors les opérations de contrôle du COS.' },

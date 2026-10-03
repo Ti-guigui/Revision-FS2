@@ -123,7 +123,7 @@ REV.add({
 <tr><td>Qui répartit les travaux (phase 2) ?</td><td>Le RDC</td></tr>
 <tr><td>GBC 180 : COS + visite station + NTI1</td><td>NTI1, puis station, puis COS</td></tr>
 <tr><td>Qui valide la partie 4 du DIT dans tous les cas ?</td><td>L’ECM (équipe de conduite de la maintenance = CDM)</td></tr>
-<tr><td>Visite périodique valant COS : qui l’enregistre au MAT 10004 ?</td><td>Le RDC</td></tr></table></div>
+<tr><td>Visite périodique valant COS (VP + OS) : qui l’enregistre au MAT 10004 ?</td><td>Le chef d’atelier (l’atelier qui a réalisé la visite)</td></tr></table></div>
 `,
       retenir: ['7 étapes ; le RDC en prend 4.', 'DIT = 4 phases : réception, diagnostic, intervention, contrôle.', 'COS : 1 an ; sortie de remisage > 6 mois ; BM2 Mobilité terrestre affecté au RDC.', 'Préparation = chef d’atelier.'],
       pieges: ['Le RDC répartit les travaux (phase 2 du DIT) ; la CDM valide la partie 4 du DIT.'],
