@@ -22,7 +22,7 @@
   ];
   /* Télescopage du RMU en sortie, en fonctionnement à 100 b (limiteur de débit en sortie : ΔP 10 b) */
   var REG = ['ppld/dad-standby.jpg', 'Régulation de la pompe : tiroir LS, ressort de stand-by (30 b), DAD (320 b), gicleur anti-pompage (1 L/min), gicleur 0,5 L/min, vérin de commande du plateau'];
-  var T = 'Télescopage du RMU en sortie, en fonctionnement à 100 b (limiteur de débit en sortie de télescopage : ΔP 10 b)';
+  var T = 'Télescopage du RMU en sortie, en fonctionnement à 100 b et 40 L/min, soit 20 L/min par vérin (limiteur de débit en sortie de télescopage : ΔP 10 b)';
   var NQ = [
     [T + ' : pression de service ?', ['140 b', '110 b', '130 b', '100 b'], 'Vérin de télescopage : 100 b (donné), lu en bordeaux sur le schéma ; Le limiteur de débit en sortie de télescopage crée une ΔP de 10 b : l’autre vérin est donc à 100 + 10 = 110 b ; La pression LS recopie la plus forte : 110 b ; Le tiroir LS de la pompe ajoute 30 b : pression de service = 110 + 30 = 140 b.'],
     [T + ' : pourquoi un des vérins est-il à 110 b ?', ['100 b du vérin + 10 b de ΔP du limiteur de débit en sortie de télescopage', '100 b + 10 b de ΔP du distributeur', '140 b − 30 b du tiroir LS', '110 b est la pression de stand-by'], 'Les 2 vérins jumelés reçoivent 20 L/min chacun ; Le limiteur de débit placé en sortie de télescopage freine l’huile : chute de 10 b ; Ce vérin travaille donc à 100 + 10 = 110 b.'],
