@@ -951,7 +951,7 @@
           (ans.ok ? '' : '<p class="fb-good">' + (q.multi ? 'Les bonnes réponses sont :<br>' : q.any ? 'Réponses acceptées :<br>' : 'La bonne réponse est : ') + goodTxt + '</p>') + '</div>' +
         (dev ? '<div class="fb-sec dev"><b>🧮 Développement de la réponse</b><p>' + dev + '</p></div>' : '') +
         '<div class="fb-sec' + (l.exo && !dev ? ' dev' : '') + '"><b>' + (l.exo && !dev ? '🧮 Développement de la réponse' : '💡 Explication') + '</b>' + expHtml(q) + '</div>' +
-        (q.eimg ? '<figure class="fb-img"><a href="img/' + q.eimg[0] + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + q.eimg[0] + '" alt="' + esc(q.eimg[1]) + '"></a><figcaption>🖼️ ' + esc(q.eimg[1]) + '</figcaption></figure>' : '') +
+        [q.eimg2, q.eimg].filter(Boolean).map(function (im) { return '<figure class="fb-img"><a href="img/' + im[0] + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + im[0] + '" alt="' + esc(im[1]) + '"></a><figcaption>🖼️ ' + esc(im[1]) + '</figcaption></figure>'; }).join('') +
         (q.r ? '<div class="fb-sec retenir"><b>🧠 À retenir</b><p>' + q.r + '</p></div>' : '') +
         (q.w ? '<div class="fb-sec attention"><b>⚠️ Attention</b><p>' + q.w + '</p></div>' : '') +
         (q.src ? '<p class="muted small">Source : ' + esc(q.src) + '</p>' : '') +
