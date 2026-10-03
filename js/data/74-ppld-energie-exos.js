@@ -135,7 +135,7 @@
       '<details class="cx-hint"><summary>💡 Indice (si tu bloques)</summary><p>' + p.data + '</p></details>' +
       '<div class="row-actions cx-btns"><button class="btn primary" data-action="calc-check">✔ Vérifier</button><button class="btn" data-action="calc-show">📖 Correction</button><button class="btn ghost" data-action="calc-reset">↺ Recommencer</button></div>' +
       '<p class="cx-res" role="status"></p>' +
-      '<div class="cx-sol" hidden><b>💡 Pourquoi chaque calcul</b><ol class="steps">' + p.rows.map(function (r) {
+      '<div class="cx-sol" hidden><figure class="fb-img"><a href="img/ppld/dad-standby.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/ppld/dad-standby.jpg" alt="Schéma de la régulation de la pompe"></a><figcaption>🖼️ Régulation de la pompe : tiroir LS, stand-by 30 b, DAD 320 b, gicleur anti-pompage 1 L/min, gicleur 0,5 L/min</figcaption></figure><b>💡 Pourquoi chaque calcul</b><ol class="steps">' + p.rows.map(function (r) {
         return '<li><b>' + r.lab + ' = ' + r.t.map(function (x) { return num(x[0]) + ' × ' + num(x[1]) + ' / 600'; }).join(' + ') + ' = ' + r.r + ' kW</b><span>' + r.why + '</span></li>';
       }).join('') + '</ol><p class="cx-sum">🧮 ' + p.sum + '</p>' +
       (parts.length ? '<div class="cx-bilan"><b>⚖️ Pourquoi l’addition donne la puissance totale</b><ul>' +

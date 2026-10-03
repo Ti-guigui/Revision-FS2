@@ -13,9 +13,13 @@
     [/désignation et rôle d’un LPS/i, 'rsq-travail'], [/limiteur de pression à commande pilotée de la section d’entrée du RSQ 240/i, 'rsq-entree'],
     [/arrêt d’urgence de la télécommande|voyant de réarmement reste allumé/i, 'elec-arret-urgence'], [/pilote l’électrovanne by-pass du RSQ 240 ou du CETOP/i, 'schema-auto-maintien']
   ];
+  // Questions de puissance / débit / pression de la pompe : schéma de la régulation dans l'explication
+  var REG = ['ppld/dad-standby.jpg', 'Régulation de la pompe : tiroir LS, ressort de stand-by (30 b), DAD (320 b), gicleur anti-pompage (1 L/min), gicleur 0,5 L/min, vérin de commande du plateau'];
+  var regRe = /puissance|kW|débit (de la|total de la|pompe)|neutre|butée|fin de course|stand-by|DAD|annulation de débit|pression de service|gicleur anti-pompage|pression maxi du circuit|tiroir LS|plateau/i;
   Object.keys(REV.qById).forEach(function (id) {
     var q = REV.qById[id];
     if (q.subject !== 'ppld' && !(q.subject === 'uv3' && /ppld/.test(q.lkey))) return;
+    if (!q.eimg && regRe.test(q.q)) q.eimg = REG;
     if (q.img && !/energie|graphes/.test(q.img)) return;
     for (var i = 0; i < R.length; i++) if (R[i][0].test(q.q)) { q.img = 'ppld/' + R[i][1] + '.jpg'; return; }
   });
