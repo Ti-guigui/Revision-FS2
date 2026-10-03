@@ -74,7 +74,7 @@
       images: [im('eq-dechargement', 'Séquence de déchargement : recul de la coulisse, puis sortie des vérins de bras'),
         im('eq-chargement', 'Séquence de chargement : rentrée des vérins de bras, puis sortie de la coulisse'),
         im('eq-degrade-electrique', 'Défaillance électrique : vis de shuntage sur EV3 (pompe) et tranches A du groupe de distribution'),
-        im('eq-degrade-generation', 'Défaillance de la génération : flexibles du PPLOG en panne branchés sur le PPLOG de dépannage')],
+        im('eq-degrade-generation', 'Défaillance de la génération : le PPLOG dépanné (à gauche) envoie ses flexibles sur le PPLOG de dépannage (à droite)')],
       html:
         bloc('Déchargement (dépose)', null,
           ['EV3 + <b>EV9</b> : rentrée du vérin de coulisse (EV2 décompresse les vérins de bras). Arrêt par <b>DT3</b> (sécurité : LPP 290 b).', 'Puis EV3 + <b>EV6</b> : sortie des 2 vérins de bras (valve de contrôle de charge). <b>DT5</b> s’active au contact bras / biellette (sécurité : LPS 265 b).', 'On lâche le bouton quand le crochet arrive à hauteur de l’anneau du PLM.']) +
