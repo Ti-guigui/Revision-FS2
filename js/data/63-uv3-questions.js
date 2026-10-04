@@ -24,7 +24,7 @@ REV.add({
     {
       id: 'rdc', title: 'RDC, COS, DIT et documents',
       html: `
-<p>Questions des QCM <b>UV3 BSTAT n°1 et n°2</b>, du <b>contrôle RDC</b> et du <b>sujet 2</b>. Quand une copie « Correction » du formateur existait, c’est elle qui fait foi, recoupée avec l’AQA 03.</p>
+<p>Questions des QCM <b>UV3 BSTAT</b>, du <b>contrôle RDC</b> et du <b>sujet 2</b>. Quand une copie corrigée existait, c’est elle qui fait foi, recoupée avec l’AQA 03.</p>
 <div class="box retenir"><b>★ À retenir</b><ul>
 <li>Le <b>RDC</b> répartit les travaux (phase 2 du DIT) et prend en charge 4 des 7 étapes (mise en réparation, diagnostic, contrôles, restitution).</li>
 <li>La <b>CDM</b> pilote la maintenance au BML et <b>valide / clôture</b> le DIT (MAT 4486).</li>
@@ -156,7 +156,7 @@ REV.add({
     { l: 'pplog', fixed: true, a: 0, q: 'PPLOG : comment contrôler les deux bus du réseau multiplexé ?', c: ['ECB via la prise OBD II (pins 6 et 14) ; VDB via le diagnostic connector (pins 21 et 22).', 'ECB via le diagnostic connector (pins 21 et 22) ; VDB via la prise OBD II (pins 6 et 14).', 'Les deux via la prise OBD II (pins 6 et 14).'], e: 'ECB (châssis) : prise OBD II, pins 6 et 14. VDB (cabine) : diagnostic connector 30 pôles, pins 21 et 22.' },
     { l: 'pplog', fixed: true, a: 0, q: 'PPLOG : sur quel bus sont l’ECM, le capteur NOx et le DCU (AdBlue) ?', c: ['L’ECB (Engine Control Bus, côté châssis).', 'Le VDB (Vehicle Data Bus, côté cabine).', 'Aucun bus : ils sont câblés en filaire.'], e: 'ECB = ECM, NOx, DCU, OBD II. VDB = VCM, IC, IBC, EM, DTCO, SWI, ABS, Astronic 2, Intarder 3.' },
     { l: 'pplog', fixed: true, a: 0, q: 'PPLOG en roulant : témoin du 1ᵉʳ circuit de direction allumé (pompe ou circuit HS). Comment le véhicule se comporte-t-il ?', c: ['Direction dure : l’assistance hydraulique reste à l’essieu AV par le circuit secondaire, le 2ᵉ essieu est commandé par la tringlerie.', 'Plus de direction du tout.', 'Aucun changement.'], e: 'Le circuit secondaire (pompe entraînée par la transmission) garde l’assistance de l’essieu AV ; le 2ᵉ essieu suit par la tringlerie : la direction est dure.' },
-    { l: 'pplog', fixed: true, a: 0, q: 'Direction PPLOG : comment contrôler le limiteur de pression (n°14) ?', c: ['Braquer à fond en mettant une cale entre la butée mécanique et la barre de direction.', 'Braquer à fond sur la butée mécanique.', 'Mesurer la pression au ralenti roues droites.'], e: 'La cale évite que la butée mécanique ne prenne l’effort : la pression monte jusqu’au tarage du limiteur. Repères : soupape de surpression 154 b, soupape de limitation de braquage 85 b.' },
+    { l: 'pplog', fixed: true, a: 0, img: 'pplog/di-schema-arret.jpg', q: 'Direction PPLOG : comment contrôler le limiteur de pression (14) ?', c: ['Braquer à fond en mettant une cale entre la butée mécanique et la barre de direction.', 'Braquer à fond sur la butée mécanique.', 'Mesurer la pression au ralenti roues droites.'], e: 'La cale évite que la butée mécanique ne prenne l’effort : la pression monte jusqu’au tarage du limiteur. Repères : soupape de surpression 154 b, soupape de limitation de braquage 85 b.' },
     { l: 'pplog', fixed: true, a: 0, q: 'Rôle de l’ASR sur le PPLOG :', c: ['Empêcher le patinage des roues motrices AR : sur début de patinage (capteurs ABS), l’électrovalve ASR pilote la valve relais qui freine les roues concernées.', 'Empêcher le blocage des roues au freinage d’urgence.', 'Limiter la vitesse maxi.'], e: 'ASR = antipatinage des roues motrices AR ; ABS = anti-blocage au freinage.' },
     { l: 'pplog', fixed: true, a: 0, q: 'À quoi sert le système blow-by ?', c: ['Les gaz de combustion qui passent au carter se mélangent aux vapeurs d’huile ; le filtre blow-by sépare l’huile, renvoyée au carter, et les gaz sont réinjectés à l’admission.', 'À souffler de l’air dans l’échappement.', 'À refroidir le turbo.'], e: 'Les gaz sont recyclés à l’admission au lieu d’être rejetés, et l’huile retourne au carter.' },
     { l: 'pplog', fixed: true, a: 2, q: 'Dépannage : le conducteur d’un PPLOG indique que sa prise de force ne se met pas en route. Comment le confirmer, et comment descendre le plateau ?', c: ['Le régime doit monter et un voyant s’allumer ; je shunte l’électrovanne EV3 et j’utilise la manette pour actionner les distributeurs.', 'Le régime doit monter ; je shunte EV3 et je connecte les flexibles d’un PPLOG dépanneur pour utiliser son huile via la pompe du PPLOG en panne.', 'Le régime doit monter et un voyant s’allumer ; je connecte les flexibles hydrauliques d’un PPLOG dépanneur au PPLOG en panne et j’utilise la pompe du dépanneur pour retirer le plateau.'], e: 'PTO en service = régime à environ 800 tr/min et témoin allumé. Sans génération hydraulique, on emprunte celle d’un autre camion. Shunter EV3 sert quand c’est le boîtier de commande qui n’est plus alimenté.' },
@@ -171,9 +171,9 @@ REV.add({
 REV.addExercises('mcot', {
   lessons: [
     {
-      id: 'test-fs2-1', title: 'Test FS2 n°1 : organisation de la maintenance (questions triées)',
+      id: 'test-fs2-1', title: 'Organisation de la maintenance',
       html: `
-<p>Les 50 questions du <b>Test FS2 n°1</b> (organisation de la maintenance). Toutes les réponses viennent de l’<b>AQA 03 indice R</b>.</p>
+<p>Les 50 questions sur l’organisation de la maintenance. Toutes les réponses viennent de l’<b>AQA 03 indice R</b>.</p>
 <div class="box retenir"><b>★ Les pièges du test</b><ul>
 <li><b>BIMT</b> = trimestriel, dévolu à la veille documentaire.</li>
 <li>3 familles professionnelles : FP <b>MMT</b> (maintenance des matériels terrestres), FP <b>LSC</b> (logistique supply chain), FP <b>MUN</b> (soutien munitions et <b>pyrotechnie</b>).</li>
@@ -234,7 +234,7 @@ REV.addExercises('mcot', {
     { l: "test-fs2-1", fixed: true, a: 2, q: "La circulaire 9401/DEF/DCMAT/SDT/CM du 27/07/2004 :", c: ["Est abrogée.", "Définit les actes techniques de la maintenance.", "Fixe l’organisation de la maintenance au sein des formations de l’armée de Terre."], e: "C’est la référence de l’organisation de la chaîne maintenance du corps de troupe." },
     { l: "test-fs2-1", fixed: true, a: 2, q: "L’échelonnement des stocks est réparti sur 3 niveaux. Lesquels ?", c: ["Niveau central, niveau local et niveau opérationnel.", "Niveau national, niveau régional et niveau local.", "Niveau central, niveau régional et niveau local."], e: "Central = entrepôt central ; Avancé = jusqu’au centre de distribution régional ; R et V = jusqu’à la cellule approvisionnement de l’atelier (local)." },
     { l: "test-fs2-1", fixed: true, a: 0, q: "La section de maintenance régimentaire (RDC, ateliers, station-service) est armée par les spécialistes maintenance de la formation. Leur rôle :", c: ["Exécution des opérations de maintenance (préventive, corrective, de modification), inscrites sur le MAT 10004 (moteur thermique et remorques), le MAT 5065 (levage et manutention) ou le MAT 1017 (multi technique) ; instruction du personnel des ateliers et des cadres des unités élémentaires qu’ils assistent et conseillent ; stages sur les nouveaux matériels dès leur mise en service.", "Opérations techniques de maintenance ; entretien utilisateur au niveau des unités élémentaires ; instruction uniquement du personnel des ateliers ; stages sur les nouveaux matériels.", "Opérations d’entretien ; visites techniques et revues ; instruction des unités élémentaires ; stages régionaux sur les nouveaux matériels."], e: "Texte de l’AQA 03 indice R (§ 5.6)." }
-  ].map(function (q) { q.src = 'Test FS2 n°1 (réponses vérifiées dans l’AQA 03)'; return q; })
+  ].map(function (q) { q.src = 'Organisation de la maintenance (réponses vérifiées dans l’AQA 03)'; return q; })
 });
 
 /* Hors UV3 : questions GBC 180 du sujet 2 → Équipement pneumatique */

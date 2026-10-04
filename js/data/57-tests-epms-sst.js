@@ -1,7 +1,7 @@
 /* Tests transmis : QCM EPMS FS2 (version 06/09/21) et test SST (réponses de la copie). Recopiés mot pour mot. */
 REV.addExercises('epms', {
   lessons: [{
-    id: 'qcm-epms', title: 'EPMS – QCM FS2 (version 06/09/21)',
+    id: 'qcm-epms', title: 'EPMS – QCM FS2',
     html: `
 <h3>Énoncé</h3>
 <p>Pour chaque question, 3 affirmations : cocher <b>oui / vrai</b> ou <b>non / faux</b> pour chacune. <b>3 bonnes réponses = 1 point, sinon 0</b>. Il y a au moins 1 vrai et au plus 3 vrais par question.</p>
@@ -31,12 +31,12 @@ REV.addExercises('epms', {
     { a: [2], q: '14- CCPM NG : cochez les affirmations vraies.', c: ['Une femme de 39 ans doit effectuer 8 km à la marche-course', 'Les CCPS sont facultatifs pour les personnels Masters 1 et Master 2', 'Les résultats CCPM sont pris en compte pour la notation'], e: 'CCPS facultatif pour les Masters 2 seulement ; résultats pris en compte pour la notation de l’année suivante.' },
     { a: [0], q: '15- CCPM NG : cochez les affirmations vraies.', c: ['Le 2400 est noté sur 20 pts', 'La natation prévoit une apnée de 10 m puis 90 m de nage libre', 'La marche course reste obligatoire pour les Masters 2'], e: 'Aisance aquatique : 15 m en immersion + 85 m de nage libre.' },
     { a: [1], q: '16- Alimentation : cochez les affirmations vraies (3ᵉ affirmation non lisible sur la photo).', c: ['La viande rouge apporte essentiellement les glucides nécessaires à l’effort', 'Les 3 grands groupes alimentaires sont : les lipides, protides et glucides'], e: 'La viande apporte des protides ; les glucides viennent des pâtes, du riz, du pain.' }
-  ].map(function (q) { q.l = 'qcm-epms'; q.fixed = true; q.src = 'EPMS – QCM FS2 (version 06/09/21), copie cochée'; return q; })
+  ].map(function (q) { q.l = 'qcm-epms'; q.fixed = true; q.src = 'EPMS – QCM FS2'; return q; })
 });
 
 REV.addExercises('pmr', {
   lessons: [{
-    id: 'test-sst', title: 'Test Santé et sécurité au travail (copie corrigée)',
+    id: 'test-sst', title: 'Santé et sécurité au travail',
     html: `
 <h3>Énoncé</h3>
 <p>Test rédigé noté sur 20. Questions recopiées mot pour mot ; les réponses sont celles de la copie corrigée (les questions illisibles sur les photos ne sont pas reprises).</p>
@@ -53,5 +53,5 @@ REV.addExercises('pmr', {
     { a: 0, q: 'Question n°2 B — Quand doit-elle se réunir ?', c: ['2 fois par an (AQA 03 indice R)', '1 fois par an', 'Tous les mois'], e: 'La copie répond « 1 fois par trimestre (4 × par an) », comme l’ancien cours ; l’AQA 03 indice R, plus récent, dit 2 réunions par an.', w: 'Si le formateur attend l’ancienne réponse : 1 fois par trimestre.' },
     { a: 0, q: 'Question n°6 — À quoi sert la Fiche Emploi-Nuisances (FEN) ?', c: ['Informer les agents concernés et le médecin de prévention des risques pouvant altérer leur santé au travail, et des moyens mis en œuvre pour les protéger', 'Déclarer un accident de service', 'Exercer le droit de retrait'], e: 'Réponse de la copie (3/3).' },
     { a: 0, q: 'Question n°7 — Quelles sont les conditions requises pour la reconnaissance d’un accident de service ?', c: ['Condition de temps, condition de lieu, relation avec le service', 'Un témoin et un certificat médical', 'Être dans l’enceinte militaire uniquement'], e: 'Imputabilité : temps + lieu + relation avec le service.' }
-  ].map(function (q) { q.l = 'test-sst'; q.fixed = true; q.src = 'Test SST (copie corrigée)'; return q; })
+  ].map(function (q) { q.l = 'test-sst'; q.fixed = true; q.src = 'Santé et sécurité au travail'; return q; })
 });

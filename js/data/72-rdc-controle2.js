@@ -21,9 +21,9 @@
     '<li><b>Par qui, civil :</b> détenteur de la <b>FS2 MOT</b> ; à défaut, <b>OE G6</b> minimum, <b>FS1 ou FS1 NG</b>, <b>2 ans</b> minimum d’atelier militaire et la <b>FA CTRL RDC COS</b> ; inscrit sur le <b>DUO</b>.</li>' +
     '<li><b>Quand :</b> <b>tous les ans</b> (bus : tous les 6 mois), lors d’une <b>VP + OS</b>, <b>sur ordre</b>, en sortie de <b>remisage de plus de 6 mois</b> (sauf ENU). Pas après une RIP.</li>' +
     '<li><b>Pourquoi :</b> mettre le véhicule <b>en conformité avec le code de la route</b> (sécurité). Celui qui signe engage sa responsabilité.</li></ul></li></ul>';
-  var lesson = { id: 'controle-rdc-2', title: 'Contrôle des connaissances n°1 RDC (copie en 12 questions)', html: html,
+  var lesson = { id: 'controle-rdc-2', title: 'Sensibilisation au contrôle RDC (12 questions)', html: html,
     retenir: ['RDC fermé → attendre. Potentiel cumulé ≥ relevé.', 'COS encore valable → phase 4 du MAT 4486 seulement.', 'VP → VP + OS : seulement si c’est marqué sur la feuille de visite.', 'RIP : le prestataire renseigne, on ne repasse pas derrière.', 'RDC répartit les travaux ; CDM pilote et valide la partie 4 du DIT ; VP + OS enregistrée au MAT 10004 par le chef d’atelier.', 'COS : RDC ; FS2 MOT (à défaut FS1 NG + 2 ans + FA CTRL RDC COS) ; tous les ans, VP + OS, sur ordre, remisage > 6 mois ; conformité au code de la route.'] };
-  var S = 'Contrôle des connaissances n°1 RDC (copie en 12 questions)';
+  var S = 'Sensibilisation au contrôle RDC';
   var QCM = [
     { a: 2, q: 'Q1 — Je suis chef d’atelier poids lourd, le RDC est fermé pour 2 semaines je peux :', c: ['Faire contrôler le VHL par un BSTAT d’un autre atelier', 'Sortir le VHL et valider la partie 4 du DIT (Mat 4486)', 'Attendre que le RDC soit ouvert'], e: 'Seul le RDC contrôle et fait sortir le véhicule : on attend qu’il soit ouvert.' },
     { a: 0, q: 'Q2 — Sur une feuille de visite NTI1 je ne peux pas avoir :', c: ['Le potentiel cumulé inférieur au relevé du compteur', 'Le potentiel cumulé identique au relevé du compteur', 'Le potentiel cumulé supérieur au relevé du compteur'], e: 'Le potentiel cumulé est toujours supérieur ou égal au relevé du compteur.' },

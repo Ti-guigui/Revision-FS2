@@ -2,7 +2,7 @@
 REV.addExercises('equip', {
   lessons: [
     {
-      id: 'qcm-demarreur', title: 'QCM démarreur et batterie (test corrigé)',
+      id: 'qcm-demarreur', title: 'QCM démarreur et batterie',
       images: [{ src: 'exo-demarreur-coupe.jpg', cap: 'Démarreur en coupe : solénoïde (noyau plongeur, bobinages d’appel et de maintien, contacteur), fourchette, lanceur à roue libre, moteur électrique (induit, inducteurs, balais)' }],
       html: `
 <h3>Énoncé</h3>

@@ -74,7 +74,7 @@ REV.fiches = {
 <div class="tw"><table><tr><th>Point</th><th>À retenir</th></tr>
 <tr><td>Usure des pneus</td><td>Rugueuse = parallélisme · lisse = carrossage · facettes = amortisseurs</td></tr>
 <tr><td>Tirage</td><td>Tire du côté du carrossage le plus positif</td></tr>
-<tr><td>Angle inclus</td><td>= carrossage + pivot (diagnostic : bon → triangle, berceau ou châssis ; pas bon → fusée, porte-fusée et/ou jambe de force)</td></tr>
+<tr><td>Angle inclus</td><td>= inclinaison de pivot + 90° + carrossage (diagnostic : bon → triangle, berceau ou châssis ; pas bon → fusée, porte-fusée et/ou jambe de force)</td></tr>
 <tr><td>Réglage</td><td>Hauteur de caisse → carrossage → parallélisme (toujours en dernier) · 1° = 60′, écrire mini–maxi</td></tr>
 <tr><td>Willis</td><td>Porte-satellites MENÉ = démultiplié · MENANT = multiplié · FIXE = marche arrière · 2 éléments liés = prise directe</td></tr>
 <tr><td>Freinage hydraulique</td><td>Fuite interne sans trace = maître-cylindre tandem · pédale dure = assistance · liquide ≤ 165 °C à remplacer</td></tr>
@@ -110,7 +110,7 @@ REV.fiches = {
 <h2 class="h2">🚙 DSFT (Q1 à Q18)</h2>
 <ul>
 <li><b>Tableau ALFA</b> : 1° = 60′ ; pour chaque angle, écrire la plage MINI–MAXI (valeur ± tolérance) puis comparer. Ex. 10°30′ ± 30′ → 10°00′ à 11°00′.</li>
-<li><b>Pièce incriminée</b> : angle inclus (carrossage + pivot) identique G/D mais carrossage et pivot décalés en sens inverse → triangle, berceau ou châssis ; angle inclus pas bon → fusée, porte-fusée et/ou jambe de force.</li>
+<li><b>Pièce incriminée</b> : angle inclus (inclinaison de pivot + 90° + carrossage) identique G/D mais carrossage et pivot décalés en sens inverse → triangle, berceau ou châssis ; angle inclus pas bon → fusée, porte-fusée et/ou jambe de force.</li>
 <li><b>Tirage</b> : du côté du carrossage le plus positif.</li>
 <li><b>Usures</b> : rugueuse = parallélisme (intérieur = trop d’ouverture, extérieur = trop de pincement) ; lisse = carrossage ; facettes = amortisseurs (changer pneus + amortisseurs du même train).</li>
 <li><b>Ordre de réglage</b> : hauteur de caisse → carrossage → parallélisme.</li>
@@ -118,7 +118,7 @@ REV.fiches = {
 <li><b>Freinage hydraulique</b> : fuite interne = maître-cylindre tandem. Mastervac : moteur arrêté, pomper → pédale dure et haute ; pied maintenu, démarrer → la pédale s’enfonce un peu.</li>
 <li><b>ABS</b> : améliorer la sécurité quelle que soit l’adhérence en optimisant stabilité, directibilité, efficacité.</li>
 <li><b>Willis</b> : Zp·Np + Zc·Nc = (Zp + Zc)·Nps. Porte-satellites mené = démultiplié ; menant = multiplié ; fixe = marche arrière.</li>
-<li><b>Pneumatique</b> : clapet anti-retour = garde la pression en aval si fuite en amont ; 4 roues freinées = circuits AV et AR ; remplissage 6 à 11 min au ralenti ; air permanent à la main directe : PAS le correcteur de freinage ; test de rupture : mano sur l’automatique, fuite sur la directe → 0 bar.</li></ul>
+<li><b>Pneumatique</b> : clapet anti-retour = garde la pression en aval si fuite en amont ; 4 roues restent freinées = circuit frein de parc (même circuit que la remorque) ; remplissage 6 à 11 min au ralenti ; air permanent à la main directe : PAS le correcteur de freinage ; test de rupture : mano sur l’automatique, fuite sur la directe → 0 bar.</li></ul>
 
 <h2 class="h2">🛢️ Hydraulique (Q19 à Q30)</h2>
 <ul>
@@ -151,5 +151,5 @@ REV.fiches = {
 <tr><td>Fréquence</td><td>f = 1 / T (T en s)</td><td>1 / 0,040 = 25 Hz</td></tr>
 <tr><td>Combinaisons</td><td>2ⁿ</td><td>2⁶ = 64</td></tr>
 <tr><td>Équations logiques</td><td>ET = produit, OU = somme, De Morgan</td><td>(M·H̄)‾ = M̄ + H</td></tr></table></div>
-<p class="muted small">Détail et questions : onglet « Exercices corrigés » de chaque matière → « UV2 — Dossier d’évaluation n°1 » et « UV2 — valeurs différentes ».</p>` }
+<p class="muted small">Détail et questions : onglet « Exercices corrigés » de chaque matière → « UV2 — Dossier d’évaluation » et « UV2 — valeurs différentes ».</p>` }
 };

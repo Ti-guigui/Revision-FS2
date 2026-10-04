@@ -1,4 +1,4 @@
-/* UV2 — banque de questions types (mêmes thèmes que le dossier d’évaluation n°1, autres valeurs ou autres cas).
+/* UV2 — banque de questions types (mêmes thèmes que le dossier d’évaluation, autres valeurs ou autres cas).
    Elle alimente les UV2 blancs de 60 questions (10 par matière) avec les questions du dossier et leurs variantes. */
 (function () {
   function lesson(id, title, retenir, cle, points, astuce) {
@@ -8,7 +8,7 @@
 
   /* ======================= DSFT ======================= */
   REV.addExercises('dsft', {
-    lessons: [lesson(L, 'UV2 — Questions types : DSFT', ['Écrire la plage mini–maxi avant de comparer (1° = 60′).', 'Angle inclus = carrossage + pivot : bon → triangle, berceau ou châssis ; pas bon → fusée, porte-fusée et/ou jambe de force.', 'Tire du côté du carrossage le plus positif et de la chasse la plus faible.', 'Rugueuse = parallélisme ; lisse = carrossage ; facettes = amortisseurs.'], 'PLAGE · ANGLE INCLUS · USURE', ['Parallélisme réglé en dernier', 'Willis : Zp·Np + Zc·Nc = (Zp + Zc)·Nps', 'Liquide < 165 °C = à remplacer'], 'Lis toujours le tableau ligne par ligne, G puis D.')],
+    lessons: [lesson(L, 'UV2 — Questions types : DSFT', ['Écrire la plage mini–maxi avant de comparer (1° = 60′).', 'Angle inclus = inclinaison de pivot + 90° + carrossage : bon → triangle, berceau ou châssis ; pas bon → fusée, porte-fusée et/ou jambe de force.', 'Tire du côté du carrossage le plus positif et de la chasse la plus faible.', 'Rugueuse = parallélisme ; lisse = carrossage ; facettes = amortisseurs.'], 'PLAGE · ANGLE INCLUS · USURE', ['Parallélisme réglé en dernier', 'Willis : Zp·Np + Zc·Nc = (Zp + Zc)·Nps', 'Liquide < 165 °C = à remplacer'], 'Lis toujours le tableau ligne par ligne, G puis D.')],
     questions: [
       { l: L, img: D + 'alfa-b.svg', q: 'D’après ce tableau ALFA, quels angles sont hors tolérance ?', c: ['Le parallélisme, le carrossage droit et le pivot droit.', 'Le carrossage droit et la chasse gauche.', 'Le parallélisme, le carrossage gauche et le pivot gauche.'], e: 'Parallélisme : plage 0 à +2 mm, relevé −1 mm (ouverture) → hors. Carrossage : plage −0°30′ à +0°30′ → D +0°45′ hors. Chasse : 2°00′ à 3°00′ → bonne. Pivot : 9°00′ à 10°00′ → D 8°50′ hors.' },
       { l: L, img: D + 'alfa-b.svg', q: 'D’après ce tableau ALFA, quelle pièce pouvez-vous incriminer ?', c: ['Un triangle.', 'La fusée / porte-fusée.', 'La barre de direction.'], e: 'Angle inclus G = 9°40′ + 0°10′ = 9°50′ ; D = 8°50′ + 0°45′ = 9°35′ : presque identiques → la fusée est bonne, c’est la position du pivot qui a bougé → triangle.' },

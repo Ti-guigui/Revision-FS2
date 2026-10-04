@@ -34,7 +34,7 @@
 <li>Quelle sera la puissance hydraulique délivrée par la pompe au neutre et en fonctionnement avec une charge maximum ?</li></ol>
 <p><b>NOTA :</b> la commande électrique des composants (4) et (9) est simultanée.</p>
 <h3>Correction</h3>
-<p class="muted small">Pas de corrigé fourni : correction établie avec la méthode du cours (Hydraulique Tome 2, circuit à détection de charge centre ouvert) et les associations données par le formateur.</p>
+<p class="muted small">Pas de corrigé fourni : correction établie avec la méthode du cours (Hydraulique Tome 2, circuit à détection de charge centre ouvert) et les associations vues en cours.</p>
 <p><b>1)</b> Circuit ouvert à <b>détection de charge (LS) centre ouvert</b>, pompe à cylindrée fixe.</p>
 <div class="tw"><table><tr><th>N°</th><th>Désignation</th><th>Rôle</th></tr>
 <tr><td>1</td><td>Pompe à cylindrée fixe (30 cm³/tr, 2 000 tr/min)</td><td>Crée le débit : 30 × 2 000 / 1 000 = 60 l/min</td></tr>

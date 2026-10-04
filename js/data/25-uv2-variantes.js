@@ -1,9 +1,9 @@
-/* UV2 — entraînement : les mêmes types de questions que le dossier d’évaluation n°1, avec d’autres valeurs.
+/* UV2 — entraînement : les mêmes types de questions que le dossier d’évaluation, avec d’autres valeurs.
    Les méthodes sont celles des cours et du corrigé du dossier ; seules les valeurs changent. */
 (function () {
   var SRC = 'Entraînement UV2 (mêmes méthodes, autres valeurs)';
   function lesson(id, title, retenir, cle, flow, points, astuce) {
-    return { id: id, title: title, html: '<p>Mêmes types de questions que le dossier d’évaluation n°1 de l’UV2, <b>avec d’autres valeurs</b>. Applique la méthode, pas le chiffre appris par cœur.</p>', retenir: retenir, pieges: ['Barème + 1 / − 0,5 / 0 : laisse vide si tu hésites entre les 3 réponses.'], memo: { cle: cle, flow: flow, points: points, astuce: astuce } };
+    return { id: id, title: title, html: '<p>Mêmes types de questions que le dossier d’évaluation de l’UV2, <b>avec d’autres valeurs</b>. Applique la méthode, pas le chiffre appris par cœur.</p>', retenir: retenir, pieges: ['Barème + 1 / − 0,5 / 0 : laisse vide si tu hésites entre les 3 réponses.'], memo: { cle: cle, flow: flow, points: points, astuce: astuce } };
   }
 
   REV.addExercises('dsft', {

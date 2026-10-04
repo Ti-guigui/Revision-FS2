@@ -1,6 +1,6 @@
 /* RDC — questions complémentaires (réponses du stagiaire et du formateur), ajoutées sans modifier les questions existantes. */
 (function () {
-  var S = 'Questions RDC complémentaires (cours du formateur)';
+  var S = 'Questions RDC complémentaires';
   var Q = [
     ['Si on n’a pas de RDC, que peut-on faire ?', ['Faire sortir le véhicule si le besoin est urgent, ponctuel et nécessaire', 'Faire sortir le véhicule par le chef d’atelier dans tous les cas', 'Rien : le véhicule ne sort jamais', 'Demander au prestataire RIP de le contrôler'], 'Exception seulement : besoin urgent, ponctuel et nécessaire (le contrôle peut alors être fait par un FS2 MOBTER). Hors urgence, quand le RDC est simplement fermé, on attend qu’il soit ouvert.'],
     ['Un GBC doit rentrer en atelier pour un COS, une visite station, une RIP et une visite NTI1. Dans quel ordre logique ?', ['Visite NTI1, visite station, COS, et on termine par la RIP', 'RIP, NTI1, station, COS', 'COS, RIP, NTI1, station', 'Visite station, NTI1, RIP, COS'], 'On remet le véhicule en état (NTI1), on fait la station, puis le COS ; la RIP (réparation dans l’industrie privée) vient en dernier.'],

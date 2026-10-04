@@ -203,7 +203,9 @@
     ['intarder-blocages', 'Témoin T1 (rouge) allumé ?', ['Blocages transversaux arrière activés', 'Blocage longitudinal activé', 'Boîte de transfert en petite vitesse', 'Défaut de l’Intarder']],
     ['intarder-blocages', 'Qui alimente en air les électrovalves de blocage ?', ['L’APU (distributeur)', 'La pompe de direction', 'Le réservoir de freinage AV directement', 'Le turbo']]
   ];
-  function qs(l) { return Q.map(function (q) { return { l: typeof l === 'function' ? l(q[0]) : l, q: q[1], c: q[2], src: 'Cours AGE 14 ind. g (PPLOG), chapitres 5 et 6' }; }); }
+  // question qui cite un repère du circuit de direction → schéma numéroté (repères 1 à 20) au-dessus
+  var REPQ = /\(\d+\)|Repères? \d|soupapes? \d|vérin \d|capteurs A et B/;
+  function qs(l) { return Q.map(function (q) { var o = { l: typeof l === 'function' ? l(q[0]) : l, q: q[1], c: q[2], src: 'Cours AGE 14 ind. g (PPLOG), chapitres 5 et 6' }; if (/^direction/.test(q[0]) && REPQ.test(q[1] + ' ' + q[2].join(' '))) o.img = I + 'di-schema-arret.jpg'; return o; }); }
   REV.addLessons('pplog', 'frein-pneumatique', L);
   REV.addExercises('pplog', { lessons: [], questions: qs(function (l) { return l; }) });
   REV.addLessons('uv3', 'pplog-freinage', [{ id: 'pplog-direction', title: 'PPLOG : direction, transmission, Intarder, blocages', images: [].concat.apply([], L.map(function (x) { return x.images; })), html: L.map(function (x) { return '<h2>' + x.title + '</h2>' + x.html; }).join(''), retenir: [].concat.apply([], L.map(function (x) { return x.retenir; })) }]);

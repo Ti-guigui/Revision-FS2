@@ -48,5 +48,5 @@ REV.addExercises('tact', {
     { a: 3, q: '18. Quel type d’agent chimique est employé par les FAR sur le territoire ukrainien ?', c: ['Phosgène', 'Sarin', 'Novitchok', 'Lacrymogène'], e: 'Réponse cochée : agents lacrymogènes.' },
     { a: 0, q: '19. Qu’est-ce qu’un capteur de renseignement ?', c: ['Un couple détecteur + vecteur', 'Une plate-forme mobile capable d’emporter un vecteur', 'Une plate-forme mobile capable d’emporter un détecteur', 'Un enregistreur'], e: 'Capteur = détecteur (ce qui voit) + vecteur (ce qui le porte).' },
     { a: 3, q: '20. Quel est l’équipement majeur du 61ᵉ régiment d’artillerie ?', c: ['Lance-roquette unitaire', 'AUF1', 'CAESAR', 'SDT Patroller'], e: 'Le 61ᵉ RA met en œuvre les drones : SDT Patroller.' }
-  ].map(function (q) { q.l = 'compo-b'; q.fixed = true; q.src = 'Questionnaire IA – B commune ECOMAT 2024-2025 (copie cochée)'; return q; })
+  ].map(function (q) { q.l = 'compo-b'; q.fixed = true; q.src = 'Questionnaire IA – B commune ECOMAT 2024-2025'; return q; })
 });

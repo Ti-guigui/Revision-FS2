@@ -2,12 +2,12 @@
 REV.addExercises('mcot', {
   lessons: [
     {
-      id: 'quiz-rdc', title: 'Quiz RDC (corrigé du formateur)',
+      id: 'quiz-rdc', title: 'Quiz RDC',
       html: `
 <h3>Énoncé</h3>
-<p>Quiz de 18 questions recopiées <b>mot pour mot</b>, avec le <b>corrigé du formateur</b>. Plusieurs questions ont <b>plusieurs bonnes réponses</b> : coche-les toutes.</p>
+<p>Quiz de 18 questions recopiées <b>mot pour mot</b>, avec leur correction. Plusieurs questions ont <b>plusieurs bonnes réponses</b> : coche-les toutes.</p>
 <h3>Ce qu’il faut retenir du corrigé</h3>
-<div class="tw"><table><tr><th>Question</th><th>Réponse du formateur</th></tr>
+<div class="tw"><table><tr><th>Question</th><th>Bonne réponse</th></tr>
 <tr><td>Qui répartit les travaux sur un VHL ?</td><td>Le RDC</td></tr>
 <tr><td>À quoi sert le COS ?</td><td>Mettre le VHL en conformité avec le code de la route</td></tr>
 <tr><td>COS obligatoire au retour de RIP ?</td><td><b>Non</b> : le prestataire doit rendre le véhicule apte et conforme au code de la route</td></tr>
@@ -50,7 +50,7 @@ REV.addExercises('mcot', {
     { l: 'quiz-rdc', fixed: true, a: 3, q: 'Q16 — sur le MAT 10004, les vidanges sont inscrites', c: ['en noir', 'en vert', 'en bleu', 'en rouge', 'peu importe'], e: 'Une opération contenant une vidange s’écrit en rouge.' },
     { l: 'quiz-rdc', fixed: true, a: [0, 1, 4, 6, 7, 9, 10], q: 'Q17 — données les 7 étapes de la remise en condition du matériels (plusieurs réponses)', c: ['réparation', 'préparation', 'nettoyage du matériel', 'création d’AT', 'diagnostique', 'cloturation du MAT 10004 et des AT', 'contrôle', 'mise en réparation du matériel', 'récupération des pièces', 'restitution du materiel', 'approvisionnement'], e: 'Mise en réparation, diagnostic, préparation, approvisionnement, réparation, contrôle, restitution.' },
     { l: 'quiz-rdc', fixed: true, a: 3, q: 'Q18 — Un VHL rentre en atelier pour une visite NTI1, station et COS, dans quel ordre logique sont effectuées les visites', c: ['NTI1, COS, station', 'COS, NTI1, station', 'station, COS, NTI1', 'NTI1, station, COS'], e: 'Ordre de priorité : 1. NTI1, 2. station, 3. COS (le COS vient en dernier sur un véhicule en état).' }
-  ].map(function (q) { q.src = 'Quiz RDC — corrigé du formateur'; return q; })
+  ].map(function (q) { q.src = 'Quiz RDC'; return q; })
 });
 
 /* Conditions officielles pour les contrôles (AQA 03 indice R, note SIMMT du 22 mai 2024). */

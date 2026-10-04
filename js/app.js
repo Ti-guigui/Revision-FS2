@@ -1202,25 +1202,25 @@
 
   /* ----- Vérification des corrigés : chaque test, question par question ----- */
   var VERIF_TESTS = [
-    ['uv2-', 'UV2 — dossier d’évaluation n°1', 'Corrigé du formateur (quiz Socrative, qui peut contenir des erreurs, et ses précisions).', 'off'],
+    ['uv2-', 'UV2 — dossier d’évaluation', 'Corrigé du quiz Socrative (qui peut contenir des erreurs), avec les précisions données en cours.', 'off'],
     ['tf-', 'Test final UV1 (sujet de préparation)', 'Correction officielle, vérifiée avec le cours.', 'off'],
     ['cah', 'Cahiers d’exercices (hydraulique, électricité)', 'Corrigés officiels des cahiers EMB.', 'off'],
     ['test-eee', 'Test équipement électrique et électronique embarquée', 'Pas de corrigé officiel : chaque réponse est tirée du cours (AGA 01, capteurs, LIN, CAN).', 'ok'],
     ['qcm-demarreur', 'QCM démarreur et batterie', 'Réponses du cours AGA 01.', 'ok'],
     ['microtracteur', 'Exercice microtracteur tondeuse', 'Copie corrigée avec le cours d’électricité.', 'ok'],
     ['moto', 'Exercice moto', 'Copie corrigée avec le cours d’électricité.', 'ok'],
-    ['controle-rdc', 'Contrôle des connaissances RDC n°1', 'Corrigé du formateur (quiz RDC Socrative) et ta fiche.', 'off'],
-    ['quiz-rdc', 'Quiz RDC', 'Corrigé du formateur (Socrative).', 'off'],
+    ['controle-rdc', 'Sensibilisation au contrôle RDC', 'Corrigé du quiz RDC et ta fiche.', 'off'],
+    ['quiz-rdc', 'Quiz RDC', 'Corrigé du quiz Socrative.', 'off'],
     ['qcm-epms', 'EPMS – QCM FS2', 'Cases cochées sur la copie, vérifiées dans le cours EPMS.', 'ok'],
     ['test-sst', 'Test SST', 'Copie corrigée ; CCHPA : AQA 03 retenue.', 'ok'],
     ['compo-b', 'Composante B (IA – B commune ECOMAT)', 'Cases cochées sur la copie ; hors des cours fournis.', 'ded'],
-    ['questions', 'PPLD — questions posées', 'Réponses surlignées sur ta feuille, vérifiées dans le cours AGE 12 ; Test n°1 sans case cochée : réponses déduites du cours.', 'ok']];
+    ['questions', 'PPLD — questions posées', 'Réponses surlignées sur ta feuille, vérifiées dans le cours AGE 12 ; questions sans case cochée : réponses déduites du cours.', 'ok']];
   // Questions dont la réponse du site n'est pas celle du corrigé, ou non confirmée
   var VERIF_FLAGS = [
     [/^(dsft\/uv2-dsft|hydro\/uv2-hydro|elec\/uv2-elec)$/, /^(1[2348]|21|5[3-9]|6[0-4])\)/, 'ok', 'Question absente du quiz Socrative : réponse vérifiée dans le cours.'],
-    [/^equip\/uv2-equip$/, /^46\)/, 'off', 'Confirmé par le formateur : la lampe n’a pas d’influence sur la charge (le Socrative coche A par erreur).'],
-    [/^dsft\/uv2-dsft$/, /^13\)/, 'off', 'Confirmé par le formateur : l’élément 13 est la VNAE.'],
-    [/^moteur\/uv2-moteur$/, /^38\)/, 'off', 'Question mal posée, 2 réponses possibles (précision du formateur) : A (Socrative) et C (cours GD 22).'],
+    [/^equip\/uv2-equip$/, /^46\)/, 'off', 'La lampe n’a pas d’influence sur la charge (le Socrative coche A par erreur).'],
+    [/^dsft\/uv2-dsft$/, /^13\)/, 'off', 'Confirmé : l’élément 13 est la VNAE.'],
+    [/^moteur\/uv2-moteur$/, /^38\)/, 'off', 'Question mal posée, 2 réponses possibles (précision donnée en cours) : A (Socrative) et C (cours GD 22).'],
     [/^ppld\/questions$/, /(règle la pression maxi du circuit|je règle la pression de stand-by|Donner la bonne réponse|En sortie terrain)/, 'ded', 'Aucune case cochée sur ta feuille : réponse déduite du cours AGE 12.'],
     [/^epms\/qcm-epms$/, /^1[12]- /, 'conf', 'Réception « 4 membres » / 3 tentatives au gué : réponses de la copie, non détaillées dans le cours.'],
     [/^tact\/compo-b$/, /^(1|10|14|16|17)\. /, 'conf', 'Non vérifiable dans les documents fournis : à confirmer avec le formateur.'],
@@ -1425,7 +1425,7 @@
     });
     return { qs: qs, mats: mats };
   }
-  function uv2Title(k) { return k === 0 ? 'UV2 — Dossier d’évaluation n°1' : k > 0 ? 'UV2 blanc n°' + k : 'UV2 aléatoire'; }
+  function uv2Title(k) { return k === 0 ? 'UV2 — Dossier d’évaluation' : k > 0 ? 'UV2 blanc n°' + k : 'UV2 aléatoire'; }
   function startExam(k, train, qs, mats, title) {
     if (!qs) { var sj = uv2Sujet(k); qs = sj.qs; mats = sj.mats; title = uv2Title(k); }
     if (train) {

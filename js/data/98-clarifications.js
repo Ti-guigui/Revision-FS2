@@ -84,7 +84,6 @@
       .replace(/Exemple du livre : /, '');
   });
   edit('equip', 'Le capteur à effet Hall est, selon ton cours', { q: 'Le capteur à effet Hall est :' });
-  edit('dsft', 'Angle de carrossage : définition retenue au test final', { q: 'Définition de l’angle de carrossage ?' });
   edit('tact', 'Portée maxi du CAESAR retenue dans tes tests', { q: 'Portée maxi du CAESAR ?' });
   edit('hydro', 'Q07 — Débit fourni par la pompe dans cette situation', { q: 'Q07 — Ripper (5 L/min) et orientation (15 L/min) en même temps, plus 1 L/min pour le pilotage LS. Débit fourni par la pompe ?' });
   edit('hydro', 'Q09 — Au neutre, ta fiche retient', { q: 'Q09 — Au neutre, la pompe LS reste à 50 b et débite 1 L/min. Puissance absorbée ?' });
@@ -111,7 +110,7 @@
   edit('equip', '24 V : 24,5 à 25,2 V à vide, 18,6 V sous démarreur', {
     q: 'Réseau 24 V : 24,5 V aux batteries à vide, 18,6 V pendant le démarrage, entraînement faible. Élément à incriminer ?',
     c: { 0: 'Les batteries (déchargées)', 1: 'Lignes + et/ou − du démarreur' },
-    e: '18,6 V au démarrage < 19,2 V (80 % de 24 V) : les batteries s’effondrent. À vide, 24,5 V / 12 éléments = 2,04 V par élément (< 2,1 V) : pas complètement chargées. Corrigé du formateur : batteries déchargées.',
+    e: '18,6 V au démarrage < 19,2 V (80 % de 24 V) : les batteries s’effondrent. À vide, 24,5 V / 12 éléments = 2,04 V par élément (< 2,1 V) : pas complètement chargées. Corrigé : batteries déchargées.',
     r: 'Sous 19,2 V au démarrage (24 V) = batteries.' });
   edit('pneu', 'Temps de remplissage de toutes les bouteilles selon ton cours', {
     q: 'Norme européenne : moteur au ralenti, en combien de temps toutes les bouteilles doivent-elles atteindre la pression de régulation ?' });

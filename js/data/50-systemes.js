@@ -118,9 +118,9 @@ REV.systemes = {
   ],
 
   dsft: [
-    { t: 'Les angles du train avant (diagnostic)', img: [['sym/agd27-p37-1.png', 'Angle inclus = carrossage + pivot'], ['tableau-alfa.jpg', 'Tableau ALFA']],
+    { t: 'Les angles du train avant (diagnostic)', img: [['sym/agd27-p37-1.png', 'Angle inclus = inclinaison de pivot + 90° + carrossage'], ['tableau-alfa.jpg', 'Tableau ALFA']],
       role: 'Lire un relevé d’angles et trouver la pièce en cause.',
-      phases: [['1. Plage', 'Écrire la plage mini–maxi de chaque angle (1° = 60′).'], ['2. Hors tolérance', 'Repérer les angles hors plage, à gauche et à droite.'], ['3. Angle inclus', 'Calculer carrossage + pivot à gauche et à droite.'], ['4. Conclusion', 'Angle inclus bon (identique G/D) → triangle, berceau ou châssis. Angle inclus pas bon → fusée, porte-fusée et/ou jambe de force.']],
+      phases: [['1. Plage', 'Écrire la plage mini–maxi de chaque angle (1° = 60′).'], ['2. Hors tolérance', 'Repérer les angles hors plage, à gauche et à droite.'], ['3. Angle inclus', 'Calculer inclinaison de pivot + 90° + carrossage à gauche et à droite (pour comparer, pivot + carrossage suffit).'], ['4. Conclusion', 'Angle inclus bon (identique G/D) → triangle, berceau ou châssis. Angle inclus pas bon → fusée, porte-fusée et/ou jambe de force.']],
       pannes: [
         ['Carrossage et pivot hors tolérance, angle inclus bon (identique G/D)', 'La fusée est bonne : c’est la position de la roue qui a bougé', 'Remplacer le triangle ; contrôler le berceau et le châssis', 'R'],
         ['Angle inclus pas bon (différent G/D)', 'Fusée, porte-fusée et/ou jambe de force déformés', 'Remplacer la fusée / le porte-fusée et/ou la jambe de force', 'R'],

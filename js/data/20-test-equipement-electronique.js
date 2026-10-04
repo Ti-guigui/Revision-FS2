@@ -2,7 +2,7 @@
 REV.addExercises('equip', {
   lessons: [
     {
-      id: 'test-eee', title: 'Test : Équipement électrique et électronique embarquée',
+      id: 'test-eee', title: 'Équipement électrique et électronique embarquée',
       html: `
 <h3>Énoncé</h3>
 <p>Test en 4 parties (26 points) : alternateurs (9 diodes / 6 ou 12 diodes / numérique LIN), lecture de schéma PVP, capteurs et actionneurs, multiplexage CAN. Questions recopiées de la copie, dans l’ordre. Les questions à rédiger sont transformées en QCM (3 propositions). Les questions 13 (extraction du schéma de la pompe lave-glace) et 24 (schéma de 2 réseaux CAN HS1 et HS2) sont des dessins : elles ne sont pas reprises. <b>Les réponses viennent des cours</b> (AGA 01, « Les capteurs », leçons LIN, CAN et lecture de schéma), pas des réponses écrites sur la copie.</p>
