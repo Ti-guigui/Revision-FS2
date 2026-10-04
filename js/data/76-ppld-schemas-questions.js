@@ -5,7 +5,7 @@
     [/stabilisateurs au neutre/i, 'stabs-neutre'], [/RMU et grue au neutre/i, 'rmu-neutre'], [/stabilisateurs en butée/i, 'stabs-butee'],
     [/télescopage du RMU en butée/i, 'rmu-butee'], [/grue en fin de course|grue : rôle des électrovannes de fin de course/i, 'grue-fin-de-course'],
     [/récepteur alimenté à 40 L\/min|régulateur de débit placé avant le bloc des stabilisateurs|formule de la puissance hydraulique/i, 'stabs-fonctionnement'],
-    [/définition du système débit \(|élément fait du circuit des stabilisateurs un système débit|régulateur de débit 3 voies garde/i, 'stabs-fonctionnement'],
+    [/élément fait du circuit des stabilisateurs un système débit|(régulateur|limiteur) de débit 3 voies garde/i, 'stabs-fonctionnement'],
     [/définition du système débit\/pression|limiteur de débit du télescopage/i, 'rmu-fonctionnement'],
     [/équipements fonctionnent en système débit\/pression|bloc distributeur commande les stabilisateurs|sélecteur de circuit sur le retour LS/i, 'schema-principe'],
     [/gicleur anti-pompage/i, 'pompe-phases'],

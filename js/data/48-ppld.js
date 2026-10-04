@@ -40,7 +40,7 @@
 <ul><li>Circuit <b>ouvert</b> à régulation <b>Load Sensing centre fermé</b>. En sortie de pompe, un <b>séparateur de flux</b> alimente 2 parties ; sur le retour LS, un <b>sélecteur de circuit</b> prend la pression la plus forte des 2 blocs et pilote la pompe.</li>
 <li>2 blocs distributeurs : <b>RSQ 240</b> proportionnel (grue, treuils, bras de remorquage) et bloc électrodistributeur <b>CETOP</b> (stabilisateurs), chacun précédé d’une <b>électrovanne by-pass</b> de sécurité.</li>
 <li>⚠️ Une fonction hydraulique ne peut être commandée <b>que si l’électrovanne by-pass</b> en amont de son bloc est pilotée.</li>
-<li><b>Système débit</b> (CETOP) : vitesse des récepteurs constante quelle que soit la charge (régulateur de débit 3 voies, 40 L/min, à l’entrée du bloc). <b>Système débit/pression</b> (RSQ 240) : la pompe adapte son débit aux besoins.</li></ul>
+<li><b>Système débit</b> : vitesse de déplacement des récepteurs constante quelle que soit la charge (grâce au limiteur de débit 3 voies à l’entrée du bloc CETOP, 40 L/min). <b>Système débit / pression</b> : adapter le débit de la pompe aux besoins du circuit (grâce aux blocs proportionnels du RSQ 240).</li></ul>
 <h3>La pompe</h3>
 <ul><li>Hydro Leduc TXV, 11 pistons, 92 cm³, <b>cylindrée variable</b>, drainée externe, régulation débit-pression Load Sensing, débit maxi <b>100 L/min</b>.</li>
 <li>Elle ne fournit que la puissance nécessaire : pas d’échauffement, de bruit ni de laminage inutiles.</li>
