@@ -1224,7 +1224,7 @@
     [/^ppld\/questions$/, /(règle la pression maxi du circuit|je règle la pression de stand-by|Donner la bonne réponse|En sortie terrain)/, 'ded', 'Aucune case cochée sur ta feuille : réponse déduite du cours AGE 12.'],
     [/^epms\/qcm-epms$/, /^1[12]- /, 'conf', 'Réception « 4 membres » / 3 tentatives au gué : réponses de la copie, non détaillées dans le cours.'],
     [/^tact\/compo-b$/, /^(1|10|14|16|17)\. /, 'conf', 'Non vérifiable dans les documents fournis : à confirmer avec le formateur.'],
-    [/^ppld\/questions$/, /composant 6/, 'conf', 'Deux réponses marquées sur ta feuille (B et C) : à confirmer.']];
+    [/^ppld\/questions$/, /composant 6/, 'ok', 'Réponse surlignée sur la copie corrigée : B (éviter de dévider le câble).']];
   var VERIF_LBL = { off: ['✅', 'Corrigé officiel'], ok: ['📘', 'Vérifié dans le cours'], ded: ['🟠', 'Déduit du cours'], ecart: ['⚠️', 'Écart avec le corrigé'], conf: ['❓', 'À confirmer'] };
   function viewVerif() {
     var all = allQuestions(), html = '', tot = { off: 0, ok: 0, ded: 0, ecart: 0, conf: 0 };
