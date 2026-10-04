@@ -15,8 +15,8 @@
       ['La charge pousse le vérin (charge entraînante).', 'La soupape freine : le vérin ne descend pas plus vite que le débit envoyé.', 'Si un flexible casse, la soupape reste fermée : le vérin est maintenu.']],
     ['rmu', 3, 'Réducteur de pression 3 voies', 'Fournir la pression de pilotage des tiroirs (25 b).', true,
       ['Il reçoit la pression du circuit.', 'Il la réduit à 25 b.', 'Ces 25 b pilotent les tiroirs des distributeurs.', 'Il amortit les déplacements des tiroirs : pas de pics de pression.']],
-    ['rmu', 4, 'Gicleur de déséquilibre', 'Faire ouvrir la balance d’entrée (étage principal) en butée.', true,
-      ['En butée, la tête pilote s’ouvre.', 'De l’huile passe par le gicleur : une différence de pression se crée.', 'La balance d’entrée est déséquilibrée et s’ouvre.', 'Elle évacue le débit à la bâche.']],
+    ['rmu', 4, 'Gicleur low flow', 'Permettre le passage d’un flux secondaire issu de la pompe (low flow) par la canalisation Load Sensing.', true,
+      ['Une petite partie du débit de la pompe (le low flow) part vers la canalisation LS.', 'Elle passe par l’étranglement du gicleur.', 'La différence de pression aux bornes de cet étranglement est le reflet du tarage du tiroir LS (30 b).']],
     ['rmu', 5, 'Balance d’entrée', null, true, null],
     ['rmu', 6, 'Tête pilote', null, true, null],
     ['rmu', 7, 'Distributeur 4/3 LS centre fermé, à action progressive, commande électro-hydraulique proportionnelle et commande manuelle, rappel par ressort', 'Diriger l’huile vers A ou B et doser la vitesse du récepteur.', true,
@@ -60,7 +60,7 @@
     return { id: id, title: 'Rôle et désignation des repères (fiches)',
       images: [{ src: F.rmu.img, cap: 'Fiche RMU : repères 1 à 8 et 13' }, { src: F.treuil.img, cap: 'Fiche Treuils + push pull : repères 9 à 11' }, { src: F.cetop.img, cap: 'Section d’entrée (bloc CETOP) : repères 1 à 7' }],
       html: '<p>Les repères des fiches à connaître : <b>désignation</b> de chaque repère, et <b>rôle</b> des repères demandés à l’examen (RMU : 1, 2, 3, 4, 7, 8 et 13 ; treuils : 9 et 11 ; section d’entrée : 6 et 7).</p>' + table('rmu') + table('treuil') + table('cetop'),
-      retenir: ['RMU : 3 = réducteur 3 voies 25 b (pilotage des tiroirs) ; 4 = gicleur de déséquilibre ; 5 + 6 = balance d’entrée + tête pilote.', 'Gicleur LS → stand-by ; solénoïde de décharge LS → monte LS en travail, décharge au neutre.', 'Électrovanne by-pass RSQ 240 (repère 11, MANU / RADIO) = grue, treuils, RMU ; électrovanne by-pass CETOP (STAB) = stabilisateurs.'] };
+      retenir: ['RMU : 3 = réducteur 3 voies 25 b (pilotage des tiroirs) ; 4 = gicleur low flow (flux secondaire par la ligne LS, ΔP = tarage du tiroir LS 30 b) ; 5 + 6 = balance d’entrée + tête pilote.', 'Gicleur LS → stand-by ; solénoïde de décharge LS → monte LS en travail, décharge au neutre.', 'Électrovanne by-pass RSQ 240 (repère 11, MANU / RADIO) = grue, treuils, RMU ; électrovanne by-pass CETOP (STAB) = stabilisateurs.'] };
   }
 
   REV.addLessons('ppld', 'fonctions', [lesson('reperes')]);
