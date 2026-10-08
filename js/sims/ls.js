@@ -73,7 +73,8 @@
     '<path d="M560 440 H860 L900 480 V620 L860 660 H560 Z" style="' + G + '"/>' +
     '<rect x="640" y="490" width="120" height="120" rx="6" style="' + LG + '"/>' +              // barillet
     '<rect x="760" y="545" width="190" height="10" style="fill:#e5e7eb;stroke:#374151;stroke-width:1.4"/>' + // arbre
-    '<path id="arbre" d="M765 550 H945" style="stroke:#f59e0b;stroke-width:5;stroke-dasharray:6 6;fill:none;opacity:0"/>' +
+    // rotation de l’arbre (entraînement mécanique par le moteur : pas de circulation d’huile)
+    '<g id="rotA" style="display:none"><path d="M872 534 A9 16 0 1 0 872 566" style="fill:none;stroke:#f59e0b;stroke-width:2.6"/><path d="M866 531 L874 534 L868 541" style="fill:none;stroke:#f59e0b;stroke-width:2.6"/></g>' +
     '<rect x="900" y="525" width="30" height="50" style="' + LG + '"/>' +
     // pistons du barillet (haut : refoulement ; bas : aspiration)
     '<rect id="bpU" x="700" y="503" width="60" height="18"/><rect id="bpL" x="700" y="579" width="60" height="18"/>' +
@@ -89,7 +90,7 @@
     '<circle cx="' + PX + '" cy="' + PY + '" r="5" style="fill:#111827"/>' +
     '<text x="566" y="432" class="t-s">Pompe à pistons axiaux (coupe)</text>' +
     '<text x="606" y="458" class="t-s">Piston de commande</text><text x="606" y="654" class="t-s">Piston de rappel</text>' +
-    '<text x="812" y="470" class="t-s">Plateau</text><text id="tCyl" x="812" y="488" class="t-s t-b">cylindrée 1 %</text>' +
+    '<text x="838" y="470" class="t-s">Plateau</text><text id="tCyl" x="838" y="488" class="t-s t-b">cylindrée 1 %</text>' +
     '<text x="646" y="545" class="t-s">Barillet</text>' +
     // moteur d’entraînement
     '<rect id="mBox" x="940" y="530" width="40" height="40" class="ink-f"/><text x="960" y="557" text-anchor="middle" class="t-b">M</text>' +
@@ -233,7 +234,7 @@
       a.move('rod', 0, py - 146);
       a.attr('chT', 'height', Math.max(0, py - 66)); a.attr('chB', 'y', py + 14); a.attr('chB', 'height', Math.max(0, 230 - py));
       // moteur
-      a.q('arbre').style.opacity = off ? 0 : 1; a.q('arbre').style.strokeDashoffset = -(st.sh || 0);
+      a.q('rotA').style.display = off ? 'none' : '';
       a.q('rotP').style.display = off ? 'none' : ''; a.move('rotP', 0, 0, st.rot || 0, 915, 550);
       a.q('mBox').style.fill = off ? '' : 'rgba(245,158,11,.35)'; a.text('tMot', off ? 'à l’arrêt' : 'en marche');
       a.move('nP', 0, 0, gAng(d.ps, 400), 490, 570); a.text('tP', F(d.ps) + ' b');
