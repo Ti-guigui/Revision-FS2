@@ -45,7 +45,7 @@
       '<div class="sim-readouts"></div>' +
       '<div class="sim-legend">' + (sim.legend || []).map(function (l) {
         return '<span><i class="lg lg-' + l[0] + '"></i>' + esc(l[1] || LEG[l[0]] || l[0]) + '</span>';
-      }).join('') + '</div>';
+      }).join('') + (sim.note && !sim.levels ? '<span class="sim-note">' + sim.note + '</span>' : '') + '</div>';
     c.svg = host.querySelector('svg');
     // Superposition animée sur chaque tuyau / fil : la « particule » qui montre le sens du flux
     c.svg.querySelectorAll('.pipe').forEach(function (p) {
@@ -54,7 +54,9 @@
       p.parentNode.insertBefore(f, p.nextSibling);
       p._flow = f;
     });
+    c.pq = []; c.tags = {};
     c.api = makeApi(c);
+    c.tagLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g'); c.tagLayer.setAttribute('class', 'sim-tags'); c.svg.appendChild(c.tagLayer);
     buildControls(c);
     host.addEventListener('click', function (e) { onClick(c, e); });
     host.addEventListener('input', function (e) { onInput(c, e); });
@@ -92,7 +94,12 @@
         var e = q(id); if (!e) return;
         e.setAttribute('transform', 'translate(' + (x || 0) + ' ' + (y || 0) + ')' + (rot ? ' rotate(' + rot + ' ' + (cx || 0) + ' ' + (cy || 0) + ')' : ''));
       },
-      cls: function (id, name, on) { var e = q(id); if (e) e.classList.toggle(name, !!on); }
+      cls: function (id, name, on) { var e = q(id); if (e) e.classList.toggle(name, !!on); },
+      // Hydraulique : couleur selon le niveau de pression (p en bar ; null = sans pression ; o.pil = ligne de pilotage)
+      lineP: function (id, p, dir, o) { c.pq.push({ k: 'line', id: id, p: p, dir: dir || 0, o: o || {} }); },
+      fillP: function (id, p, o) { c.pq.push({ k: 'fill', id: id, p: p, o: o || {} }); },
+      // Étiquette de valeur posée sur une conduite / un fil (à la fraction o.at de sa longueur, 0,5 par défaut)
+      tag: function (id, txt, o) { c.tags[id] = { txt: txt, o: o || {} }; }
     };
   }
 
@@ -213,7 +220,9 @@
     if (sim.tick) { if (sim.tick(c.st, dt, d)) { d = sim.compute(c.st); c.dirty = true; } else if (sim.alwaysDraw) c.dirty = true; }
     if (c.dirty) {
       c.dirty = false;
+      c.pq = []; c.tags = {};
       sim.draw(c.api, c.st, d);
+      resolve(c);
       var cap = c.mode === 'watch' ? '<b>' + esc(sim.steps[c.step].title) + '</b> — ' + sim.steps[c.step].text : (d.text || '');
       var capEl = c.host.querySelector('.sim-caption');
       if (capEl._h !== cap) { capEl.innerHTML = cap; capEl._h = cap; }
@@ -225,6 +234,73 @@
     }
     c.raf = requestAnimationFrame(function () { loop(c); });
   }
+
+  var LV = ['var(--lv0)', 'var(--lv1)', 'var(--lv2)', 'var(--lv3)', 'var(--lv4)', 'var(--lv5)'];
+  function resolve(c) {
+    var api = c.api, sim = c.sim;
+    var levels = [];
+    c.pq.forEach(function (it) { var p = it.p; if (p != null && p > 0.05 && !it.o.pil && levels.indexOf(r1(p)) < 0) levels.push(r1(p)); });
+    levels.sort(function (a, b) { return b - a; });
+    var hasZero = false, hasPil = false, hasOff = false;
+    function col(it) {
+      if (it.p == null) { hasOff = true; return null; }
+      if (it.o.pil) { hasPil = true; return 'var(--sim-pil)'; }
+      if (it.p <= 0.05) { hasZero = true; return 'var(--sim-bp)'; }
+      return LV[Math.min(LV.length - 1, levels.indexOf(r1(it.p)))];
+    }
+    c.pq.forEach(function (it) {
+      var e = api.q(it.id); if (!e) return;
+      var cc = col(it);
+      if (it.k === 'line') {
+        var cls = 'pipe' + (cc ? '' : ' pl-off') + (e.classList.contains('thin') ? ' thin' : '');
+        if (e.getAttribute('class') !== cls) e.setAttribute('class', cls);
+        e.style.stroke = cc || '';
+        var f = e._flow;
+        if (f) { var fc = 'flow' + (it.dir > 0 ? ' fw' : it.dir < 0 ? ' rv' : ''); if (f.getAttribute('class') !== fc) f.setAttribute('class', fc); }
+        if (sim.tags !== false && it.o.tag !== false && it.p != null) c.tags[it.id] = c.tags[it.id] || { txt: SIMS.fmt(it.p, it.p < 10 && it.p % 1 ? 1 : 0) + ' ' + (sim.unit || 'b'), o: it.o };
+      } else {
+        e.setAttribute('class', 'zone' + (cc ? '' : ' z-off'));
+        e.style.fill = cc || ''; e.style.opacity = cc ? (it.o.op || 0.85) : '';
+      }
+    });
+    // étiquettes
+    var seen = {};
+    Object.keys(c.tags).forEach(function (id) {
+      var tg = c.tags[id], path = api.q(id); if (!path || !path.getTotalLength) return;
+      seen[id] = true;
+      var g = c.tagLayer.querySelector('[data-t="' + id + '"]');
+      if (!g) {
+        g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('data-t', id);
+        g.innerHTML = '<rect rx="5" ry="5" height="18"/><text text-anchor="middle" y="13"></text>';
+        c.tagLayer.appendChild(g);
+      }
+      var key = path.getAttribute('d') + '|' + (tg.o.at || 0.5) + '|' + (tg.o.dx || 0) + '|' + (tg.o.dy || 0);
+      if (g._k !== key) {
+        var L = path.getTotalLength(), pt = path.getPointAtLength(L * (tg.o.at || 0.5));
+        g.setAttribute('transform', 'translate(' + (pt.x + (tg.o.dx || 0)) + ' ' + (pt.y - 9 + (tg.o.dy || 0)) + ')'); g._k = key;
+      }
+      g.style.display = '';
+      var tx = g.querySelector('text');
+      if (tx.textContent !== tg.txt) {
+        tx.textContent = tg.txt;
+        var w = Math.max(30, tg.txt.length * 7.4 + 10), r = g.querySelector('rect');
+        r.setAttribute('x', -w / 2); r.setAttribute('width', w);
+      }
+    });
+    c.tagLayer.querySelectorAll('[data-t]').forEach(function (g) { if (!seen[g.getAttribute('data-t')]) g.style.display = 'none'; });
+    // légende des niveaux de pression
+    if (sim.levels) {
+      var u = sim.unit || 'b';
+      var h = levels.map(function (p, i) { return '<span><i class="lg" style="background:' + LV[Math.min(LV.length - 1, i)] + '"></i>' + SIMS.fmt(p, p % 1 ? 1 : 0) + ' ' + u + (i === 0 ? ' (la plus haute)' : '') + '</span>'; }).join('') +
+        (hasPil ? '<span><i class="lg lg-pil"></i>' + (sim.pilLabel || 'Pilotage') + '</span>' : '') +
+        (hasZero ? '<span><i class="lg lg-bp"></i>0 ' + u + ' (retour bâche)</span>' : '') +
+        (hasOff ? '<span><i class="lg"></i>Sans pression</span>' : '') +
+        (sim.note ? '<span class="sim-note">' + sim.note + '</span>' : '');
+      var le = c.host.querySelector('.sim-legend');
+      if (le._h !== h) { le.innerHTML = h; le._h = h; }
+    }
+  }
+  function r1(p) { return Math.round(p * 10) / 10; }
 
   // Lien vers le simulateur Falstad (circuit texte, ouvert tout prêt)
   SIMS.falstadUrl = function (cct) {

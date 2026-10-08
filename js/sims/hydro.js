@@ -20,7 +20,8 @@
     desc: 'La pression dépend de la charge, la vitesse dépend du débit. En butée, le limiteur s’ouvre.',
     lessons: ['hydro/bases', 'hydro/distributeurs', 'hydro/pression', 'hydro/recepteurs'],
     viewBox: '0 0 820 500',
-    legend: [['hp', 'Pression'], ['bp', 'Retour bâche'], ['off', 'Sans débit']],
+    levels: true, note: 'Valeurs d’exemple : limiteur taré à 150 b, pompe 20 L/min, pertes de charge ≈ 5 b.',
+    legend: [],
     svg:
       // vérin
       '<rect class="zone z-off" id="chA" x="203" y="43" width="10" height="74"/>' +
@@ -99,19 +100,18 @@
       a.attr('chA', 'width', Math.max(0, px - 203)); a.attr('chB', 'x', px + 18); a.attr('chB', 'width', Math.max(0, 577 - px - 18));
       a.text('chg', st.charge + ' b');
       a.q('spool').style.transform = 'translateX(' + ({ N: 230, S: 310, R: 150 }[st.man]) + 'px)';
-      var lim = d.ql > 0;
-      a.q('limAr').style.transform = lim ? 'translateX(-6px)' : '';
-      a.line('pP', st.man === 'N' ? 'bp' : 'hp', 1);
-      a.line('pL1', st.man === 'N' ? 'off' : 'hp', lim ? 1 : 0);
-      a.line('pL2', lim ? 'bp' : 'off', lim ? 1 : 0);
+      var lim = d.ql > 0, mv = d.moving ? 1 : 0;
+      a.lineP('pP', d.p, 1, { at: 0.35 });
+      a.lineP('pL1', d.p, lim ? 1 : 0, { tag: false });
+      a.lineP('pL2', lim ? 0 : null, lim ? 1 : 0, { tag: false });
       if (st.man === 'N') {
-        a.line('pT', 'bp', 1); a.line('pA', 'off', 0); a.line('pB', 'off', 0); a.fill('chA', 'off'); a.fill('chB', 'off');
+        a.lineP('pT', 0, 1, { dx: 30 }); a.lineP('pA', null, 0); a.lineP('pB', null, 0); a.fillP('chA', null); a.fillP('chB', null);
       } else if (st.man === 'S') {
-        a.line('pA', 'hp', d.moving ? 1 : 0); a.line('pB', 'bp', d.moving ? -1 : 0); a.line('pT', d.moving ? 'bp' : 'off', d.moving ? 1 : 0);
-        a.fill('chA', 'hp'); a.fill('chB', 'bp');
+        a.lineP('pA', d.p, mv, { at: 0.35 }); a.lineP('pB', 0, -mv, { at: 0.5 }); a.lineP('pT', 0, mv, { dx: 30 });
+        a.fillP('chA', d.p); a.fillP('chB', 0);
       } else {
-        a.line('pB', 'hp', d.moving ? 1 : 0); a.line('pA', 'bp', d.moving ? -1 : 0); a.line('pT', d.moving ? 'bp' : 'off', d.moving ? 1 : 0);
-        a.fill('chB', 'hp'); a.fill('chA', 'bp');
+        a.lineP('pB', d.p, mv, { at: 0.5 }); a.lineP('pA', 0, -mv, { at: 0.35 }); a.lineP('pT', 0, mv, { dx: 30 });
+        a.fillP('chB', d.p); a.fillP('chA', 0);
       }
       a.move('needle', 0, 0, gAng(d.p, 200), 285, 428);
       a.text('mtxt', F(d.p) + ' b');
@@ -133,7 +133,8 @@
     desc: 'Stand-by 30 b, pression de service = LS + 30 b, débit selon l’ouverture du tiroir, DAD 320 b en butée.',
     lessons: ['ppld/generation', 'ppld/rsq240', 'ppld/energie', 'hydro/ls'],
     viewBox: '0 0 820 470',
-    legend: [['hp', 'Pression de service'], ['ls', 'Signal LS (pression de la charge)'], ['bp', 'Retour bâche']],
+    levels: true, note: 'Valeurs du cours : stand-by 30 b, DAD 320 b → 350 b, pompe 100 L/min.',
+    legend: [],
     svg:
       // pompe à cylindrée variable
       '<circle class="ink-f" cx="120" cy="250" r="46"/><g id="plat"><line class="ink" x1="120" y1="212" x2="120" y2="288" style="stroke-width:5"/></g>' +
@@ -157,7 +158,8 @@
         '<rect class="ink-f" x="560" y="100" width="80" height="30" rx="5"/><text id="chg" x="600" y="120" text-anchor="middle" class="t-s">0 b</text></g>' +
       '<path class="ink" d="M560 140 V250 H640 V140"/>' +
       '<text x="700" y="200" class="t-s">Récepteur</text><text x="700" y="216" class="t-s">(vérin)</text>' +
-      '<text x="200" y="46" class="t-s" style="fill:var(--sim-ls)">Ligne LS : pression de la charge renvoyée à la pompe</text>' +
+      '<text x="200" y="14" class="t-s" style="fill:var(--sim-ls)">Ligne LS : pression de la charge renvoyée à la pompe</text>' +
+      gauge('nLS', 330, 62) + '<path class="ink" d="M330 24 V45"/><text id="tLS" x="352" y="67" class="t-b">0 b</text><text x="300" y="98" class="t-s">Manomètre LS</text>' +
       gauge('nP', 290, 300) + '<path class="ink" d="M290 250 V283"/><text id="tP" x="312" y="306" class="t-b">30 b</text>' +
       '<text x="250" y="342" class="t-s">Pression de service</text>',
     init: { ouv: 0, charge: 100, butee: false, pos: 0.3 },
@@ -192,11 +194,12 @@
       var py = d.mode === 'dad' ? 1 : st.pos; a.move('rod', 0, -py * 70);
       a.attr('ch', 'y', 240 - py * 70); a.attr('ch', 'height', 8 + py * 70);
       var run = d.mode === 'run';
-      a.line('pP', 'hp', run || d.mode === 'sb' ? 1 : 0);
-      a.line('pR', run || d.mode === 'dad' ? 'hp' : 'off', run ? 1 : 0);
-      a.line('pRet', run || d.mode === 'sb' ? 'bp' : 'off', run || d.mode === 'sb' ? 1 : 0);
-      a.line('pLS', d.mode === 'sb' ? 'off' : 'ls', 0);
-      a.fill('ch', d.mode === 'sb' ? 'off' : 'hp');
+      a.lineP('pP', d.p, run || d.mode === 'sb' ? 1 : 0, { at: 0.75 });
+      a.lineP('pR', run || d.mode === 'dad' ? d.ls : null, run ? 1 : 0);
+      a.lineP('pRet', run || d.mode === 'sb' ? 0 : null, run || d.mode === 'sb' ? 1 : 0, { dx: 30 });
+      a.lineP('pLS', d.ls, 0, { at: 0.55 });
+      a.fillP('ch', d.mode === 'sb' ? null : d.ls);
+      a.move('nLS', 0, 0, gAng(d.ls, 400), 330, 62); a.text('tLS', F(d.ls) + ' b');
       a.move('nP', 0, 0, gAng(d.p, 400), 290, 300); a.text('tP', F(d.p) + ' b');
     },
     steps: [
@@ -215,7 +218,8 @@
     desc: 'Pompe réversible et moteur hydraulique : HP / BP, gavage 20 b, échange 18 b, annulation de débit 280 b.',
     lessons: ['hydro/hydrostatique', 'hydro/circuit-ferme'],
     viewBox: '0 0 820 470',
-    legend: [['hp', 'Haute pression (HP)'], ['bp', 'Basse pression (BP)'], ['pil', 'Gavage'], ['off', 'Sans débit']],
+    levels: true, pilLabel: 'Gavage 20 b', note: 'Valeurs du cours : gavage 20 b, échange 18 b, annulation 280 b, soupapes HP 320 b. Vitesse du moteur : valeur d’exemple.',
+    legend: [],
     svg:
       '<path class="pipe" id="bH" d="M150 196 V90 H670 V196"/>' +
       '<path class="pipe" id="bL" d="M150 284 V370 H670 V284"/>' +
@@ -239,8 +243,10 @@
       '<path class="pipe thin" id="exH" d="M505 90 V200"/><path class="pipe thin" id="exL" d="M505 370 V280"/>' +
       '<rect class="ink-f" id="tir" x="470" y="200" width="70" height="80" rx="4"/><text x="505" y="236" text-anchor="middle" class="t-s">Tiroir</text><text x="505" y="252" text-anchor="middle" class="t-s">d’échange</text>' +
       '<path class="pipe thin" id="exO" d="M540 240 H580"/><rect class="ink-f" x="580" y="226" width="26" height="28"/>' + spring(590, 254, 12, 12, 2) +
+      gauge('nH', 90, 130) + '<path class="ink" d="M107 130 H150"/><text id="tH" x="90" y="168" text-anchor="middle" class="t-b">20 b</text>' +
+      gauge('nL', 90, 336) + '<path class="ink" d="M107 336 H150"/><text id="tL" x="90" y="374" text-anchor="middle" class="t-b">20 b</text>' +
       '<text x="548" y="296" class="t-s">Limiteur</text><text x="548" y="312" class="t-s">d’échange 18 b</text><text x="548" y="328" class="t-s">→ refroidisseur</text>' +
-      '<text id="tH" x="300" y="80" class="t-b">20 b</text><text id="tL" x="300" y="398" class="t-b">20 b</text>',
+      '',
     init: { man: 0, charge: 150, ang: 0 },
     keep: ['ang'],
     controls: [
@@ -262,16 +268,19 @@
     tick: function (st, dt, d) { if (!d.n) return false; st.ang = (st.ang + d.dir * d.n * dt * 0.6) % 360; return true; },
     draw: function (a, st, d) {
       var up = d.dir > 0, run = d.dir !== 0 && !d.ann;
-      a.line('bH', !d.dir ? 'pil' : up ? 'hp' : 'bp', run ? (up ? 1 : -1) : 0);
-      a.line('bL', !d.dir ? 'pil' : up ? 'bp' : 'hp', run ? (up ? -1 : 1) : 0);
-      a.line('gvH', 'pil', !d.dir || !up ? 1 : 0);
-      a.line('gvL', 'pil', !d.dir || up ? 1 : 0);
-      a.line('gvLim', 'pil', !d.dir ? 1 : 0);
-      a.line('exH', d.dir ? (up ? 'hp' : 'bp') : 'off', !up && run ? 1 : 0);
-      a.line('exL', d.dir ? (up ? 'bp' : 'hp') : 'off', up && run ? 1 : 0);
-      a.line('exO', run ? 'bp' : 'off', run ? 1 : 0);
+      var pH = up ? d.hp : d.bp, pL = up ? d.bp : d.hp, G = { pil: true };
+      if (!d.dir) { a.lineP('bH', GAV, 0, { pil: true, at: 0.75 }); a.lineP('bL', GAV, 0, { pil: true, at: 0.75 }); }
+      else { a.lineP('bH', pH, run ? (up ? 1 : -1) : 0, { at: 0.75 }); a.lineP('bL', pL, run ? (up ? -1 : 1) : 0, { at: 0.75 }); }
+      a.lineP('gvH', GAV, !d.dir || !up ? 1 : 0, { pil: true, at: 0.55, dx: -34 });
+      a.lineP('gvL', GAV, !d.dir || up ? 1 : 0, { pil: true, at: 0.55, dx: -34 });
+      a.lineP('gvLim', GAV, !d.dir ? 1 : 0, { pil: true, tag: false });
+      a.lineP('exH', d.dir ? pH : null, !up && run ? 1 : 0, { tag: false });
+      a.lineP('exL', d.dir ? pL : null, up && run ? 1 : 0, { tag: false });
+      a.lineP('exO', run ? ECH : null, run ? 1 : 0, { tag: false });
+      var gH = d.dir ? pH : GAV, gL = d.dir ? pL : GAV;
+      a.move('nH', 0, 0, gAng(gH, 400), 90, 130); a.text('tH', F(gH) + ' b');
+      a.move('nL', 0, 0, gAng(gL, 400), 90, 336); a.text('tL', F(gL) + ' b');
       a.move('rotor', 0, 0, st.ang, 670, 240);
-      a.text('tH', F(up || !d.dir ? d.hp : d.bp) + ' b'); a.text('tL', F(up || !d.dir ? d.bp : d.hp) + ' b');
       a.text('tN', F(d.n) + ' tr/min');
     },
     steps: [

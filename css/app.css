@@ -847,3 +847,25 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
   .sim-stage svg { min-width: 640px; }
   .sim-stage::after { content: "↔ fais glisser le schéma"; display: block; text-align: center; font-size: .75rem; color: var(--muted); padding: 2px 0 4px; position: sticky; left: 0; }
 }
+
+/* Simulateurs : niveaux de pression (rouge = la plus haute, puis violet, bordeaux, rose, orange, ocre), étiquettes, circuits pneumatiques */
+:root { --lv0: #dc2626; --lv1: #7c3aed; --lv2: #9f1239; --lv3: #db2777; --lv4: #ea580c; --lv5: #a16207;
+  --pn-av: #f97316; --pn-ar: #38bdf8; --pn-pa: #16a34a; --pn-re: #dc2626; --pn-al: #a78bfa; --pn-pil: #facc15; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lv0: #f87171; --lv1: #a78bfa; --lv2: #e11d48; --lv3: #f472b6; --lv4: #fb923c; --lv5: #facc15; } }
+:root[data-theme="dark"] { --lv0: #f87171; --lv1: #a78bfa; --lv2: #e11d48; --lv3: #f472b6; --lv4: #fb923c; --lv5: #facc15; }
+.sim-stage .sim-tags rect { fill: var(--sim-bg); stroke: var(--sim-ink); stroke-width: 1; opacity: .93; }
+.sim-stage .sim-tags text { font-size: 12px; font-weight: 800; }
+.sim-stage .meter { fill: var(--sim-bg); stroke: var(--sim-ink); stroke-width: 2; }
+.sim-stage .pl-pav { stroke: var(--pn-av); } .sim-stage .pl-par { stroke: var(--pn-ar); } .sim-stage .pl-ppa { stroke: var(--pn-pa); }
+.sim-stage .pl-pre { stroke: var(--pn-re); } .sim-stage .pl-pal { stroke: var(--pn-al); }
+.sim-stage .pipe.del { stroke-dasharray: 12 7; stroke-linecap: butt; }
+.sim-stage .pipe.pilx { stroke-dasharray: 10 10; stroke-linecap: butt; }
+.sim-stage .pilbase { fill: none; stroke: var(--pn-pil); stroke-width: 7; }
+.sim-stage .z-par { fill: var(--pn-ar); } .sim-stage .z-ppa { fill: var(--pn-pa); }
+.lg-pav { background: var(--pn-av) !important; } .lg-par { background: var(--pn-ar) !important; } .lg-ppa { background: var(--pn-pa) !important; }
+.lg-pre { background: var(--pn-re) !important; } .lg-pal { background: var(--pn-al) !important; }
+.lg-del { background: repeating-linear-gradient(90deg, var(--sim-ink) 0 5px, transparent 5px 8px) !important; }
+.lg-pardel { background: repeating-linear-gradient(90deg, var(--pn-ar) 0 6px, transparent 6px 9px) !important; }
+.lg-ppadel { background: repeating-linear-gradient(90deg, var(--pn-pa) 0 6px, transparent 6px 9px) !important; }
+.sim-legend .sim-note { flex-basis: 100%; font-size: .85em; opacity: .85; }
+.lg-pilx { background: repeating-linear-gradient(90deg, var(--pn-ar) 0 5px, var(--pn-pil) 5px 10px) !important; }

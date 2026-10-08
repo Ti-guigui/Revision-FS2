@@ -10,6 +10,9 @@
     return vertical ? '<rect class="ink-f" x="' + (x - h / 2) + '" y="' + y + '" width="' + h + '" height="' + w + '"/><text x="' + (x + h / 2 + 8) + '" y="' + (y + w / 2 + 5) + '">' + label + '</text>'
       : '<rect class="ink-f" x="' + x + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h + '"/><text x="' + (x + w / 2) + '" y="' + (y - h / 2 - 8) + '" text-anchor="middle">' + label + '</text>';
   }
+  function meter(x, y, l) { // appareil de mesure : A = ampèremètre (en série), V = voltmètre (en parallèle)
+    return '<circle class="meter" cx="' + x + '" cy="' + y + '" r="15"/><text x="' + x + '" y="' + (y + 5) + '" text-anchor="middle" class="t-b">' + l + '</text>';
+  }
   function sw(id, x, y) { // interrupteur : pivot en (x, y), longueur 70
     return '<circle class="solid" cx="' + x + '" cy="' + y + '" r="4"/><circle class="solid" cx="' + (x + 70) + '" cy="' + y + '" r="4"/>' +
       '<g id="' + id + '" style="transition:transform .25s;transform-origin:' + x + 'px ' + y + 'px"><path class="ink" d="M' + x + ' ' + y + ' L' + (x + 68) + ' ' + y + '" style="stroke-width:3.5"/></g>';
@@ -36,8 +39,9 @@
         '<path class="ink" d="M640 150 V172 M640 214 V240"/></g>' +
       '<text id="tD" x="700" y="230" class="t-s">DEL</text>' +
       '<text x="660" y="160" class="t-s t-m">anode</text><text x="660" y="262" class="t-s t-m">cathode</text>' +
-      '<text id="tUR" x="450" y="128" text-anchor="middle" class="t-s">UR = 0 V</text><text id="tUD" x="560" y="200" text-anchor="end" class="t-s">UD = 0 V</text>' +
-      '<text id="tI" x="390" y="360" text-anchor="middle" class="t-b">I = 0 mA</text>',
+      '<text id="tUR" x="450" y="128" text-anchor="middle" class="t-s">UR = 0 V</text><text id="tUD" x="770" y="290" text-anchor="middle" class="t-s">UD = 0 V</text>' +
+      '<path class="ink" d="M640 136 H770 V180 M770 210 V252 H640" style="stroke-dasharray:4 4"/>' + meter(770, 195, 'V') +
+      meter(390, 330, 'A') + '<text id="tI" x="390" y="372" text-anchor="middle" class="t-b">I = 0 mA</text>',
     init: { k: true, typ: 'led', sens: 'direct', r: 1000 },
     controls: [
       { key: 'k', type: 'toggle', label: 'Interrupteur K', on: 'Fermé', off: 'Ouvert' },
@@ -100,7 +104,8 @@
       '<text x="556" y="210" class="t-s">Zéner</text><text x="556" y="226" class="t-s">Uz = 5,6 V</text>' +
       '<circle class="ink-f" cx="700" cy="200" r="30"/><text x="700" y="206" text-anchor="middle">V</text>' +
       '<text id="tUs" x="640" y="140" text-anchor="middle" class="t-b">Us = 0 V</text>' +
-      '<text id="tI" x="350" y="130" text-anchor="middle" class="t-s">I = 0 mA</text>',
+      meter(330, 320, 'A') + '<text id="tI" x="330" y="360" text-anchor="middle" class="t-s">I = 0 mA</text>' +
+      '<text id="tUrs" x="350" y="130" text-anchor="middle" class="t-s">URs = 0 V</text>',
     init: { ue: 9 },
     controls: [{ key: 'ue', type: 'range', label: 'Tension d’entrée Ue', min: 0, max: 20, step: 0.5, unit: 'V', dec: 1 }],
     compute: function (st) {
@@ -115,7 +120,7 @@
     draw: function (a, st, d) {
       var on = d.i > 0;
       ['w1', 'w2', 'w3'].forEach(function (w) { a.line(w, on ? 'cur' : 'cur0', on ? 1 : 0); });
-      a.text('tUe', 'Ue = ' + F(st.ue, 1) + ' V'); a.text('tUs', 'Us = ' + F(d.us, 1) + ' V'); a.text('tI', 'I = ' + F(d.ma, 1) + ' mA');
+      a.text('tUe', 'Ue = ' + F(st.ue, 1) + ' V'); a.text('tUs', 'Us = ' + F(d.us, 1) + ' V'); a.text('tI', 'I = ' + F(d.ma, 1) + ' mA'); a.text('tUrs', 'URs = ' + F(d.urs, 1) + ' V');
     },
     steps: [
       { title: 'Ue = 4 V', text: 'Sous la tension Zéner, la diode ne conduit pas : la sortie suit l’entrée, <b>Us = 4 V</b>.', set: { ue: 4 } },
@@ -152,7 +157,8 @@
       '<path class="pipe thin" id="wb4" d="M140 210 V380 H600"/>' +
       bat(140, 190, '5 V') + sw('sw', 230, 110) + '<text x="265" y="92" text-anchor="middle" class="t-s">Commande</text>' +
       res(360, 270, 100, 26, '') + '<text id="tRb" x="410" y="250" text-anchor="middle">Rb = 8,6 kΩ</text>' +
-      '<text id="tIb" x="410" y="306" text-anchor="middle" class="t-s">Ib = 0</text><text id="tIc" x="700" y="230" class="t-s">Ic = 0</text>' +
+      '<text id="tIb" x="490" y="306" text-anchor="middle" class="t-s">Ib = 0</text><text id="tIc" x="624" y="92" class="t-s">Ic = 0</text>' +
+      meter(600, 85, 'A') + meter(490, 270, 'A') +
       '<text id="tEt" x="300" y="410" text-anchor="middle" class="t-b">BLOQUÉ</text><text id="tVce" x="640" y="276" class="t-s">VCE = 12 V</text>',
     init: { k: false, rb: 8.6, beta: 200 },
     controls: [

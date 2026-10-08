@@ -21,7 +21,11 @@
     lessons: ['equip/demarreur', 'equip/qcm-demarreur', 'elec/moto'],
     viewBox: '0 0 820 450',
     legend: [['cur', 'Courant'], ['cur0', 'Pas de courant']],
+    note: 'Valeurs du cours : 24 V, au moins 19,2 V au lancement (80 %), 18 V = batteries en cause ; appel ≈ 2 Ω, maintien ≈ 4 Ω. Courant du moteur et tension au lancement avec de bonnes batteries : valeurs d’exemple.',
     svg:
+      // voltmètre aux bornes de la batterie
+      '<path class="ink" d="M120 250 H180 V243 M180 273 V282 H90" style="stroke-dasharray:4 4"/><circle class="meter" cx="180" cy="258" r="15"/><text x="180" y="263" text-anchor="middle" class="t-b">V</text>' +
+      '<text id="tUb" x="202" y="263" class="t-b">24 V</text>' +
       // batterie
       '<path class="ink" d="M60 250 H120" style="stroke-width:3"/><path class="ink" d="M74 264 H106" style="stroke-width:7"/><text x="130" y="258" class="t-s">+</text><text x="40" y="300" class="t-s">Batterie 24 V</text>' +
       '<path class="ink" d="M90 264 V400"/>' + gnd(90, 400) +
@@ -52,13 +56,23 @@
       '<path class="ink" d="M150 300 A90 90 0 0 0 150 400" style="stroke-width:10;stroke-dasharray:4 4"/><text x="60" y="440" class="t-s">Couronne du volant</text>' +
       '<g id="fork"><path class="ink" d="M330 202 L270 290 L222 330" style="stroke-width:4"/><circle class="solid" cx="270" cy="290" r="5"/></g><text x="282" y="290" class="t-s">fourchette</text>' +
       '<text id="tPh" x="680" y="200" class="t-b">REPOS</text>',
-    init: { cle: false, ph: 0, s: 0, t: 0, auto: true, ang: 0 },
-    keep: [],
-    controls: [{ key: 'cle', type: 'toggle', label: 'Clé de contact', on: 'Démarrage', off: 'Repos' }],
+    init: { cle: false, ph: 0, s: 0, t: 0, auto: true, ang: 0, bat: 'ok' },
+    keep: ['bat'],
+    controls: [{ key: 'cle', type: 'toggle', label: 'Clé de contact', on: 'Démarrage', off: 'Repos' },
+      { key: 'bat', type: 'seg', label: 'État des batteries', options: [['ok', 'Bonnes'], ['faible', 'Faibles']] }],
     compute: function (st) {
-      var p = PH[st.ph];
-      return { text: p.x, readouts: [['Phase', p.t], ['Bobine d’appel', st.ph === 1 ? 'alimentée' : st.ph === 3 ? 'courant inversé' : 'sans courant', st.ph === 1 || st.ph === 3 ? 'hot' : ''],
-        ['Bobine de maintien', st.ph === 1 || st.ph === 2 || st.ph === 3 ? 'alimentée' : 'sans courant'], ['Contacteur 30 → moteur', st.ph === 2 ? 'fermé' : 'ouvert', st.ph === 2 ? 'ok' : '']] };
+      var p = PH[st.ph], ph = st.ph, ok = st.bat === 'ok';
+      var d = { u: ph === 2 ? (ok ? 21 : 18) : ph === 1 ? (ok ? 23 : 21) : (ok ? 24 : 22.5) };
+      d.ia = ph === 1 || ph === 3 ? d.u / 2 : 0;            // bobine d’appel ≈ 2 Ω
+      d.im = ph ? d.u / 4 : 0;                              // bobine de maintien ≈ 4 Ω
+      d.imot = ph === 2 ? (ok ? 350 : 250) : ph === 1 ? d.ia : 0; // valeur d’exemple
+      var bad = ph === 2 && d.u < 19.2;
+      d.text = p.x + (ph === 2 ? (bad ? ' <b style="color:var(--bad)">Au lancement, la tension tombe à 18 V : sous le minimum de 19,2 V (80 % de 24 V), les batteries sont en cause.</b>'
+        : ' Au lancement, la tension reste à ' + F(d.u) + ' V : au-dessus du minimum de <b>19,2 V</b> (80 % de 24 V), les batteries sont bonnes.') : '');
+      d.readouts = [['Phase', p.t], ['Tension batterie', F(d.u, d.u % 1 ? 1 : 0) + ' V', bad ? 'hot' : ph === 2 ? 'ok' : ''],
+        ['Bobine d’appel', d.ia ? F(d.ia, 1) + ' A' + (ph === 3 ? ' (inversé)' : '') : '0 A', d.ia ? 'hot' : ''], ['Bobine de maintien', F(d.im, 1) + ' A'],
+        ['Moteur (exemple)', d.imot ? '≈ ' + F(d.imot) + ' A' : '0 A'], ['Contacteur 30 → moteur', ph === 2 ? 'fermé' : 'ouvert', ph === 2 ? 'ok' : '']];
+      return d;
     },
     tick: function (st, dt) {
       var ch = false;
@@ -74,8 +88,13 @@
       if (sp) { st.ang = (st.ang + sp * dt) % 360; ch = true; }
       return ch;
     },
-    draw: function (a, st) {
-      var ph = st.ph, s = st.s;
+    draw: function (a, st, d) {
+      var ph = st.ph, s = st.s, A = function (i) { return F(i, i % 1 ? 1 : 0) + ' A'; };
+      a.text('tUb', F(d.u, d.u % 1 ? 1 : 0) + ' V');
+      if (ph === 1 || ph === 2) a.tag('pExc', A(d.ia + d.im), { at: 0.45 });
+      if (d.ia) a.tag('pApp', A(d.ia), { at: 0.85 });
+      if (d.im) a.tag('pMas', A(d.im), { at: 0.9, dx: -26 });
+      if (ph === 2) { a.tag('p30', '≈ ' + d.imot + ' A', { at: 0.5 }); a.tag('pC', '≈ ' + d.imot + ' A', { at: 0.7 }); }
       a.q('key').style.transform = st.cle || ph === 1 || ph === 2 ? '' : 'rotate(-30deg)';
       a.line('pK', ph === 1 || ph === 2 ? 'cur' : 'cur0', ph === 1 || ph === 2 ? 1 : 0);
       a.line('pExc', ph === 1 || ph === 2 ? 'cur' : 'cur0', ph === 1 || ph === 2 ? 1 : 0);
@@ -95,8 +114,9 @@
     steps: [
       { title: PH[0].t, text: PH[0].x, set: { auto: false, ph: 0, s: 0 } },
       { title: PH[1].t, text: PH[1].x, set: { auto: false, cle: true, ph: 1, s: 0 } },
-      { title: PH[2].t, text: PH[2].x, set: { auto: false, cle: true, ph: 2, s: 1 } },
-      { title: PH[3].t, text: PH[3].x, set: { auto: false, cle: false, ph: 3, s: 1 } },
+      { title: PH[2].t, text: PH[2].x, set: { auto: false, cle: true, ph: 2, s: 1, bat: 'ok' } },
+      { title: 'Batteries faibles', text: 'Même phase avec des batteries fatiguées : au lancement la tension tombe à <b>18 V</b>, sous le minimum de <b>19,2 V</b> (80 % de 24 V). Ce n’est pas le démarreur : <b>les batteries sont en cause</b>.', set: { auto: false, cle: true, ph: 2, s: 1, bat: 'faible' } },
+      { title: PH[3].t, text: PH[3].x, set: { auto: false, cle: false, ph: 3, s: 1, bat: 'ok' } },
       { title: 'Retour au repos', text: 'Noyau revenu, lanceur dégagé, contacteur ouvert : le démarreur est prêt pour un nouveau démarrage. <b>Contrôles</b> : appel entre EXC et +DEM (la plus faible), maintien entre EXC et masse (≈ 2 × appel).', set: { auto: false, ph: 0, s: 0 } }
     ]
   });
