@@ -34,9 +34,9 @@
       '<text x="248" y="142" class="t-s">A (fond)</text><text x="548" y="142" class="t-s">B (tige)</text>' +
       // conduites
       '<path class="pipe" id="pA" d="M330 300 V230 H240 V120"/>' +
-      '<path class="pipe" id="pB" d="M410 300 V230 H540 V120"/>' +
+      '<path class="pipe" id="pB" d="M370 300 V250 H540 V120"/>' +
       '<path class="pipe" id="pP" d="M110 428 V400 H330 V380"/>' +
-      '<path class="pipe" id="pT" d="M410 380 V482"/>' +
+      '<path class="pipe" id="pT" d="M370 380 V482"/>' +
       '<path class="pipe" id="pL1" d="M220 400 V420"/>' +
       '<path class="pipe" id="pL2" d="M220 462 V482"/>' +
       // distributeur (tiroir mobile)
@@ -48,8 +48,8 @@
         spring(-34, 326, 34, 28, 3) + spring(240, 326, 34, 28, 3) +
         '<path class="ink" d="M-34 340 H-48 M-48 322 V358"/>' +
       '</g>' +
-      '<text x="370" y="292" text-anchor="middle" class="t-s t-m">A          B</text>' +
-      '<text x="370" y="398" text-anchor="middle" class="t-s t-m">P          T</text>' +
+      '<text x="318" y="294" text-anchor="middle" class="t-s t-m">A</text><text x="382" y="294" text-anchor="middle" class="t-s t-m">B</text>' +
+      '<text x="318" y="396" text-anchor="middle" class="t-s t-m">P</text><text x="382" y="396" text-anchor="middle" class="t-s t-m">T</text>' +
       '<text x="600" y="330" class="t-s">Distributeur 4/3</text><text x="600" y="348" class="t-s">centre ouvert</text>' +
       // pompe
       '<circle class="ink-f" cx="110" cy="450" r="22"/><path class="solid" d="M110 432 l9 14 h-18z"/>' +
@@ -57,7 +57,7 @@
       // limiteur de pression
       '<rect class="ink-f" x="204" y="420" width="32" height="42"/><g id="limAr" style="transition:transform .3s"><path class="ink" d="M226 458 V426" marker-end="url(#sim-ar)"/></g>' +
       spring(236, 432, 22, 16, 2) + '<path class="ink" d="M204 446 H196 V414 H220" style="stroke-dasharray:4 4"/>' +
-      bache(220, 482) + bache(410, 482) +
+      bache(220, 482) + bache(370, 482) +
       '<text x="262" y="474" class="t-s">Limiteur ' + TAR + ' b</text>' +
       gauge('needle', 285, 428) + '<path class="ink" d="M285 400 V411"/>' +
       '<text id="mtxt" x="306" y="433" class="t-b">0 b</text>',
@@ -122,7 +122,7 @@
       { title: 'Sortie, charge 120 b', text: 'Charge plus lourde : la pression monte à ≈ 125 b, mais la <b>vitesse ne change pas</b> : c’est le débit (20 L/min) qui fait la vitesse.', set: { man: 'S', charge: 120 } },
       { title: 'Butée', text: 'Le piston arrive en fin de course : la pression monte au tarage du <b>limiteur (150 b)</b>, qui renvoie tout le débit à la bâche (perte d’énergie en chaleur).', set: { man: 'S', charge: 120, pos: 1 } },
       { title: 'Charge trop lourde', text: 'Charge qui demande 180 b : le limiteur s’ouvre à 150 b avant que le vérin puisse bouger. <b>Pression = charge</b>, plafonnée par le limiteur.', set: { man: 'S', charge: 180, pos: 0.4 } },
-      { title: 'Rentrée', text: 'Manette tirée : les voies se croisent, <b>P → B</b> et <b>A → T</b>. Côté tige la section est plus petite : même débit, vitesse plus grande.', set: { man: 'R', charge: 50 } }
+      { title: 'Rentrée', text: 'Manette tirée : les voies se croisent, <b>P → B</b> et <b>A → T</b>. Côté tige la section est plus petite : même débit, vitesse plus grande.', set: { man: 'R', charge: 50, pos: 1 } }
     ]
   });
 
