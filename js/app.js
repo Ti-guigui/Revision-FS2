@@ -306,7 +306,7 @@
   // Onglet(s) à allumer pour chaque route : barre du bas (home, cours, qcm = S’entraîner, resultats, plus) et barre latérale
   function setActiveNav(route, parts) {
     var map = { '': ['home'], cours: ['cours'], matiere: ['cours'], lecon: ['cours'], verif: ['cours'],
-      memos: ['memos', 'plus'], fiche: ['plus'], fiches: ['plus'], formules: ['formules', 'plus'], 'a-revoir': ['a-revoir', 'plus'], exercices: ['exercices', 'plus'], plus: ['plus'],
+      memos: ['memos', 'plus'], fiche: ['plus'], fiches: ['plus'], formules: ['formules', 'plus'], simulateurs: ['simulateurs', 'plus'], 'a-revoir': ['a-revoir', 'plus'], exercices: ['exercices', 'plus'], plus: ['plus'],
       qcm: ['qcm'], uv2: ['qcm'], session: ['qcm'], bilan: ['qcm'], quiz: ['quiz', 'qcm'], revision: ['revision', 'qcm'], resultats: ['resultats'], recherche: [] };
     var keys = map[route] || ['home'];
     if ((route === 'session' || route === 'bilan') && session && session.mode === 'quiz') keys = ['quiz', 'qcm'];
@@ -319,6 +319,7 @@
 
   function render() {
     clearInterval(timerId);
+    if (window.SIMS) SIMS.unmount();
     var parts = location.hash.replace(/^#\/?/, '').replace(/#.*$/, '').split('/').map(decodeURIComponent);
     var route = parts[0] || '';
     setActiveNav(route, parts);
@@ -344,6 +345,7 @@
       case 'formules': html = viewFormules(parts[1]); break;
       case 'recherche': html = viewRecherche(parts.slice(1).join('/')); break;
       case 'plus': html = viewPlus(); break;
+      case 'simulateurs': html = viewSims(parts[1]); break;
       default: html = viewHome();
     }
     main.innerHTML = html;
@@ -353,6 +355,7 @@
     var si = document.querySelector('form.top-search input');
     if (si && route !== 'recherche' && document.activeElement !== si) si.value = '';
     if (route === 'session') afterSessionRender();
+    if (route === 'simulateurs' && parts[1] && window.SIMS) SIMS.mount(parts[1], main.querySelector('.sim'));
     main.focus({ preventScroll: true });
   }
 
@@ -388,7 +391,7 @@
   // Raccourcis vers les outils : accueil (grille compacte) et page « Plus » (liste)
   var TOOLS = [['#/a-revoir', '📌', 'Leçons à revoir'], ['#/formules', '📐', 'Formules et conversions'], ['#/exercices', '✍️', 'Exercices corrigés'],
     ['#/fiches', '📄', 'Fiches de révision'], ['#/memos', '💡', 'Aides-mémoires'], ['#/uv2', '📝', 'Test UV2'], ['#/fiche/uv2', '🎯', 'Fiche spéciale UV2'],
-    ['mdf.html', '🏗️', 'Calcul manœuvre de force'], ['diagnostic.html', '🔧', 'Coin diagnostic']];
+    ['#/simulateurs', '🎛️', 'Simulateurs animés'], ['mdf.html', '🏗️', 'Calcul manœuvre de force'], ['diagnostic.html', '🔧', 'Coin diagnostic']];
 
   // Bloc « Aujourd’hui » : ce qu’il y a de plus utile à faire maintenant (session en cours, lecture, erreurs, matière faible)
   function todayHtml(all) {
@@ -457,6 +460,41 @@
   }
 
   // Page « Plus » (onglet du bas sur téléphone) : tous les outils et pages annexes
+  /* ----- Simulateurs animés (js/sims) ----- */
+  function lessonSimsHtml(key) {
+    var list = window.SIMS ? SIMS.forLesson(key) : [];
+    if (!list.length) return '';
+    return '<div class="lesson-sims">' + list.map(function (s) {
+      return '<a href="#/simulateurs/' + s.id + '">🎛️ Animation : ' + esc(s.title) + '</a>';
+    }).join('') + '</div>';
+  }
+  function viewSims(id) {
+    if (!window.SIMS) return viewHome();
+    var sim = id && SIMS.byId[id];
+    if (sim) {
+      var s = subj(sim.subj);
+      var lessons = (sim.lessons || []).map(function (k) { return REV.lessonById[k]; }).filter(Boolean);
+      return crumbs([['#/simulateurs', 'Simulateurs'], [null, sim.title]]) +
+        '<h1 class="h1">' + sim.icon + ' ' + esc(sim.title) + '</h1><p class="muted">' + esc(sim.desc) + '</p>' +
+        '<div class="sim" style="--c:' + (s ? s.color : '') + '"></div>' +
+        '<div class="sim-links">' +
+          (sim.falstad ? '<a class="btn" href="' + SIMS.falstadUrl(sim.falstad) + '" target="_blank" rel="noopener">⚡ Ouvrir ce circuit dans Falstad</a>' : '') +
+          lessons.map(function (l) { return '<a class="btn ghost small" href="#/lecon/' + l.key + '">📖 ' + esc(l.title) + '</a>'; }).join('') +
+        '</div>' +
+        (sim.falstad ? '<p class="muted small">Falstad est un simulateur de circuits gratuit (site externe, en anglais) : le circuit s’ouvre tout prêt, tu peux cliquer sur les interrupteurs et changer les valeurs (double-clic sur un composant).</p>' : '');
+    }
+    var groups = {};
+    SIMS.list.forEach(function (x) { (groups[x.subj] = groups[x.subj] || []).push(x); });
+    return '<h1 class="h1">🎛️ Simulateurs animés</h1>' +
+      '<p class="muted">Les composants et circuits du cours en mouvement. Deux modes : <b>▶️ Regarder</b> (le fonctionnement étape par étape) et <b>🕹️ Manipuler</b> (tu actionnes la manette, l’interrupteur ou la charge et le schéma réagit, avec les pressions, débits et courants).</p>' +
+      Object.keys(groups).map(function (sid) {
+        var s = subj(sid);
+        return '<h2 class="h2 sec-title">' + (s ? s.icon + ' ' + esc(s.name) : esc(sid)) + '</h2><div class="sim-grid">' + groups[sid].map(function (x) {
+          return '<a class="card sim-card" href="#/simulateurs/' + x.id + '"><span class="big">' + x.icon + '</span><span><b>' + esc(x.title) + '</b><span class="muted small">' + esc(x.desc) + '</span></span></a>';
+        }).join('') + '</div>';
+      }).join('');
+  }
+
   function viewPlus() {
     var toReview = allQuestions().filter(needsReview).length;
     return '<h1 class="h1">☰ Plus</h1><p class="muted">Tous les outils de révision et les pages annexes.</p>' +
@@ -734,7 +772,7 @@
       '<h1 class="h1"><span class="num">' + l.num + '</span> ' + esc(l.title) + '</h1>' +
       (group.length > 1 ? '<p class="lesson-pos muted small">' + (l.exo ? 'Exercice ' : 'Leçon ') + (idx + 1) + ' / ' + group.length + ' · ✔ ' + readN + ' lue' + (readN > 1 ? 's' : '') + ' dans ' + esc(s.name) + '</p>' : '') +
       (ls.pct !== null ? '<p><span class="pill ' + level(ls.pct).cls + '">' + level(ls.pct).dot + ' Ton score : ' + ls.pct + ' %</span></p>' : '') +
-      tocHtml(l, key) +
+      tocHtml(l, key) + lessonSimsHtml(key) +
       '<div class="lesson-body">' + (function (n) { return l.html.replace(/<h3(?=[\s>])/gi, function () { return '<h3 id="p-' + (++n) + '"'; }); })(0) + '</div>' +
       (l.images ? '<span id="schemas"></span>' + l.images.map(function (im) {
         return '<figure><a href="img/' + im.src + '" target="_blank" rel="noopener"><img loading="lazy" src="img/' + im.src + '" alt="' + esc(im.cap) + '"></a><figcaption>🖼️ ' + esc(im.cap) + ' <span class="muted">(toucher pour agrandir)</span></figcaption></figure>';

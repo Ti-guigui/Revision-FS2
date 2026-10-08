@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap">
-  <link rel="stylesheet" href="css/app.css?v=114">
+  <link rel="stylesheet" href="css/app.css?v=115">
 </head>
 <body>
   <a class="skip" href="#main">Aller au contenu</a>
@@ -42,6 +42,7 @@
       <nav class="side-subjects" id="side-subjects"></nav>
       <nav class="side-extra">
         <a href="#/a-revoir" data-nav="a-revoir"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></span>Leçons à revoir</a>
+        <a href="#/simulateurs" data-nav="simulateurs"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg></span>Simulateurs animés</a>
         <a href="#/formules" data-nav="formules"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h2M12 18h4"/></svg></span>Formules et conversions</a>
         <a href="diagnostic.html"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span>Coin diagnostic</a>
         <a href="mdf.html"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V5h4M5 5l14 2M19 7v6"/><circle cx="19" cy="15" r="2"/><path d="M3 21h8"/></svg></span>Calcul manœuvre de force</a>
@@ -65,7 +66,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/app.js?v=115"></script>
+  <script src="js/app.js?v=116"></script>
   <script src="js/data/01-electricite.js"></script>
   <script src="js/data/02-equipement-electrique.js"></script>
   <script src="js/data/03-motorisation.js"></script>
@@ -139,5 +140,10 @@
   <script src="js/data/76-ppld-schemas-questions.js"></script>
   <script src="js/data/77-sans-indices.js"></script>
   <script src="js/data/78-ppld-calculs-expliques.js"></script>
+  <script src="js/sims/engine.js?v=1"></script>
+  <script src="js/sims/hydro.js?v=1"></script>
+  <script src="js/sims/elec.js?v=1"></script>
+  <script src="js/sims/pneu.js?v=1"></script>
+  <script src="js/sims/equip.js?v=1"></script>
 </body>
 </html>
