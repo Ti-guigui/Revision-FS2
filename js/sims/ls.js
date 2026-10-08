@@ -44,8 +44,10 @@
       '<path class="pipe" id="pRet" d="M805 462 V480 H960 V520"/>' +
       '<path class="pipe thin" id="pSuc" d="M60 584 V560 H80"/>' +
       // ---- moteur + pompe à cylindrée variable ----
-      '<rect class="ink-f" x="4" y="508" width="28" height="28"/><text x="18" y="527" text-anchor="middle" class="t-b">M</text><path class="ink" d="M32 518 H80 M32 526 H80" transform="translate(0 0)"/>' +
-      '<circle class="ink-f" cx="110" cy="560" r="30"/><path class="solid" d="M140 560 l-12 -7 v14z"/><path class="ink" d="M86 586 L136 532" marker-end="url(#sim-ar)"/>' +
+      '<rect id="mBox" class="ink-f" x="4" y="508" width="28" height="28"/><text x="18" y="527" text-anchor="middle" class="t-b">M</text><path class="ink" d="M32 518 H80 M32 526 H80"/>' +
+      '<path id="arbre" d="M34 522 H80" style="stroke:#f59e0b;stroke-width:5;stroke-dasharray:6 6;fill:none;opacity:0"/>' +
+      '<text id="tMot" x="4" y="500" class="t-s t-b">moteur en marche</text>' +
+      '<circle class="ink-f" cx="110" cy="560" r="30"/><g id="rotP"><path d="M110 534 V586 M84 560 H136" style="stroke:#f59e0b;stroke-width:3;opacity:.8"/></g><path class="solid" d="M140 560 l-12 -7 v14z"/><path class="ink" d="M86 586 L136 532" marker-end="url(#sim-ar)"/>' +
       bache(60, 584) + '<text x="110" y="528" text-anchor="middle" class="t-s">Pompe</text>' +
       // ---- tiroir LS (corps : petit alésage + grande chambre) ----
       '<rect id="zPS" class="zone z-off" x="142" y="172" width="8" height="58" style="transition:transform .45s ease;transform-origin:142px 200px"/>' +
@@ -143,8 +145,9 @@
       return d;
     },
     tick: function (st, dt, d) {
-      if (d.mode !== 'run' || !d.q) return false;
-      st.pos += dt * d.q / 250; if (st.pos > 1) st.pos = 0;
+      if (d.mode === 'arret') return false;
+      st.rot = ((st.rot || 0) + dt * 360) % 360; st.sh = ((st.sh || 0) + dt * 40) % 12;
+      if (d.mode === 'run' && d.q) { st.pos += dt * d.q / 250; if (st.pos > 1) st.pos = 0; }
       return true;
     },
     draw: function (a, st, d) {
@@ -168,7 +171,11 @@
       a.lineP('pR', run || d.mode === 'butee' ? d.ls : null, run && d.q ? 1 : 0, { at: 0.3, pil: d.ls > 0 }); // ligne du récepteur = pression LS (même couleur que la ligne LS)
       a.lineP('pLS', d.ls, d.dadOpen ? 1 : 0, { pil: d.ls > 0, at: 0.62 }); // DAD fermé : rien ne circule dans le gicleur LS ; ouvert : LS → gicleur 0,5 L/min → DAD → bâche
       a.lineP('pDAD', 0, d.dadOpen ? 1 : 0, { tag: false });
-      a.lineP('pRet', 0, 0, { tag: false }); a.lineP('pSuc', 0, 1, { tag: false });
+      a.lineP('pRet', 0, 0, { tag: false }); a.lineP('pSuc', 0, d.Q > 0 ? 1 : 0, { tag: false });
+      var on = d.mode !== 'arret';
+      a.q('arbre').style.opacity = on ? 1 : 0; a.q('arbre').style.strokeDashoffset = -(st.sh || 0); a.q('rotP').style.display = on ? '' : 'none';
+      a.q('mBox').style.fill = on ? 'rgba(245,158,11,.35)' : ''; a.text('tMot', on ? 'moteur en marche' : 'moteur à l’arrêt');
+      a.move('rotP', 0, 0, st.rot || 0, 110, 560);
       // DAD
       a.q('dadB').style.transform = d.dadOpen ? 'translateY(-7px)' : '';
       a.attr('dadSpr', 'd', zigV(420, d.dadOpen ? 79 : 86, 50, 22, 3));
