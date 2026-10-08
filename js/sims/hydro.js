@@ -56,7 +56,7 @@
       '<circle class="ink-f" cx="110" cy="450" r="22"/><path class="solid" d="M110 432 l9 14 h-18z"/>' +
       '<path class="ink" d="M110 472 V482"/>' + bache(110, 482) + '<text x="30" y="455" class="t-s">Pompe</text><text x="30" y="472" class="t-s">20 L/min</text>' +
       // limiteur de pression
-      '<rect class="ink-f" x="204" y="420" width="32" height="42"/><g id="limAr" style="transition:transform .3s"><path class="ink" d="M226 426 V458" marker-end="url(#sim-ar)"/></g>' +
+      '<rect class="ink-f" x="204" y="420" width="32" height="42"/><g id="limAr" style="transition:transform .3s"><path class="ink" d="M213 426 V458" marker-end="url(#sim-ar)"/></g>' +
       spring(236, 432, 22, 16, 2) + '<path class="ink" d="M204 446 H196 V414 H220" style="stroke-dasharray:4 4"/>' +
       bache(220, 482) + bache(370, 482) +
       '<text x="262" y="474" class="t-s">Limiteur ' + TAR + ' b</text>' +
@@ -101,6 +101,7 @@
       a.text('chg', st.charge + ' b');
       a.q('spool').style.transform = 'translateX(' + ({ N: 230, S: 310, R: 150 }[st.man]) + 'px)';
       var lim = d.ql > 0, mv = d.moving ? 1 : 0;
+      a.q('limAr').style.transform = lim ? 'translateX(7px)' : ''; // ouvert : la flèche vient dans l’axe de la conduite
       a.lineP('pP', d.p, 1, { at: 0.35 });
       a.lineP('pL1', d.p, lim ? 1 : 0, { tag: false });
       a.lineP('pL2', lim ? 0 : null, lim ? 1 : 0, { tag: false });
