@@ -74,7 +74,9 @@
       '<li><b>Stand-by</b> : distributeurs au neutre, LS = 0 : dès que PS dépasse 30 b, le tiroir se déplace et envoie la pression au <b>vérin de commande</b> qui ramène le <b>plateau</b> vers la cylindrée mini : la pompe maintient <b>30 b</b> sans débiter.</li>' +
       '<li><b>Travail</b> : la pression LS (reflet de la charge) s’ajoute au ressort : le tiroir équilibre <b>PS = LS + 30 b</b> et la cylindrée s’adapte au besoin.</li>' +
       '<li><b>DAD (320 b)</b> : clapet taré sur la chambre du ressort. Récepteur en butée, LS monte jusqu’à 320 b : le DAD s’ouvre vers la bâche (≈ 1 L/min), la pression LS est plafonnée à 320 b, donc <b>PS maxi = 320 + 30 = 350 b</b> et le plateau revient en cylindrée mini (débit annulé, pression maintenue).</li>' +
-      '<li><b>Gicleur 0,5 L/min</b> sur l’arrivée LS : il limite le débit qui entre dans la chambre, pour que le DAD puisse décharger la pression. <b>Gicleur anti-pompage</b> (vers la bâche) : il amortit les mouvements du tiroir pour éviter les oscillations (pompage).</li></ul>' };
+      '<li><b>Full flow / low flow</b> : d’un côté du tiroir agit la <b>pression de service (full flow)</b>, de l’autre la <b>pression LS (low flow)</b> qui <b>s’additionne</b> au ressort de stand-by (30 b). Pour ouvrir le DAD, la pression de service doit vaincre la LS + 30 b. Exemple avec un DAD taré à <b>150 b</b> : quand la pression de service atteint <b>180 b</b> (150 b du ressort du DAD dans le low flow + 30 b du stand-by), le tiroir se déplace et comprime le ressort, le DAD s’ouvre dans la ligne LS et laisse échapper l’huile à <b>≈ 1 L/min</b>. Avec le tarage du PPLD (320 b), c’est à <b>350 b</b>.</li>' +
+      '<li><b>Gicleur 0,5 L/min</b> sur l’arrivée LS : il limite le débit qui entre dans la chambre, pour que le DAD puisse décharger la pression.</li>' +
+      '<li><b>Gicleur anti-pompage</b> (vers la bâche) : il consomme <b>en permanence 1 L/min</b> ; il est là pour gérer le <b>vérin de commande du plateau</b> (agir sur la cylindrée de la pompe sans oscillations, le « pompage »).</li></ul>' };
   REV.extendLesson('ppld/generation', DAD);
   REV.extendLesson('uv3/ppld', DAD);
 })();
