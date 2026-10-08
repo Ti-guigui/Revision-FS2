@@ -268,6 +268,7 @@
     var hasHp = false, hasZero = false, hasPil = false, hasOff = false, hasLs = false;
     function col(it) {
       if (it.p == null) { hasOff = true; return null; }
+      if (it.o.col) return it.o.col;
       if (it.o.ls && it.p > 0.05) { hasLs = true; return 'var(--sim-lsv)'; }
       if (it.o.pil) { hasPil = true; return 'var(--sim-pil)'; }
       if (it.o.ret || it.p <= 0.05) { hasZero = true; return 'var(--sim-bp)'; }
@@ -315,12 +316,12 @@
     c.tagLayer.querySelectorAll('[data-t]').forEach(function (g) { if (!seen[g.getAttribute('data-t')]) g.style.display = 'none'; });
     // légende : rouge / vert / bleu (les valeurs sont écrites sur les conduites)
     if (sim.levels) {
-      var h = (hasHp ? '<span><i class="lg lg-hp"></i>' + (sim.hpLabel || 'Pression') + '</span>' : '') +
+      var h = sim.legendHtml ? sim.legendHtml + (sim.note ? '<span class="sim-note">' + sim.note + '</span>' : '') : ((hasHp ? '<span><i class="lg lg-hp"></i>' + (sim.hpLabel || 'Pression') + '</span>' : '') +
         (hasLs ? '<span><i class="lg" style="background:var(--sim-lsv)"></i>' + (sim.lsLabel || 'Pression LS') + '</span>' : '') +
         (hasPil ? '<span><i class="lg lg-pil"></i>' + (sim.pilLabel || 'Pilotage / commande') + '</span>' : '') +
         (hasZero ? '<span><i class="lg lg-bp"></i>' + (sim.bpLabel || 'Retour bâche') + '</span>' : '') +
         (hasOff && !sim.offHide ? '<span><i class="lg"></i>Sans pression</span>' : '') +
-        (sim.note ? '<span class="sim-note">' + sim.note + '</span>' : '');
+        (sim.note ? '<span class="sim-note">' + sim.note + '</span>' : ''));
       var le = c.host.querySelector('.sim-legend');
       if (le._h !== h) { le.innerHTML = h; le._h = h; }
     }

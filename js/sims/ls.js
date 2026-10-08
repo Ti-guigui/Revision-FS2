@@ -1,10 +1,13 @@
-/* Simulateur : régulation Load Sensing de la pompe du PPLD — dessiné d’après le schéma « DAD / stand-by » (tiroir LS, ressort de stand-by,
-   DAD, gicleur anti-pompage, gicleur LS, vérin de commande et vérin de rappel du plateau) */
+/* Simulateur : régulation Load Sensing de la pompe du PPLD — dessiné comme la figure du cours « les 4 phases de la régulation LS » :
+   pompe à pistons axiaux en coupe (barillet, plateau, piston de commande et piston de rappel intégrés au corps de pompe),
+   régulateur fixé sur la pompe (tiroir LS, ressort de stand-by, DAD, gicleurs), distributeur, réservoir et récepteur. */
 (function () {
   var F = SIMS.fmt;
   var SB = 30, QAP = 1, QDAD = 0.5, QMAX = 100;
+  // couleurs de la figure du cours
+  var RED = '#dc2626', BOR = '#9f1239', BLU = '#1e3a8a', ORA = '#f59e0b';
+  var PX = 800, PY = 550; // pivot du plateau
 
-  function bache(x, y) { return '<path class="ink" d="M' + (x - 12) + ' ' + y + ' V' + (y + 10) + ' H' + (x + 12) + ' V' + y + '"/>'; }
   function zig(x1, y, x2, h, n) {
     var d = 'M' + x1 + ' ' + y, s = (x2 - x1) / (n * 2);
     for (var i = 0; i < n * 2; i++) d += ' L' + (x1 + s * (i + 1)) + ' ' + (y + (i % 2 ? h / 2 : -h / 2));
@@ -15,92 +18,119 @@
     for (var i = 0; i < n * 2; i++) d += ' L' + (x + (i % 2 ? w / 2 : -w / 2)) + ' ' + (y1 + s * (i + 1));
     return d + ' L' + x + ' ' + y2;
   }
-  function gicleur(x, y1, y2) { // étranglement (gicleur) sur une ligne verticale
+  function gicleur(x, y1, y2) {
     var m = (y1 + y2) / 2;
     return '<path class="ink" d="M' + (x - 7) + ' ' + y1 + ' V' + (m - 5) + ' L' + (x - 2) + ' ' + m + ' V' + y2 + ' M' + (x + 7) + ' ' + y1 + ' V' + (m - 5) + ' L' + (x + 2) + ' ' + m + ' V' + y2 + '" style="stroke-width:2"/>';
   }
   function gauge(id, x, y) {
-    return '<circle class="ink-f" cx="' + x + '" cy="' + y + '" r="16"/><line id="' + id + '" class="ink" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (y - 12) + '" style="stroke-width:2.6"/><circle class="solid" cx="' + x + '" cy="' + y + '" r="2.5"/>';
+    return '<circle class="ink-f" cx="' + x + '" cy="' + y + '" r="15"/><line id="' + id + '" class="ink" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (y - 11) + '" style="stroke-width:2.6"/><circle class="solid" cx="' + x + '" cy="' + y + '" r="2.5"/>';
   }
   var gAng = function (p, max) { return -120 + Math.max(0, Math.min(1, p / max)) * 240; };
   function dot(x, y) { return '<circle class="solid" cx="' + x + '" cy="' + y + '" r="3.2"/>'; }
+  var G = 'fill:#9ca3af;stroke:#374151;stroke-width:2'; // corps gris (comme le cours)
+  var LG = 'fill:#e5e7eb;stroke:#374151;stroke-width:1.6';
 
-  SIMS.add({
-    id: 'ppld-ls', subj: 'ppld', icon: '🚛', title: 'Régulation Load Sensing de la pompe (PPLD) : stand-by et DAD',
-    desc: 'D’après ton schéma : la pression LS s’ajoute au ressort de stand-by (30 b) → pression de service (full flow) = LS + 30 b. Le DAD plafonne la LS (low flow) : pression maxi = DAD + 30 b.',
-    lessons: ['ppld/generation', 'ppld/rsq240', 'ppld/energie', 'hydro/ls'],
-    viewBox: '0 0 1000 600', minWidth: 900,
-    levels: true, hpLabel: 'Pression de service (full flow)', pilLabel: 'Pression LS (low flow)', bpLabel: '0 b (retour bâche)',
-    note: 'Valeurs du cours et de tes fiches : stand-by 30 b, DAD 320 b (réglable ici), gicleur anti-pompage 1 L/min, gicleur LS 0,5 L/min, DAD ouvert : il ne laisse passer que les 0,5 L/min du gicleur LS, pompe 100 L/min. Débits et pressions des étapes : tes fiches de phases (treuil, RMU, stabilisateurs).',
-    svg:
-      // ---- conduites ----
-      '<path class="pipe" id="pP" d="M140 560 H775 V462"/>' +
-      '<path class="pipe thin" id="pPS" d="M170 560 V300 H110 V201 H142"/>' +
-      '<path class="pipe thin" id="pVC" d="M230 232 V415 H300"/>' +
-      '<path class="pipe thin" id="pAP" d="M230 168 V112"/>' +
-      '<path class="pipe" id="pR" d="M790 398 V360 H900 V322"/>' +
-      '<path class="pipe thin" id="pLS" d="M840 360 V350 H420 V332"/>' +
-      '<path class="pipe thin" id="pDAD" d="M420 48 V24"/>' +
-      '<path class="pipe" id="pRet" d="M805 462 V480 H960 V520"/>' +
-      '<path class="pipe thin" id="pSuc" d="M60 584 V560 H80"/>' +
-      // ---- moteur + pompe à cylindrée variable ----
-      '<rect id="mBox" class="ink-f" x="4" y="508" width="28" height="28"/><text x="18" y="527" text-anchor="middle" class="t-b">M</text><path class="ink" d="M32 518 H80 M32 526 H80"/>' +
-      '<path id="arbre" d="M34 522 H80" style="stroke:#f59e0b;stroke-width:5;stroke-dasharray:6 6;fill:none;opacity:0"/>' +
-      '<text id="tMot" x="4" y="500" class="t-s t-b">moteur en marche</text>' +
-      '<circle class="ink-f" cx="110" cy="560" r="30"/><g id="rotP"><path d="M110 534 V586 M84 560 H136" style="stroke:#f59e0b;stroke-width:3;opacity:.8"/></g><path class="solid" d="M140 560 l-12 -7 v14z"/><path class="ink" d="M86 586 L136 532" marker-end="url(#sim-ar)"/>' +
-      bache(60, 584) + '<text x="110" y="528" text-anchor="middle" class="t-s">Pompe</text>' +
-      // ---- tiroir LS (corps : petit alésage + grande chambre) ----
+  var svg =
+    // ---------- conduites ----------
+    '<path class="pipe" id="pP" d="M640 510 H530 V570 H150 V460"/>' +
+    '<path class="pipe thin" id="pPS" d="M530 510 V221 H619"/>' +
+    '<path class="pipe thin" id="pCmd" d="M687 239 V330 H580 V475 H604"/>' +
+    '<path class="pipe thin" id="pAP" d="M687 183 V50"/>' +
+    '<path class="pipe thin" id="pLS" d="M100 330 H192 A8 8 0 0 1 208 330 H230 V22 H988 V355 H858 V300 M230 150 H285"/>' +
+    '<path class="pipe thin" id="pDad" d="M858 73 V50 H687"/>' +
+    '<path class="pipe thin" id="pDr" d="M687 50 H470 V300"/>' +
+    '<path class="pipe" id="pA" d="M100 370 V250"/>' +
+    '<path class="pipe thin" id="pB" d="M200 370 V75 H152"/>' +
+    '<path class="pipe thin" id="pT" d="M250 460 V500 H327"/>' +
+    '<path class="pipe thin" id="pT2" d="M363 500 H420 V300"/>' +
+    '<path class="pipe" id="pSuc" d="M450 402 V670 H620 V590 H640"/>' +
+    // ---------- récepteur (vérin) ----------
+    '<rect x="80" y="60" width="70" height="190" style="' + G + '"/><rect x="88" y="66" width="54" height="178" style="fill:#f8fafc"/>' +
+    '<rect id="chT" x="88" y="66" width="54" height="80"/><rect id="chB" x="88" y="160" width="54" height="84"/>' +
+    '<g id="rod"><rect x="88" y="146" width="54" height="14" style="fill:#374151"/><rect x="108" y="10" width="14" height="136" style="fill:#f8fafc;stroke:#374151;stroke-width:1.6"/></g>' +
+    '<text x="160" y="40" class="t-s">Récepteur</text><text id="chg" x="160" y="58" class="t-s t-b">100 b</text>' +
+    // ---------- distributeur à tiroir en coupe (comme la figure du cours) ----------
+    // orifices : A (vers le récepteur, prise LS), P (pression de service), B (retour du récepteur), T (retour réservoir par le filtre)
+    '<rect x="50" y="370" width="240" height="90" style="' + G + '"/>' +
+    '<rect x="50" y="404" width="240" height="24" style="fill:#f8fafc"/>' +
+    '<rect id="zR" x="206" y="404" width="84" height="24"/>' +                                   // chambre de retour (côté T)
+    '<rect id="gA" x="94" y="370" width="12" height="64"/><rect id="gP" x="144" y="398" width="12" height="62"/>' +
+    '<rect id="gB" x="194" y="370" width="12" height="64"/><rect id="gT" x="244" y="398" width="12" height="62"/>' +
+    '<g id="spoolD" style="transition:transform .4s ease">' +
+      '<rect id="zN" x="114" y="404" width="72" height="24"/>' +                                 // gorge du tiroir (P)
+      '<rect x="36" y="411" width="278" height="10" style="' + LG + '"/>' +
+      '<rect x="40" y="404" width="74" height="24" style="' + LG + '"/><rect x="186" y="404" width="28" height="24" style="' + LG + '"/><rect x="280" y="404" width="30" height="24" style="' + LG + '"/>' +
+      '<path d="M38 416 L28 352" style="stroke:#374151;stroke-width:4"/><circle cx="28" cy="346" r="8" style="fill:#111827"/></g>' +
+    '<text x="82" y="392" class="t-s t-b" style="fill:#fff">A</text><text x="160" y="452" class="t-s t-b" style="fill:#fff">P</text>' +
+    '<text x="210" y="392" class="t-s t-b" style="fill:#fff">B</text><text x="260" y="452" class="t-s t-b" style="fill:#fff">T</text>' +
+    '<text x="108" y="324" class="t-s t-b">LS</text>' +
+    '<text x="8" y="480" class="t-s">Distributeur</text><text id="ouv" x="8" y="498" class="t-s t-b">fermé</text>' +
+    // ---------- filtre et réservoir ----------
+    '<path d="M345 482 L363 500 L345 518 L327 500 Z" style="fill:' + BLU + ';stroke:#111827;stroke-width:2"/><text x="318" y="540" class="t-s">Filtre</text>' +
+    '<rect x="400" y="300" width="100" height="102" style="fill:#f8fafc;stroke:#111827;stroke-width:2"/><rect x="402" y="330" width="96" height="70" style="fill:' + BLU + '"/>' +
+    '<text x="402" y="292" class="t-s">Réservoir</text>' +
+    // ---------- pompe à pistons axiaux (coupe) ----------
+    '<path d="M560 440 H860 L900 480 V620 L860 660 H560 Z" style="' + G + '"/>' +
+    '<rect x="640" y="490" width="120" height="120" rx="6" style="' + LG + '"/>' +              // barillet
+    '<rect x="760" y="545" width="190" height="10" style="fill:#e5e7eb;stroke:#374151;stroke-width:1.4"/>' + // arbre
+    '<path id="arbre" d="M765 550 H945" style="stroke:#f59e0b;stroke-width:5;stroke-dasharray:6 6;fill:none;opacity:0"/>' +
+    '<rect x="900" y="525" width="30" height="50" style="' + LG + '"/>' +
+    // pistons du barillet (haut : refoulement ; bas : aspiration)
+    '<rect id="bpU" x="700" y="503" width="60" height="18"/><rect id="bpL" x="700" y="579" width="60" height="18"/>' +
+    '<rect id="ppU" x="740" y="506" width="40" height="12" style="fill:#f8fafc;stroke:#374151;stroke-width:1.4"/><rect id="ppL" x="740" y="582" width="40" height="12" style="fill:#f8fafc;stroke:#374151;stroke-width:1.4"/>' +
+    // piston de commande (haut) et piston de rappel (bas), intégrés au corps de pompe
+    '<rect x="604" y="463" width="100" height="24" style="' + LG + '"/><rect id="chC" x="606" y="465" width="40" height="20"/>' +
+    '<g id="pistC" style="transition:transform .6s ease"><rect x="646" y="465" width="10" height="20" style="fill:#374151"/><rect x="656" y="471" width="144" height="8" style="fill:#f8fafc;stroke:#374151;stroke-width:1.2"/></g>' +
+    '<rect x="604" y="613" width="100" height="24" style="' + LG + '"/>' +
+    '<g id="pistR" style="transition:transform .6s ease"><rect x="646" y="615" width="10" height="20" style="fill:#374151"/><rect x="656" y="621" width="144" height="8" style="fill:#f8fafc;stroke:#374151;stroke-width:1.2"/></g>' +
+    '<path id="sprR" d="' + zig(606, 625, 646, 14, 4) + '" style="stroke:' + RED + ';stroke-width:2.4;fill:none;transition:transform .6s ease;transform-origin:606px 625px"/>' +
+    // plateau (pivot au milieu)
+    '<g id="plat" style="transition:transform .6s ease;transform-origin:' + PX + 'px ' + PY + 'px"><rect x="' + (PX - 6) + '" y="' + (PY - 92) + '" width="12" height="184" rx="3" style="fill:#d1d5db;stroke:#111827;stroke-width:2"/></g>' +
+    '<circle cx="' + PX + '" cy="' + PY + '" r="5" style="fill:#111827"/>' +
+    '<text x="566" y="432" class="t-s">Pompe à pistons axiaux (coupe)</text>' +
+    '<text x="606" y="458" class="t-s">Piston de commande</text><text x="606" y="654" class="t-s">Piston de rappel</text>' +
+    '<text x="812" y="470" class="t-s">Plateau</text><text id="tCyl" x="812" y="488" class="t-s t-b">cylindrée 1 %</text>' +
+    '<text x="646" y="545" class="t-s">Barillet</text>' +
+    // moteur d’entraînement
+    '<rect id="mBox" x="940" y="530" width="40" height="40" class="ink-f"/><text x="960" y="557" text-anchor="middle" class="t-b">M</text>' +
+    '<g id="rotP"><path d="M915 532 V568 M902 550 H928" style="stroke:#f59e0b;stroke-width:3"/></g>' +
+    '<text id="tMot" x="958" y="592" text-anchor="middle" class="t-s" style="font-weight:700">en marche</text>' +
+    // ---------- régulateur (ton dessin à la main : tiroir LS, grande chambre du ressort de stand-by, DAD, gicleurs) ----------
+    '<g transform="translate(480 30) scale(0.9)">' +
+      '<rect x="142" y="170" width="118" height="62" style="fill:#f8fafc"/><rect x="260" y="100" width="210" height="200" style="fill:#f8fafc"/>' +
       '<rect id="zPS" class="zone z-off" x="142" y="172" width="8" height="58" style="transition:transform .45s ease;transform-origin:142px 200px"/>' +
       '<rect id="zA1" class="zone z-off" x="190" y="172" width="70" height="58" style="transition:transform .45s ease;transform-origin:260px 200px"/><rect id="zA2" class="zone z-off" x="262" y="102" width="38" height="196" style="transition:transform .45s ease;transform-origin:262px 200px"/>' +
       '<rect id="zLS" class="zone z-off" x="318" y="102" width="150" height="196" style="transition:transform .45s ease;transform-origin:468px 200px"/>' +
       '<path class="ink" d="M142 170 H260 V100 H470 V300 H260 V232 H142" style="fill:none;stroke-width:3"/>' +
       '<g id="spool" style="transition:transform .45s ease"><rect class="solid" x="150" y="174" width="40" height="54" rx="3"/><rect class="ink-f" x="190" y="192" width="112" height="18"/><rect class="solid" x="300" y="104" width="18" height="192"/></g>' +
-      '<path id="lsSpr" class="ink" d="' + zig(318, 200, 468, 150, 5) + '" style="stroke-width:2.6;transition:transform .45s ease;transform-origin:468px 200px"/>' +
+      '<path id="lsSpr" class="ink" d="' + zig(318, 200, 468, 150, 5) + '" style="fill:none;stroke-width:2.6;transition:transform .45s ease;transform-origin:468px 200px"/>' +
       '<text x="120" y="152" class="t-b">Tiroir LS</text>' +
-      '<text x="480" y="210" class="t-b" style="fill:#dc2626">Stand-by</text><text x="480" y="228" class="t-b" style="fill:#dc2626">30 b</text>' +
-      '<text x="96" y="196" text-anchor="end" class="t-b" style="fill:#dc2626">PS</text>' +
-      // gicleur anti-pompage (retour bâche)
-      gicleur(230, 170, 140) + '<path class="ink" d="M230 112 V100"/>' + bache(230, 88) +
-      '<text x="150" y="70" class="t-s" style="fill:#2563eb">Gicleur anti-pompage</text><text x="150" y="86" class="t-s" style="fill:#2563eb">1 L/min → retour bâche</text>' +
-      // DAD : bille + siège + ressort sur la chambre LS
-      '<path class="ink" d="M406 100 L420 114 L434 100" style="fill:none;stroke-width:2.6"/>' +
+      '<text x="480" y="210" class="t-b" style="fill:' + RED + '">Stand-by</text><text x="480" y="228" class="t-b" style="fill:' + RED + '">30 b</text>' +
+      // gicleur anti-pompage (haut du petit alésage → retour réservoir)
+      gicleur(230, 170, 140) +
+      '<text x="218" y="100" text-anchor="end" class="t-s" style="fill:' + BLU + '">Gicleur anti-pompage</text><text x="218" y="116" text-anchor="end" class="t-s" style="fill:' + BLU + '">1 L/min → réservoir</text>' +
+      // DAD : bille + siège + ressort sur la chambre du ressort de stand-by
+      '<path d="M402 100 L420 116 L438 100" style="fill:#f8fafc;stroke:#111827;stroke-width:2.6"/>' +
       '<g id="dadB" style="transition:transform .3s"><circle class="solid" cx="420" cy="96" r="9"/></g>' +
-      '<path class="ink" d="M402 88 V48 M438 88 V48 H402"/><path id="dadSpr" class="ink" d="' + zigV(420, 86, 50, 22, 3) + '"/>' +
-      '<g id="dadOut" style="opacity:.2"><path class="ink" d="M404 92 L390 80 M436 92 L450 80" marker-end="url(#sim-ar)"/></g>' +
-      bache(420, 12) + '<text x="448" y="40" class="t-b">DAD</text><text id="tDAD" x="448" y="58" class="t-b">320 b</text><text id="tDADq" x="448" y="76" class="t-s"></text>' +
-      // gicleur LS 0,5 L/min (arrivée LS sous la chambre)
-      gicleur(420, 300, 330) + '<text x="434" y="322" class="t-s" style="fill:#7c3aed">Gicleur 0,5 L/min</text>' +
-      
-      // vérin de commande, vérin de rappel, plateau
-      '<rect class="ink-f" x="300" y="400" width="120" height="30"/>' +
-      '<rect id="zVC" class="zone z-off" x="302" y="402" width="70" height="26" style="transition:transform .6s ease;transform-origin:302px 415px"/>' +
-      '<g id="vcP" style="transition:transform .6s ease"><rect class="solid" x="372" y="402" width="8" height="26"/><path class="ink" d="M380 415 H456" style="stroke-width:3"/></g>' +
-      '<rect class="ink-f" x="300" y="490" width="120" height="30"/><g id="vrP" style="transition:transform .6s ease"><rect class="solid" x="372" y="492" width="8" height="26"/><path class="ink" d="M380 505 H456" style="stroke-width:3"/></g>' +
-      '<path class="ink" d="' + zig(270, 505, 300, 12, 3) + '"/>' +
-      '<g id="plat" style="transition:transform .6s ease;transform-origin:460px 460px"><rect class="ink-f" x="456" y="380" width="8" height="160"/></g><circle class="solid" cx="460" cy="460" r="5"/>' +
-      '<path class="ink" d="M426 387 L494 533 M460 372 V548" style="stroke-dasharray:8 3 2 3;stroke-width:1.2"/>' +
-      '<text x="416" y="378" text-anchor="middle" class="t-s t-b">Max</text><text x="466" y="366" text-anchor="middle" class="t-s t-b">Min</text>' +
-      '<text x="300" y="393" class="t-s">Vérin de commande</text>' +
-      '<text x="300" y="483" class="t-s">Vérin de rappel</text><text x="476" y="430" class="t-s">Plateau</text><text x="476" y="446" class="t-s">pompe</text>' +
-      '<text id="tCyl" x="476" y="466" class="t-s t-b">cylindrée 1 %</text>' +
-      // distributeur proportionnel (élément) et récepteur
-      '<g id="dist" style="transition:transform .3s ease">' +
-        '<rect class="ink-f" x="700" y="398" width="180" height="64"/><path class="ink" d="M760 398 V462 M820 398 V462 M700 390 H880 M700 470 H880"/>' +
-        '<path class="ink" d="M715 460 L730 404" marker-end="url(#sim-ar)"/><path class="ink" d="M745 462 V452 M739 452 H751"/>' +
-        '<path class="ink" d="M775 462 V452 M769 452 H781 M805 462 V452 M799 452 H811 M790 398 V408 M784 408 H796"/>' +
-        '<path class="ink" d="M850 404 L865 460" marker-end="url(#sim-ar)"/><path class="ink" d="M835 462 V452 M829 452 H841"/>' +
-        '<path class="ink" d="' + zig(672, 430, 700, 22, 3) + '"/><path class="ink" d="' + zig(880, 430, 900, 22, 3) + '"/>' +
-        '<path class="ink" d="M672 424 H660 M672 436 H660 M660 436 V404"/><circle class="ink-f" cx="660" cy="399" r="5"/>' +
-      '</g>' + bache(960, 520) +
-      '<text x="700" y="500" class="t-s">Élément de distributeur</text><text id="ouv" x="700" y="518" class="t-b">0 L/min</text>' +
-      '<rect class="zone z-off" id="ch" x="862" y="312" width="76" height="8"/>' +
-      '<g id="rod"><rect class="solid" x="862" y="302" width="76" height="10"/><rect class="ink-f" x="892" y="202" width="16" height="100"/>' +
-        '<rect class="ink-f" x="860" y="172" width="80" height="30" rx="5"/><text id="chg" x="900" y="192" text-anchor="middle" class="t-s">0 b</text></g>' +
-      '<path class="ink" d="M860 212 V322 H940 V212"/><text x="852" y="262" text-anchor="end" class="t-s">Récepteur</text>' +
-      // manomètres
-      gauge('nP', 560, 520) + '<path class="ink" d="M560 560 V536"/><text id="tP" x="582" y="525" class="t-b">30 b</text><text x="510" y="494" class="t-s">Pression de service</text>' +
-      gauge('nLS', 660, 314) + '<path class="ink" d="M660 350 V330"/><text id="tLS" x="682" y="319" class="t-b">0 b</text><text x="620" y="288" class="t-s">Manomètre LS</text>' +
-      [[170, 560], [560, 560], [840, 360], [660, 350]].map(function (q) { return dot(q[0], q[1]); }).join(''),
+      '<path class="ink" d="M402 88 V48 H438 V88" style="fill:none"/><path id="dadSpr" class="ink" d="' + zigV(420, 86, 50, 22, 3) + '" style="fill:none"/>' +
+      '<text x="448" y="62" class="t-b">DAD</text><text id="tDAD" x="448" y="80" class="t-b">320 b</text><text id="tDADq" x="448" y="96" class="t-s"></text>' +
+      // gicleur LS 0,5 L/min (arrivée de la ligne LS sous la chambre)
+      gicleur(420, 300, 330) + '<text x="434" y="322" class="t-s" style="fill:' + BOR + '">Gicleur 0,5 L/min</text>' +
+    '</g>' +
+    '<text x="566" y="212" text-anchor="end" class="t-b" style="fill:' + RED + '">PS</text>' +
+    // manomètres
+    gauge('nP', 490, 570) + '<text id="tP" x="470" y="606" class="t-b">30 b</text><text x="470" y="626" class="t-s">Pression de service</text>' +
+    gauge('nLS', 300, 150) + '<text id="tLS" x="322" y="140" class="t-b">0 b</text><text x="322" y="176" class="t-s">LS</text>' +
+    [[530, 510], [530, 570], [687, 50], [230, 150], [490, 570], [100, 330]].map(function (q) { return dot(q[0], q[1]); }).join('');
+
+  SIMS.add({
+    id: 'ppld-ls', subj: 'ppld', icon: '🚛', title: 'Régulation Load Sensing de la pompe (PPLD) : les 4 phases du cours',
+    desc: 'Comme la figure du cours : pompe à pistons axiaux en coupe avec piston de commande et piston de rappel intégrés, régulateur (tiroir LS, ressort de stand-by 30 b, DAD 320 b), distributeur et récepteur.',
+    lessons: ['ppld/generation', 'ppld/rsq240', 'ppld/energie', 'hydro/ls'],
+    viewBox: '0 0 1000 690', minWidth: 900,
+    levels: true, legendHtml: '<span><i class="lg" style="background:#dc2626"></i>Pression de service</span><span><i class="lg" style="background:#9f1239"></i>Pression de la charge (LS)</span><span><i class="lg" style="background:#f59e0b"></i>Commande (piston de commande)</span><span><i class="lg" style="background:#1e3a8a"></i>Bâche / 0 b</span>',
+    note: 'Valeurs du cours et de tes fiches : stand-by 30 b, DAD 320 b (réglable), gicleur anti-pompage 1 L/min, gicleur LS 0,5 L/min (ne débite que si le DAD est ouvert), pompe 100 L/min.',
+    svg: svg,
     init: { moteur: true, ouv: 0, charge: 100, butee: false, dad: 320, sec: 0, pos: 0.3 },
     keep: ['pos'],
     controls: [
@@ -124,22 +154,22 @@
         d.q = d.stall ? 0 : Math.min(QMAX - QAP, st.ouv);
       }
       // plein débit (cours) : le distributeur demande plus que la pompe ne peut donner → plus de ΔP, LS = pression de service,
-      // le ressort de stand-by retient le tiroir, le vérin de commande n’est pas alimenté : cylindrée maximum
+      // le ressort de stand-by retient le tiroir, le piston de commande n’est pas alimenté : cylindrée maximum
       d.plein = d.mode === 'run' && st.ouv >= QMAX - QAP;
       d.ps = d.plein ? d.ls : d.ls + SB;
       d.Q = d.plein ? QMAX : d.q + QAP + (d.dadOpen ? QDAD : 0);
       d.cyl = Math.max(1, Math.round(d.Q / QMAX * 100));
       if (!st.moteur) { d.mode = 'arret'; d.plein = false; d.ps = 0; d.ls = 0; d.q = 0; d.Q = 0; d.cyl = 100; d.dadOpen = d.secOpen = false; }
       d.kw = d.ps * d.Q / 600;
-      d.text = d.mode === 'arret' ? '<b>Au repos (moteur à l’arrêt)</b> : aucune pression. Le <b>vérin de rappel</b> (ressort) pousse le plateau : la pompe est en <b>cylindrée maximum</b>. Dès le démarrage, la pression monte et la régulation ramène le plateau au débit dont le circuit a besoin.'
+      d.text = d.mode === 'arret' ? '<b>Au repos (moteur à l’arrêt)</b> : aucune pression. Le <b>piston de rappel</b> (ressort) pousse le plateau : la pompe est en <b>cylindrée maximum</b>. Dès le démarrage, la pression monte et la régulation ramène le plateau au débit dont le circuit a besoin.'
         : d.mode === 'sb'
-        ? '<b>Stand-by</b> : éléments au neutre, la ligne LS est à la bâche (<b>LS = 0 b</b>). Seul le ressort de stand-by retient le tiroir : dès que la <b>PS dépasse 30 b</b>, le tiroir se déplace, envoie la pression au <b>vérin de commande</b> qui ramène le <b>plateau vers le mini</b>. La pompe garde <b>30 b</b> et ne débite que ce que consomme le <b>gicleur anti-pompage (1 L/min)</b>.'
+        ? '<b>Stand-by</b> : éléments au neutre, la ligne LS est à la bâche (<b>LS = 0 b</b>). Seul le ressort de stand-by retient le tiroir : dès que la <b>PS dépasse 30 b</b>, le tiroir se déplace, envoie la pression au <b>piston de commande</b> qui ramène le <b>plateau vers le mini</b>. La pompe garde <b>30 b</b> et ne débite que ce que consomme le <b>gicleur anti-pompage (1 L/min)</b>.'
         : d.dadOpen
-          ? '<b>Butée : le DAD s’ouvre</b>. La LS (low flow) monte jusqu’au tarage du ressort du DAD (<b>' + dad + ' b</b>) : la bille se soulève et laisse passer vers la bâche <b>seulement les 0,5 L/min</b> qui arrivent par le <b>gicleur LS</b> (ligne LS → gicleur → chambre → DAD). Tant que le DAD est fermé, rien ne circule dans le gicleur LS. Pour déplacer le tiroir, la <b>pression de service (full flow)</b> doit vaincre <b>LS + ressort de stand-by = ' + dad + ' + 30 = ' + d.ps + ' b</b> : le tiroir comprime le ressort, alimente le vérin de commande, le plateau revient au mini → <b>annulation de débit</b>, pression maxi maintenue.'
+          ? '<b>Butée : le DAD s’ouvre</b>. La LS (low flow) monte jusqu’au tarage du ressort du DAD (<b>' + dad + ' b</b>) : la bille se soulève et laisse passer vers la bâche <b>seulement les 0,5 L/min</b> qui arrivent par le <b>gicleur LS</b> (ligne LS → gicleur → chambre → DAD). Tant que le DAD est fermé, rien ne circule dans le gicleur LS. Pour déplacer le tiroir, la <b>pression de service (full flow)</b> doit vaincre <b>LS + ressort de stand-by = ' + dad + ' + 30 = ' + d.ps + ' b</b> : le tiroir comprime le ressort, alimente le piston de commande, le plateau revient au mini → <b>annulation de débit</b>, pression maxi maintenue.'
           : d.secOpen
             ? '<b>Butée</b> : le <b>limiteur secondaire de l’élément (' + sec + ' b)</b> plafonne la pression LS avant le DAD (' + dad + ' b, resté fermé). La pompe maintient <b>PS = ' + sec + ' + 30 = ' + d.ps + ' b</b>, plateau au mini.'
-            : d.plein ? '<b>Plein débit</b> : le distributeur est <b>ouvert au maximum</b>. La pression dans la ligne LS est <b>identique</b> à la pression de service (' + d.ps + ' b). Le tiroir LS reçoit la même pression de chaque côté, mais le <b>ressort de stand-by</b> ne permet pas son déplacement : le <b>vérin de commande n’est pas alimenté</b>, la pompe est en <b>cylindrée maximum</b> (100 L/min).'
-            : '<b>Contrôle du débit</b> : le distributeur est ouvert partiellement. La pression LS (' + d.ls + ' b, la charge) <b>s’ajoute au ressort de stand-by (30 b)</b> derrière le tiroir. Le tiroir s’équilibre quand <b>PS = LS + 30 = ' + d.ps + ' b</b> : il dose l’huile envoyée au vérin de commande et le plateau prend la cylindrée qu’il faut pour donner <b>' + F(d.q) + ' L/min</b> à l’élément (+ 1 L/min du gicleur anti-pompage). ΔP de l’élément = 30 b : la vitesse ne dépend pas de la charge.';
+            : d.plein ? '<b>Plein débit</b> : le distributeur est <b>ouvert au maximum</b>. La pression dans la ligne LS est <b>identique</b> à la pression de service (' + d.ps + ' b). Le tiroir LS reçoit la même pression de chaque côté, mais le <b>ressort de stand-by</b> ne permet pas son déplacement : le <b>piston de commande n’est pas alimenté</b>, la pompe est en <b>cylindrée maximum</b> (100 L/min).'
+            : '<b>Contrôle du débit</b> : le distributeur est ouvert partiellement. La pression LS (' + d.ls + ' b, la charge) <b>s’ajoute au ressort de stand-by (30 b)</b> derrière le tiroir. Le tiroir s’équilibre quand <b>PS = LS + 30 = ' + d.ps + ' b</b> : il dose l’huile envoyée au piston de commande et le plateau prend la cylindrée qu’il faut pour donner <b>' + F(d.q) + ' L/min</b> à l’élément (+ 1 L/min du gicleur anti-pompage). ΔP de l’élément = 30 b : la vitesse ne dépend pas de la charge.';
       d.readouts = [['Pression de service (full flow)', F(d.ps) + ' b', d.dadOpen ? 'hot' : ''], ['Pression LS (low flow)', F(d.ls) + ' b'], ['ΔP = PS − LS', (d.plein ? 0 : SB) + ' b'],
         ['Débit pompe', F(d.Q, d.Q % 1 ? 1 : 0) + ' L/min'], ['DAD', d.dadOpen ? 'ouvert (0,5 L/min)' : 'fermé', d.dadOpen ? 'hot' : ''], ['Puissance', F(d.kw, 1) + ' kW']];
       return d;
@@ -151,62 +181,70 @@
       return true;
     },
     draw: function (a, st, d) {
-      var run = d.mode === 'run', sb = d.mode === 'sb';
-      // tiroir : repoussé vers le ressort (stand-by, butée) → PS vers le vérin de commande ; en travail il est en équilibre
-      // le tiroir comprime le ressort de stand-by d’autant plus que la pression de service l’emporte sur LS + ressort
-      var dx = d.plein || d.mode === 'arret' ? 0 : run ? Math.round(8 + 30 * (1 - d.q / 99)) : 40;
+      var off = d.mode === 'arret', run = d.mode === 'run', sb = d.mode === 'sb';
+      var P = off ? null : d.ps, LS = off ? null : d.ls;
+      var cLS = d.plein || d.dadOpen ? RED : BOR;
+      var Z = off ? null : 0;
+      function L(id, p, dir, col, o) { o = o || {}; o.col = p == null ? null : (p > 0.05 ? col : BLU); if (o.tag === undefined) o.tag = false; a.lineP(id, p, dir, o); }
+      function Fz(id, p, col) { a.fillP(id, p, { col: p == null ? null : (p > 0.05 ? col : BLU), op: 0.85 }); }
+      // tiroir LS : déplacement (le ressort de stand-by se comprime)
+      var dx = d.plein || off ? 0 : run ? Math.round(8 + 30 * (1 - d.q / 99)) : 40;
       a.q('spool').style.transform = 'translateX(' + dx + 'px)';
-      // ressort de stand-by comprimé et chambres qui suivent le tiroir (même animation)
       var sx = function (id, k) { a.q(id).style.transform = 'scaleX(' + k.toFixed(3) + ')'; };
       sx('lsSpr', (150 - dx) / 150); sx('zLS', (150 - dx) / 150); sx('zPS', (8 + dx) / 8); sx('zA1', (70 - dx) / 70); sx('zA2', (38 + dx) / 38);
-      a.fillP('zPS', d.ps);
-      var pvc = d.plein || d.mode === 'arret' ? 0 : d.ps * Math.min(1, dx / 40); // pression envoyée au vérin de commande (ordre de grandeur)
-      a.fillP('zA1', pvc > 1 ? pvc : 0, { op: 0.6 }); a.fillP('zA2', pvc > 1 ? pvc : 0, { op: 0.6 });
-      a.fillP('zLS', d.ls > 0 ? d.ls : 0, { pil: d.ls > 0, op: 0.55 });
-      a.fillP('zVC', pvc > 1 ? pvc : 0, { op: 0.7 });
-      a.lineP('pP', d.ps, d.Q > 1 ? 1 : 0, { at: 0.42 });
-      a.lineP('pPS', d.ps, 0, { tag: false });
-      a.lineP('pVC', pvc > 1 ? pvc : 0, 0, { tag: false });
-      a.lineP('pAP', 0, 1, { tag: false });
-      a.lineP('pR', run || d.mode === 'butee' ? d.ls : null, run && d.q ? 1 : 0, { at: 0.3, pil: d.ls > 0 }); // ligne du récepteur = pression LS (même couleur que la ligne LS)
-      a.lineP('pLS', d.ls, d.dadOpen ? 1 : 0, { pil: d.ls > 0, at: 0.62 }); // DAD fermé : rien ne circule dans le gicleur LS ; ouvert : LS → gicleur 0,5 L/min → DAD → bâche
-      a.lineP('pDAD', 0, d.dadOpen ? 1 : 0, { tag: false });
-      a.lineP('pRet', 0, 0, { tag: false }); a.lineP('pSuc', 0, d.Q > 0 ? 1 : 0, { tag: false });
-      var on = d.mode !== 'arret';
-      a.q('arbre').style.opacity = on ? 1 : 0; a.q('arbre').style.strokeDashoffset = -(st.sh || 0); a.q('rotP').style.display = on ? '' : 'none';
-      a.q('mBox').style.fill = on ? 'rgba(245,158,11,.35)' : ''; a.text('tMot', on ? 'moteur en marche' : 'moteur à l’arrêt');
-      a.move('rotP', 0, 0, st.rot || 0, 110, 560);
+      var feed = !off && !d.plein && dx > 0; // le tiroir laisse passer la pression vers le piston de commande
+      // conduites
+      L('pP', P, d.Q > 1 ? 1 : 0, RED, { tag: true, at: 0.55 });
+      L('pPS', P, 0, RED);
+      L('pCmd', off ? null : (feed ? d.ps : 0), feed && !sb ? 1 : 0, ORA, { tag: feed, at: 0.9 });
+      L('pAP', Z, off ? 0 : 1, BLU);
+      L('pLS', LS, d.dadOpen ? 1 : 0, cLS, { tag: true, at: 0.12 });
+      L('pDad', Z, d.dadOpen ? 1 : 0, BLU); L('pDr', Z, off ? 0 : 1, BLU);
+      L('pA', off ? null : (sb ? 0 : LS), run && d.q ? 1 : 0, cLS);
+      L('pB', Z, run && d.q ? -1 : 0, BLU);
+      L('pT', Z, run && d.q ? 1 : 0, BLU); L('pT2', Z, run && d.q ? 1 : 0, BLU);
+      L('pSuc', 0, d.Q > 0 ? 1 : 0, BLU);
+      Fz('zPS', P, RED); Fz('zA1', off ? null : (feed ? d.ps : 0), ORA); Fz('zA2', off ? null : (feed ? d.ps : 0), ORA); Fz('zLS', off ? null : (sb ? 0 : LS), cLS);
+      Fz('chC', off ? null : (feed ? d.ps : 0), ORA);
+      Fz('bpU', P, RED); Fz('bpL', Z, BLU);
+      Fz('chB', off ? null : (sb ? 0 : LS), cLS); Fz('chT', Z, BLU);
       // DAD
       a.q('dadB').style.transform = d.dadOpen ? 'translateY(-7px)' : '';
       a.attr('dadSpr', 'd', zigV(420, d.dadOpen ? 79 : 86, 50, 22, 3));
-      a.q('dadOut').style.opacity = d.dadOpen ? 1 : 0.2;
-      a.text('tDAD', st.dad + ' b'); a.text('tDADq', d.dadOpen ? 'ouvert : 0,5 L/min' : 'fermé');
-      // plateau, vérin de commande, vérin de rappel
-      var c = d.cyl / 100, ang = -25 * c;
-      // plateau et vérins liés : les tiges restent en appui sur le plateau (vérin de commande à 125 px du pivot, vérin de rappel à 35 px)
-      // pivot au milieu : le haut (vérin de commande) part à gauche, le bas (vérin de rappel) part à droite vers Max
-      var sn = Math.sin(-ang * Math.PI / 180), dxC = -45 * sn, dxR = 45 * sn;
-      a.q('plat').style.transform = 'rotate(' + ang + 'deg)';
-      a.q('vcP').style.transform = 'translateX(' + dxC.toFixed(1) + 'px)';
-      a.q('vrP').style.transform = 'translateX(' + dxR.toFixed(1) + 'px)';
-      a.q('zVC').style.transform = 'scaleX(' + ((70 + dxC) / 70).toFixed(3) + ')';
+      a.text('tDAD', st.dad + ' b'); a.text('tDADq', off ? '' : d.dadOpen ? 'ouvert' : 'fermé');
+      // plateau (pivot au milieu) : piston de commande en haut, piston de rappel + ressort en bas, pistons du barillet
+      var c = d.cyl / 100, th = -18 * c, sn = Math.sin(th * Math.PI / 180);
+      a.q('plat').style.transform = 'rotate(' + th + 'deg)';
+      var tipC = PX + 75 * sn, tipR = PX - 75 * sn;
+      a.q('pistC').style.transform = 'translateX(' + (tipC - PX).toFixed(1) + 'px)';
+      a.q('pistR').style.transform = 'translateX(' + (tipR - PX).toFixed(1) + 'px)';
+      a.attr('chC', 'width', Math.max(2, 40 + tipC - PX).toFixed(1));
+      a.q('sprR').style.transform = 'scaleX(' + ((40 + tipR - PX) / 40).toFixed(3) + ')';
+      var tU = PX + 40 * sn - 6, tL = PX - 38 * sn - 6;
+      a.attr('ppU', 'width', Math.max(4, tU - 740).toFixed(1)); a.attr('ppL', 'width', Math.max(4, tL - 740).toFixed(1));
       a.text('tCyl', 'cylindrée ' + d.cyl + ' %');
-      // élément de distributeur et récepteur
-      a.q('dist').style.transform = 'translateX(' + (Math.min(1, st.ouv / 60) * 60) + 'px)';
-      a.text('ouv', F(st.ouv) + ' L/min demandés');
+      // distributeur et récepteur
+      var open = !off && (st.ouv > 0 || st.butee);
+      a.q('spoolD').style.transform = 'translateX(' + (open ? -(10 + 12 * Math.min(1, st.ouv / 100)) : 0) + 'px)';
+      Fz('zN', P, RED); Fz('gP', P, RED); Fz('gA', off ? null : (sb ? 0 : LS), cLS); Fz('gB', Z, BLU); Fz('gT', Z, BLU); Fz('zR', Z, BLU);
+      a.text('ouv', !open ? 'fermé' : d.plein ? 'ouvert maxi' : st.butee ? 'ouvert (butée)' : 'ouvert ' + st.ouv + ' %');
       a.text('chg', st.butee ? 'butée' : st.charge + ' b');
-      var py = d.mode === 'butee' ? 1 : st.pos; a.move('rod', 0, -py * 70);
-      a.attr('ch', 'y', 312 - py * 70); a.attr('ch', 'height', 8 + py * 70);
-      a.fillP('ch', sb ? null : d.ls, { pil: d.ls > 0 });
-      a.move('nP', 0, 0, gAng(d.ps, 400), 560, 520); a.text('tP', F(d.ps) + ' b');
-      a.move('nLS', 0, 0, gAng(d.ls, 400), 660, 314); a.text('tLS', F(d.ls) + ' b');
+      var py = 230 - (d.mode === 'butee' ? 1 : st.pos) * 150;
+      a.move('rod', 0, py - 146);
+      a.attr('chT', 'height', Math.max(0, py - 66)); a.attr('chB', 'y', py + 14); a.attr('chB', 'height', Math.max(0, 230 - py));
+      // moteur
+      a.q('arbre').style.opacity = off ? 0 : 1; a.q('arbre').style.strokeDashoffset = -(st.sh || 0);
+      a.q('rotP').style.display = off ? 'none' : ''; a.move('rotP', 0, 0, st.rot || 0, 915, 550);
+      a.q('mBox').style.fill = off ? '' : 'rgba(245,158,11,.35)'; a.text('tMot', off ? 'à l’arrêt' : 'en marche');
+      a.move('nP', 0, 0, gAng(d.ps, 400), 490, 570); a.text('tP', F(d.ps) + ' b');
+      a.move('nLS', 0, 0, gAng(d.ls, 400), 300, 150); a.text('tLS', F(d.ls) + ' b');
     },
     steps: [
-      { title: 'Au repos (moteur arrêté)', text: 'Pas de pression : le <b>vérin de rappel</b> pousse le plateau, la pompe est en <b>cylindrée maximum</b>. Au démarrage, la régulation ajuste ensuite le débit au besoin du circuit.', set: { moteur: false } },
-      { title: '1. Débit nul (stand-by)', text: 'Cours : distributeur <b>fermé</b>. Éléments au neutre : <b>LS = 0 b</b>, la pompe garde <b>30 b</b> (ressort de stand-by). Le tiroir alimente le vérin de commande : plateau au mini, la pompe ne débite que le gicleur anti-pompage (<b>1 L/min</b>).', set: { ouv: 0, charge: 100 } },
-      { title: '2. Contrôle du débit', text: 'Cours : distributeur <b>ouvert partiellement</b>. La pression de la ligne LS est l’effort demandé par le récepteur (100 b). La pression de service s’oppose à LS + ressort (30 b) : le tiroir et le vérin de commande se déplacent <b>partiellement</b>, le plateau s’incline juste ce qu’il faut : <b>le débit fourni est adapté aux besoins</b> (50 L/min).', set: { ouv: 50, charge: 100 } },
-      { title: '3. Plein débit', text: 'Cours : distributeur <b>ouvert au maximum</b>. La pression LS est <b>identique</b> à la pression de service ; le tiroir reçoit la même pression des deux côtés, le ressort de stand-by l’empêche de bouger : le <b>vérin de commande n’est pas alimenté</b>, la pompe est en <b>cylindrée maximum</b>.', set: { ouv: 100, charge: 100 } },
-      { title: '4. Débit nul (pression maxi)', text: 'Cours : distributeur ouvert mais <b>récepteur en butée</b>. La pression monte jusqu’au tarage du <b>DAD (320 b)</b>, qui s’ouvre et relie la ligne LS au drain. Sous l’effet de la pression de service, le tiroir LS se déplace et le vérin de commande pousse le plateau en position verticale : <b>pas de débit mais maintien de la pression maximum</b> (350 b).', set: { ouv: 28, butee: true } },
+      { title: 'Au repos (moteur arrêté)', text: 'Pas de pression : le <b>piston de rappel</b> pousse le plateau, la pompe est en <b>cylindrée maximum</b>. Au démarrage, la régulation ajuste ensuite le débit au besoin du circuit.', set: { moteur: false } },
+      { title: '1. Débit nul (stand-by)', text: 'Cours : distributeur <b>fermé</b>. Éléments au neutre : <b>LS = 0 b</b>, la pompe garde <b>30 b</b> (ressort de stand-by). Le tiroir alimente le piston de commande : plateau au mini, la pompe ne débite que le gicleur anti-pompage (<b>1 L/min</b>).', set: { ouv: 0, charge: 100 } },
+      { title: '2. Plein débit', text: 'Cours : distributeur <b>ouvert au maximum</b>. La pression LS est <b>identique</b> à la pression de service ; le tiroir reçoit la même pression des deux côtés, le ressort de stand-by l’empêche de bouger : le <b>piston de commande n’est pas alimenté</b>, la pompe est en <b>cylindrée maximum</b>.', set: { ouv: 100, charge: 100 } },
+      { title: '3. Contrôle du débit', text: 'Cours : distributeur <b>ouvert partiellement</b>. La pression de la ligne LS est l’effort demandé par le récepteur (100 b). La pression de service s’oppose à LS + ressort (30 b) : le tiroir et le piston de commande se déplacent <b>partiellement</b>, le plateau s’incline juste ce qu’il faut : <b>le débit fourni est adapté aux besoins</b> (50 L/min).', set: { ouv: 50, charge: 100 } },
+      { title: '4. Débit nul (pression maxi)', text: 'Cours : distributeur ouvert mais <b>récepteur en butée</b>. La pression monte jusqu’au tarage du <b>DAD (320 b)</b>, qui s’ouvre et relie la ligne LS au drain. Sous l’effet de la pression de service, le tiroir LS se déplace et le piston de commande pousse le plateau en position verticale : <b>pas de débit mais maintien de la pression maximum</b> (350 b).', set: { ouv: 28, butee: true } },
       { title: 'Treuil : halage à 180 b', text: 'Ta fiche « treuils » : la charge demande <b>180 b</b> dans la LS ; elle s’ajoute aux 30 b du ressort : <b>PS = 210 b</b>. ΔP de l’élément = 30 b, débit <b>28 L/min</b>.', set: { ouv: 28, charge: 180 } },
       { title: 'RMU : corps de flèche à 270 b', text: 'Ta fiche « RMU » : LS = <b>270 b</b> → <b>PS = 300 b</b>, débit <b>38 L/min</b>.', set: { ouv: 38, charge: 270 } },
       { title: 'RMU en butée', text: 'Ta fiche « RMU en butée » : le <b>limiteur secondaire 300 b</b> de l’élément plafonne la LS à 300 b → <b>PS = 330 b</b>. Le DAD (320 b) reste fermé.', set: { ouv: 38, butee: true, sec: '300' } },
