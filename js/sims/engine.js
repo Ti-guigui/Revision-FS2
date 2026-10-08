@@ -36,13 +36,15 @@
       '<div class="sim-tabs" role="tablist">' +
         (sim.steps && sim.steps.length ? '<button type="button" data-sim="mode" data-v="watch">▶️ Regarder</button>' : '') +
         '<button type="button" data-sim="mode" data-v="play">🕹️ Manipuler</button></div>' +
-      '<div class="sim-stage"><svg viewBox="' + (sim.viewBox || '0 0 820 460') + '" role="img" aria-label="' + esc(sim.title) + '">' + defs() + sim.svg + '</svg></div>' +
+      '<div class="sim-stage"><svg viewBox="' + (sim.viewBox || '0 0 820 460') + '"' + (sim.minWidth ? ' style="--simw:' + sim.minWidth + 'px"' : '') + ' role="img" aria-label="' + esc(sim.title) + '">' + defs() + sim.svg + '</svg></div>' +
+      (sim.reps ? '<div class="sim-info" hidden></div>' : '') +
       '<div class="sim-caption" aria-live="polite"></div>' +
       '<div class="sim-watch"><button type="button" class="btn small" data-sim="prev">◀ Étape précédente</button>' +
         '<span class="sim-stepn"></span><button type="button" class="btn small" data-sim="auto">⏵ Lecture auto</button>' +
         '<button type="button" class="btn small primary" data-sim="next">Étape suivante ▶</button></div>' +
       '<div class="sim-controls"></div>' +
       '<div class="sim-readouts"></div>' +
+      (sim.panelHtml ? '<div class="sim-panel">' + sim.panelHtml + '</div>' : '') +
       '<div class="sim-legend">' + (sim.legend || []).map(function (l) {
         return '<span><i class="lg lg-' + l[0] + '"></i>' + esc(l[1] || LEG[l[0]] || l[0]) + '</span>';
       }).join('') + (sim.note && !sim.levels ? '<span class="sim-note">' + sim.note + '</span>' : '') + '</div>';
@@ -60,6 +62,7 @@
     buildControls(c);
     host.addEventListener('click', function (e) { onClick(c, e); });
     host.addEventListener('input', function (e) { onInput(c, e); });
+    host.addEventListener('change', function (e) { if (e.target.matches('select[data-k]')) onInput(c, e); });
     setMode(c, c.mode);
     c.last = performance.now();
     loop(c);
@@ -111,6 +114,11 @@
           return '<button type="button" data-sim="set" data-k="' + k.key + '" data-v="' + esc(o[0]) + '">' + esc(o[1]) + '</button>';
         }).join('') + '</div></div>';
       }
+      if (k.type === 'select') {
+        return '<label class="sim-ctl"><span class="sim-lbl">' + esc(k.label) + '</span><select class="sim-sel" data-k="' + k.key + '">' + k.options.map(function (o) {
+          return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>';
+        }).join('') + '</select></label>';
+      }
       if (k.type === 'toggle') {
         return '<div class="sim-ctl"><span class="sim-lbl">' + esc(k.label) + '</span><button type="button" class="sim-tog" data-sim="tog" data-k="' + k.key + '"></button></div>';
       }
@@ -127,6 +135,9 @@
           var on = String(b.getAttribute('data-v')) === String(v);
           b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
         });
+      } else if (k.type === 'select') {
+        var sl = c.host.querySelector('select[data-k="' + k.key + '"]');
+        if (sl && sl.value !== String(v)) sl.value = v;
       } else if (k.type === 'toggle') {
         var b = c.host.querySelector('[data-sim="tog"][data-k="' + k.key + '"]');
         if (b) { b.textContent = v ? (k.on || 'Oui') : (k.off || 'Non'); b.classList.toggle('on', !!v); b.setAttribute('aria-pressed', !!v); }
@@ -176,6 +187,9 @@
   }
 
   function onClick(c, e) {
+    var rp = e.target.closest('[data-rep]');
+    if (rp && c.sim.reps && !c.dead) { showRep(c, rp.getAttribute('data-rep')); return; }
+    if (c.sim.panelClick && e.target.closest('.sim-panel') && !c.dead) { c.sim.panelClick(e, c); return; }
     var b = e.target.closest('[data-sim]');
     if (!b || c.dead) return;
     var a = b.getAttribute('data-sim');
@@ -203,9 +217,21 @@
     }
   }
 
+  // Repère cliqué : désignation et rôle sous le schéma
+  function showRep(c, n) {
+    var r = c.sim.reps[n], box = c.host.querySelector('.sim-info');
+    if (!r || !box) return;
+    c.host.querySelectorAll('[data-rep]').forEach(function (g) { g.classList.toggle('on', g.getAttribute('data-rep') === n); });
+    box.hidden = false;
+    box.innerHTML = '<button type="button" class="sim-info-x" aria-label="Fermer" onclick="this.parentNode.hidden=true">✕</button><b>Repère ' + esc(n) + ' — ' + r[0] + '</b><br>' + r[1];
+  }
+
   function onInput(c, e) {
     var r = e.target;
-    if (!r.matches('input[type="range"][data-k]') || c.dead) return;
+    if (c.dead) return;
+    if (r.matches('select[data-k]')) { c.st[r.getAttribute('data-k')] = r.value; syncControls(c); c.dirty = true; return; }
+    if (c.sim.panelInput && r.closest('.sim-panel')) { c.sim.panelInput(e, c); return; }
+    if (!r.matches('input[type="range"][data-k]')) return;
     c.st[r.getAttribute('data-k')] = +r.value;
     syncControls(c); c.dirty = true;
   }
@@ -231,6 +257,7 @@
       }).join('');
       var roEl = c.host.querySelector('.sim-readouts');
       if (roEl._h !== ro) { roEl.innerHTML = ro; roEl._h = ro; }
+      if (sim.panelDraw) sim.panelDraw(c.host.querySelector('.sim-panel'), c.st, d, c);
     }
     c.raf = requestAnimationFrame(function () { loop(c); });
   }
