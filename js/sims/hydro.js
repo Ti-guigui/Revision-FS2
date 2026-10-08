@@ -83,7 +83,7 @@
         d.text = d.moving ? 'Le tiroir croise les voies : <b>P → B</b> et <b>A → T</b>. Le vérin rentre ; ici la charge pousse dans le même sens, la pression reste faible. Côté tige, la section est plus petite : il rentre <b>plus vite</b>.'
           : 'Vérin rentré en butée : la pression monte au tarage du limiteur (150 b), tout le débit passe par le limiteur.';
       } else {
-        d.text = 'Au <b>neutre</b>, le distributeur à centre ouvert relie <b>P → T</b> : la pompe débite à la bâche presque sans pression (pertes de charge). A et B sont fermés : le vérin est bloqué.';
+        d.text = 'Au <b>neutre</b>, le distributeur à centre ouvert relie <b>P → T</b> : la pompe débite à la bâche presque sans pression (pertes de charge). A et B sont fermés : le vérin est bloqué. L’huile <b>enfermée côté A</b> retient la charge : sa pression vaut celle de la charge (' + st.charge + ' b) ; côté B, l’huile enfermée n’est pas chargée.';
       }
       d.readouts = [['Pression (manomètre)', F(d.p) + ' b', d.p >= TAR ? 'hot' : ''], ['Débit vers le vérin', F(d.qv) + ' L/min'],
         ['Débit par le limiteur', F(d.ql) + ' L/min', d.ql ? 'hot' : ''], ['Sortie de la tige', F(st.pos * 100) + ' %']];
@@ -106,7 +106,8 @@
       a.lineP('pL1', d.p, lim ? 1 : 0, { tag: false });
       a.lineP('pL2', lim ? 0 : null, lim ? 1 : 0, { tag: false });
       if (st.man === 'N') {
-        a.lineP('pT', 0, 1, { dx: 30 }); a.lineP('pA', null, 0); a.lineP('pB', null, 0); a.fillP('chA', null); a.fillP('chB', null);
+        a.lineP('pT', 0, 1, { dx: 30 }); var pk = st.charge > 0 ? st.charge : null; // huile enfermée : la charge appuie sur le fond
+        a.lineP('pA', pk, 0, { at: 0.35 }); a.lineP('pB', null, 0); a.fillP('chA', pk); a.fillP('chB', null);
       } else if (st.man === 'S') {
         a.lineP('pA', d.p, mv, { at: 0.35 }); a.lineP('pB', 0, -mv, { at: 0.5 }); a.lineP('pT', 0, mv, { dx: 30 });
         a.fillP('chA', d.p); a.fillP('chB', 0);
@@ -118,7 +119,7 @@
       a.text('mtxt', F(d.p) + ' b');
     },
     steps: [
-      { title: 'Neutre', text: 'Distributeur au neutre (centre ouvert) : <b>P → T</b>. La pompe tourne mais l’huile retourne à la bâche sans pression. A et B fermés : le vérin est bloqué.', set: { man: 'N', charge: 50, pos: 0.15 } },
+      { title: 'Neutre', text: 'Distributeur au neutre (centre ouvert) : <b>P → T</b>. La pompe tourne mais l’huile retourne à la bâche sans pression. A et B fermés : le vérin est bloqué, l’huile enfermée côté A retient la charge (50 b).', set: { man: 'N', charge: 50, pos: 0.15 } },
       { title: 'Sortie, charge 50 b', text: 'On pousse la manette : <b>P → A</b>, <b>B → T</b>. La pression s’établit à ce que demande la charge : ≈ 55 b.', set: { man: 'S', charge: 50 } },
       { title: 'Sortie, charge 120 b', text: 'Charge plus lourde : la pression monte à ≈ 125 b, mais la <b>vitesse ne change pas</b> : c’est le débit (20 L/min) qui fait la vitesse.', set: { man: 'S', charge: 120 } },
       { title: 'Butée', text: 'Le piston arrive en fin de course : la pression monte au tarage du <b>limiteur (150 b)</b>, qui renvoie tout le débit à la bâche (perte d’énergie en chaleur).', set: { man: 'S', charge: 120, pos: 1 } },
@@ -222,15 +223,15 @@
     levels: true, pilLabel: 'Gavage 20 b', note: 'Valeurs du cours : gavage 20 b, échange 18 b, annulation 280 b, soupapes HP 320 b. Vitesse du moteur : valeur d’exemple.',
     legend: [],
     svg:
-      '<path class="pipe" id="bH" d="M150 196 V90 H670 V196"/>' +
-      '<path class="pipe" id="bL" d="M150 284 V370 H670 V284"/>' +
+      '<path class="pipe" id="bH" d="M150 196 V90 H740 V196"/>' +
+      '<path class="pipe" id="bL" d="M150 284 V370 H740 V284"/>' +
       // pompe principale réversible
       '<circle class="ink-f" cx="150" cy="240" r="44"/><path class="solid" d="M150 200 l9 13 h-18z"/><path class="solid" d="M150 280 l9 -13 h-18z"/>' +
       '<path class="ink" d="M118 274 L184 206" marker-end="url(#sim-ar)"/>' +
       '<text x="40" y="236" class="t-s">Pompe</text><text x="40" y="252" class="t-s">réversible</text>' +
-      // moteur hydraulique
-      '<circle class="ink-f" cx="670" cy="240" r="44"/><path class="solid" d="M670 214 l9 -13 h-18z"/><path class="solid" d="M670 266 l9 13 h-18z"/><g id="rotor"><path class="ink" d="M670 222 V258 M652 240 H688" style="stroke-width:4"/></g>' +
-      '<text x="726" y="236" class="t-s">Moteur</text><text x="726" y="252" class="t-s">hydraulique</text><text id="tN" x="726" y="272" class="t-s">0 tr/min</text>' +
+      // moteur hydraulique (triangles vers l’intérieur : récepteur réversible)
+      '<circle class="ink-f" cx="740" cy="240" r="44"/><path class="solid" d="M740 214 l9 -13 h-18z"/><path class="solid" d="M740 266 l9 13 h-18z"/><g id="rotor"><path class="ink" d="M740 222 V258 M722 240 H758" style="stroke-width:4"/></g>' +
+      '<text x="740" y="400" text-anchor="middle" class="t-s">Moteur hydraulique</text><text id="tN" x="740" y="418" text-anchor="middle" class="t-b">0 tr/min</text>' +
       // gavage (au centre de la boucle)
       '<path class="pipe thin" id="gvH" d="M300 218 V90"/><path class="pipe thin" id="gvL" d="M300 262 V370"/>' +
       '<path class="pipe thin" id="gvLim" d="M322 240 H360"/>' +
@@ -240,15 +241,22 @@
       '<text x="312" y="130" class="t-s">clapet</text><text x="312" y="340" class="t-s">clapet</text>' +
       '<text x="226" y="292" class="t-s">Pompe de</text><text x="226" y="308" class="t-s">gavage</text>' +
       '<rect class="ink-f" x="360" y="226" width="30" height="28"/>' + spring(390, 233, 16, 14, 2) + '<path class="ink" d="M375 254 V266"/>' + bache(375, 266) +
-      '<text x="352" y="300" class="t-s">Limiteur de</text><text x="352" y="316" class="t-s">gavage 20 b</text>' +
+      '<text x="358" y="300" class="t-s">Limiteur de</text><text x="358" y="316" class="t-s">gavage 20 b</text>' +
+      // soupapes HP 320 b : une par branche, elles déchargent dans l’autre branche
+      '<path class="pipe thin" id="s1i" d="M460 90 V120"/><path class="pipe thin" id="s1o" d="M460 160 V370"/>' +
+      '<rect class="ink-f" x="448" y="120" width="24" height="40"/><path class="ink" d="M454 124 V156" marker-end="url(#sim-ar)"/>' + spring(472, 133, 14, 14, 2) +
+      '<path class="ink" d="M460 104 H440 V140 H448" style="stroke-dasharray:4 4"/>' +
+      '<path class="pipe thin" id="s2i" d="M510 370 V340"/><path class="pipe thin" id="s2o" d="M510 300 V90"/>' +
+      '<rect class="ink-f" x="498" y="300" width="24" height="40"/><path class="ink" d="M504 336 V304" marker-end="url(#sim-ar)"/>' + spring(522, 313, 14, 14, 2) +
+      '<path class="ink" d="M510 356 H490 V320 H498" style="stroke-dasharray:4 4"/>' +
+      '<text x="485" y="74" text-anchor="middle" class="t-s">Soupapes HP 320 b</text>' +
       // tiroir d'échange
-      '<path class="pipe thin" id="exH" d="M505 90 V200"/><path class="pipe thin" id="exL" d="M505 370 V280"/>' +
-      '<rect class="ink-f" id="tir" x="470" y="200" width="70" height="80" rx="4"/><text x="505" y="236" text-anchor="middle" class="t-s">Tiroir</text><text x="505" y="252" text-anchor="middle" class="t-s">d’échange</text>' +
-      '<path class="pipe thin" id="exO" d="M540 240 H580"/><rect class="ink-f" x="580" y="226" width="26" height="28"/>' + spring(590, 254, 12, 12, 2) +
+      '<path class="pipe thin" id="exH" d="M610 90 V200"/><path class="pipe thin" id="exL" d="M610 370 V280"/>' +
+      '<rect class="ink-f" id="tir" x="575" y="200" width="70" height="80" rx="4"/><text x="610" y="236" text-anchor="middle" class="t-s">Tiroir</text><text x="610" y="252" text-anchor="middle" class="t-s">d’échange</text>' +
+      '<path class="pipe thin" id="exO" d="M645 240 H660"/><rect class="ink-f" x="660" y="226" width="22" height="28"/>' + spring(666, 254, 10, 10, 2) +
       gauge('nH', 90, 130) + '<path class="ink" d="M107 130 H150"/><text id="tH" x="90" y="168" text-anchor="middle" class="t-b">20 b</text>' +
       gauge('nL', 90, 336) + '<path class="ink" d="M107 336 H150"/><text id="tL" x="90" y="374" text-anchor="middle" class="t-b">20 b</text>' +
-      '<text x="548" y="296" class="t-s">Limiteur</text><text x="548" y="312" class="t-s">d’échange 18 b</text><text x="548" y="328" class="t-s">→ refroidisseur</text>' +
-      '',
+      '<text x="650" y="298" class="t-s">Limiteur</text><text x="650" y="314" class="t-s">d’échange</text><text x="650" y="330" class="t-s">18 b →</text><text x="650" y="346" class="t-s">refroidisseur</text>',
     init: { man: 0, charge: 150, ang: 0 },
     keep: ['ang'],
     controls: [
@@ -262,9 +270,9 @@
       else if (d.ann) { d.hp = ANN; d.bp = ECH; d.n = 0; }
       else { d.hp = Math.max(ECH + 5, st.charge); d.bp = ECH; d.n = Math.abs(st.man) * 25; }
       d.text = !d.dir ? '<b>Neutre</b> : plateau de la pompe à zéro, pas de débit dans la boucle. La pompe de gavage remplit les <b>deux branches à 20 b</b> par les clapets ; le surplus part par le <b>limiteur de gavage</b>.'
-        : d.ann ? 'Effort trop grand : la HP atteint <b>280 b</b>, l’<b>annulation de débit</b> ramène la pompe vers la cylindrée nulle : le moteur s’arrête sans faire caler le moteur thermique (les soupapes HP 320 b protègent des pics).'
+        : d.ann ? 'Effort trop grand : la HP atteint <b>280 b</b>, l’<b>annulation de débit</b> ramène la pompe vers la cylindrée nulle : le moteur s’arrête sans faire caler le moteur thermique (les <b>soupapes HP 320 b</b>, une par branche, ne servent qu’aux pics de pression : elles renvoient l’huile dans l’autre branche).'
         : 'Marche ' + (d.dir > 0 ? 'avant' : 'arrière') + ' : la branche ' + (d.dir > 0 ? 'du haut' : 'du bas') + ' est en <b>HP (' + d.hp + ' b)</b>, l’autre en <b>BP</b>. Le tiroir d’échange, piloté par la HP, envoie la BP au <b>limiteur d’échange 18 b</b> (huile chaude au refroidisseur) ; le gavage la remplace à 20 b.';
-      d.readouts = [['Branche HP', F(d.hp) + ' b', d.ann ? 'hot' : ''], ['Branche BP', F(d.bp) + ' b'], ['Gavage', GAV + ' b'], ['Moteur', F(d.n) + ' tr/min']];
+      d.readouts = [['Branche HP', F(d.hp) + ' b', d.ann ? 'hot' : ''], ['Branche BP', F(d.bp) + ' b'], ['Gavage', GAV + ' b'], ['Soupapes HP', '320 b (fermées)'], ['Moteur', F(d.n) + ' tr/min']];
       return d;
     },
     tick: function (st, dt, d) { if (!d.n) return false; st.ang = (st.ang + d.dir * d.n * dt * 0.6) % 360; return true; },
@@ -279,10 +287,13 @@
       a.lineP('exH', d.dir ? pH : null, !up && run ? 1 : 0, { tag: false });
       a.lineP('exL', d.dir ? pL : null, up && run ? 1 : 0, { tag: false });
       a.lineP('exO', run ? ECH : null, run ? 1 : 0, { tag: false });
+      // soupapes HP : fermées (l’annulation à 280 b agit avant) ; l’entrée voit la pression de sa branche
+      a.lineP('s1i', d.dir ? pH : GAV, 0, { tag: false, pil: !d.dir }); a.lineP('s1o', null, 0, { tag: false });
+      a.lineP('s2i', d.dir ? pL : GAV, 0, { tag: false, pil: !d.dir }); a.lineP('s2o', null, 0, { tag: false });
       var gH = d.dir ? pH : GAV, gL = d.dir ? pL : GAV;
       a.move('nH', 0, 0, gAng(gH, 400), 90, 130); a.text('tH', F(gH) + ' b');
       a.move('nL', 0, 0, gAng(gL, 400), 90, 336); a.text('tL', F(gL) + ' b');
-      a.move('rotor', 0, 0, st.ang, 670, 240);
+      a.move('rotor', 0, 0, st.ang, 740, 240);
       a.text('tN', F(d.n) + ' tr/min');
     },
     steps: [
