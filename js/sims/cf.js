@@ -15,20 +15,20 @@
     return '<path class="ink" d="' + d + ' L' + x + ' ' + y2 + '"/>';
   }
   // limiteur / soupape (symbole du cahier) : case 24 × 40, flèche décalée côté pilotage, ressort réglable ; sens 1 = entrée en haut
-  function relief(x, y, sens, lbl, pos) {
+  function relief(x, y, sens, lbl, pos, arId) {
     var top = sens > 0 ? y : y - 40, mid = top + 20;
     var ar = sens > 0 ? 'M' + (x + 6) + ' ' + (top + 4) + ' V' + (top + 36) : 'M' + (x + 6) + ' ' + (top + 36) + ' V' + (top + 4);
     var pil = sens > 0 ? 'M' + x + ' ' + (top - 8) + ' H' + (x + 20) + ' V' + (mid + 6) + ' H' + (x + 12)
       : 'M' + x + ' ' + (top + 48) + ' H' + (x + 20) + ' V' + (mid - 6) + ' H' + (x + 12);
-    return '<rect class="ink-f" x="' + (x - 12) + '" y="' + top + '" width="24" height="40"/><path class="ink" d="' + ar + '" marker-end="url(#sim-ar)"/>' +
+    return '<rect class="ink-f" x="' + (x - 12) + '" y="' + top + '" width="24" height="40"/><g id="' + arId + '" style="transition:transform .3s"><path class="ink" d="' + ar + '" marker-end="url(#sim-ar)"/></g>' +
       '<path class="ink" d="' + pil + '" style="stroke-dasharray:4 3"/>' + zig(x - 26, mid, x - 12, 12, 2) +
       '<path class="ink" d="M' + (x - 30) + ' ' + (mid + 11) + ' L' + (x - 10) + ' ' + (mid - 11) + '" marker-end="url(#sim-ar)"/>' +
-      (lbl ? '<text x="' + (pos === 'l' ? x - 34 : x + 28) + '" y="' + (mid + 4) + '" text-anchor="' + (pos === 'l' ? 'end' : 'start') + '" class="t-s">' + lbl + '</text>' : '');
+      (lbl ? '<text x="' + (pos === 'l' ? x - 34 : pos === 'lb' ? x - 18 : x + 28) + '" y="' + (pos === 'lb' ? top + 52 : mid + 4) + '" text-anchor="' + (pos === 'l' || pos === 'lb' ? 'end' : 'start') + '" class="t-s">' + lbl + '</text>' : '');
   }
   // clapet anti-retour vertical (bille + siège) : passage libre du sommet du V vers la bille ; sens -1 = vers le haut
-  function ckv(x, y, sens) {
+  function ckv(x, y, sens, id) {
     var v = sens < 0 ? 'M' + (x - 8) + ' ' + (y - 5) + ' L' + x + ' ' + (y + 7) + ' L' + (x + 8) + ' ' + (y - 5) : 'M' + (x - 8) + ' ' + (y + 5) + ' L' + x + ' ' + (y - 7) + ' L' + (x + 8) + ' ' + (y + 5);
-    return '<circle class="ink-f" cx="' + x + '" cy="' + (y + (sens < 0 ? -6 : 6)) + '" r="6"/><path class="ink" d="' + v + '" style="fill:none;stroke-width:2.2"/>';
+    return '<g' + (id ? ' id="' + id + '" style="transition:transform .3s"' : '') + '><circle class="ink-f" cx="' + x + '" cy="' + (y + (sens < 0 ? -6 : 6)) + '" r="6"/></g><path class="ink" d="' + v + '" style="fill:none;stroke-width:2.2"/>';
   }
   function prise(id, x, y, lbl, ax, ay) { // prise de pression (croix) + valeur mesurée
     return '<path class="ink" d="M' + (x - 5) + ' ' + (y - 5) + ' L' + (x + 5) + ' ' + (y + 5) + ' M' + (x + 5) + ' ' + (y - 5) + ' L' + (x - 5) + ' ' + (y + 5) + '" style="stroke-width:2.2"/>' +
@@ -37,8 +37,8 @@
   }
   function debit(id, x, y, ax) { // débitmètre
     return '<circle class="ink-f" cx="' + x + '" cy="' + y + '" r="6"/><path class="ink" d="M' + (x - 4) + ' ' + (y - 4) + ' L' + (x + 4) + ' ' + (y + 4) + ' M' + (x + 4) + ' ' + (y - 4) + ' L' + (x - 4) + ' ' + (y + 4) + '"/>' +
-      '<text x="' + (x + (ax || 10)) + '" y="' + (y + 4) + '" class="t-s t-b">' + id + '</text>' +
-      '<text id="tv' + id + '" x="' + (x + (ax || 10)) + '" y="' + (y + 18) + '" class="t-s sim-mval"></text>';
+      '<text x="' + (x + (ax || 10)) + '" y="' + (y + 4) + '" class="t-s t-b"' + (ax < 0 ? ' text-anchor="end"' : '') + '>' + id + '</text>' +
+      '<text id="tv' + id + '" x="' + (x + (ax || 10)) + '" y="' + (y + 18) + '" class="t-s sim-mval"' + (ax < 0 ? ' text-anchor="end"' : '') + '></text>';
   }
   function bulle(n, x, y) {
     return '<g data-rep="' + n + '"><circle cx="' + x + '" cy="' + y + '" r="' + (n.length > 2 ? 13 : 11) + '"/><text x="' + x + '" y="' + (y + 4) + '" text-anchor="middle">' + n + '</text></g>';
@@ -70,7 +70,8 @@
     shpFuy: 'Soupape HP marche avant (8.2) fuyarde',
     annBloq: 'Soupape d’annulation de débit (11) bloquée',
     gavDet: 'Limiteur de pression de gavage (4) détaré à 5 b',
-    echDet: 'Limiteur d’échange (10) détaré à 4 b'
+    echDet: 'Limiteur d’échange (10) détaré à 4 b',
+    filtre: 'Filtre (14) colmaté'
   };
 
   var ROWS = [['MA', 'Pp1', 'Q1'], ['MB', 'Pp2', 'Q2'], ['M', 'Pp3', 'Q3'], ['MG', '', 'Q4']];
@@ -105,10 +106,11 @@
       '<path class="pipe thin" id="s81i" d="M668 437 V412"/><path class="pipe thin" id="s81o" d="M668 372 V250"/>' +
       '<path class="pipe thin" id="x9T" d="M870 304 H900 V250"/><path class="pipe thin" id="x9B" d="M870 364 H900 V437"/>' +
       '<path class="pipe thin" id="x9O" d="M846 334 H764 V346"/><path class="pipe thin" id="q2" d="M764 386 V412"/>' +
-      '<path class="pipe thin" id="pM" d="M800 334 V300"/>' +
+      '<path class="pipe thin" id="pM" d="M800 334 V472"/>' +
       '<path class="pipe thin" id="pMB" d="M920 250 V206"/><path class="pipe thin" id="pMA" d="M920 437 V468"/>' +
       '<path class="pipe thin" id="dr13" d="M604 470 Q530 504 456 470"/>' +
       '<path class="pipe thin" id="sc" d="M110 562 V361"/>' +
+      '<path class="pipe thin" id="rt1" d="M150 482 V502"/><path class="pipe thin" id="rt2" d="M150 534 V562"/><path class="pipe thin" id="byp" d="M150 494 H182 V542 H150"/>' +
       '<path class="pipe thin" id="dr1" d="M184 362 L204 378 V392"/><path class="pipe thin" id="dr7" d="M979 350 L988 362 V382"/>' +
       // ---- appareils ----
       // moteur thermique, pompe de gavage (2), pompe principale (1)
@@ -116,12 +118,13 @@
       '<path class="ink" d="M50 339 H92 M50 347 H92 M128 339 H134 M128 347 H134"/>' +
       '<circle class="ink-f" cx="110" cy="343" r="18"/><path class="solid" d="M110 325 l-7 11 h14z"/>' +
       '<circle class="ink-f" cx="162" cy="343" r="28"/><path class="solid" d="M162 315 l-8 13 h16z"/><path class="solid" d="M162 371 l-8 -13 h16z"/>' +
-      '<path class="ink" d="M138 370 L188 312" marker-end="url(#sim-ar)"/><text x="176" y="308" class="t-s t-b">AV</text><text x="176" y="388" class="t-s t-b">AR</text>' +
+      '<g id="va1" style="transition:transform .45s ease;transform-origin:162px 343px"><path class="ink" d="M162 381 V305" marker-end="url(#sim-ar)"/></g><text x="176" y="308" class="t-s t-b">AV</text><text x="176" y="388" class="t-s t-b">AR</text>' +
       bache(204, 392) +
-      // filtre (14) avec by-pass et débitmètre Q4 sur l’aspiration du gavage
-      '<path class="ink-f" d="M110 486 L126 502 L110 518 L94 502 Z"/><path class="ink" d="M110 488 V516" style="stroke-dasharray:3 3"/>' +
-      '<path class="ink" d="M110 474 H140 V530 H110"/>' + ckv(140, 502, -1) + zigV(140, 482, 492, 8, 2) +
-      debit('Q4', 110, 545, 12) + bache(110, 562) +
+      // aspiration directe de la pompe de gavage ; filtre (14) avec by-pass et débitmètre Q4 sur le retour bâche (comme au cahier)
+      bache(110, 562) + '<text x="150" y="476" text-anchor="middle" class="t-s t-m">retour</text>' +
+      '<path class="ink-f" d="M150 502 L166 518 L150 534 L134 518 Z"/><path class="ink" d="M136 518 H164" style="stroke-dasharray:3 3"/>' +
+      ckv(182, 515, 1, 'bpB') + zigV(182, 528, 540, 8, 2) +
+      debit('Q4', 150, 550, 12) + bache(150, 562) +
       // servopiston (6) + rétroaction
       '<rect class="ink-f" x="211" y="328" width="54" height="26"/>' +
       '<g id="sp6"><rect class="solid" x="235" y="330" width="6" height="22"/><path class="ink" d="M190 341 H211 M265 341 H284" style="stroke-width:3"/></g>' +
@@ -137,13 +140,13 @@
       '</g>' + bache(300, 145) +
       '<text x="250" y="92" text-anchor="middle" class="t-s t-b">AR · N · AV</text>' +
       // soupape d’annulation de débit (11) et sélecteur (12)
-      '<rect class="ink-f" x="104" y="96" width="26" height="26"/><g id="an11"><path class="ink" d="M107 109 H127" marker-end="url(#sim-ar)"/></g><g id="an11b" style="display:none"><path class="ink" d="M107 109 L117 119" marker-end="url(#sim-ar)"/></g>' +
+      '<rect class="ink-f" x="104" y="96" width="26" height="26"/><g id="an11"><path class="ink" d="M107 109 H127" marker-end="url(#sim-ar)"/></g><g id="an11b" style="display:none"><path class="ink" d="M127 105 L118 119" marker-end="url(#sim-ar)"/><path class="ink" d="M104 109 H110 M110 103 V115" style="stroke-width:2"/></g>' +
       '<path class="ink" d="M117 122 V128"/>' + bache(117, 128) + zigV(134, 116, 134, 8, 2) + '<path class="ink" d="M128 136 L142 114" marker-end="url(#sim-ar)"/><text x="136" y="98" class="t-s">280 b</text>' +
       '<path class="ink" d="M103 64 L110 72 L103 80 M131 64 L124 72 L131 80" style="fill:none;stroke-width:2"/><g id="sel12" style="transition:transform .3s"><circle class="ink-f" cx="117" cy="72" r="6"/></g>' +
       // clapets (3.1, 3.2) et limiteur de gavage (4)
-      ckv(355, 275, -1) + ckv(355, 372, 1) + relief(394, 315, 1, '20 b', 'r') + debit('Q1', 394, 372, 12) + bache(394, 390) +
+      ckv(355, 275, -1, 'b32') + ckv(355, 372, 1, 'b31') + relief(394, 315, 1, '20 b', 'r', 'a4') + debit('Q1', 394, 372, 12) + bache(394, 390) +
       // soupapes HP (8.1, 8.2)
-      relief(612, 270, 1, '320 b', 'l') + relief(668, 412, -1, '320 b', 'r') +
+      relief(612, 270, 1, '320 b', 'l', 'a82') + relief(668, 412, -1, '320 b', 'lb', 'a81') +
       // tiroir d’échange (9) + pilotages + limiteur d’échange (10)
       '<path id="x9pT" class="ink" d="" style="stroke-dasharray:3 4"/><path id="x9pB" class="ink" d="" style="stroke-dasharray:3 4"/>' +
       '<g id="tir9" style="transition:transform .45s ease">' +
@@ -153,21 +156,21 @@
         zigV(858, 276, 289, 10, 2) + zigV(858, 379, 392, 10, 2) +
         '<path class="solid" d="M852 268 h12 l-6 8z"/><path class="solid" d="M852 400 h12 l-6 -8z"/>' +
       '</g>' +
-      relief(764, 346, 1, '18 b', 'l') + debit('Q2', 764, 398, 12) + bache(764, 412) +
+      relief(764, 346, 1, '18 b', 'l', 'a10') + debit('Q2', 764, 398, -12) + bache(764, 412) +
       // moteur hydraulique (7)
       '<circle class="ink-f" cx="959" cy="331" r="28"/><path class="solid" d="M959 316 l-8 -12 h16z"/><path class="solid" d="M959 346 l-8 12 h16z"/>' +
       '<g id="rot7"><path class="ink" d="M959 323 V339 M951 331 H967" style="stroke-width:3"/></g><path class="ink" d="M987 327 H998 M987 335 H998"/>' + bache(988, 382) +
       // flexible de fuite (13) + Q3
       debit('Q3', 530, 498, 12) +
       // prises de pression
-      prise('MB', 920, 202, 'MB', 0, -10) + prise('MA', 920, 472, 'MA', 0, 22) + prise('M', 800, 296, 'M', 0, -10) + prise('MG', 54, 186, 'MG', -24, 4) +
+      prise('MB', 920, 202, 'MB', 0, -10) + prise('MA', 920, 472, 'MA', 0, 22) + prise('M', 800, 476, 'M', 0, 22) + prise('MG', 54, 186, 'MG', -24, 4) +
       prise('Pp1', 82, 88, 'Pp1', -26, 4) + prise('Pp2', 182, 192, 'Pp2', -26, 4) + prise('Pp3', 294, 206, 'Pp3', 20, 4) +
       // jonctions
       [[110, 226], [78, 186], [355, 300], [394, 300], [355, 250], [355, 437], [433, 250], [456, 437], [117, 88], [236, 192], [253, 206], [612, 250], [612, 437], [668, 437], [668, 250], [900, 250], [900, 437], [920, 250], [920, 437], [800, 334], [880, 250], [880, 437]].map(function (q) { return dot(q[0], q[1]); }).join('') +
       // repères
       bulle('1', 196, 398) + bulle('2', 76, 380) + bulle('3.2', 326, 270) + bulle('3.1', 326, 380) + bulle('4', 432, 288) + bulle('5', 352, 176) + bulle('6', 238, 378) +
       bulle('7', 959, 395) + bulle('8.2', 592, 222) + bulle('8.1', 700, 462) + bulle('9', 836, 420) + bulle('10', 730, 428) + bulle('11', 86, 132) + bulle('12', 96, 50) +
-      bulle('13', 530, 530) + bulle('14', 70, 502) +
+      bulle('13', 530, 530) + bulle('14', 212, 512) +
       '<text x="250" y="230" text-anchor="middle" class="t-s t-m" style="opacity:0"></text>',
     panelHtml: '<div class="seg sim-seg"><button type="button" data-x="live" class="on">Tableau en direct</button><button type="button" data-x="exo">Exercice : remplis le tableau</button></div>' +
       '<div class="tw"><table class="sim-mt">' + ROWS.map(function (r) {
@@ -217,6 +220,7 @@
         : d.open ? '<b>Soupape HP de marche avant détarée à 50 b</b> : en avant, la pression plafonne à 50 b (le reste à 18 b) : <b>manque de force</b>, l’huile passe par la soupape 8.2 dans l’autre branche et le véhicule n’avance plus en charge. En arrière, la HP monte bien à 280 b : pompe, sélecteur et annulation sont bons.'
         : pan === 'shpFuy' && dir > 0 ? '<b>Soupape HP de marche avant fuyarde</b> : une partie du débit (' + d.leak + ' L/min) repasse en permanence de la HP vers la BP : la pression ne dépasse pas ≈ 150 b et le moteur tourne moins vite (' + F(d.n) + ' tr/min au lieu de 2 063). L’huile laminée chauffe. (Valeurs d’exemple.)'
         : '<b>Marche ' + sens + '</b> : le servodistributeur alimente le servopiston (' + (dir > 0 ? 'Pp3' : 'Pp2') + ' = 18 b), la pompe débite dans ' + hpB + ' : <b>HP = ' + F(d.hp) + ' b</b> (la pression dépend de la résistance). Le clapet côté HP se ferme ; le gavage réalimente la BP par l’autre clapet. Le tiroir d’échange, piloté par la HP, envoie la BP au <b>limiteur d’échange 18 b</b> : Q1 = 0, Q2 = 28 − 4 = 24 L/min, Q3 = 24 + 2 (fuite moteur) = 26 L/min.';
+      if (pan === 'filtre') d.text = '<b>Filtre 14 colmaté</b> : l’huile de retour ne passe plus à travers l’élément filtrant ; la pression monte devant le filtre et ouvre le <b>clapet de by-pass</b> : l’huile retourne à la bâche <b>sans être filtrée</b> (Q4 = 28 L/min passe par le by-pass). Aucun symptôme de pression sur la boucle : c’est l’entretien (indicateur de colmatage, échange de la cartouche) qui le détecte. ' + d.text;
       d.readouts = [['État', d.etat, d.cale || d.cav || d.open || pan === 'gavDet' ? 'hot' : d.run ? 'ok' : ''], ['Haute pression', F(Math.max(d.v.MA, d.v.MB)) + ' b', d.hp >= ANN ? 'hot' : ''],
         ['Basse pression', F(Math.min(d.v.MA, d.v.MB)) + ' b'], ['Moteur hydraulique', F(d.n) + ' tr/min'], ['Puissance', F(d.kw, 1) + ' kW', d.kw > 35 ? 'hot' : '']];
       return d;
@@ -253,12 +257,23 @@
       a.lineP('q2', 0, v.Q2 ? 1 : 0, { tag: false });
       br('pMB', v.MB, hpT, 0, { tag: false }); br('pMA', v.MA, hpB, 0, { tag: false });
       a.lineP('dr13', 0, v.Q3 ? -1 : 0, { tag: false }); a.lineP('sc', 0, -1, { tag: false });
+      var col = st.panne === 'filtre';
+      a.lineP('rt1', 0, 1, { tag: false }); a.lineP('rt2', 0, col ? 0 : 1, { tag: false }); a.lineP('byp', 0, col ? 1 : 0, { tag: false });
+      a.q('bpB').style.transform = col ? 'translateY(6px)' : '';
       a.lineP('dr1', 0, d.dir && !neut ? 1 : 0, { tag: false }); a.lineP('dr7', 0, d.n ? 1 : 0, { tag: false });
       // organes mobiles
       var shift = neut || d.ann ? 0 : up ? -33 : 33;
       a.q('svd').style.transform = 'translateX(' + shift + 'px)';
       a.move('sp6', neut || d.ann ? 0 : up ? 10 : -10, 0);
       a.show('an11', !d.ann); a.show('an11b', d.ann);
+      // flèches des limiteurs / soupapes : dans l’axe quand l’appareil est ouvert ; billes des clapets soulevées quand le gavage passe
+      a.q('a4').style.transform = v.Q1 ? 'translateX(-6px)' : '';
+      a.q('a10').style.transform = v.Q2 ? 'translateX(-6px)' : '';
+      a.q('a82').style.transform = o82 ? 'translateX(-6px)' : '';
+      a.q('a81').style.transform = o81 ? 'translateX(-6px)' : '';
+      a.q('b32').style.transform = neut || !up ? 'translateY(-5px)' : '';
+      a.q('b31').style.transform = neut || up ? 'translateY(5px)' : '';
+      a.q('va1').style.transform = neut || d.ann ? '' : up ? 'rotate(40deg)' : 'rotate(-40deg)';
       a.q('sel12').style.transform = 'translateX(' + (v.MB > v.MA ? -5 : v.MA > v.MB ? 5 : 0) + 'px)';
       var dy = run || d.ann || d.open ? (up ? 30 : -30) : 0;
       a.q('tir9').style.transform = 'translateY(' + dy + 'px)';
