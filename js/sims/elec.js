@@ -34,7 +34,7 @@
       bat(140, 190, '12 V') + sw('sw', 250, 80) + '<text x="285" y="62" text-anchor="middle" class="t-s">K</text>' +
       res(400, 80, 100, 28, '') + '<text id="tR" x="450" y="56" text-anchor="middle">R = 1 000 Ω</text>' +
       '<circle id="glow" cx="640" cy="195" r="34" class="zone z-off" style="opacity:0"/>' +
-      '<g id="dio" style="transition:transform .3s;transform-origin:640px 195px"><path class="ink-f" d="M616 172 H664 L640 212 Z"/><path class="ink" d="M614 214 H666" style="stroke-width:3"/>' +
+      '<g id="dio" style="transition:transform .3s;transform-origin:640px 195px"><circle id="ledc" class="ink" cx="640" cy="193" r="30" style="fill:none"/><path class="solid" d="M618 174 H662 L640 212 Z"/><path class="ink" d="M614 214 H666" style="stroke-width:3"/>' +
         '<g id="ledar"><path class="ink" d="M672 180 l18 -14 M680 194 l18 -14" marker-end="url(#sim-ar)"/></g>' +
         '<path class="ink" d="M640 150 V172 M640 214 V240"/></g>' +
       '<text id="tD" x="700" y="230" class="t-s">DEL</text>' +
@@ -66,7 +66,7 @@
       ['w1', 'w2', 'w3', 'w4'].forEach(function (w) { a.line(w, on ? 'cur' : 'cur0', on ? 1 : 0); });
       a.q('sw').style.transform = st.k ? '' : 'rotate(-28deg)';
       a.q('dio').style.transform = st.sens === 'direct' ? '' : 'rotate(180deg)';
-      a.show('ledar', st.typ === 'led');
+      a.show('ledar', st.typ === 'led'); a.show('ledc', st.typ === 'led');
       a.text('tD', st.typ === 'led' ? 'DEL' : 'Diode');
       a.text('tAn', st.sens === 'direct' ? 'anode' : 'cathode'); a.text('tCa', st.sens === 'direct' ? 'cathode' : 'anode');
       var g = a.q('glow');
@@ -100,7 +100,7 @@
       '<path class="ink" d="M520 80 H700 V170 M520 320 H700 V230"/>' +
       bat(140, 180, '') + '<text id="tUe" x="96" y="192" text-anchor="end">Ue</text>' +
       res(300, 80, 100, 28, 'Rs = 220 Ω') +
-      '<path class="ink-f" d="M496 222 H544 L520 182 Z"/><path class="ink" d="M496 180 H544 M496 180 l-8 -8 M544 180 l8 8" style="stroke-width:3"/>' +
+      '<path class="solid" d="M498 222 H542 L520 182 Z"/><path class="ink" d="M496 180 H544 M496 180 l-8 -8 M544 180 l8 8" style="stroke-width:3"/>' +
       '<path class="ink" d="M520 160 V180 M520 222 V240"/>' +
       '<text x="556" y="210" class="t-s">Zéner</text><text x="556" y="226" class="t-s">Uz = 5,6 V</text>' +
       '<circle class="ink-f" cx="700" cy="200" r="30"/><text x="700" y="206" text-anchor="middle">V</text>' +

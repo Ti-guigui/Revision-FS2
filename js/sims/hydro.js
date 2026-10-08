@@ -11,6 +11,22 @@
     return '<circle class="ink-f" cx="' + x + '" cy="' + y + '" r="17"/><line id="' + id + '" class="ink" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (y - 13) + '" style="stroke-width:2.6"/>' +
       '<circle class="solid" cx="' + x + '" cy="' + y + '" r="2.5"/>';
   }
+  // limiteur / soupape (symbole du cahier) : entrée en (x, y), case 24 × 40 ; sens 1 = entrée en haut, -1 = entrée en bas
+  // flèche décalée côté pilotage (à droite), pilotage en pointillés pris à l’entrée, ressort réglable à gauche
+  function relief(x, y, sens, arId) {
+    var top = sens > 0 ? y : y - 40, inY = sens > 0 ? y : y, mid = top + 20;
+    var ar = sens > 0 ? 'M' + (x + 6) + ' ' + (top + 4) + ' V' + (top + 36) : 'M' + (x + 6) + ' ' + (top + 36) + ' V' + (top + 4);
+    var pil = sens > 0 ? 'M' + x + ' ' + (top - 14) + ' H' + (x + 22) + ' V' + (mid + 6) + ' H' + (x + 12)
+      : 'M' + x + ' ' + (top + 54) + ' H' + (x + 22) + ' V' + (mid - 6) + ' H' + (x + 12);
+    return '<rect class="ink-f" x="' + (x - 12) + '" y="' + top + '" width="24" height="40"/>' + (arId ? '<g id="' + arId + '" style="transition:transform .3s">' : '') + '<path class="ink" d="' + ar + '" marker-end="url(#sim-ar)"/>' + (arId ? '</g>' : '') +
+      '<path class="ink" d="' + pil + '" style="stroke-dasharray:4 3"/>' + spring(x - 26, mid - 7, 14, 14, 2) +
+      '<path class="ink" d="M' + (x - 30) + ' ' + (mid + 12) + ' L' + (x - 10) + ' ' + (mid - 12) + '" marker-end="url(#sim-ar)"/>';
+  }
+  // clapet anti-retour vertical (bille + siège) : passage libre du sommet du V vers la bille ; sens -1 = vers le haut, 1 = vers le bas
+  function ckv(x, y, sens) {
+    var v = sens < 0 ? 'M' + (x - 9) + ' ' + (y - 6) + ' L' + x + ' ' + (y + 8) + ' L' + (x + 9) + ' ' + (y - 6) : 'M' + (x - 9) + ' ' + (y + 6) + ' L' + x + ' ' + (y - 8) + ' L' + (x + 9) + ' ' + (y + 6);
+    return '<circle class="ink-f" cx="' + x + '" cy="' + (y + (sens < 0 ? -7 : 7)) + '" r="7"/><path class="ink" d="' + v + '" style="fill:none;stroke-width:2.4"/>';
+  }
   var gAng = function (p, max) { return -120 + Math.max(0, Math.min(1, p / max)) * 240; };
 
   /* ---------------- 1. Pompe, limiteur, distributeur 4/3, vérin double effet ---------------- */
@@ -39,7 +55,7 @@
       '<path class="pipe" id="pP" d="M110 428 V400 H330 V380"/>' +
       '<path class="pipe" id="pT" d="M370 380 V482"/>' +
       '<path class="pipe" id="pL1" d="M220 400 V420"/>' +
-      '<path class="pipe" id="pL2" d="M220 462 V482"/>' +
+      '<path class="pipe" id="pL2" d="M220 460 V482"/>' +
       // distributeur (tiroir mobile)
       '<g id="spool" style="transition:transform .45s ease">' +
         '<rect class="ink-f" x="0" y="300" width="240" height="80"/><path class="ink" d="M80 300 V380 M160 300 V380"/>' +
@@ -47,20 +63,20 @@
         '<path class="ink" d="M100 380 V340 H140 V378" marker-end="url(#sim-ar)"/><path class="ink" d="M100 300 V314 M92 314 H108 M140 300 V314 M132 314 H148"/>' +
         '<path class="ink" d="M180 374 L218 308" marker-end="url(#sim-ar)"/><path class="ink" d="M180 308 L218 372" marker-end="url(#sim-ar)"/>' +
         spring(-34, 326, 34, 28, 3) + spring(240, 326, 34, 28, 3) +
-        '<path class="ink" d="M-34 340 H-48 M-48 322 V358"/>' +
+        '<path class="ink" d="M-34 334 H-50 M-34 346 H-50 M-50 346 V312"/><circle class="ink-f" cx="-50" cy="307" r="5"/>' +
       '</g>' +
       '<text x="318" y="294" text-anchor="middle" class="t-s t-m">A</text><text x="382" y="294" text-anchor="middle" class="t-s t-m">B</text>' +
       '<text x="318" y="396" text-anchor="middle" class="t-s t-m">P</text><text x="382" y="396" text-anchor="middle" class="t-s t-m">T</text>' +
       '<text x="600" y="330" class="t-s">Distributeur 4/3</text><text x="600" y="348" class="t-s">centre ouvert</text>' +
       // pompe
-      '<circle class="ink-f" cx="110" cy="450" r="22"/><path class="solid" d="M110 432 l9 14 h-18z"/>' +
-      '<path class="ink" d="M110 472 V482"/>' + bache(110, 482) + '<text x="30" y="455" class="t-s">Pompe</text><text x="30" y="472" class="t-s">20 L/min</text>' +
+      '<rect class="ink-f" x="30" y="436" width="28" height="28"/><text x="44" y="455" text-anchor="middle" class="t-b">M</text><path class="ink" d="M58 446 H88 M58 454 H88"/>' +
+      '<circle class="ink-f" cx="110" cy="450" r="22"/><path class="solid" d="M110 428 l-8 13 h16z"/>' +
+      '<path class="ink" d="M110 472 V482"/>' + bache(110, 482) + '<text x="138" y="478" class="t-s">Pompe</text><text x="138" y="494" class="t-s">20 L/min</text>' +
       // limiteur de pression
-      '<rect class="ink-f" x="204" y="420" width="32" height="42"/><g id="limAr" style="transition:transform .3s"><path class="ink" d="M213 426 V458" marker-end="url(#sim-ar)"/></g>' +
-      spring(236, 432, 22, 16, 2) + '<path class="ink" d="M204 446 H196 V414 H220" style="stroke-dasharray:4 4"/>' +
+      relief(220, 420, 1, 'limAr') +
       bache(220, 482) + bache(370, 482) +
-      '<text x="262" y="474" class="t-s">Limiteur ' + TAR + ' b</text>' +
-      gauge('needle', 285, 428) + '<path class="ink" d="M285 400 V411"/>' +
+      '<text x="252" y="488" class="t-s">Limiteur ' + TAR + ' b</text>' +
+      gauge('needle', 285, 428) + '<path class="ink" d="M285 400 V411"/>' + '<circle class="solid" cx="220" cy="400" r="3.5"/><circle class="solid" cx="285" cy="400" r="3.5"/>' +
       '<text id="mtxt" x="306" y="433" class="t-b">0 b</text>' +
       '<text id="tEtat" x="680" y="200" text-anchor="middle" class="t-b">BLOQUÉ (neutre)</text><text id="tEtat2" x="680" y="220" text-anchor="middle" class="t-s"></text>',
     init: { man: 'N', charge: 1.5, pos: 0.2 },
@@ -105,7 +121,7 @@
       a.text('chg', F(st.charge, 1) + ' t');
       a.q('spool').style.transform = 'translateX(' + ({ N: 230, S: 310, R: 150 }[st.man]) + 'px)';
       var lim = d.ql > 0, mv = d.moving ? 1 : 0;
-      a.q('limAr').style.transform = lim ? 'translateX(7px)' : ''; // ouvert : la flèche vient dans l’axe de la conduite
+      a.q('limAr').style.transform = lim ? 'translateX(-6px)' : ''; // ouvert : la flèche vient dans l’axe de la conduite
       a.lineP('pP', d.p, 1, { at: 0.35 });
       a.lineP('pL1', d.p, lim ? 1 : 0, { tag: false });
       a.lineP('pL2', lim ? 0 : null, lim ? 1 : 0, { tag: false });
@@ -144,32 +160,50 @@
     levels: true, hpLabel: 'Pression (service / récepteur)', pilLabel: 'Signal LS (pilotage de la pompe)', note: 'Valeurs du cours : stand-by 30 b, DAD 320 b → 350 b, pompe 100 L/min.',
     legend: [],
     svg:
-      // pompe à cylindrée variable
-      '<circle class="ink-f" cx="120" cy="250" r="46"/><g id="plat"><line class="ink" x1="120" y1="212" x2="120" y2="288" style="stroke-width:5"/></g>' +
-      '<path class="ink" d="M86 296 L154 204" marker-end="url(#sim-ar)"/><path class="solid" d="M166 250 l-15 -9 v18z"/>' +
-      '<text x="120" y="320" text-anchor="middle" class="t-s">Pompe à cylindrée</text><text x="120" y="336" text-anchor="middle" class="t-s">variable (plateau)</text>' +
-      '<path class="ink" d="M120 296 V420"/>' + bache(120, 420) +
-      // régulateur (tiroir LS + DAD)
-      '<rect class="ink-f" x="70" y="100" width="100" height="66" rx="6"/><text x="120" y="126" text-anchor="middle" class="t-s">Tiroir LS 30 b</text><text x="120" y="148" text-anchor="middle" class="t-s">DAD 320 b</text>' +
-      '<path class="ink" d="M120 166 V204" style="stroke-dasharray:5 4"/>' +
+      // moteur d’entraînement + pompe à cylindrée variable (symbole du cahier)
+      '<rect class="ink-f" x="14" y="236" width="28" height="28"/><text x="28" y="255" text-anchor="middle" class="t-b">M</text><path class="ink" d="M42 246 H80 M42 254 H80"/>' +
+      '<circle class="ink-f" cx="120" cy="250" r="40"/><path class="solid" d="M160 250 l-14 -8 v16z"/>' +
+      '<path class="ink" d="M90 290 L152 206" marker-end="url(#sim-ar)"/>' +
+      '<path class="ink" d="M120 290 V420"/>' + bache(120, 420) +
+      '<text x="58" y="318" class="t-s">Pompe à cylindrée</text><text x="58" y="334" class="t-s">variable</text><text id="tCyl" x="58" y="352" class="t-s">cylindrée 0 %</text>' +
+      // régulateur LS, dessiné comme dans le livre : tiroir LS + ressort (stand-by 30 b), DAD (bille + ressort 320 b)
+      '<path class="pipe thin" id="pPS" d="M190 250 V190 H44 V100 H70"/>' +
+      '<path class="ink" d="M70 82 H150 V62 H250 V138 H150 V118 H70 Z" style="fill:var(--sim-bg)"/>' +
+      '<g id="spool"><rect class="ink-f" x="74" y="88" width="78" height="24"/><rect class="solid" x="152" y="66" width="8" height="68"/></g>' +
+      '<path id="lsSpr" class="ink" d=""/>' +
+      '<g id="dadBall" style="transition:transform .3s"><circle class="ink-f" cx="215" cy="54" r="7"/></g><path class="ink" d="M203 62 L210 52 M227 62 L220 52"/>' +
+      '<path class="ink" d="M215 46 L209 40 L221 34 L209 28 L221 22 L215 18"/>' +
+      '<path id="dadOut" class="ink" d="M226 50 l14 -10" marker-end="url(#sim-ar)" style="opacity:.25"/><text x="244" y="40" class="t-s">→ bâche</text>' +
+      '<text x="232" y="22" class="t-s">DAD 320 b</text><text x="190" y="156" class="t-s">ressort 30 b</text>' +
+      '<text x="66" y="74" class="t-s">Tiroir LS</text><text x="20" y="96" class="t-s">PS</text>' +
+      '<path class="ink" d="M110 118 V176 H124 V212" style="stroke-dasharray:6 4"/><text x="130" y="178" class="t-s">vérin de commande du plateau</text>' +
       // conduites
-      '<path class="pipe" id="pP" d="M166 250 H420"/>' +
-      '<path class="pipe" id="pR" d="M520 250 H600"/>' +
-      '<path class="pipe" id="pRet" d="M470 290 V420"/>' + bache(470, 420) +
-      '<path class="pipe thin" id="pLS" d="M640 236 H690 V24 H120 V100"/>' +
-      // distributeur proportionnel
-      '<rect class="ink-f" x="420" y="210" width="100" height="80" rx="4"/><text x="470" y="236" text-anchor="middle" class="t-s">Distributeur</text>' +
-      '<text x="470" y="254" text-anchor="middle" class="t-s">proportionnel</text><text id="ouv" x="470" y="276" text-anchor="middle" class="t-b">0 %</text>' +
-      // récepteur (vérin vertical, tige vers le haut)
-      '<rect class="zone z-off" id="ch" x="562" y="240" width="76" height="8"/>' +
-      '<g id="rod"><rect class="solid" x="562" y="230" width="76" height="10"/><rect class="ink-f" x="592" y="130" width="16" height="100"/>' +
-        '<rect class="ink-f" x="560" y="100" width="80" height="30" rx="5"/><text id="chg" x="600" y="120" text-anchor="middle" class="t-s">0 b</text></g>' +
-      '<path class="ink" d="M560 140 V250 H640 V140"/>' +
-      '<text x="700" y="200" class="t-s">Récepteur</text><text x="700" y="216" class="t-s">(vérin)</text>' +
-      '<text x="200" y="14" class="t-s" style="fill:var(--sim-pil)">Ligne LS : pression de la charge renvoyée à la pompe</text>' +
-      gauge('nLS', 330, 62) + '<path class="ink" d="M330 24 V45"/><text id="tLS" x="352" y="67" class="t-b">0 b</text><text x="300" y="98" class="t-s">Manomètre LS</text>' +
-      gauge('nP', 290, 300) + '<path class="ink" d="M290 250 V283"/><text id="tP" x="312" y="306" class="t-b">30 b</text>' +
-      '<text x="250" y="342" class="t-s">Pression de service</text>',
+      '<path class="pipe" id="pP" d="M160 250 H400 V320 H455 V292"/>' +
+      '<path class="pipe" id="pR" d="M470 208 V170 H640 V236 H660"/>' +
+      '<path class="pipe" id="pRet" d="M485 292 V420"/>' + bache(485, 420) +
+      '<path class="pipe thin" id="pLS" d="M640 170 V24 H290 V100 H250"/>' +
+      // distributeur proportionnel 3 positions (centre fermé), commandé par manipulateur
+      '<g id="dist" style="transition:transform .3s ease">' +
+        '<rect class="ink-f" x="380" y="208" width="180" height="84"/><path class="ink" d="M440 208 V292 M500 208 V292 M380 200 H560 M380 300 H560"/>' +
+        '<path class="ink" d="M395 288 L410 214" marker-end="url(#sim-ar)"/><path class="ink" d="M425 292 V280 M419 280 H431"/>' +
+        '<path class="ink" d="M455 292 V280 M449 280 H461 M485 292 V280 M479 280 H491 M470 208 V220 M464 220 H476"/>' +
+        '<path class="ink" d="M530 214 L545 288" marker-end="url(#sim-ar)"/><path class="ink" d="M515 292 V280 M509 280 H521"/>' +
+        spring(346, 236, 34, 28, 3) + spring(560, 236, 22, 28, 3) +
+        '<path class="ink" d="M346 244 H330 M346 256 H330 M330 256 V222"/><circle class="ink-f" cx="330" cy="217" r="5"/>' +
+      '</g>' +
+      '<text x="560" y="350" class="t-s">Distributeur proportionnel</text><text id="ouv" x="560" y="370" class="t-b">0 %</text>' +
+      '<text x="448" y="204" class="t-s t-m">A</text><text x="440" y="306" class="t-s t-m">P</text><text x="492" y="306" class="t-s t-m">T</text>' +
+      // récepteur (vérin simple effet, tige vers le haut)
+      '<rect class="zone z-off" id="ch" x="662" y="240" width="76" height="8"/>' +
+      '<g id="rod"><rect class="solid" x="662" y="230" width="76" height="10"/><rect class="ink-f" x="692" y="130" width="16" height="100"/>' +
+        '<rect class="ink-f" x="660" y="100" width="80" height="30" rx="5"/><text id="chg" x="700" y="120" text-anchor="middle" class="t-s">0 b</text></g>' +
+      '<path class="ink" d="M660 140 V250 H740 V140"/>' +
+      '<text x="750" y="200" class="t-s">Récepteur</text><text x="750" y="216" class="t-s">(vérin)</text>' +
+      '<text x="300" y="14" class="t-s" style="fill:var(--sim-pil)">Ligne LS : pression de la charge renvoyée au tiroir LS</text>' +
+      gauge('nLS', 400, 62) + '<path class="ink" d="M400 24 V45"/><text id="tLS" x="422" y="67" class="t-b">0 b</text><text x="372" y="98" class="t-s">Manomètre LS</text>' +
+      gauge('nP', 300, 292) + '<path class="ink" d="M300 250 V275"/><text id="tP" x="322" y="298" class="t-b">30 b</text>' +
+      '<text x="250" y="334" class="t-s">Pression de service</text>' +
+      [[190, 250], [300, 250], [640, 170], [400, 24]].map(function (q) { return '<circle class="solid" cx="' + q[0] + '" cy="' + q[1] + '" r="3.5"/>'; }).join(''),
     init: { ouv: 0, charge: 100, butee: false, pos: 0.3 },
     keep: ['pos'],
     controls: [
@@ -196,19 +230,26 @@
       return true;
     },
     draw: function (a, st, d) {
-      var ang = -8 - 22 * Math.min(1, d.q / 100);
-      a.move('plat', 0, 0, ang, 120, 250);
+      var run = d.mode === 'run';
+      // tiroir LS : en stand-by et en DAD il est repoussé (vérin de commande alimenté → plateau vers le mini) ; en travail il est en équilibre
+      var sx = run ? 3 : 10;
+      a.move('spool', sx, 0);
+      a.attr('lsSpr', 'd', 'M' + (160 + sx) + ' 100 L' + (172 + sx * 0.8) + ' 76 L' + (186 + sx * 0.6) + ' 124 L' + (200 + sx * 0.4) + ' 76 L' + (214 + sx * 0.3) + ' 124 L' + (228 + sx * 0.2) + ' 76 L250 100');
+      a.q('dadBall').style.transform = d.mode === 'dad' ? 'translateY(-6px)' : '';
+      a.q('dadOut').style.opacity = d.mode === 'dad' ? 1 : 0.25;
+      a.text('tCyl', 'cylindrée ' + F(d.mode === 'run' ? d.q : d.mode === 'sb' ? 2 : 1) + ' %');
+      a.q('dist').style.transform = 'translateX(' + (st.ouv * 0.6) + 'px)';
       a.text('ouv', st.ouv + ' %'); a.text('chg', (st.butee ? 'butée' : st.charge + ' b'));
       var py = d.mode === 'dad' ? 1 : st.pos; a.move('rod', 0, -py * 70);
       a.attr('ch', 'y', 240 - py * 70); a.attr('ch', 'height', 8 + py * 70);
-      var run = d.mode === 'run';
-      a.lineP('pP', d.p, run || d.mode === 'sb' ? 1 : 0, { at: 0.75 });
-      a.lineP('pR', run || d.mode === 'dad' ? d.ls : null, run ? 1 : 0);
-      a.lineP('pRet', run || d.mode === 'sb' ? 0 : null, run || d.mode === 'sb' ? 1 : 0, { dx: 30 });
+      a.lineP('pP', d.p, run || d.mode === 'sb' ? 1 : 0, { at: 0.3 });
+      a.lineP('pPS', d.p, 0, { tag: false });
+      a.lineP('pR', run || d.mode === 'dad' ? d.ls : null, run ? 1 : 0, { at: 0.3 });
+      a.lineP('pRet', 0, 0, { dx: 30 });
       a.lineP('pLS', d.ls, 0, { at: 0.55, pil: true }); // signal LS = pilotage de la pompe
       a.fillP('ch', d.mode === 'sb' ? null : d.ls);
-      a.move('nLS', 0, 0, gAng(d.ls, 400), 330, 62); a.text('tLS', F(d.ls) + ' b');
-      a.move('nP', 0, 0, gAng(d.p, 400), 290, 300); a.text('tP', F(d.p) + ' b');
+      a.move('nLS', 0, 0, gAng(d.ls, 400), 400, 62); a.text('tLS', F(d.ls) + ' b');
+      a.move('nP', 0, 0, gAng(d.p, 400), 300, 292); a.text('tP', F(d.p) + ' b');
     },
     steps: [
       { title: 'Stand-by', text: 'Tiroir au neutre : <b>LS = 0 b</b>, la pompe garde <b>30 b</b> (tarage du tiroir LS) avec un débit presque nul. Très peu de puissance perdue.', set: { ouv: 0, charge: 100 } },
@@ -229,40 +270,60 @@
     levels: true, hpLabel: 'Haute pression (HP)', pilLabel: 'Gavage 20 b (commande)', bpLabel: 'Basse pression (BP) / retour', note: 'Valeurs du cours : gavage 20 b, échange 18 b, annulation 280 b, soupapes HP 320 b. Vitesse du moteur : valeur d’exemple.',
     legend: [],
     svg:
-      '<path class="pipe" id="bH" d="M150 196 V90 H740 V196"/>' +
-      '<path class="pipe" id="bL" d="M150 284 V370 H740 V284"/>' +
-      // pompe principale réversible
-      '<circle class="ink-f" cx="150" cy="240" r="44"/><path class="solid" d="M150 200 l9 13 h-18z"/><path class="solid" d="M150 280 l9 -13 h-18z"/>' +
-      '<path class="ink" d="M118 274 L184 206" marker-end="url(#sim-ar)"/>' +
-      '<text x="40" y="236" class="t-s">Pompe</text><text x="40" y="252" class="t-s">réversible</text>' +
-      // moteur hydraulique (triangles vers l’intérieur : récepteur réversible)
-      '<circle class="ink-f" cx="740" cy="240" r="44"/><path class="solid" d="M740 214 l9 -13 h-18z"/><path class="solid" d="M740 266 l9 13 h-18z"/><g id="rotor"><path class="ink" d="M740 222 V258 M722 240 H758" style="stroke-width:4"/></g>' +
-      '<text x="740" y="400" text-anchor="middle" class="t-s">Moteur hydraulique</text><text id="tN" x="740" y="418" text-anchor="middle" class="t-b">0 tr/min</text>' +
-      // gavage (au centre de la boucle)
-      '<path class="pipe thin" id="gvH" d="M300 218 V90"/><path class="pipe thin" id="gvL" d="M300 262 V370"/>' +
-      '<path class="pipe thin" id="gvLim" d="M322 240 H360"/>' +
-      '<circle class="ink-f" cx="300" cy="240" r="22"/><path class="solid" d="M300 224 l8 12 h-16z"/>' +
-      '<path class="ink-f" d="M292 132 l8 -12 l8 12 z"/><path class="ink-f" d="M292 328 l8 12 l8 -12 z"/><path class="ink" d="M290 120 H310 M290 340 H310" style="stroke-width:3"/>' +
-      '<path class="ink" d="M278 240 H256 V258"/>' + bache(256, 258) +
-      '<text x="312" y="130" class="t-s">clapet</text><text x="312" y="340" class="t-s">clapet</text>' +
-      '<text x="226" y="292" class="t-s">Pompe de</text><text x="226" y="308" class="t-s">gavage</text>' +
-      '<rect class="ink-f" x="360" y="226" width="30" height="28"/>' + spring(390, 233, 16, 14, 2) + '<path class="ink" d="M375 254 V266"/>' + bache(375, 266) +
-      '<text x="358" y="300" class="t-s">Limiteur de</text><text x="358" y="316" class="t-s">gavage 20 b</text>' +
-      // soupapes HP 320 b : une par branche, elles déchargent dans l’autre branche
-      '<path class="pipe thin" id="s1i" d="M460 90 V120"/><path class="pipe thin" id="s1o" d="M460 160 V370"/>' +
-      '<rect class="ink-f" x="448" y="120" width="24" height="40"/><path class="ink" d="M454 124 V156" marker-end="url(#sim-ar)"/>' + spring(472, 133, 14, 14, 2) +
-      '<path class="ink" d="M460 104 H440 V140 H448" style="stroke-dasharray:4 4"/>' +
-      '<path class="pipe thin" id="s2i" d="M510 370 V340"/><path class="pipe thin" id="s2o" d="M510 300 V90"/>' +
-      '<rect class="ink-f" x="498" y="300" width="24" height="40"/><path class="ink" d="M504 336 V304" marker-end="url(#sim-ar)"/>' + spring(522, 313, 14, 14, 2) +
-      '<path class="ink" d="M510 356 H490 V320 H498" style="stroke-dasharray:4 4"/>' +
-      '<text x="485" y="74" text-anchor="middle" class="t-s">Soupapes HP 320 b</text>' +
-      // tiroir d'échange
-      '<path class="pipe thin" id="exH" d="M610 90 V200"/><path class="pipe thin" id="exL" d="M610 370 V280"/>' +
-      '<rect class="ink-f" id="tir" x="575" y="200" width="70" height="80" rx="4"/><text x="610" y="236" text-anchor="middle" class="t-s">Tiroir</text><text x="610" y="252" text-anchor="middle" class="t-s">d’échange</text>' +
-      '<path class="pipe thin" id="exO" d="M645 240 H660"/><rect class="ink-f" x="660" y="226" width="22" height="28"/>' + spring(666, 254, 10, 10, 2) +
-      gauge('nH', 90, 130) + '<path class="ink" d="M107 130 H150"/><text id="tH" x="90" y="168" text-anchor="middle" class="t-b">20 b</text>' +
-      gauge('nL', 90, 336) + '<path class="ink" d="M107 336 H150"/><text id="tL" x="90" y="374" text-anchor="middle" class="t-b">20 b</text>' +
-      '<text x="650" y="298" class="t-s">Limiteur</text><text x="650" y="314" class="t-s">d’échange</text><text x="650" y="330" class="t-s">18 b →</text><text x="650" y="346" class="t-s">refroidisseur</text>',
+      // moteur thermique M → arbre → pompe principale + pompe de gavage (même arbre, comme au cahier)
+      '<rect class="ink-f" x="16" y="218" width="44" height="44"/><text x="38" y="245" text-anchor="middle" class="t-b">M</text>' +
+      '<path class="ink" d="M60 236 H136 M60 244 H136"/>' +
+      // branches HP / BP de la boucle
+      '<path class="pipe" id="bH" d="M170 206 V80 H720 V196"/>' +
+      '<path class="pipe" id="bL" d="M170 274 V400 H720 V284"/>' +
+      // pompe principale : 2 sens de flux, cylindrée variable
+      '<circle class="ink-f" cx="170" cy="240" r="34"/><path class="solid" d="M170 206 l-8 13 h16z"/><path class="solid" d="M170 274 l-8 -13 h16z"/>' +
+      '<path class="ink" d="M144 268 L198 210" marker-end="url(#sim-ar)"/>' +
+      '<text x="160" y="300" text-anchor="end" class="t-s">Pompe</text><text x="160" y="316" text-anchor="end" class="t-s">réversible</text>' +
+      // pompe de gavage : 1 sens de flux, cylindrée fixe
+      '<path class="pipe thin" id="gvM" d="M254 240 H450"/>' +
+      '<circle class="ink-f" cx="230" cy="240" r="24"/><path class="solid" d="M254 240 l-13 -8 v16z"/>' +
+      '<path class="ink" d="M230 264 V292"/>' + bache(230, 292) +
+      '<text x="232" y="182" text-anchor="middle" class="t-s">Pompe de</text><text x="232" y="198" text-anchor="middle" class="t-s">gavage</text>' +
+      // limiteur de gavage 20 b (ressort réglable, pilotage pris à l’entrée)
+      '<path class="pipe thin" id="gvLim" d="M300 240 V270"/>' + relief(300, 270, 1) +
+      '<path class="ink" d="M300 310 V324"/>' + bache(300, 324) +
+      '<text x="300" y="356" text-anchor="middle" class="t-s">Limiteur de</text><text x="300" y="372" text-anchor="middle" class="t-s">gavage 20 b</text>' +
+      // clapets anti-retour (bille + siège) : du gavage vers la branche en BP
+      '<path class="pipe thin" id="cvH" d="M400 240 V80"/><path class="pipe thin" id="cvL" d="M400 240 V400"/>' +
+      ckv(400, 150, -1) + ckv(400, 330, 1) +
+      '<text x="392" y="206" text-anchor="end" class="t-s">clapets</text>' +
+      // soupapes HP 320 b : déchargent la branche dans la ligne de gavage
+      '<path class="pipe thin" id="s1i" d="M450 80 V130"/><path class="pipe thin" id="s1o" d="M450 170 V240"/>' + relief(450, 130, 1) +
+      '<path class="pipe thin" id="s2i" d="M450 400 V350"/><path class="pipe thin" id="s2o" d="M450 310 V240"/>' + relief(450, 350, -1) +
+      '<text x="450" y="66" text-anchor="middle" class="t-s">Soupapes HP 320 b</text>' +
+      // tiroir d’échange 3/3 piloté par les deux branches
+      '<path class="pipe thin" id="exA" d="M635 80 V230 H615"/><path class="pipe thin" id="exB" d="M650 400 V250 H615"/>' +
+      '<path id="xpT" class="ink" d="" style="stroke-dasharray:3 4"/><path id="xpB" class="ink" d="" style="stroke-dasharray:3 4"/>' +
+      '<g transform="translate(25 0)"><g id="tirx" style="transition:transform .45s ease">' +
+        '<rect class="ink-f" x="540" y="180" width="50" height="120"/><path class="ink" d="M540 220 H590 M540 260 H590"/>' +
+        '<path class="ink" d="M588 210 L546 201" marker-end="url(#sim-ar)"/><path class="ink" d="M590 190 H580 M580 185 V195"/>' +
+        '<path class="ink" d="M590 230 H580 M580 225 V235 M590 250 H580 M580 245 V255 M540 240 H550 M550 235 V245"/>' +
+        '<path class="ink" d="M588 270 L546 279" marker-end="url(#sim-ar)"/><path class="ink" d="M590 290 H580 M580 285 V295"/>' +
+        '<path class="solid" d="M559 166 h12 l-6 12z"/><path class="solid" d="M559 314 h12 l-6 -12z"/>' +
+        '<path class="ink" d="M565 166 V160 M565 314 V320"/>' +
+      '</g></g>' +
+      '<text x="590" y="104" text-anchor="middle" class="t-s">Tiroir d’échange</text>' +
+      // limiteur d’échange 18 b puis refroidisseur (échangeur de chaleur) et bâche
+      '<path class="pipe thin" id="exO" d="M565 240 H530 V270"/>' + relief(530, 270, 1) +
+      '<path class="pipe thin" id="exR" d="M530 310 V324"/>' +
+      '<path class="ink-f" d="M530 324 L546 340 L530 356 L514 340 Z"/><path class="ink" d="M520 340 H540" marker-start="url(#sim-ar)" marker-end="url(#sim-ar)"/>' +
+      '<path class="ink" d="M530 356 V368"/>' + bache(530, 368) +
+      '<text x="530" y="428" text-anchor="middle" class="t-s">Limiteur d’échange 18 b</text><text x="530" y="444" text-anchor="middle" class="t-s">+ refroidisseur</text>' +
+      // moteur hydraulique : 2 sens de flux (triangles vers l’intérieur)
+      '<circle class="ink-f" cx="720" cy="240" r="44"/><path class="solid" d="M720 214 l-9 -13 h18z"/><path class="solid" d="M720 266 l-9 13 h18z"/>' +
+      '<g id="rotor"><path class="ink" d="M720 224 V256 M704 240 H736" style="stroke-width:4"/></g><path class="ink" d="M764 236 H800 M764 244 H800"/>' +
+      '<text x="720" y="428" text-anchor="middle" class="t-s">Moteur hydraulique</text><text id="tN" x="720" y="446" text-anchor="middle" class="t-b">0 tr/min</text>' +
+      // manomètres sur les prises de pression des deux branches
+      gauge('nH', 100, 130) + '<path class="ink" d="M117 130 H170"/><text id="tH" x="100" y="168" text-anchor="middle" class="t-b">20 b</text>' +
+      gauge('nL', 100, 352) + '<path class="ink" d="M117 352 H170"/><text id="tL" x="100" y="390" text-anchor="middle" class="t-b">20 b</text>' +
+      // points de jonction
+      [[170, 130], [170, 352], [300, 240], [400, 240], [450, 240], [400, 80], [450, 80], [635, 80], [400, 400], [450, 400], [650, 400], [665, 80], [665, 400]].map(function (q) { return '<circle class="solid" cx="' + q[0] + '" cy="' + q[1] + '" r="3.5"/>'; }).join(''),
     init: { man: 0, charge: 150, ang: 0 },
     keep: ['ang'],
     controls: [
@@ -287,19 +348,26 @@
       var pH = up ? d.hp : d.bp, pL = up ? d.bp : d.hp, rH = d.dir && !up, rL = d.dir && up; // rH / rL : branche en BP (bleu)
       if (!d.dir) { a.lineP('bH', GAV, 0, { pil: true, at: 0.75 }); a.lineP('bL', GAV, 0, { pil: true, at: 0.75 }); }
       else { a.lineP('bH', pH, run ? (up ? 1 : -1) : 0, { at: 0.75, ret: rH }); a.lineP('bL', pL, run ? (up ? -1 : 1) : 0, { at: 0.75, ret: rL }); }
-      a.lineP('gvH', GAV, !d.dir || !up ? 1 : 0, { pil: true, at: 0.3, dx: 30 });
-      a.lineP('gvL', GAV, !d.dir || up ? 1 : 0, { pil: true, at: 0.3, dx: 30 });
+      // gavage : par le clapet du côté BP (au neutre, vers les deux branches et le limiteur de gavage)
+      a.lineP('gvM', GAV, 1, { pil: true, at: 0.15 });
+      a.lineP('cvH', GAV, !d.dir || !up ? 1 : 0, { pil: true, tag: false });
+      a.lineP('cvL', GAV, !d.dir || up ? 1 : 0, { pil: true, tag: false });
       a.lineP('gvLim', GAV, !d.dir ? 1 : 0, { pil: true, tag: false });
-      a.lineP('exH', d.dir ? pH : null, !up && run ? 1 : 0, { tag: false, ret: rH });
-      a.lineP('exL', d.dir ? pL : null, up && run ? 1 : 0, { tag: false, ret: rL });
+      // soupapes HP : fermées (l’annulation à 280 b agit avant), entrée = pression de la branche, sortie = ligne de gavage
+      a.lineP('s1i', d.dir ? pH : GAV, 0, { tag: false, pil: !d.dir, ret: rH }); a.lineP('s1o', GAV, 0, { tag: false, pil: true });
+      a.lineP('s2i', d.dir ? pL : GAV, 0, { tag: false, pil: !d.dir, ret: rL }); a.lineP('s2o', GAV, 0, { tag: false, pil: true });
+      // tiroir d’échange : poussé par la branche HP, il relie la branche BP au limiteur d’échange
+      var dy = run ? (up ? 40 : -40) : 0;
+      a.q('tirx').style.transform = 'translateY(' + dy + 'px)';
+      a.attr('xpT', 'd', 'M665 80 V140 H590 V' + (160 + dy)); a.attr('xpB', 'd', 'M665 400 V340 H590 V' + (320 + dy));
+      a.lineP('exA', d.dir ? pH : GAV, !up && run ? 1 : 0, { tag: false, ret: rH, pil: !d.dir });
+      a.lineP('exB', d.dir ? pL : GAV, up && run ? 1 : 0, { tag: false, ret: rL, pil: !d.dir });
       a.lineP('exO', run ? ECH : null, run ? 1 : 0, { tag: false, ret: true });
-      // soupapes HP : fermées (l’annulation à 280 b agit avant) ; l’entrée voit la pression de sa branche
-      a.lineP('s1i', d.dir ? pH : GAV, 0, { tag: false, pil: !d.dir, ret: rH }); a.lineP('s1o', null, 0, { tag: false });
-      a.lineP('s2i', d.dir ? pL : GAV, 0, { tag: false, pil: !d.dir, ret: rL }); a.lineP('s2o', null, 0, { tag: false });
+      a.lineP('exR', run ? 0 : null, run ? 1 : 0, { tag: false });
       var gH = d.dir ? pH : GAV, gL = d.dir ? pL : GAV;
-      a.move('nH', 0, 0, gAng(gH, 400), 90, 130); a.text('tH', F(gH) + ' b');
-      a.move('nL', 0, 0, gAng(gL, 400), 90, 336); a.text('tL', F(gL) + ' b');
-      a.move('rotor', 0, 0, st.ang, 740, 240);
+      a.move('nH', 0, 0, gAng(gH, 400), 100, 130); a.text('tH', F(gH) + ' b');
+      a.move('nL', 0, 0, gAng(gL, 400), 100, 352); a.text('tL', F(gL) + ' b');
+      a.move('rotor', 0, 0, st.ang, 720, 240);
       a.text('tN', F(d.n) + ' tr/min');
     },
     steps: [
