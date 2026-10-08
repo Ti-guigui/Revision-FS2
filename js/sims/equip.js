@@ -39,6 +39,7 @@
       '<path class="pipe thin" id="pExc" d="M214 140 H300 V170"/><text x="232" y="164" class="t-s">EXC (50)</text>' +
       // solénoïde
       '<rect class="ink" x="300" y="150" width="230" height="100" rx="8"/>' +
+      '<path class="ink" d="M300 172 H318 M308 172 V232 H318"/>' +
       '<path class="pipe thin" id="cA" d="' + coil(318, 498, 172, 9) + '"/><text x="318" y="146" class="t-s">Bobine d’appel</text>' +
       '<path class="pipe thin" id="cM" d="' + coil(318, 498, 232, 9) + '"/><text x="318" y="270" class="t-s">Bobine de maintien</text>' +
       '<g id="core"><rect class="ink-f" x="330" y="190" width="120" height="24" rx="4"/><text x="390" y="207" text-anchor="middle" class="t-s">noyau</text>' +
@@ -61,17 +62,17 @@
     controls: [{ key: 'cle', type: 'toggle', label: 'Clé de contact', on: 'Démarrage', off: 'Repos' },
       { key: 'bat', type: 'seg', label: 'État des batteries', options: [['ok', 'Bonnes'], ['faible', 'Faibles']] }],
     compute: function (st) {
-      var p = PH[st.ph], ph = st.ph, ok = st.bat === 'ok';
+      var p = PH[st.ph], ph = st.ph, ok = st.bat === 'ok', k3 = ph === 3 && st.s > 0.95; // retour : courant tant que le contact 30 est encore fermé
       var d = { u: ph === 2 ? (ok ? 21 : 18) : ph === 1 ? (ok ? 23 : 21) : (ok ? 24 : 22.5) };
-      d.ia = ph === 1 || ph === 3 ? d.u / 2 : 0;            // bobine d’appel ≈ 2 Ω
-      d.im = ph ? d.u / 4 : 0;                              // bobine de maintien ≈ 4 Ω
+      d.ia = ph === 1 ? d.u / 2 : k3 ? d.u / 6 : 0;    // bobine d’appel ≈ 2 Ω (au retour : en série avec le maintien, 2 + 4 Ω)
+      d.im = ph === 3 ? d.ia : ph ? d.u / 4 : 0;            // bobine de maintien ≈ 4 Ω
       d.imot = ph === 2 ? (ok ? 350 : 250) : ph === 1 ? d.ia : 0; // valeur d’exemple
       var bad = ph === 2 && d.u < 19.2;
       d.text = p.x + (ph === 2 ? (bad ? ' <b style="color:var(--bad)">Au lancement, la tension tombe à 18 V : sous le minimum de 19,2 V (80 % de 24 V), les batteries sont en cause.</b>'
         : ' Au lancement, la tension reste à ' + F(d.u) + ' V : au-dessus du minimum de <b>19,2 V</b> (80 % de 24 V), les batteries sont bonnes.') : '');
       d.readouts = [['Phase', p.t], ['Tension batterie', F(d.u, d.u % 1 ? 1 : 0) + ' V', bad ? 'hot' : ph === 2 ? 'ok' : ''],
         ['Bobine d’appel', d.ia ? F(d.ia, 1) + ' A' + (ph === 3 ? ' (inversé)' : '') : '0 A', d.ia ? 'hot' : ''], ['Bobine de maintien', F(d.im, 1) + ' A'],
-        ['Moteur (exemple)', d.imot ? '≈ ' + F(d.imot) + ' A' : '0 A'], ['Contacteur 30 → moteur', ph === 2 ? 'fermé' : 'ouvert', ph === 2 ? 'ok' : '']];
+        ['Moteur (exemple)', k3 ? 'alimenté jusqu’à l’ouverture du contact' : d.imot ? '≈ ' + F(d.imot, d.imot % 1 ? 1 : 0) + ' A' : '0 A'], ['Contacteur 30 → moteur', ph === 2 || k3 ? 'fermé' : 'ouvert', ph === 2 || k3 ? 'ok' : '']];
       return d;
     },
     tick: function (st, dt) {
@@ -82,7 +83,8 @@
         else if (!st.cle && (st.ph === 1 || st.ph === 2)) { st.ph = 3; st.t = 0; ch = true; }
         else if (!st.cle && st.ph === 3 && (st.t += dt) > 1) { st.ph = 0; ch = true; }
       }
-      var target = st.ph === 1 || st.ph === 2 ? 1 : 0;
+      // au retour, le noyau reste un instant en place (contact encore fermé) avant que le ressort le ramène
+      var target = st.ph === 1 || st.ph === 2 || (st.ph === 3 && (!st.auto || st.t < 0.5)) ? 1 : 0;
       if (Math.abs(st.s - target) > 0.001) { st.s += Math.sign(target - st.s) * Math.min(Math.abs(target - st.s), dt * (target ? 0.9 : 1.6)); ch = true; }
       var sp = st.ph === 1 ? 120 : st.ph === 2 ? 900 : 0;
       if (sp) { st.ang = (st.ang + sp * dt) % 360; ch = true; }
@@ -98,13 +100,14 @@
       a.q('key').style.transform = st.cle || ph === 1 || ph === 2 ? '' : 'rotate(-30deg)';
       a.line('pK', ph === 1 || ph === 2 ? 'cur' : 'cur0', ph === 1 || ph === 2 ? 1 : 0);
       a.line('pExc', ph === 1 || ph === 2 ? 'cur' : 'cur0', ph === 1 || ph === 2 ? 1 : 0);
-      a.line('cA', ph === 1 || ph === 3 ? 'cur' : 'cur0', ph === 1 ? 1 : ph === 3 ? -1 : 0);
-      a.line('cM', ph ? 'cur' : 'cur0', ph ? 1 : 0);
-      a.line('pMas', ph ? 'cur' : 'cur0', ph ? 1 : 0);
-      a.line('pApp', ph === 1 ? 'cur' : ph === 3 ? 'cur' : 'cur0', ph === 1 ? 1 : ph === 3 ? -1 : 0);
-      a.line('p30', ph === 2 || ph === 3 && s > 0.95 ? 'cur' : 'cur0', ph === 2 ? 1 : 0);
-      a.line('pC', ph === 1 || ph === 2 ? 'cur' : 'cur0', ph === 1 || ph === 2 ? 1 : 0);
-      a.line('pMg', ph === 1 || ph === 2 ? 'cur' : 'cur0', ph === 1 || ph === 2 ? 1 : 0);
+      var k3 = ph === 3 && s > 0.95, m = ph === 1 || ph === 2 || k3; // retour : courant tant que le contact 30 est encore fermé
+      a.line('cA', ph === 1 || k3 ? 'cur' : 'cur0', ph === 1 ? 1 : k3 ? -1 : 0);
+      a.line('cM', m ? 'cur' : 'cur0', m ? 1 : 0);
+      a.line('pMas', m ? 'cur' : 'cur0', m ? 1 : 0);
+      a.line('pApp', ph === 1 || k3 ? 'cur' : 'cur0', ph === 1 ? 1 : k3 ? -1 : 0);
+      a.line('p30', ph === 2 || k3 ? 'cur' : 'cur0', ph === 2 || k3 ? 1 : 0);
+      a.line('pC', m ? 'cur' : 'cur0', m ? 1 : 0);
+      a.line('pMg', m ? 'cur' : 'cur0', m ? 1 : 0);
       a.move('core', s * 56, 0);
       a.move('pin', -s * 40, 0);
       a.attr('fork', 'transform', 'rotate(' + (s * 25) + ' 270 290)');

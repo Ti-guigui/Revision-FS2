@@ -38,7 +38,7 @@
         '<g id="ledar"><path class="ink" d="M672 180 l18 -14 M680 194 l18 -14" marker-end="url(#sim-ar)"/></g>' +
         '<path class="ink" d="M640 150 V172 M640 214 V240"/></g>' +
       '<text id="tD" x="700" y="230" class="t-s">DEL</text>' +
-      '<text x="660" y="160" class="t-s t-m">anode</text><text x="660" y="262" class="t-s t-m">cathode</text>' +
+      '<text id="tAn" x="660" y="160" class="t-s t-m">anode</text><text id="tCa" x="660" y="262" class="t-s t-m">cathode</text>' +
       '<text id="tUR" x="450" y="128" text-anchor="middle" class="t-s">UR = 0 V</text><text id="tUD" x="770" y="290" text-anchor="middle" class="t-s">UD = 0 V</text>' +
       '<path class="ink" d="M640 136 H770 V180 M770 210 V252 H640" style="stroke-dasharray:4 4"/>' + meter(770, 195, 'V') +
       meter(390, 330, 'A') + '<text id="tI" x="390" y="372" text-anchor="middle" class="t-b">I = 0 mA</text>',
@@ -68,6 +68,7 @@
       a.q('dio').style.transform = st.sens === 'direct' ? '' : 'rotate(180deg)';
       a.show('ledar', st.typ === 'led');
       a.text('tD', st.typ === 'led' ? 'DEL' : 'Diode');
+      a.text('tAn', st.sens === 'direct' ? 'anode' : 'cathode'); a.text('tCa', st.sens === 'direct' ? 'cathode' : 'anode');
       var g = a.q('glow');
       g.setAttribute('class', 'zone ' + (on && st.typ === 'led' ? 'z-led' : 'z-off'));
       g.style.opacity = on && st.typ === 'led' ? Math.min(1, 0.35 + d.ma / 15) : 0;
@@ -149,7 +150,7 @@
       // transistor
       '<circle class="ink-f" cx="580" cy="270" r="34"/><path class="ink" d="M560 248 V292" style="stroke-width:4"/>' +
       '<path class="ink" d="M560 258 L600 240 M560 282 L600 300"/><path class="ink" d="M586 292 L600 300 L588 304" />' +
-      '<text x="530" y="236" class="t-s">C</text><text x="530" y="318" class="t-s">E</text><text x="506" y="268" class="t-s">B</text>' +
+      '<text x="608" y="232" class="t-s">C</text><text x="608" y="322" class="t-s">E</text><text x="506" y="268" class="t-s">B</text>' +
       // circuit de commande
       '<path class="pipe thin" id="wb1" d="M140 190 V110 H230"/>' +
       '<path class="pipe thin" id="wb2" d="M300 110 H340 V270 H360"/>' +

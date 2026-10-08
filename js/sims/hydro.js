@@ -139,7 +139,7 @@
     svg:
       // pompe à cylindrée variable
       '<circle class="ink-f" cx="120" cy="250" r="46"/><g id="plat"><line class="ink" x1="120" y1="212" x2="120" y2="288" style="stroke-width:5"/></g>' +
-      '<path class="ink" d="M86 296 L154 204" marker-end="url(#sim-ar)"/>' +
+      '<path class="ink" d="M86 296 L154 204" marker-end="url(#sim-ar)"/><path class="solid" d="M166 250 l-15 -9 v18z"/>' +
       '<text x="120" y="320" text-anchor="middle" class="t-s">Pompe à cylindrée</text><text x="120" y="336" text-anchor="middle" class="t-s">variable (plateau)</text>' +
       '<path class="ink" d="M120 296 V420"/>' + bache(120, 420) +
       // régulateur (tiroir LS + DAD)
@@ -229,15 +229,16 @@
       '<path class="ink" d="M118 274 L184 206" marker-end="url(#sim-ar)"/>' +
       '<text x="40" y="236" class="t-s">Pompe</text><text x="40" y="252" class="t-s">réversible</text>' +
       // moteur hydraulique
-      '<circle class="ink-f" cx="670" cy="240" r="44"/><g id="rotor"><path class="ink" d="M670 206 V274 M636 240 H704" style="stroke-width:4"/></g>' +
+      '<circle class="ink-f" cx="670" cy="240" r="44"/><path class="solid" d="M670 214 l9 -13 h-18z"/><path class="solid" d="M670 266 l9 13 h-18z"/><g id="rotor"><path class="ink" d="M670 222 V258 M652 240 H688" style="stroke-width:4"/></g>' +
       '<text x="726" y="236" class="t-s">Moteur</text><text x="726" y="252" class="t-s">hydraulique</text><text id="tN" x="726" y="272" class="t-s">0 tr/min</text>' +
       // gavage (au centre de la boucle)
       '<path class="pipe thin" id="gvH" d="M300 218 V90"/><path class="pipe thin" id="gvL" d="M300 262 V370"/>' +
       '<path class="pipe thin" id="gvLim" d="M322 240 H360"/>' +
       '<circle class="ink-f" cx="300" cy="240" r="22"/><path class="solid" d="M300 224 l8 12 h-16z"/>' +
-      '<path class="ink-f" d="M292 132 l8 -12 l8 12 z"/><path class="ink-f" d="M292 328 l8 12 l8 -12 z"/>' +
+      '<path class="ink-f" d="M292 132 l8 -12 l8 12 z"/><path class="ink-f" d="M292 328 l8 12 l8 -12 z"/><path class="ink" d="M290 120 H310 M290 340 H310" style="stroke-width:3"/>' +
+      '<path class="ink" d="M278 240 H256 V258"/>' + bache(256, 258) +
       '<text x="312" y="130" class="t-s">clapet</text><text x="312" y="340" class="t-s">clapet</text>' +
-      '<text x="238" y="280" class="t-s">Pompe de</text><text x="238" y="296" class="t-s">gavage</text>' +
+      '<text x="226" y="292" class="t-s">Pompe de</text><text x="226" y="308" class="t-s">gavage</text>' +
       '<rect class="ink-f" x="360" y="226" width="30" height="28"/>' + spring(390, 233, 16, 14, 2) + '<path class="ink" d="M375 254 V266"/>' + bache(375, 266) +
       '<text x="352" y="300" class="t-s">Limiteur de</text><text x="352" y="316" class="t-s">gavage 20 b</text>' +
       // tiroir d'échange
@@ -272,8 +273,8 @@
       var pH = up ? d.hp : d.bp, pL = up ? d.bp : d.hp, G = { pil: true };
       if (!d.dir) { a.lineP('bH', GAV, 0, { pil: true, at: 0.75 }); a.lineP('bL', GAV, 0, { pil: true, at: 0.75 }); }
       else { a.lineP('bH', pH, run ? (up ? 1 : -1) : 0, { at: 0.75 }); a.lineP('bL', pL, run ? (up ? -1 : 1) : 0, { at: 0.75 }); }
-      a.lineP('gvH', GAV, !d.dir || !up ? 1 : 0, { pil: true, at: 0.55, dx: -34 });
-      a.lineP('gvL', GAV, !d.dir || up ? 1 : 0, { pil: true, at: 0.55, dx: -34 });
+      a.lineP('gvH', GAV, !d.dir || !up ? 1 : 0, { pil: true, at: 0.3, dx: 30 });
+      a.lineP('gvL', GAV, !d.dir || up ? 1 : 0, { pil: true, at: 0.3, dx: 30 });
       a.lineP('gvLim', GAV, !d.dir ? 1 : 0, { pil: true, tag: false });
       a.lineP('exH', d.dir ? pH : null, !up && run ? 1 : 0, { tag: false });
       a.lineP('exL', d.dir ? pL : null, up && run ? 1 : 0, { tag: false });
