@@ -279,7 +279,7 @@
       if (it.k === 'line') {
         var cls = 'pipe' + (cc ? '' : ' pl-off') + (e.classList.contains('thin') ? ' thin' : '');
         if (e.getAttribute('class') !== cls) e.setAttribute('class', cls);
-        e.style.stroke = cc || '';
+        e.style.stroke = cc || (sim.offHide ? 'transparent' : '');
         var f = e._flow;
         if (f) { var fc = 'flow' + (it.dir > 0 ? ' fw' : it.dir < 0 ? ' rv' : ''); if (f.getAttribute('class') !== fc) f.setAttribute('class', fc); }
         if (sim.tags !== false && it.o.tag !== false && it.p != null) c.tags[it.id] = c.tags[it.id] || { txt: SIMS.fmt(it.p, it.p < 10 && it.p % 1 ? 1 : 0) + ' ' + (sim.unit || 'b'), o: it.o };
@@ -319,7 +319,7 @@
         (hasLs ? '<span><i class="lg" style="background:var(--sim-lsv)"></i>' + (sim.lsLabel || 'Pression LS') + '</span>' : '') +
         (hasPil ? '<span><i class="lg lg-pil"></i>' + (sim.pilLabel || 'Pilotage / commande') + '</span>' : '') +
         (hasZero ? '<span><i class="lg lg-bp"></i>' + (sim.bpLabel || 'Retour bâche') + '</span>' : '') +
-        (hasOff ? '<span><i class="lg"></i>Sans pression</span>' : '') +
+        (hasOff && !sim.offHide ? '<span><i class="lg"></i>Sans pression</span>' : '') +
         (sim.note ? '<span class="sim-note">' + sim.note + '</span>' : '');
       var le = c.host.querySelector('.sim-legend');
       if (le._h !== h) { le.innerHTML = h; le._h = h; }
