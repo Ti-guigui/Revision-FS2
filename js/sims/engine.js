@@ -235,18 +235,15 @@
     c.raf = requestAnimationFrame(function () { loop(c); });
   }
 
-  var LV = ['var(--lv0)', 'var(--lv1)', 'var(--lv2)', 'var(--lv3)', 'var(--lv4)', 'var(--lv5)'];
+  // Couleurs du cours : rouge = pression, vert = pilotage / commande / gavage, bleu = retour bâche (ou BP avec o.ret)
   function resolve(c) {
     var api = c.api, sim = c.sim;
-    var levels = [];
-    c.pq.forEach(function (it) { var p = it.p; if (p != null && p > 0.05 && !it.o.pil && levels.indexOf(r1(p)) < 0) levels.push(r1(p)); });
-    levels.sort(function (a, b) { return b - a; });
-    var hasZero = false, hasPil = false, hasOff = false;
+    var hasHp = false, hasZero = false, hasPil = false, hasOff = false;
     function col(it) {
       if (it.p == null) { hasOff = true; return null; }
       if (it.o.pil) { hasPil = true; return 'var(--sim-pil)'; }
-      if (it.p <= 0.05) { hasZero = true; return 'var(--sim-bp)'; }
-      return LV[Math.min(LV.length - 1, levels.indexOf(r1(it.p)))];
+      if (it.o.ret || it.p <= 0.05) { hasZero = true; return 'var(--sim-bp)'; }
+      hasHp = true; return 'var(--sim-hp)';
     }
     c.pq.forEach(function (it) {
       var e = api.q(it.id); if (!e) return;
@@ -288,12 +285,11 @@
       }
     });
     c.tagLayer.querySelectorAll('[data-t]').forEach(function (g) { if (!seen[g.getAttribute('data-t')]) g.style.display = 'none'; });
-    // légende des niveaux de pression
+    // légende : rouge / vert / bleu (les valeurs sont écrites sur les conduites)
     if (sim.levels) {
-      var u = sim.unit || 'b';
-      var h = levels.map(function (p, i) { return '<span><i class="lg" style="background:' + LV[Math.min(LV.length - 1, i)] + '"></i>' + SIMS.fmt(p, p % 1 ? 1 : 0) + ' ' + u + (i === 0 ? ' (la plus haute)' : '') + '</span>'; }).join('') +
-        (hasPil ? '<span><i class="lg lg-pil"></i>' + (sim.pilLabel || 'Pilotage') + '</span>' : '') +
-        (hasZero ? '<span><i class="lg lg-bp"></i>0 ' + u + ' (retour bâche)</span>' : '') +
+      var h = (hasHp ? '<span><i class="lg lg-hp"></i>' + (sim.hpLabel || 'Pression') + '</span>' : '') +
+        (hasPil ? '<span><i class="lg lg-pil"></i>' + (sim.pilLabel || 'Pilotage / commande') + '</span>' : '') +
+        (hasZero ? '<span><i class="lg lg-bp"></i>' + (sim.bpLabel || 'Retour bâche') + '</span>' : '') +
         (hasOff ? '<span><i class="lg"></i>Sans pression</span>' : '') +
         (sim.note ? '<span class="sim-note">' + sim.note + '</span>' : '');
       var le = c.host.querySelector('.sim-legend');
