@@ -120,8 +120,11 @@
         d.dadOpen = d.stall && dad <= sec; d.secOpen = d.stall && sec < dad;
         d.q = d.stall ? 0 : Math.min(QMAX - QAP, st.ouv);
       }
-      d.ps = d.ls + SB;
-      d.Q = d.q + QAP + (d.dadOpen ? QDAD : 0);
+      // plein débit (cours) : le distributeur demande plus que la pompe ne peut donner → plus de ΔP, LS = pression de service,
+      // le ressort de stand-by retient le tiroir, le vérin de commande n’est pas alimenté : cylindrée maximum
+      d.plein = d.mode === 'run' && st.ouv >= QMAX - QAP;
+      d.ps = d.plein ? d.ls : d.ls + SB;
+      d.Q = d.plein ? QMAX : d.q + QAP + (d.dadOpen ? QDAD : 0);
       d.cyl = Math.max(1, Math.round(d.Q / QMAX * 100));
       d.kw = d.ps * d.Q / 600;
       d.text = d.mode === 'sb'
@@ -130,8 +133,9 @@
           ? '<b>Butée : le DAD s’ouvre</b>. La LS (low flow) monte jusqu’au tarage du ressort du DAD (<b>' + dad + ' b</b>) : la bille se soulève et laisse passer vers la bâche <b>seulement les 0,5 L/min</b> qui arrivent par le <b>gicleur LS</b> (ligne LS → gicleur → chambre → DAD). Tant que le DAD est fermé, rien ne circule dans le gicleur LS. Pour déplacer le tiroir, la <b>pression de service (full flow)</b> doit vaincre <b>LS + ressort de stand-by = ' + dad + ' + 30 = ' + d.ps + ' b</b> : le tiroir comprime le ressort, alimente le vérin de commande, le plateau revient au mini → <b>annulation de débit</b>, pression maxi maintenue.'
           : d.secOpen
             ? '<b>Butée</b> : le <b>limiteur secondaire de l’élément (' + sec + ' b)</b> plafonne la pression LS avant le DAD (' + dad + ' b, resté fermé). La pompe maintient <b>PS = ' + sec + ' + 30 = ' + d.ps + ' b</b>, plateau au mini.'
-            : '<b>Travail</b> : la pression LS (' + d.ls + ' b, la charge) <b>s’ajoute au ressort de stand-by (30 b)</b> derrière le tiroir. Le tiroir s’équilibre quand <b>PS = LS + 30 = ' + d.ps + ' b</b> : il dose l’huile envoyée au vérin de commande et le plateau prend la cylindrée qu’il faut pour donner <b>' + F(d.q) + ' L/min</b> à l’élément (+ 1 L/min du gicleur anti-pompage). ΔP de l’élément = 30 b : la vitesse ne dépend pas de la charge.';
-      d.readouts = [['Pression de service (full flow)', F(d.ps) + ' b', d.dadOpen ? 'hot' : ''], ['Pression LS (low flow)', F(d.ls) + ' b'], ['ΔP = PS − LS', SB + ' b'],
+            : d.plein ? '<b>Plein débit</b> : le distributeur est <b>ouvert au maximum</b>. La pression dans la ligne LS est <b>identique</b> à la pression de service (' + d.ps + ' b). Le tiroir LS reçoit la même pression de chaque côté, mais le <b>ressort de stand-by</b> ne permet pas son déplacement : le <b>vérin de commande n’est pas alimenté</b>, la pompe est en <b>cylindrée maximum</b> (100 L/min).'
+            : '<b>Contrôle du débit</b> : le distributeur est ouvert partiellement. La pression LS (' + d.ls + ' b, la charge) <b>s’ajoute au ressort de stand-by (30 b)</b> derrière le tiroir. Le tiroir s’équilibre quand <b>PS = LS + 30 = ' + d.ps + ' b</b> : il dose l’huile envoyée au vérin de commande et le plateau prend la cylindrée qu’il faut pour donner <b>' + F(d.q) + ' L/min</b> à l’élément (+ 1 L/min du gicleur anti-pompage). ΔP de l’élément = 30 b : la vitesse ne dépend pas de la charge.';
+      d.readouts = [['Pression de service (full flow)', F(d.ps) + ' b', d.dadOpen ? 'hot' : ''], ['Pression LS (low flow)', F(d.ls) + ' b'], ['ΔP = PS − LS', (d.plein ? 0 : SB) + ' b'],
         ['Débit pompe', F(d.Q, d.Q % 1 ? 1 : 0) + ' L/min'], ['DAD', d.dadOpen ? 'ouvert (0,5 L/min)' : 'fermé', d.dadOpen ? 'hot' : ''], ['Puissance', F(d.kw, 1) + ' kW']];
       return d;
     },
@@ -143,12 +147,12 @@
     draw: function (a, st, d) {
       var run = d.mode === 'run', sb = d.mode === 'sb';
       // tiroir : repoussé vers le ressort (stand-by, butée) → PS vers le vérin de commande ; en travail il est en équilibre
-      var dx = run ? Math.max(2, 12 - d.q / 10) : 14;
+      var dx = d.plein ? 0 : run ? Math.max(2, 12 - d.q / 10) : 14;
       a.q('spool').style.transform = 'translateX(' + dx + 'px)';
       a.attr('lsSpr', 'd', zig(318 + dx, 200, 468, 150 - dx * 2, 4));
       a.attr('zPS', 'width', 8 + dx); a.attr('zA1', 'x', 190 + dx); a.attr('zA1', 'width', 70 - dx); a.attr('zA2', 'width', 38 + dx); a.attr('zLS', 'x', 318 + dx); a.attr('zLS', 'width', 150 - dx);
       a.fillP('zPS', d.ps);
-      var pvc = d.ps * Math.min(1, dx / 14) * 0.6; // pression envoyée au vérin de commande (ordre de grandeur)
+      var pvc = d.plein ? 0 : d.ps * Math.min(1, dx / 14) * 0.6; // pression envoyée au vérin de commande (ordre de grandeur)
       a.fillP('zA1', pvc > 1 ? pvc : 0, { op: 0.6 }); a.fillP('zA2', pvc > 1 ? pvc : 0, { op: 0.6 });
       a.fillP('zLS', d.ls > 0 ? d.ls : 0, { pil: d.ls > 0, op: 0.55 });
       a.fillP('zVC', pvc > 1 ? pvc : 0, { op: 0.7 });
@@ -185,7 +189,10 @@
       a.move('nLS', 0, 0, gAng(d.ls, 400), 660, 314); a.text('tLS', F(d.ls) + ' b');
     },
     steps: [
-      { title: 'Stand-by', text: 'Éléments au neutre : <b>LS = 0 b</b>, la pompe garde <b>30 b</b> (ressort de stand-by). Le tiroir alimente le vérin de commande : plateau au mini, la pompe ne débite que le gicleur anti-pompage (<b>1 L/min</b>).', set: { ouv: 0, charge: 100 } },
+      { title: '1. Débit nul (stand-by)', text: 'Cours : distributeur <b>fermé</b>. Éléments au neutre : <b>LS = 0 b</b>, la pompe garde <b>30 b</b> (ressort de stand-by). Le tiroir alimente le vérin de commande : plateau au mini, la pompe ne débite que le gicleur anti-pompage (<b>1 L/min</b>).', set: { ouv: 0, charge: 100 } },
+      { title: '2. Contrôle du débit', text: 'Cours : distributeur <b>ouvert partiellement</b>. La pression de la ligne LS est l’effort demandé par le récepteur (100 b). La pression de service s’oppose à LS + ressort (30 b) : le tiroir et le vérin de commande se déplacent <b>partiellement</b>, le plateau s’incline juste ce qu’il faut : <b>le débit fourni est adapté aux besoins</b> (50 L/min).', set: { ouv: 50, charge: 100 } },
+      { title: '3. Plein débit', text: 'Cours : distributeur <b>ouvert au maximum</b>. La pression LS est <b>identique</b> à la pression de service ; le tiroir reçoit la même pression des deux côtés, le ressort de stand-by l’empêche de bouger : le <b>vérin de commande n’est pas alimenté</b>, la pompe est en <b>cylindrée maximum</b>.', set: { ouv: 100, charge: 100 } },
+      { title: '4. Débit nul (pression maxi)', text: 'Cours : distributeur ouvert mais <b>récepteur en butée</b>. La pression monte jusqu’au tarage du <b>DAD (320 b)</b>, qui s’ouvre et relie la ligne LS au drain. Sous l’effet de la pression de service, le tiroir LS se déplace et le vérin de commande pousse le plateau en position verticale : <b>pas de débit mais maintien de la pression maximum</b> (350 b).', set: { ouv: 28, butee: true } },
       { title: 'Treuil : halage à 180 b', text: 'Ta fiche « treuils » : la charge demande <b>180 b</b> dans la LS ; elle s’ajoute aux 30 b du ressort : <b>PS = 210 b</b>. ΔP de l’élément = 30 b, débit <b>28 L/min</b>.', set: { ouv: 28, charge: 180 } },
       { title: 'RMU : corps de flèche à 270 b', text: 'Ta fiche « RMU » : LS = <b>270 b</b> → <b>PS = 300 b</b>, débit <b>38 L/min</b>.', set: { ouv: 38, charge: 270 } },
       { title: 'RMU en butée', text: 'Ta fiche « RMU en butée » : le <b>limiteur secondaire 300 b</b> de l’élément plafonne la LS à 300 b → <b>PS = 330 b</b>. Le DAD (320 b) reste fermé.', set: { ouv: 38, butee: true, sec: '300' } },
