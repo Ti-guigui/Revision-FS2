@@ -14,13 +14,13 @@
   var gAng = function (p, max) { return -120 + Math.max(0, Math.min(1, p / max)) * 240; };
 
   /* ---------------- 1. Pompe, limiteur, distributeur 4/3, vérin double effet ---------------- */
-  var TAR = 150, QP = 20;
+  var TAR = 150, QP = 20, SA = Math.PI * 6.3 * 6.3 / 4; // section du piston Ø 63 mm en cm²
   SIMS.add({
     id: 'hydro-verin', subj: 'hydro', icon: '🛢️', title: 'Distributeur 4/3, vérin double effet et limiteur de pression',
-    desc: 'La pression dépend de la charge, la vitesse dépend du débit. En butée, le limiteur s’ouvre.',
+    desc: 'Règle le poids de la charge : la pression vaut P = F / S. La vitesse dépend du débit. En butée, le limiteur s’ouvre.',
     lessons: ['hydro/bases', 'hydro/distributeurs', 'hydro/pression', 'hydro/recepteurs'],
     viewBox: '0 0 820 500',
-    levels: true, note: 'Valeurs d’exemple : limiteur taré à 150 b, pompe 20 L/min, pertes de charge ≈ 5 b.',
+    levels: true, note: 'Valeurs d’exemple : vérin Ø 63 mm (S = 31,2 cm²), tige Ø 36 mm, limiteur taré à 150 b, pompe 20 L/min, pertes de charge ≈ 5 b. 1 t ≈ 1 000 daN.',
     legend: [],
     svg:
       // vérin
@@ -63,32 +63,33 @@
       gauge('needle', 285, 428) + '<path class="ink" d="M285 400 V411"/>' +
       '<text id="mtxt" x="306" y="433" class="t-b">0 b</text>' +
       '<text id="tEtat" x="680" y="200" text-anchor="middle" class="t-b">BLOQUÉ (neutre)</text><text id="tEtat2" x="680" y="220" text-anchor="middle" class="t-s"></text>',
-    init: { man: 'N', charge: 50, pos: 0.2 },
+    init: { man: 'N', charge: 1.5, pos: 0.2 },
     keep: ['pos'],
     controls: [
       { key: 'man', type: 'seg', label: 'Manette du distributeur', options: [['R', '◀ Rentrée'], ['N', 'Neutre'], ['S', 'Sortie ▶']] },
-      { key: 'charge', type: 'range', label: 'Charge sur la tige (au-dessus de 150 b, le vérin ne peut plus sortir)', min: 0, max: 200, step: 5, unit: 'b' }
+      { key: 'charge', type: 'range', label: 'Poids de la charge (au-delà de 4,6 t, la pression dépasse 150 b : le vérin ne peut plus sortir)', min: 0, max: 6.5, step: 0.1, unit: 't', dec: 1 }
     ],
     compute: function (st) {
-      var d = { p: 5, qv: 0, ql: 0, moving: false, butee: false };
+      var d = { p: 5, qv: 0, ql: 0, moving: false, butee: false }, T = F(st.charge, 1) + ' t';
+      var pc = d.pc = Math.round(st.charge * 1000 / SA); // P (bar) = F (daN) / S (cm²)
       if (st.man === 'S') {
-        d.butee = st.pos >= 1; var trop = st.charge >= TAR;
+        d.butee = st.pos >= 1; var trop = pc >= TAR;
         d.moving = !d.butee && !trop;
-        d.p = d.moving ? st.charge + 5 : TAR; d.qv = d.moving ? QP : 0; d.ql = d.moving ? 0 : QP;
-        d.text = d.moving ? 'Le tiroir relie <b>P → A</b> et <b>B → T</b> : le vérin sort. La pression monte juste à ce qu’il faut pour vaincre la charge (' + st.charge + ' b + pertes). La <b>vitesse</b> dépend du <b>débit</b> (20 L/min), pas de la charge.'
+        d.p = d.moving ? pc + 5 : TAR; d.qv = d.moving ? QP : 0; d.ql = d.moving ? 0 : QP;
+        d.text = d.moving ? 'Le tiroir relie <b>P → A</b> et <b>B → T</b> : le vérin sort. La pression monte juste à ce qu’il faut pour vaincre la charge : P = F / S = ' + F(st.charge * 1000) + ' daN / 31,2 cm² ≈ <b>' + pc + ' b</b> (+ 5 b de pertes). La <b>vitesse</b> dépend du <b>débit</b> (20 L/min), pas de la charge.'
           : d.butee ? 'Le vérin est <b>en butée</b> : l’huile ne peut plus aller nulle part, la pression monte jusqu’au tarage du <b>limiteur (150 b)</b> qui s’ouvre et renvoie tout le débit à la bâche : l’énergie part en chaleur.'
-          : 'La charge (' + st.charge + ' b) demande plus que le tarage du limiteur : la pression plafonne à <b>150 b</b>, le limiteur s’ouvre et le vérin <b>ne peut pas sortir</b>. Baisse la charge sous 150 b pour qu’il sorte. (En rentrée, la charge pousse dans le même sens : il rentre quand même.)';
+          : 'La charge de ' + T + ' demande ' + pc + ' b (P = F / S), plus que le tarage du limiteur : la pression plafonne à <b>150 b</b>, le limiteur s’ouvre et le vérin <b>ne peut pas sortir</b>. Baisse le poids sous 4,6 t pour qu’il sorte. (En rentrée, la charge pousse dans le même sens : il rentre quand même.)';
       } else if (st.man === 'R') {
         d.butee = st.pos <= 0; d.moving = !d.butee;
         d.p = d.moving ? 10 : TAR; d.qv = d.moving ? QP : 0; d.ql = d.moving ? 0 : QP;
         d.text = d.moving ? 'Le tiroir croise les voies : <b>P → B</b> et <b>A → T</b>. Le vérin rentre ; ici la charge pousse dans le même sens, la pression reste faible. Côté tige, la section est plus petite : il rentre <b>plus vite</b>.'
           : 'Vérin rentré en butée : la pression monte au tarage du limiteur (150 b), tout le débit passe par le limiteur.';
       } else {
-        d.text = 'Au <b>neutre</b>, le distributeur à centre ouvert relie <b>P → T</b> : la pompe débite à la bâche presque sans pression (pertes de charge). A et B sont fermés : le vérin est bloqué. L’huile <b>enfermée côté A</b> retient la charge : sa pression vaut celle de la charge (' + st.charge + ' b) ; côté B, l’huile enfermée n’est pas chargée.';
+        d.text = 'Au <b>neutre</b>, le distributeur à centre ouvert relie <b>P → T</b> : la pompe débite à la bâche presque sans pression (pertes de charge). A et B sont fermés : le vérin est bloqué. L’huile <b>enfermée côté A</b> retient la charge : sa pression vaut F / S = ' + pc + ' b pour ' + T + ' ; côté B, l’huile enfermée n’est pas chargée.';
       }
-      d.trop = st.man === 'S' && st.charge >= TAR && !d.butee;
+      d.trop = st.man === 'S' && pc >= TAR && !d.butee;
       d.etat = st.man === 'N' ? 'BLOQUÉ (neutre)' : d.moving ? (st.man === 'S' ? 'SORT' : 'RENTRE') : d.butee ? 'EN BUTÉE' : 'NE PEUT PAS SORTIR';
-      d.readouts = [['État du vérin', d.etat, d.trop ? 'hot' : d.moving ? 'ok' : ''], ['Pression (manomètre)', F(d.p) + ' b', d.p >= TAR ? 'hot' : ''], ['Débit vers le vérin', F(d.qv) + ' L/min'],
+      d.readouts = [['État du vérin', d.etat, d.trop ? 'hot' : d.moving ? 'ok' : ''], ['Charge', T + ' → ' + pc + ' b'], ['Pression (manomètre)', F(d.p) + ' b', d.p >= TAR ? 'hot' : ''], ['Débit vers le vérin', F(d.qv) + ' L/min'],
         ['Débit par le limiteur', F(d.ql) + ' L/min', d.ql ? 'hot' : ''], ['Sortie de la tige', F(st.pos * 100) + ' %']];
       return d;
     },
@@ -101,7 +102,7 @@
       var px = 205 + st.pos * 235;
       a.move('piston', px, 0);
       a.attr('chA', 'width', Math.max(0, px - 203)); a.attr('chB', 'x', px + 18); a.attr('chB', 'width', Math.max(0, 577 - px - 18));
-      a.text('chg', st.charge + ' b');
+      a.text('chg', F(st.charge, 1) + ' t');
       a.q('spool').style.transform = 'translateX(' + ({ N: 230, S: 310, R: 150 }[st.man]) + 'px)';
       var lim = d.ql > 0, mv = d.moving ? 1 : 0;
       a.q('limAr').style.transform = lim ? 'translateX(7px)' : ''; // ouvert : la flèche vient dans l’axe de la conduite
@@ -109,7 +110,7 @@
       a.lineP('pL1', d.p, lim ? 1 : 0, { tag: false });
       a.lineP('pL2', lim ? 0 : null, lim ? 1 : 0, { tag: false });
       if (st.man === 'N') {
-        a.lineP('pT', 0, 1, { dx: 30 }); var pk = st.charge > 0 ? st.charge : null; // huile enfermée : la charge appuie sur le fond
+        a.lineP('pT', 0, 1, { dx: 30 }); var pk = d.pc > 0 ? d.pc : null; // huile enfermée : la charge appuie sur le fond
         a.lineP('pA', pk, 0, { at: 0.35 }); a.lineP('pB', null, 0); a.fillP('chA', pk); a.fillP('chB', null);
       } else if (st.man === 'S') {
         a.lineP('pA', d.p, mv, { at: 0.35 }); a.lineP('pB', 0, -mv, { at: 0.5 }); a.lineP('pT', 0, mv, { dx: 30 });
@@ -118,18 +119,18 @@
         a.lineP('pB', d.p, mv, { at: 0.5 }); a.lineP('pA', 0, -mv, { at: 0.35 }); a.lineP('pT', 0, mv, { dx: 30 });
         a.fillP('chB', d.p); a.fillP('chA', 0);
       }
-      a.text('tEtat', d.etat); a.text('tEtat2', d.trop ? 'charge ' + st.charge + ' b > limiteur 150 b' : '');
+      a.text('tEtat', d.etat); a.text('tEtat2', d.trop ? F(st.charge, 1) + ' t → ' + d.pc + ' b > limiteur 150 b' : '');
       a.q('tEtat').style.fill = d.trop ? 'var(--bad)' : '';
       a.move('needle', 0, 0, gAng(d.p, 200), 285, 428);
       a.text('mtxt', F(d.p) + ' b');
     },
     steps: [
-      { title: 'Neutre', text: 'Distributeur au neutre (centre ouvert) : <b>P → T</b>. La pompe tourne mais l’huile retourne à la bâche sans pression. A et B fermés : le vérin est bloqué, l’huile enfermée côté A retient la charge (50 b).', set: { man: 'N', charge: 50, pos: 0.15 } },
-      { title: 'Sortie, charge 50 b', text: 'On pousse la manette : <b>P → A</b>, <b>B → T</b>. La pression s’établit à ce que demande la charge : ≈ 55 b.', set: { man: 'S', charge: 50 } },
-      { title: 'Sortie, charge 120 b', text: 'Charge plus lourde : la pression monte à ≈ 125 b, mais la <b>vitesse ne change pas</b> : c’est le débit (20 L/min) qui fait la vitesse.', set: { man: 'S', charge: 120 } },
-      { title: 'Butée', text: 'Le piston arrive en fin de course : la pression monte au tarage du <b>limiteur (150 b)</b>, qui renvoie tout le débit à la bâche (perte d’énergie en chaleur).', set: { man: 'S', charge: 120, pos: 1 } },
-      { title: 'Charge trop lourde', text: 'Charge qui demande 180 b : le limiteur s’ouvre à 150 b avant que le vérin puisse bouger. <b>Pression = charge</b>, plafonnée par le limiteur.', set: { man: 'S', charge: 180, pos: 0.4 } },
-      { title: 'Rentrée', text: 'Manette tirée : les voies se croisent, <b>P → B</b> et <b>A → T</b>. Côté tige la section est plus petite : même débit, vitesse plus grande.', set: { man: 'R', charge: 50, pos: 1 } }
+      { title: 'Neutre', text: 'Distributeur au neutre (centre ouvert) : <b>P → T</b>. La pompe tourne mais l’huile retourne à la bâche sans pression. A et B fermés : le vérin est bloqué, l’huile enfermée côté A retient la charge (1,5 t ≈ 48 b).', set: { man: 'N', charge: 1.5, pos: 0.15 } },
+      { title: 'Sortie, charge 1,5 t', text: 'On pousse la manette : <b>P → A</b>, <b>B → T</b>. La pression s’établit à ce que demande la charge : P = F / S = 1 500 daN / 31,2 cm² ≈ 48 b, + 5 b de pertes ≈ <b>53 b</b>.', set: { man: 'S', charge: 1.5 } },
+      { title: 'Sortie, charge 3,8 t', text: 'Charge plus lourde : 3 800 daN / 31,2 cm² ≈ 122 b, la pression monte à ≈ <b>127 b</b>, mais la <b>vitesse ne change pas</b> : c’est le débit (20 L/min) qui fait la vitesse.', set: { man: 'S', charge: 3.8 } },
+      { title: 'Butée', text: 'Le piston arrive en fin de course : la pression monte au tarage du <b>limiteur (150 b)</b>, qui renvoie tout le débit à la bâche (perte d’énergie en chaleur).', set: { man: 'S', charge: 3.8, pos: 1 } },
+      { title: 'Charge trop lourde', text: 'Charge de 5,5 t : il faudrait 5 500 / 31,2 ≈ 176 b. Le limiteur s’ouvre à 150 b avant que le vérin puisse bouger. La pression dépend de la charge, mais elle est <b>plafonnée par le limiteur</b>.', set: { man: 'S', charge: 5.5, pos: 0.4 } },
+      { title: 'Rentrée', text: 'Manette tirée : les voies se croisent, <b>P → B</b> et <b>A → T</b>. Côté tige la section est plus petite : même débit, vitesse plus grande.', set: { man: 'R', charge: 1.5, pos: 1 } }
     ]
   });
 
