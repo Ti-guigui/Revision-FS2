@@ -48,12 +48,12 @@
       '<circle class="ink-f" cx="110" cy="560" r="30"/><path class="solid" d="M140 560 l-12 -7 v14z"/><path class="ink" d="M86 586 L136 532" marker-end="url(#sim-ar)"/>' +
       bache(60, 584) + '<text x="110" y="528" text-anchor="middle" class="t-s">Pompe</text>' +
       // ---- tiroir LS (corps : petit alésage + grande chambre) ----
-      '<rect id="zPS" class="zone z-off" x="142" y="172" width="10" height="58"/>' +
-      '<rect id="zA1" class="zone z-off" x="190" y="172" width="70" height="58"/><rect id="zA2" class="zone z-off" x="262" y="102" width="38" height="196"/>' +
-      '<rect id="zLS" class="zone z-off" x="318" y="102" width="150" height="196"/>' +
+      '<rect id="zPS" class="zone z-off" x="142" y="172" width="8" height="58" style="transition:transform .45s ease;transform-origin:142px 200px"/>' +
+      '<rect id="zA1" class="zone z-off" x="190" y="172" width="70" height="58" style="transition:transform .45s ease;transform-origin:260px 200px"/><rect id="zA2" class="zone z-off" x="262" y="102" width="38" height="196" style="transition:transform .45s ease;transform-origin:262px 200px"/>' +
+      '<rect id="zLS" class="zone z-off" x="318" y="102" width="150" height="196" style="transition:transform .45s ease;transform-origin:468px 200px"/>' +
       '<path class="ink" d="M142 170 H260 V100 H470 V300 H260 V232 H142" style="fill:none;stroke-width:3"/>' +
       '<g id="spool" style="transition:transform .45s ease"><rect class="solid" x="150" y="174" width="40" height="54" rx="3"/><rect class="ink-f" x="190" y="192" width="112" height="18"/><rect class="solid" x="300" y="104" width="18" height="192"/></g>' +
-      '<path id="lsSpr" class="ink" d="" style="stroke-width:2.6"/>' +
+      '<path id="lsSpr" class="ink" d="' + zig(318, 200, 468, 150, 5) + '" style="stroke-width:2.6;transition:transform .45s ease;transform-origin:468px 200px"/>' +
       '<text x="120" y="152" class="t-b">Tiroir LS</text>' +
       '<text x="480" y="210" class="t-b" style="fill:#dc2626">Stand-by</text><text x="480" y="228" class="t-b" style="fill:#dc2626">30 b</text>' +
       '<text x="96" y="196" text-anchor="end" class="t-b" style="fill:#dc2626">PS</text>' +
@@ -150,12 +150,14 @@
     draw: function (a, st, d) {
       var run = d.mode === 'run', sb = d.mode === 'sb';
       // tiroir : repoussé vers le ressort (stand-by, butée) → PS vers le vérin de commande ; en travail il est en équilibre
-      var dx = d.plein || d.mode === 'arret' ? 0 : run ? Math.max(2, 12 - d.q / 10) : 14;
+      // le tiroir comprime le ressort de stand-by d’autant plus que la pression de service l’emporte sur LS + ressort
+      var dx = d.plein || d.mode === 'arret' ? 0 : run ? Math.round(8 + 30 * (1 - d.q / 99)) : 40;
       a.q('spool').style.transform = 'translateX(' + dx + 'px)';
-      a.attr('lsSpr', 'd', zig(318 + dx, 200, 468, 150 - dx * 2, 4));
-      a.attr('zPS', 'width', 8 + dx); a.attr('zA1', 'x', 190 + dx); a.attr('zA1', 'width', 70 - dx); a.attr('zA2', 'width', 38 + dx); a.attr('zLS', 'x', 318 + dx); a.attr('zLS', 'width', 150 - dx);
+      // ressort de stand-by comprimé et chambres qui suivent le tiroir (même animation)
+      var sx = function (id, k) { a.q(id).style.transform = 'scaleX(' + k.toFixed(3) + ')'; };
+      sx('lsSpr', (150 - dx) / 150); sx('zLS', (150 - dx) / 150); sx('zPS', (8 + dx) / 8); sx('zA1', (70 - dx) / 70); sx('zA2', (38 + dx) / 38);
       a.fillP('zPS', d.ps);
-      var pvc = d.plein ? 0 : d.ps * Math.min(1, dx / 14) * 0.6; // pression envoyée au vérin de commande (ordre de grandeur)
+      var pvc = d.plein || d.mode === 'arret' ? 0 : d.ps * Math.min(1, dx / 40); // pression envoyée au vérin de commande (ordre de grandeur)
       a.fillP('zA1', pvc > 1 ? pvc : 0, { op: 0.6 }); a.fillP('zA2', pvc > 1 ? pvc : 0, { op: 0.6 });
       a.fillP('zLS', d.ls > 0 ? d.ls : 0, { pil: d.ls > 0, op: 0.55 });
       a.fillP('zVC', pvc > 1 ? pvc : 0, { op: 0.7 });
