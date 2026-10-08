@@ -2,7 +2,7 @@
    DAD, gicleur anti-pompage, gicleur LS, vérin de commande et vérin de rappel du plateau) */
 (function () {
   var F = SIMS.fmt;
-  var SB = 30, QAP = 1, QDAD = 1, QMAX = 100;
+  var SB = 30, QAP = 1, QDAD = 0.5, QMAX = 100;
 
   function bache(x, y) { return '<path class="ink" d="M' + (x - 12) + ' ' + y + ' V' + (y + 10) + ' H' + (x + 12) + ' V' + y + '"/>'; }
   function zig(x1, y, x2, h, n) {
@@ -31,7 +31,7 @@
     lessons: ['ppld/generation', 'ppld/rsq240', 'ppld/energie', 'hydro/ls'],
     viewBox: '0 0 1000 600', minWidth: 900,
     levels: true, hpLabel: 'Pression de service (full flow)', pilLabel: 'Pression LS (low flow)', bpLabel: '0 b (retour bâche)',
-    note: 'Valeurs du cours et de tes fiches : stand-by 30 b, DAD 320 b (réglable ici), gicleur anti-pompage 1 L/min, gicleur LS 0,5 L/min, fuite du DAD ouvert ≈ 1 L/min, pompe 100 L/min. Débits et pressions des étapes : tes fiches de phases (treuil, RMU, stabilisateurs).',
+    note: 'Valeurs du cours et de tes fiches : stand-by 30 b, DAD 320 b (réglable ici), gicleur anti-pompage 1 L/min, gicleur LS 0,5 L/min, DAD ouvert : il ne laisse passer que les 0,5 L/min du gicleur LS, pompe 100 L/min. Débits et pressions des étapes : tes fiches de phases (treuil, RMU, stabilisateurs).',
     svg:
       // ---- conduites ----
       '<path class="pipe" id="pP" d="M140 560 H775 V462"/>' +
@@ -126,12 +126,12 @@
       d.text = d.mode === 'sb'
         ? '<b>Stand-by</b> : éléments au neutre, la ligne LS est à la bâche (<b>LS = 0 b</b>). Seul le ressort de stand-by retient le tiroir : dès que la <b>PS dépasse 30 b</b>, le tiroir se déplace, envoie la pression au <b>vérin de commande</b> qui ramène le <b>plateau vers le mini</b>. La pompe garde <b>30 b</b> et ne débite que ce que consomme le <b>gicleur anti-pompage (1 L/min)</b>.'
         : d.dadOpen
-          ? '<b>Butée : le DAD s’ouvre</b>. La LS (low flow) monte jusqu’au tarage du ressort du DAD (<b>' + dad + ' b</b>) : la bille se soulève et laisse échapper l’huile de la chambre LS (≈ 1 L/min, alimentée par le gicleur LS). Pour déplacer le tiroir, la <b>pression de service (full flow)</b> doit vaincre <b>LS + ressort de stand-by = ' + dad + ' + 30 = ' + d.ps + ' b</b> : le tiroir comprime le ressort, alimente le vérin de commande, le plateau revient au mini → <b>annulation de débit</b>, pression maxi maintenue.'
+          ? '<b>Butée : le DAD s’ouvre</b>. La LS (low flow) monte jusqu’au tarage du ressort du DAD (<b>' + dad + ' b</b>) : la bille se soulève et laisse passer vers la bâche <b>seulement les 0,5 L/min</b> qui arrivent par le <b>gicleur LS</b> (ligne LS → gicleur → chambre → DAD). Tant que le DAD est fermé, rien ne circule dans le gicleur LS. Pour déplacer le tiroir, la <b>pression de service (full flow)</b> doit vaincre <b>LS + ressort de stand-by = ' + dad + ' + 30 = ' + d.ps + ' b</b> : le tiroir comprime le ressort, alimente le vérin de commande, le plateau revient au mini → <b>annulation de débit</b>, pression maxi maintenue.'
           : d.secOpen
             ? '<b>Butée</b> : le <b>limiteur secondaire de l’élément (' + sec + ' b)</b> plafonne la pression LS avant le DAD (' + dad + ' b, resté fermé). La pompe maintient <b>PS = ' + sec + ' + 30 = ' + d.ps + ' b</b>, plateau au mini.'
             : '<b>Travail</b> : la pression LS (' + d.ls + ' b, la charge) <b>s’ajoute au ressort de stand-by (30 b)</b> derrière le tiroir. Le tiroir s’équilibre quand <b>PS = LS + 30 = ' + d.ps + ' b</b> : il dose l’huile envoyée au vérin de commande et le plateau prend la cylindrée qu’il faut pour donner <b>' + F(d.q) + ' L/min</b> à l’élément (+ 1 L/min du gicleur anti-pompage). ΔP de l’élément = 30 b : la vitesse ne dépend pas de la charge.';
       d.readouts = [['Pression de service (full flow)', F(d.ps) + ' b', d.dadOpen ? 'hot' : ''], ['Pression LS (low flow)', F(d.ls) + ' b'], ['ΔP = PS − LS', SB + ' b'],
-        ['Débit pompe', F(d.Q, d.Q % 1 ? 1 : 0) + ' L/min'], ['DAD', d.dadOpen ? 'ouvert (≈ 1 L/min)' : 'fermé', d.dadOpen ? 'hot' : ''], ['Puissance', F(d.kw, 1) + ' kW']];
+        ['Débit pompe', F(d.Q, d.Q % 1 ? 1 : 0) + ' L/min'], ['DAD', d.dadOpen ? 'ouvert (0,5 L/min)' : 'fermé', d.dadOpen ? 'hot' : ''], ['Puissance', F(d.kw, 1) + ' kW']];
       return d;
     },
     tick: function (st, dt, d) {
@@ -156,14 +156,14 @@
       a.lineP('pVC', pvc > 1 ? pvc : 0, 0, { tag: false });
       a.lineP('pAP', 0, 1, { tag: false });
       a.lineP('pR', run || d.mode === 'butee' ? d.ls : null, run && d.q ? 1 : 0, { at: 0.3, pil: d.ls > 0 }); // ligne du récepteur = pression LS (même couleur que la ligne LS)
-      a.lineP('pLS', d.ls, d.dadOpen ? -1 : 0, { pil: d.ls > 0, at: 0.62 });
+      a.lineP('pLS', d.ls, d.dadOpen ? 1 : 0, { pil: d.ls > 0, at: 0.62 }); // DAD fermé : rien ne circule dans le gicleur LS ; ouvert : LS → gicleur 0,5 L/min → DAD → bâche
       a.lineP('pDAD', 0, d.dadOpen ? 1 : 0, { tag: false });
       a.lineP('pRet', 0, 0, { tag: false }); a.lineP('pSuc', 0, 1, { tag: false });
       // DAD
       a.q('dadB').style.transform = d.dadOpen ? 'translateY(-7px)' : '';
       a.attr('dadSpr', 'd', zigV(420, d.dadOpen ? 79 : 86, 50, 22, 3));
       a.q('dadOut').style.opacity = d.dadOpen ? 1 : 0.2;
-      a.text('tDAD', st.dad + ' b'); a.text('tDADq', d.dadOpen ? 'ouvert : ≈ 1 L/min' : 'fermé');
+      a.text('tDAD', st.dad + ' b'); a.text('tDADq', d.dadOpen ? 'ouvert : 0,5 L/min' : 'fermé');
       // plateau, vérin de commande, vérin de rappel
       var c = d.cyl / 100, ang = -17 * c;
       a.q('plat').style.transform = 'rotate(' + ang + 'deg)';
@@ -187,8 +187,8 @@
       { title: 'RMU en butée', text: 'Ta fiche « RMU en butée » : le <b>limiteur secondaire 300 b</b> de l’élément plafonne la LS à 300 b → <b>PS = 330 b</b>. Le DAD (320 b) reste fermé.', set: { ouv: 38, butee: true, sec: '300' } },
       { title: 'Stabilisateurs : extension à 85 b', text: 'Ta fiche « stabilisateurs » : LS = <b>85 b</b> → <b>PS = 115 b</b>, débit <b>40 L/min</b> (balance d’entrée : ΔP 30 b, 40 L/min).', set: { ouv: 40, charge: 85 } },
       { title: 'Stabilisateurs en butée', text: 'Ta fiche : le <b>limiteur de pression à commande pilotée 220 b</b> plafonne la LS → <b>PS = 250 b</b> (tête pilote 200 b).', set: { ouv: 40, butee: true, sec: '220' } },
-      { title: 'Treuil en butée : DAD 320 b', text: 'Sans limiteur secondaire, la LS monte jusqu’au <b>DAD (320 b)</b> : la bille se soulève, la chambre LS fuit ≈ 1 L/min ; la PS doit vaincre <b>320 + 30 = 350 b</b> : annulation de débit, 350 b maintenus.', set: { ouv: 28, butee: true } },
-      { title: 'DAD réglé à 150 b', text: 'Ton exemple : ressort du DAD à <b>150 b</b>. Quand la <b>pression de service atteint 180 b</b> (150 b du DAD dans le low flow + 30 b du stand-by), le tiroir se déplace et comprime le ressort, le DAD s’ouvre et laisse échapper l’huile (≈ 1 L/min) : la pompe s’annule à 180 b.', set: { ouv: 28, butee: true, dad: 150 } }
+      { title: 'Treuil en butée : DAD 320 b', text: 'Sans limiteur secondaire, la LS monte jusqu’au <b>DAD (320 b)</b> : la bille se soulève, il laisse passer les <b>0,5 L/min</b> du gicleur LS vers la bâche ; la PS doit vaincre <b>320 + 30 = 350 b</b> : annulation de débit, 350 b maintenus.', set: { ouv: 28, butee: true } },
+      { title: 'DAD réglé à 150 b', text: 'Ton exemple : ressort du DAD à <b>150 b</b>. Quand la <b>pression de service atteint 180 b</b> (150 b du DAD dans le low flow + 30 b du stand-by), le tiroir se déplace et comprime le ressort, le DAD s’ouvre et laisse passer les <b>0,5 L/min</b> du gicleur LS : la pompe s’annule à 180 b.', set: { ouv: 28, butee: true, dad: 150 } }
     ],
     stepMs: 7000
   });

@@ -891,3 +891,13 @@ tr.v-ded td, tr.v-conf td { background: color-mix(in srgb, var(--mid-bg) 45%, tr
 .sim-mt .exp { display: block; font-size: 12px; color: #dc2626; }
 .sim-exo .sim-tags, .sim-exo .sim-readouts, .sim-exo .sim-mval, .sim-exo .sim-caption { display: none; }
 .sim-panel .sim-res { margin-top: 8px; font-weight: 700; }
+
+/* Simulateurs : pression LS (violet, comme les fiches PPLD), grand schéma, éléments cliquables */
+:root { --sim-lsv: #7c3aed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sim-lsv: #a78bfa; } }
+:root[data-theme="dark"] { --sim-lsv: #a78bfa; }
+.sim-stage.wide { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.sim-stage svg.big { font-size: 20px; } .sim-stage svg.big .t-s { font-size: 16px; } .sim-stage svg.big .t-b { font-size: 23px; }
+.sim-stage [data-info] { cursor: pointer; }
+.sim-stage [data-info]:hover > .hit, .sim-stage [data-info].on > .hit { fill: rgba(250, 204, 21, .28); stroke: #facc15; }
+.sim-stage .hit { fill: transparent; stroke: none; }

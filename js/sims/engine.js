@@ -36,7 +36,7 @@
       '<div class="sim-tabs" role="tablist">' +
         (sim.steps && sim.steps.length ? '<button type="button" data-sim="mode" data-v="watch">▶️ Regarder</button>' : '') +
         '<button type="button" data-sim="mode" data-v="play">🕹️ Manipuler</button></div>' +
-      '<div class="sim-stage"><svg viewBox="' + (sim.viewBox || '0 0 820 460') + '"' + (sim.minWidth ? ' style="--simw:' + sim.minWidth + 'px"' : '') + ' role="img" aria-label="' + esc(sim.title) + '">' + defs() + sim.svg + '</svg></div>' +
+      '<div class="sim-stage' + (sim.deskMin ? ' wide' : '') + '"><svg' + (sim.big ? ' class="big"' : '') + ' viewBox="' + (sim.viewBox || '0 0 820 460') + '"' + (sim.minWidth || sim.deskMin ? ' style="--simw:' + (sim.minWidth || 640) + 'px' + (sim.deskMin ? ';min-width:' + sim.deskMin + 'px' : '') + '"' : '') + ' role="img" aria-label="' + esc(sim.title) + '">' + defs() + sim.svg + '</svg></div>' +
       (sim.reps ? '<div class="sim-info" hidden></div>' : '') +
       '<div class="sim-caption" aria-live="polite"></div>' +
       '<div class="sim-watch"><button type="button" class="btn small" data-sim="prev">◀ Étape précédente</button>' +
@@ -187,8 +187,8 @@
   }
 
   function onClick(c, e) {
-    var rp = e.target.closest('[data-rep]');
-    if (rp && c.sim.reps && !c.dead) { showRep(c, rp.getAttribute('data-rep')); return; }
+    var rp = e.target.closest('[data-rep],[data-info]');
+    if (rp && c.sim.reps && !c.dead) { showRep(c, rp.getAttribute('data-rep') || rp.getAttribute('data-info')); return; }
     if (c.sim.panelClick && e.target.closest('.sim-panel') && !c.dead) { c.sim.panelClick(e, c); return; }
     var b = e.target.closest('[data-sim]');
     if (!b || c.dead) return;
@@ -221,9 +221,9 @@
   function showRep(c, n) {
     var r = c.sim.reps[n], box = c.host.querySelector('.sim-info');
     if (!r || !box) return;
-    c.host.querySelectorAll('[data-rep]').forEach(function (g) { g.classList.toggle('on', g.getAttribute('data-rep') === n); });
+    c.host.querySelectorAll('[data-rep],[data-info]').forEach(function (g) { g.classList.toggle('on', (g.getAttribute('data-rep') || g.getAttribute('data-info')) === n); });
     box.hidden = false;
-    box.innerHTML = '<button type="button" class="sim-info-x" aria-label="Fermer" onclick="this.parentNode.hidden=true">✕</button><b>Repère ' + esc(n) + ' — ' + r[0] + '</b><br>' + r[1];
+    box.innerHTML = '<button type="button" class="sim-info-x" aria-label="Fermer" onclick="this.parentNode.hidden=true">✕</button><b>' + (/^[0-9.]+$/.test(n) ? 'Repère ' + esc(n) + ' — ' : '') + r[0] + '</b><br>' + r[1];
   }
 
   function onInput(c, e) {
@@ -265,9 +265,10 @@
   // Couleurs du cours : rouge = pression, vert = pilotage / commande / gavage, bleu = retour bâche (ou BP avec o.ret)
   function resolve(c) {
     var api = c.api, sim = c.sim;
-    var hasHp = false, hasZero = false, hasPil = false, hasOff = false;
+    var hasHp = false, hasZero = false, hasPil = false, hasOff = false, hasLs = false;
     function col(it) {
       if (it.p == null) { hasOff = true; return null; }
+      if (it.o.ls && it.p > 0.05) { hasLs = true; return 'var(--sim-lsv)'; }
       if (it.o.pil) { hasPil = true; return 'var(--sim-pil)'; }
       if (it.o.ret || it.p <= 0.05) { hasZero = true; return 'var(--sim-bp)'; }
       hasHp = true; return 'var(--sim-hp)';
@@ -315,6 +316,7 @@
     // légende : rouge / vert / bleu (les valeurs sont écrites sur les conduites)
     if (sim.levels) {
       var h = (hasHp ? '<span><i class="lg lg-hp"></i>' + (sim.hpLabel || 'Pression') + '</span>' : '') +
+        (hasLs ? '<span><i class="lg" style="background:var(--sim-lsv)"></i>' + (sim.lsLabel || 'Pression LS') + '</span>' : '') +
         (hasPil ? '<span><i class="lg lg-pil"></i>' + (sim.pilLabel || 'Pilotage / commande') + '</span>' : '') +
         (hasZero ? '<span><i class="lg lg-bp"></i>' + (sim.bpLabel || 'Retour bâche') + '</span>' : '') +
         (hasOff ? '<span><i class="lg"></i>Sans pression</span>' : '') +
