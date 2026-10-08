@@ -256,7 +256,7 @@
       a.lineP('x9O', v.M, v.Q2 ? 1 : 0, { pil: v.M > 0.5, tag: false }); a.lineP('pM', v.M, 0, { pil: v.M > 0.5, tag: false });
       a.lineP('q2', 0, v.Q2 ? 1 : 0, { tag: false });
       br('pMB', v.MB, hpT, 0, { tag: false }); br('pMA', v.MA, hpB, 0, { tag: false });
-      a.lineP('dr13', 0, v.Q3 ? -1 : 0, { tag: false }); a.lineP('sc', 0, -1, { tag: false });
+      a.lineP('dr13', 0, v.Q3 ? 1 : 0, { tag: false }); a.lineP('sc', 0, 1, { tag: false }); // Q3 : du bloc moteur vers le bloc pompe ; aspiration : de la bâche vers la pompe de gavage
       var col = st.panne === 'filtre';
       a.lineP('rt1', 0, 1, { tag: false }); a.lineP('rt2', 0, col ? 0 : 1, { tag: false }); a.lineP('byp', 0, col ? 1 : 0, { tag: false });
       a.q('bpB').style.transform = col ? 'translateY(6px)' : '';
