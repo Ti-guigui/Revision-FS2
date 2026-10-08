@@ -70,11 +70,12 @@
       gicleur(420, 300, 330) + '<text x="434" y="322" class="t-s" style="fill:#7c3aed">Gicleur 0,5 L/min</text>' +
       
       // vérin de commande, vérin de rappel, plateau
-      '<rect class="ink-f" x="300" y="400" width="120" height="30"/><g id="vcP" style="transition:transform .45s ease"><rect class="solid" x="328" y="402" width="8" height="26"/><path class="ink" d="M336 415 H450" style="stroke-width:3"/></g>' +
-      '<rect id="zVC" class="zone z-off" x="302" y="402" width="26" height="26"/>' +
-      '<rect class="ink-f" x="300" y="490" width="120" height="30"/><g id="vrP" style="transition:transform .45s ease"><rect class="solid" x="328" y="492" width="8" height="26"/><path class="ink" d="M336 505 H452" style="stroke-width:3"/></g>' +
+      '<rect class="ink-f" x="300" y="400" width="120" height="30"/>' +
+      '<rect id="zVC" class="zone z-off" x="302" y="402" width="70" height="26" style="transition:transform .6s ease;transform-origin:302px 415px"/>' +
+      '<g id="vcP" style="transition:transform .6s ease"><rect class="solid" x="372" y="402" width="8" height="26"/><path class="ink" d="M380 415 H456" style="stroke-width:3"/></g>' +
+      '<rect class="ink-f" x="300" y="490" width="120" height="30"/><g id="vrP" style="transition:transform .6s ease"><rect class="solid" x="372" y="492" width="8" height="26"/><path class="ink" d="M380 505 H456" style="stroke-width:3"/></g>' +
       '<path class="ink" d="' + zig(270, 505, 300, 12, 3) + '"/>' +
-      '<g id="plat" style="transition:transform .45s ease;transform-origin:460px 540px"><rect class="ink-f" x="456" y="380" width="8" height="160"/></g>' +
+      '<g id="plat" style="transition:transform .6s ease;transform-origin:460px 540px"><rect class="ink-f" x="456" y="380" width="8" height="160"/></g>' +
       '<path class="ink" d="M410 378 L460 540 M460 372 V540" style="stroke-dasharray:8 3 2 3;stroke-width:1.2"/>' +
       '<text x="404" y="372" text-anchor="middle" class="t-s t-b">Max</text><text x="466" y="366" text-anchor="middle" class="t-s t-b">Min</text>' +
       '<text x="300" y="393" class="t-s">Vérin de commande</text>' +
@@ -166,9 +167,12 @@
       a.text('tDAD', st.dad + ' b'); a.text('tDADq', d.dadOpen ? 'ouvert : 0,5 L/min' : 'fermé');
       // plateau, vérin de commande, vérin de rappel
       var c = d.cyl / 100, ang = -17 * c;
+      // plateau et vérins liés : les tiges restent en appui sur le plateau (vérin de commande à 125 px du pivot, vérin de rappel à 35 px)
+      var sn = Math.sin(-ang * Math.PI / 180), dxC = -125 * sn, dxR = -35 * sn;
       a.q('plat').style.transform = 'rotate(' + ang + 'deg)';
-      a.move('vcP', -c * 40, 0); a.move('vrP', -c * 10, 0);
-      a.attr('zVC', 'width', Math.max(2, 26 - c * 40 + 0));
+      a.q('vcP').style.transform = 'translateX(' + dxC.toFixed(1) + 'px)';
+      a.q('vrP').style.transform = 'translateX(' + dxR.toFixed(1) + 'px)';
+      a.q('zVC').style.transform = 'scaleX(' + ((70 + dxC) / 70).toFixed(3) + ')';
       a.text('tCyl', 'cylindrée ' + d.cyl + ' %');
       // élément de distributeur et récepteur
       a.q('dist').style.transform = 'translateX(' + (Math.min(1, st.ouv / 60) * 60) + 'px)';
