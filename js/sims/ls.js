@@ -75,9 +75,9 @@
       '<g id="vcP" style="transition:transform .6s ease"><rect class="solid" x="372" y="402" width="8" height="26"/><path class="ink" d="M380 415 H456" style="stroke-width:3"/></g>' +
       '<rect class="ink-f" x="300" y="490" width="120" height="30"/><g id="vrP" style="transition:transform .6s ease"><rect class="solid" x="372" y="492" width="8" height="26"/><path class="ink" d="M380 505 H456" style="stroke-width:3"/></g>' +
       '<path class="ink" d="' + zig(270, 505, 300, 12, 3) + '"/>' +
-      '<g id="plat" style="transition:transform .6s ease;transform-origin:460px 540px"><rect class="ink-f" x="456" y="380" width="8" height="160"/></g>' +
-      '<path class="ink" d="M410 378 L460 540 M460 372 V540" style="stroke-dasharray:8 3 2 3;stroke-width:1.2"/>' +
-      '<text x="404" y="372" text-anchor="middle" class="t-s t-b">Max</text><text x="466" y="366" text-anchor="middle" class="t-s t-b">Min</text>' +
+      '<g id="plat" style="transition:transform .6s ease;transform-origin:460px 460px"><rect class="ink-f" x="456" y="380" width="8" height="160"/></g><circle class="solid" cx="460" cy="460" r="5"/>' +
+      '<path class="ink" d="M426 387 L494 533 M460 372 V548" style="stroke-dasharray:8 3 2 3;stroke-width:1.2"/>' +
+      '<text x="416" y="378" text-anchor="middle" class="t-s t-b">Max</text><text x="466" y="366" text-anchor="middle" class="t-s t-b">Min</text>' +
       '<text x="300" y="393" class="t-s">Vérin de commande</text>' +
       '<text x="300" y="483" class="t-s">Vérin de rappel</text><text x="476" y="430" class="t-s">Plateau</text><text x="476" y="446" class="t-s">pompe</text>' +
       '<text id="tCyl" x="476" y="466" class="t-s t-b">cylindrée 1 %</text>' +
@@ -99,9 +99,10 @@
       gauge('nP', 560, 520) + '<path class="ink" d="M560 560 V536"/><text id="tP" x="582" y="525" class="t-b">30 b</text><text x="510" y="494" class="t-s">Pression de service</text>' +
       gauge('nLS', 660, 314) + '<path class="ink" d="M660 350 V330"/><text id="tLS" x="682" y="319" class="t-b">0 b</text><text x="620" y="288" class="t-s">Manomètre LS</text>' +
       [[170, 560], [560, 560], [840, 360], [660, 350]].map(function (q) { return dot(q[0], q[1]); }).join(''),
-    init: { ouv: 0, charge: 100, butee: false, dad: 320, sec: 0, pos: 0.3 },
+    init: { moteur: true, ouv: 0, charge: 100, butee: false, dad: 320, sec: 0, pos: 0.3 },
     keep: ['pos'],
     controls: [
+      { key: 'moteur', type: 'toggle', label: 'Moteur (entraînement de la pompe)', on: 'En marche', off: 'À l’arrêt' },
       { key: 'ouv', type: 'range', label: 'Débit demandé par l’élément (ouverture du tiroir)', min: 0, max: 100, step: 1, unit: 'L/min' },
       { key: 'charge', type: 'range', label: 'Pression demandée par la charge (LS)', min: 0, max: 340, step: 5, unit: 'b' },
       { key: 'butee', type: 'toggle', label: 'Récepteur en butée', on: 'Oui', off: 'Non' },
@@ -126,8 +127,10 @@
       d.ps = d.plein ? d.ls : d.ls + SB;
       d.Q = d.plein ? QMAX : d.q + QAP + (d.dadOpen ? QDAD : 0);
       d.cyl = Math.max(1, Math.round(d.Q / QMAX * 100));
+      if (!st.moteur) { d.mode = 'arret'; d.plein = false; d.ps = 0; d.ls = 0; d.q = 0; d.Q = 0; d.cyl = 100; d.dadOpen = d.secOpen = false; }
       d.kw = d.ps * d.Q / 600;
-      d.text = d.mode === 'sb'
+      d.text = d.mode === 'arret' ? '<b>Au repos (moteur à l’arrêt)</b> : aucune pression. Le <b>vérin de rappel</b> (ressort) pousse le plateau : la pompe est en <b>cylindrée maximum</b>. Dès le démarrage, la pression monte et la régulation ramène le plateau au débit dont le circuit a besoin.'
+        : d.mode === 'sb'
         ? '<b>Stand-by</b> : éléments au neutre, la ligne LS est à la bâche (<b>LS = 0 b</b>). Seul le ressort de stand-by retient le tiroir : dès que la <b>PS dépasse 30 b</b>, le tiroir se déplace, envoie la pression au <b>vérin de commande</b> qui ramène le <b>plateau vers le mini</b>. La pompe garde <b>30 b</b> et ne débite que ce que consomme le <b>gicleur anti-pompage (1 L/min)</b>.'
         : d.dadOpen
           ? '<b>Butée : le DAD s’ouvre</b>. La LS (low flow) monte jusqu’au tarage du ressort du DAD (<b>' + dad + ' b</b>) : la bille se soulève et laisse passer vers la bâche <b>seulement les 0,5 L/min</b> qui arrivent par le <b>gicleur LS</b> (ligne LS → gicleur → chambre → DAD). Tant que le DAD est fermé, rien ne circule dans le gicleur LS. Pour déplacer le tiroir, la <b>pression de service (full flow)</b> doit vaincre <b>LS + ressort de stand-by = ' + dad + ' + 30 = ' + d.ps + ' b</b> : le tiroir comprime le ressort, alimente le vérin de commande, le plateau revient au mini → <b>annulation de débit</b>, pression maxi maintenue.'
@@ -147,7 +150,7 @@
     draw: function (a, st, d) {
       var run = d.mode === 'run', sb = d.mode === 'sb';
       // tiroir : repoussé vers le ressort (stand-by, butée) → PS vers le vérin de commande ; en travail il est en équilibre
-      var dx = d.plein ? 0 : run ? Math.max(2, 12 - d.q / 10) : 14;
+      var dx = d.plein || d.mode === 'arret' ? 0 : run ? Math.max(2, 12 - d.q / 10) : 14;
       a.q('spool').style.transform = 'translateX(' + dx + 'px)';
       a.attr('lsSpr', 'd', zig(318 + dx, 200, 468, 150 - dx * 2, 4));
       a.attr('zPS', 'width', 8 + dx); a.attr('zA1', 'x', 190 + dx); a.attr('zA1', 'width', 70 - dx); a.attr('zA2', 'width', 38 + dx); a.attr('zLS', 'x', 318 + dx); a.attr('zLS', 'width', 150 - dx);
@@ -170,9 +173,10 @@
       a.q('dadOut').style.opacity = d.dadOpen ? 1 : 0.2;
       a.text('tDAD', st.dad + ' b'); a.text('tDADq', d.dadOpen ? 'ouvert : 0,5 L/min' : 'fermé');
       // plateau, vérin de commande, vérin de rappel
-      var c = d.cyl / 100, ang = -17 * c;
+      var c = d.cyl / 100, ang = -25 * c;
       // plateau et vérins liés : les tiges restent en appui sur le plateau (vérin de commande à 125 px du pivot, vérin de rappel à 35 px)
-      var sn = Math.sin(-ang * Math.PI / 180), dxC = -125 * sn, dxR = -35 * sn;
+      // pivot au milieu : le haut (vérin de commande) part à gauche, le bas (vérin de rappel) part à droite vers Max
+      var sn = Math.sin(-ang * Math.PI / 180), dxC = -45 * sn, dxR = 45 * sn;
       a.q('plat').style.transform = 'rotate(' + ang + 'deg)';
       a.q('vcP').style.transform = 'translateX(' + dxC.toFixed(1) + 'px)';
       a.q('vrP').style.transform = 'translateX(' + dxR.toFixed(1) + 'px)';
@@ -189,6 +193,7 @@
       a.move('nLS', 0, 0, gAng(d.ls, 400), 660, 314); a.text('tLS', F(d.ls) + ' b');
     },
     steps: [
+      { title: 'Au repos (moteur arrêté)', text: 'Pas de pression : le <b>vérin de rappel</b> pousse le plateau, la pompe est en <b>cylindrée maximum</b>. Au démarrage, la régulation ajuste ensuite le débit au besoin du circuit.', set: { moteur: false } },
       { title: '1. Débit nul (stand-by)', text: 'Cours : distributeur <b>fermé</b>. Éléments au neutre : <b>LS = 0 b</b>, la pompe garde <b>30 b</b> (ressort de stand-by). Le tiroir alimente le vérin de commande : plateau au mini, la pompe ne débite que le gicleur anti-pompage (<b>1 L/min</b>).', set: { ouv: 0, charge: 100 } },
       { title: '2. Contrôle du débit', text: 'Cours : distributeur <b>ouvert partiellement</b>. La pression de la ligne LS est l’effort demandé par le récepteur (100 b). La pression de service s’oppose à LS + ressort (30 b) : le tiroir et le vérin de commande se déplacent <b>partiellement</b>, le plateau s’incline juste ce qu’il faut : <b>le débit fourni est adapté aux besoins</b> (50 L/min).', set: { ouv: 50, charge: 100 } },
       { title: '3. Plein débit', text: 'Cours : distributeur <b>ouvert au maximum</b>. La pression LS est <b>identique</b> à la pression de service ; le tiroir reçoit la même pression des deux côtés, le ressort de stand-by l’empêche de bouger : le <b>vérin de commande n’est pas alimenté</b>, la pompe est en <b>cylindrée maximum</b>.', set: { ouv: 100, charge: 100 } },
