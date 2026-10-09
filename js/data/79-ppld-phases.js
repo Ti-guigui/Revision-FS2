@@ -16,9 +16,9 @@
       '<tr><td>Treuils + push-pull</td><td>Halage</td><td>180 b</td><td>210 b</td><td>28 L/min</td></tr>' +
       '<tr><td>Treuils + push-pull</td><td>En butée (DAD)</td><td>320 b</td><td>350 b</td><td>≈ 0 (annulation de débit)</td></tr>' +
       '<tr><td>RMU</td><td>Corps de flèche</td><td>270 b</td><td>300 b</td><td>38 L/min</td></tr>' +
-      '<tr><td>RMU</td><td>En butée (limiteur secondaire 300 b)</td><td>300 b</td><td>330 b</td><td>≈ 0</td></tr>' +
+      '<tr><td>RMU</td><td>En butée (limiteur secondaire 300 b)</td><td>300 b</td><td>330 b</td><td>38 L/min (par le LPS, en chaleur : DAD non atteint)</td></tr>' +
       '<tr><td>Stabilisateurs</td><td>Extension</td><td>85 b</td><td>115 b</td><td>40 L/min</td></tr>' +
-      '<tr><td>Stabilisateurs</td><td>En butée (limiteur piloté 220 b)</td><td>220 b</td><td>250 b</td><td>≈ 0</td></tr></table></div>' +
+      '<tr><td>Stabilisateurs</td><td>En butée (limiteur piloté 220 b)</td><td>220 b</td><td>250 b</td><td>40 L/min (par le limiteur, en chaleur : DAD non atteint)</td></tr></table></div>' +
       '<p>Couleurs : <b style="color:#dc2626">rouge</b> = pression de service, <b style="color:#7c3aed">violet</b> = pression LS (charge), <b style="color:#16a34a">vert</b> = pilotage 25 b, <b style="color:#2563eb">bleu</b> = retour 0 b. Pour voir le fonctionnement de la régulation de la pompe avec ces valeurs : simulateur « Régulation Load Sensing ».</p>',
     retenir: ['Pression de service = LS + 30 b (ressort de stand-by).', 'En butée, la pression est plafonnée par le limiteur secondaire de l’élément ou, à défaut, par le DAD (320 b → 350 b).', 'Balance d’entrée / de pression : ΔP constante (30 b) → débit, donc vitesse, constant : Q = K × S × √ΔP.']
   };

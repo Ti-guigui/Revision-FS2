@@ -12,8 +12,8 @@
 <tr><td>Catalyseur</td><td><b>3 voies</b> : CO, HC <b>et NOx</b></td><td><b>D’oxydation</b> : CO et HC seulement</td></tr>
 <tr><td>Particules</td><td>—</td><td><b>FAP</b> : filtre puis brûle les suies (≈ 550 °C)</td></tr>
 <tr><td>NOx</td><td>EGR</td><td>EGR + <b>SCR (AdBlue)</b></td></tr></table></div>
-<p><b>Commun aux deux : l’EGR.</b> La recirculation des gaz par l’EGR se fait à partir de ≈ <b>1 300 °C</b> ; elle fait baisser la température de combustion, donc les NOx (le livre : N₂ + O₂ → NOx au-delà de 2 000 °C).</p>`,
-    retenir: ['Essence = catalyseur 3 voies (CO, HC, NOx).', 'Diesel = catalyseur d’oxydation (CO, HC) + FAP (suies) + SCR/AdBlue (NOx).', 'EGR : essence ET diesel ; recirculation à partir de ≈ 1 300 °C.'],
+<p><b>Commun aux deux : l’EGR.</b> L’EGR intervient quand la température de combustion dépasse ≈ <b>1 300 °C</b> ; elle fait baisser la température de combustion, donc les NOx (le livre : N₂ + O₂ → NOx au-delà de 2 000 °C).</p>`,
+    retenir: ['Essence = catalyseur 3 voies (CO, HC, NOx).', 'Diesel = catalyseur d’oxydation (CO, HC) + FAP (suies) + SCR/AdBlue (NOx).', 'EGR : essence ET diesel ; intervient au-delà de ≈ 1 300 °C de température de combustion.'],
     pieges: ['Le FAP et l’AdBlue n’existent pas sur un moteur essence.', 'Catalyseur d’oxydation (diesel) : pas de NOx. Seul le 3 voies (essence) traite les NOx.']
   });
 
@@ -26,7 +26,7 @@
     { q: 'La SCR (AdBlue) équipe :', c: ['Le moteur diesel', 'Le moteur essence', 'Les deux'], e: 'Elle réduit les NOx du diesel dans l’échappement.' },
     { q: 'L’EGR (recyclage des gaz d’échappement) équipe :', c: ['Les moteurs essence ET diesel', 'Le diesel seulement', 'L’essence seulement'], e: 'Commun aux deux : il réduit les NOx en diminuant la température de combustion.' },
     { q: 'Quel dispositif est commun aux moteurs essence et diesel ?', c: ['L’EGR', 'Le FAP', 'La SCR (AdBlue)', 'Le catalyseur d’oxydation'], e: 'Essence : catalyseur 3 voies. Diesel : catalyseur d’oxydation, FAP, SCR. Les deux : EGR.' },
-    { q: 'À partir de quelle température se fait la recirculation des gaz par l’EGR ?', c: ['≈ 1 300 °C', '≈ 550 °C', '≈ 180 °C', '≈ 250 °C'], e: 'La recirculation se fait à partir de ≈ 1 300 °C pour faire baisser la température de combustion et limiter les NOx. (550 °C = régénération du FAP ; 180 °C = catalyseur pour la SCR.)' }
+    { q: 'À partir de quelle température de combustion l’EGR intervient-il ?', c: ['≈ 1 300 °C', '≈ 550 °C', '≈ 180 °C', '≈ 250 °C'], e: 'L’EGR intervient au-delà de ≈ 1 300 °C de combustion pour la faire baisser la température de combustion et limiter les NOx. (550 °C = régénération du FAP ; 180 °C = catalyseur pour la SCR.)' }
   ];
   REV.addExercises('moteur', { lessons: [], questions: qs.map(function (q) { q.l = 'depollution'; q.src = SRC; return q; }) });
 
@@ -35,7 +35,7 @@
 <div class="tw"><table><tr><th>⛽ Essence</th><th>🛢️ Diesel</th></tr>
 <tr><td>Catalyseur <b>3 voies</b> (CO, HC, NOx)</td><td>Catalyseur d’<b>oxydation</b> (CO, HC)</td></tr>
 <tr><td>—</td><td><b>FAP</b> ≈ 550 °C · <b>SCR / AdBlue</b> (NOx)</td></tr>
-<tr><td colspan="2" style="text-align:center">Les deux : <b>EGR</b> (recirculation à partir de ≈ 1 300 °C)</td></tr></table></div>
+<tr><td colspan="2" style="text-align:center">Les deux : <b>EGR</b> (intervient au-delà de ≈ 1 300 °C de combustion)</td></tr></table></div>
 <p>💡 « L’essence a <b>3 voies</b> ; le diesel <b>s’encrasse</b> (FAP) et <b>boit de l’AdBlue</b>. L’EGR, tout le monde l’a. »</p>` });
 
   /* ---------- Réseau CAN : état logique ou mesure sur la prise OBD ---------- */

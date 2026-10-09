@@ -279,7 +279,8 @@
   }
 
   function startSession(opts) {
-    var qs = regroupExo(opts.questions.slice(0, opts.count || opts.questions.length), opts.mode !== 'revision');
+    // quiz / examen : nombre de questions annoncé respecté (pas d'exercice repris en entier)
+    var qs = regroupExo(opts.questions.slice(0, opts.count || opts.questions.length), !/^(revision|quiz|examen)$/.test(opts.mode));
     if (!qs.length) { toast('Aucune question disponible pour ce choix.'); return; }
     session = {
       mode: opts.mode, title: opts.title, subject: opts.subject || null, lesson: opts.lesson || null,
@@ -1681,13 +1682,13 @@
       startSession({ mode: 'quiz', title: 'Quiz éclair', timer: el.getAttribute('data-timer') === '1', questions: shuffle(allQuestions()), count: 10 });
     }
     else if (a === 'exam') {
-      // 40 questions réparties au prorata du nombre de questions par matière
-      var pool = [];
+      // 40 questions réparties au prorata du nombre de questions par matière (au moins 1 par matière, total exact)
       var total = totalQuestions();
-      REV.subjects.forEach(function (s) {
-        var k = Math.max(1, Math.round(40 * s.questions.length / total));
-        pool = pool.concat(shuffle(s.questions).slice(0, k));
-      });
+      var share = REV.subjects.map(function (s) { var x = 40 * s.questions.length / total; return { s: s, k: Math.max(1, Math.floor(x)), r: x - Math.floor(x) }; });
+      var left = 40 - share.reduce(function (n, o) { return n + o.k; }, 0);
+      share.slice().sort(function (x, y) { return y.r - x.r; }).forEach(function (o) { if (left > 0) { o.k++; left--; } });
+      var pool = [];
+      share.forEach(function (o) { pool = pool.concat(shuffle(o.s.questions).slice(0, o.k)); });
       startSession({ mode: 'examen', title: 'Examen blanc', questions: shuffle(pool).slice(0, 40) });
     }
     else if (a === 'revision') {
@@ -1743,7 +1744,7 @@
       fr.onload = function () {
         try {
           var d = JSON.parse(fr.result);
-          if (!d || typeof d.q !== 'object') throw new Error('format');
+          if (!d || !d.q || typeof d.q !== 'object') throw new Error('format');
           store = { q: d.q, sessions: d.sessions || [], lessonsSeen: d.lessonsSeen || {} };
           save(); toast('Progression importée ✔'); render();
         } catch (err) { toast('Fichier invalide.'); }
@@ -1774,7 +1775,7 @@
   }
 
   function onKey(e) {
-    if (!session || !/^#\/session/.test(location.hash)) return;
+    if (!session || !/^#\/session/.test(location.hash) || session.i >= session.qids.length) return;
     if (e.target.tagName === 'INPUT' || e.ctrlKey || e.metaKey || e.altKey) return;
     var ans = session.answers[session.i];
     var k = e.key.toUpperCase();

@@ -35,8 +35,7 @@
       html: '<h3>Désignation et rôle</h3><div class="tw"><table><tr><th>Symbole</th><th>Désignation</th><th>Rôle</th></tr>' +
         S.map(function (s) { return '<tr><td><img src="img/sym/aga03-' + s[0] + '.png" alt="" style="max-width:140px"></td><td><b>' + s[1] + '</b></td><td>' + s[2] + '</td></tr>'; }).join('') + '</table></div>',
       retenir: ['Diode : passe de l’anode vers la cathode (trait = cathode).', 'Zéner : en inverse, garde VZ.', 'Transistor NPN (seul vu en cours) : Ib commande Ic = β × Ib ; saturé = interrupteur fermé.', 'Ampèremètre en série, voltmètre en parallèle, ohmmètre hors tension.'],
-      pieges: ['Rhéostat (série, fait varier I) ≠ potentiomètre (diviseur de tension).', 'Condensateur polarisé : respecter + et −.'],
-      memo: { cle: 'A en série · V en parallèle · Ω hors tension', flow: ['Transformateur', 'Pont de Graëtz', 'Condensateur', 'Zéner + ballast'], points: ['LED ≈ 2 V', 'Diode Si ≈ 0,6 V', 'β = Ic / Ib'], astuce: 'NPN : la flèche de l’émetteur sort.' }
+      memo: { cle: 'A en série · V en parallèle · Ω hors tension', flow: ['Pont de Graëtz', 'Zéner + ballast'], points: ['LED ≈ 2 V', 'Diode Si ≈ 0,6 V', 'β = Ic / Ib'], astuce: 'NPN : la flèche de l’émetteur sort.' }
     }],
     questions: qs
   });

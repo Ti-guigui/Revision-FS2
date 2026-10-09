@@ -70,7 +70,6 @@
       { l: 'actionneurs', img: A + 'g140_0.jpg', q: 'Comment le calculateur commande-t-il l’électrovanne de régulation de suralimentation ?', c: ['Par une tension variable (RCO)', 'Par une tension fixe de 24 V', 'Par un signal carré de 5 V venant d’un capteur'], e: 'Électrovanne proportionnelle commandée en RCO : elle module la dépression envoyée à la soupape du turbo.', src: src },
       { l: 'actionneurs', img: A + 'g140_1.jpg', q: 'Électrovanne RGE avec un RCO minimum (non alimentée) :', c: ['Pas de dépression : le recyclage des gaz est supprimé', 'Recyclage maximum', 'Le moteur s’arrête'], e: 'RCO mini = pression atmosphérique sur la soupape = RGE supprimé.', src: src },
       { l: 'actionneurs', img: A + 'g166_0.jpg', q: 'Régulateur IMV Delphi : si le courant de commande augmente…', c: ['Le débit envoyé à la pompe HP diminue', 'Le débit augmente', 'La pompe s’arrête'], e: 'L’IMV est normalement ouvert ; le courant le ferme progressivement.', src: src },
-      { l: 'actionneurs', img: A + 'g165_0.jpg', q: 'Forme du courant de commande d’un injecteur :', c: ['Un courant d’appel élevé puis un courant de maintien plus faible', 'Un courant constant', 'Une sinusoïde'], e: 'Appel pour ouvrir vite, maintien plus faible pour tenir l’injecteur ouvert sans chauffer.', src: src },
       { l: 'actionneurs', img: A + 'g141_1.jpg', q: 'Sur ce schéma, rôle du boîtier de préchauffage 1150 commandé par le calculateur 1320 :', c: ['Alimenter les bougies de préchauffage 1160', 'Alimenter le démarreur', 'Mesurer la tension batterie'], e: 'Le calculateur commande le boîtier de préchauffage, qui alimente les bougies selon la cartographie.', src: src }
     ] });
   })();
@@ -89,8 +88,9 @@
   });
   (function () {
     var s = subj('elec');
-    var al = REV.lessonById['elec/aga03-resistance']; if (al) al.title = 'Livre AGA 03 — loi d’Ohm (Ex 14)';
-    var cc = REV.lessonById['elec/aga03-courant']; if (cc) cc.title = 'Livre AGA 03 — courant, loi des nœuds (Ex 1 à 4)';
+    // intro et « à retenir » alignés sur les exercices gardés (section, Ah, code couleurs et résistivité retirés)
+    var al = REV.lessonById['elec/aga03-resistance']; if (al) { al.title = 'Livre AGA 03 — loi d’Ohm (Ex 14)'; al.html = al.html.replace('Exercices 11 à 19', 'Exercice 14'); al.retenir = ['U = R × I.']; if (al.memo) al.memo.cle = 'U = R × I'; }
+    var cc = REV.lessonById['elec/aga03-courant']; if (cc) { cc.title = 'Livre AGA 03 — courant, loi des nœuds (Ex 1 à 4)'; cc.html = cc.html.replace('Exercices 1 à 6', 'Exercices 1 à 4'); cc.retenir = ['1 A = 1 000 mA.', 'Loi des nœuds.']; }
     var ca = REV.lessonById['elec/cah-e-alimentation']; if (ca) { ca.title = 'Cahier électricité — Pont de diodes et Zéner (Ex 27)'; ca.images = (ca.images || []).filter(function (im) { return !/e27osc|r27/.test(im.src); }); }
     var c = REV.lessonById['elec/composants'];
     if (c) {
@@ -143,7 +143,7 @@
       ['usure rugueuse à l’intérieur de la bande', D + 'usure-rugueuse-int.svg'], ['dans quel ordre procéder', D + 'alfa-uv2.svg'], ['fuite interne sur un circuit', L + 'd048_0.jpg'], ['assistance de freinage de type Mastervac', L + 'd057_1.jpg'],
       ['usure des pneus en facette', D + 'usure-facettes.svg'], ['Donnez le rôle de l’ABS', L + 'd073_0.jpg'], ['méthode graphique', D + 'train-c600-p-fixe.svg'],
       ['quatre roues restent freinées', D + 'schema-pneu-theorique.jpg'], ['temps de remplissage', D + 'schema-pneu-theorique.jpg'], ['air à la main directe', D + 'schema-pneu-theorique.jpg'], ['système de rupture de la VCR', D + 'schema-pneu-theorique.jpg'],
-      ['Quel est le rôle du maitre-cylindre', L + 'd047_2.jpg'], ['rôles d’un ICP by-pass', L + 'd054_0.jpg'], ['Quelle affirmation est fausse', L + 'd084_1.jpg'], ['qualités d’une boite de vitesse', L + 'd092_0.jpg'],
+      ['Quel est le rôle du maitre-cylindre', L + 'd047_2.jpg'], ['Quel est le rôle du maître-cylindre', L + 'd047_2.jpg'], ['autostabilité', S + 'p38-1.png'], ['qualités d’une boîte de vitesses', L + 'd092_0.jpg'], ['rôles d’un ICP by-pass', L + 'd054_0.jpg'], ['Quelle affirmation est fausse', L + 'd084_1.jpg'], ['qualités d’une boite de vitesse', L + 'd092_0.jpg'],
       ['carrossage est hors tolérance', D + 'usure-lisse.svg'], ['parallélisme est hors tolérance', D + 'usure-rugueuse.svg'], ['Usure rugueuse à l’intérieur', D + 'usure-rugueuse-int.svg'], ['Usure rugueuse à l’extérieur', D + 'usure-rugueuse-ext.svg'],
       ['Usure lisse à l’intérieur', D + 'usure-lisse-int.svg'], ['Usure lisse à l’extérieur', D + 'usure-lisse-ext.svg'], ['pas le même à gauche et à droite', D + 'var-tirage.svg'], ['a changé après un choc', S + 'p37-1.png'],
       ['Angle inclus identique des deux côtés', L + 'd038_0.jpg'], ['retour en ligne droite', S + 'p38-1.png'], ['Ordre de réglage d’un train avant', D + 'alfa-uv2.svg'], ['inclinaison de pivot entraîne', S + 'p34-3.png'],

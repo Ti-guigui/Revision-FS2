@@ -206,7 +206,7 @@
     ['capteurs-cr', 'g136_0', 'Le capteur de régime du common rail est de type :', 'Inductif (2 fausses dents pour le PMH du cylindre 1)', 'Effet Hall', 'CTN'],
     ['capteurs-cr', 'g136_1', 'Capteur de phase défectueux :', 'Le moteur ne démarre pas', 'Le moteur s’arrête en roulant', 'Aucune conséquence'],
     ['capteurs-cr', 'g137_0', 'Le capteur de température moteur est de type :', 'CTN', 'Piézo-électrique', 'Inductif'],
-    ['capteurs-cr', 'g137_1', 'Le capteur de haute pression de rampe est de type :', 'Piézo-électrique', 'CTN', 'Effet Hall'],
+    ['capteurs-cr', 'g137_1', 'Le capteur de haute pression de rampe est de type :', 'Piézo-résistif', 'CTN', 'Effet Hall'],
     ['capteurs-cr', 'g138_2', 'Rôle du débitmètre d’air à film chaud :', 'Déterminer la masse d’air admise (avec la température d’air)', 'Mesurer la pression de rampe', 'Mesurer la vitesse du véhicule'],
     ['capteurs-cr', 'g138_1', 'Pourquoi le transducteur d’accélérateur a-t-il 2 potentiomètres ?', 'Le calculateur compare les 2 pistes pour détecter un dysfonctionnement', 'Pour doubler le débit', 'Pour commander 2 injecteurs'],
     ['capteurs-cr', 'g139_2', 'Où est le capteur de pression atmosphérique ?', 'Dans le calculateur (défaillance = remplacer le calculateur)', 'Sur la rampe', 'Dans le réservoir'],

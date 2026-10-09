@@ -46,28 +46,28 @@ REV.addExercises('hydro', {
 <li><b>Q36 — Régulateur de débit 3 voies réglable (simplifié).</b> Régulateur de débit 3 voies réglable (simplifié) : Balance en dérivation : le surplus retourne à la bâche, meilleur rendement.</li>
 <li><b>Q37 — Régulateur de débit 3 voies réglable (détaillé).</b> Régulateur de débit 3 voies réglable (détaillé) : Balance de pression en dérivation vers la bâche + étrangleur réglable.</li>
 <li><b>Q38 — Diviseur de débit à tiroir.</b> Diviseur de débit à tiroir : Divise le débit de la pompe pour que plusieurs récepteurs aillent à la même vitesse.</li>
-<li><b>Q39 — Laisse passer l’huile dans un sens et l’empêche dans l’autre (ressort < 1,4 bar)..</b> Clapet anti-retour.</li>
-<li><b>Q40 — La pression en amont est égale au tarage de son ressort avant qu’il ne s’ouvre..</b> Clapet anti-retour taré.</li>
-<li><b>Q41 — Le pilotage permet d’ouvrir le clapet : il bloque le récepteur tant qu’il n’y a pas de pilotage..</b> Clapet anti-retour piloté.</li>
-<li><b>Q42 — Blocage hydrostatique du récepteur en l’absence de génération ; monté au plus près du récepteur..</b> Bloc de sécurité (clapet piloté double).</li>
-<li><b>Q43 — Sélectionne la pression la plus forte de deux branches pour l’envoyer vers une sortie..</b> Sélecteur de circuit.</li>
-<li><b>Q44 — Limite la pression maxi du circuit en renvoyant l’huile à la bâche (P → T)..</b> Limiteur de pression à action directe réglable.</li>
-<li><b>Q45 — Limite la pression maxi grâce à un étage pilote : précis, pour les gros débits..</b> Limiteur de pression à commande pilotée (symbole simplifié).</li>
-<li><b>Q46 — Ouvert au repos, piloté en aval : maintient une pression réduite dans une partie du circuit..</b> Réducteur de pression 2 voies.</li>
-<li><b>Q47 — Réduit la pression et protège le circuit aval des surpressions (retour bâche)..</b> Réducteur de pression 3 voies.</li>
-<li><b>Q48 — Fermée au repos : donne la priorité d’alimentation à un récepteur par rapport à un autre..</b> Soupape de séquence.</li>
-<li><b>Q49 — Contrôle un récepteur soumis à une charge menante dans les deux sens et assure son blocage..</b> Bloc de freinage.</li>
-<li><b>Q50 — Emmagasine l’énergie hydraulique et la restitue (réserve de secours, amortisseur de coups de bélier)..</b> Accumulateur.</li>
-<li><b>Q51 — Freine le récepteur dans un sens ; passage libre par le clapet dans l’autre..</b> Clapet freineur (limiteur de débit simple effet, non réglable).</li>
-<li><b>Q52 — Freine le récepteur dans un sens avec un débit réglable ; passage libre dans l’autre..</b> Clapet freineur réglable (limiteur de débit simple effet réglable).</li>
-<li><b>Q53 — Réduit le débit dans les deux sens de passage de l’huile..</b> Limiteur de débit double effet non réglable.</li>
-<li><b>Q54 — Réduit le débit, réglable, dans les deux sens de passage..</b> Limiteur de débit double effet réglable.</li>
-<li><b>Q55 — Débit constant, donc vitesse constante quelle que soit la charge (balance en série)..</b> Régulateur de débit 2 voies non réglable (simplifié).</li>
-<li><b>Q56 — Débit constant réglable ; la balance de pression est montée en série..</b> Régulateur de débit 2 voies réglable (simplifié).</li>
-<li><b>Q57 — Balance de pression + étrangleur en série : Δp constant, vitesse constante..</b> Régulateur de débit 2 voies non réglable (détaillé).</li>
-<li><b>Q58 — Balance en dérivation : le surplus retourne à la bâche, meilleur rendement..</b> Régulateur de débit 3 voies réglable (simplifié).</li>
-<li><b>Q59 — Balance de pression en dérivation vers la bâche + étrangleur réglable..</b> Régulateur de débit 3 voies réglable (détaillé).</li>
-<li><b>Q60 — Divise le débit de la pompe pour que plusieurs récepteurs aillent à la même vitesse..</b> Diviseur de débit à tiroir.</li>
+<li><b>Q39 — Laisse passer l’huile dans un sens et l’empêche dans l’autre (ressort < 1,4 bar).</b> Clapet anti-retour.</li>
+<li><b>Q40 — La pression en amont est égale au tarage de son ressort avant qu’il ne s’ouvre.</b> Clapet anti-retour taré.</li>
+<li><b>Q41 — Le pilotage permet d’ouvrir le clapet : il bloque le récepteur tant qu’il n’y a pas de pilotage.</b> Clapet anti-retour piloté.</li>
+<li><b>Q42 — Blocage hydrostatique du récepteur en l’absence de génération ; monté au plus près du récepteur.</b> Bloc de sécurité (clapet piloté double).</li>
+<li><b>Q43 — Sélectionne la pression la plus forte de deux branches pour l’envoyer vers une sortie.</b> Sélecteur de circuit.</li>
+<li><b>Q44 — Limite la pression maxi du circuit en renvoyant l’huile à la bâche (P → T).</b> Limiteur de pression à action directe réglable.</li>
+<li><b>Q45 — Limite la pression maxi grâce à un étage pilote : précis, pour les gros débits.</b> Limiteur de pression à commande pilotée (symbole simplifié).</li>
+<li><b>Q46 — Ouvert au repos, piloté en aval : maintient une pression réduite dans une partie du circuit.</b> Réducteur de pression 2 voies.</li>
+<li><b>Q47 — Réduit la pression et protège le circuit aval des surpressions (retour bâche).</b> Réducteur de pression 3 voies.</li>
+<li><b>Q48 — Fermée au repos : donne la priorité d’alimentation à un récepteur par rapport à un autre.</b> Soupape de séquence.</li>
+<li><b>Q49 — Contrôle un récepteur soumis à une charge menante dans les deux sens et assure son blocage.</b> Bloc de freinage.</li>
+<li><b>Q50 — Emmagasine l’énergie hydraulique et la restitue (réserve de secours, amortisseur de coups de bélier).</b> Accumulateur.</li>
+<li><b>Q51 — Freine le récepteur dans un sens ; passage libre par le clapet dans l’autre.</b> Clapet freineur (limiteur de débit simple effet, non réglable).</li>
+<li><b>Q52 — Freine le récepteur dans un sens avec un débit réglable ; passage libre dans l’autre.</b> Clapet freineur réglable (limiteur de débit simple effet réglable).</li>
+<li><b>Q53 — Réduit le débit dans les deux sens de passage de l’huile.</b> Limiteur de débit double effet non réglable.</li>
+<li><b>Q54 — Réduit le débit, réglable, dans les deux sens de passage.</b> Limiteur de débit double effet réglable.</li>
+<li><b>Q55 — Débit constant, donc vitesse constante quelle que soit la charge (balance en série).</b> Régulateur de débit 2 voies non réglable (simplifié).</li>
+<li><b>Q56 — Débit constant réglable ; la balance de pression est montée en série.</b> Régulateur de débit 2 voies réglable (simplifié).</li>
+<li><b>Q57 — Balance de pression + étrangleur en série : Δp constant, vitesse constante.</b> Régulateur de débit 2 voies non réglable (détaillé).</li>
+<li><b>Q58 — Balance en dérivation : le surplus retourne à la bâche, meilleur rendement.</b> Régulateur de débit 3 voies réglable (simplifié).</li>
+<li><b>Q59 — Balance de pression en dérivation vers la bâche + étrangleur réglable.</b> Régulateur de débit 3 voies réglable (détaillé).</li>
+<li><b>Q60 — Divise le débit de la pompe pour que plusieurs récepteurs aillent à la même vitesse.</b> Diviseur de débit à tiroir.</li>
 </ol>`,
       retenir: ['Reconnaître le symbole, puis dire son rôle.'],
       memo: { cle: 'SYMBOLE → NOM → RÔLE', points: ['Regarder les orifices, les flèches, les ressorts et les pilotages'], astuce: 'Un symbole se lit comme une phrase : entrée, sortie, commande.' }
@@ -178,39 +178,39 @@ REV.addExercises('pneu', {
 <li><b>Q32 — Cylindre de frein à verrou.</b> Cylindre de frein à verrou : Combine frein de service et frein de stationnement (verrouillage mécanique).</li>
 <li><b>Q33 — Robinet de frein de service, commande par pédale.</b> Robinet de frein de service, commande par pédale : Délivre une information de freinage proportionnelle à l’effort sur la pédale.</li>
 <li><b>Q34 — Double valve d’arrêt.</b> Double valve d’arrêt : Alimente un circuit à partir de deux circuits indépendants.</li>
-<li><b>Q35 — Entraîné par le moteur thermique, il fournit l’air comprimé à l’installation..</b> Compresseur.</li>
-<li><b>Q36 — Commande le frein de parcage (et de secours)..</b> Robinet de frein de parc.</li>
-<li><b>Q37 — Autorise le passage de l’air dans un seul sens..</b> Clapet anti-retour ou valve de retenue.</li>
-<li><b>Q38 — Protège les éléments du circuit contre le gel et la corrosion..</b> Dispositif antigel.</li>
-<li><b>Q39 — Commande le freinage de la remorque indépendamment du tracteur..</b> Robinet de frein d’alignement ou de remorque.</li>
-<li><b>Q40 — Maintient dans un circuit une pression inférieure à la pression de service..</b> Valve de limitation de pression ou détendeur.</li>
-<li><b>Q41 — Élimine les condensats et les particules solides..</b> Épurateur.</li>
-<li><b>Q42 — Facilite l’échappement de l’air pour accélérer le défreinage..</b> Valve de desserrage rapide.</li>
-<li><b>Q43 — Alimente un circuit quand la pression amont atteint la pression de barrage (priorité de remplissage)..</b> Valve de barrage à retour total.</li>
-<li><b>Q44 — Réduit la pression délivrée dans un rapport constant..</b> Valve de réduction.</li>
-<li><b>Q45 — Priorité de remplissage, avec retour partiel de l’air..</b> Valve de barrage à retour partiel.</li>
-<li><b>Q47 — Stocke l’air comprimé..</b> Accumulateur d’air (réservoir).</li>
-<li><b>Q48 — Priorité de remplissage, sans retour de l’air..</b> Valve de barrage sans retour.</li>
-<li><b>Q49 — Diminue le temps de réponse et la consommation au freinage..</b> Valve relais simple pilotage (VRSP).</li>
-<li><b>Q50 — Commande le freinage de la remorque à partir des freins de service AV et AR..</b> Valve de commande de remorque à double pilotage sans rupture.</li>
-<li><b>Q51 — Évacue l’eau des réservoirs..</b> Valve de purge d’eau.</li>
-<li><b>Q52 — Valve relais qui délivre de la pression quand le pilotage chute..</b> Valve relais simple pilotage inversé.</li>
-<li><b>Q53 — Commande le freinage de la remorque et assure la fonction rupture..</b> Valve de commande de remorque à double pilotage avec rupture.</li>
-<li><b>Q54 — Entrée unique 1 : commande le freinage de la remorque (service AV, AR et parc), sans fonction rupture..</b> Valve de commande de remorque à triple pilotage sans rupture.</li>
-<li><b>Q55 — Pilotée par deux circuits ; la VNAE évite d’additionner frein de service et frein de parc..</b> Valve relais double pilotage ou VNAE.</li>
-<li><b>Q56 — Deux entrées 11 et 12 = avec rupture : commande le freinage de la remorque (service AV, AR, parc) et assure la fonction rupture..</b> Valve de commande de remorque à triple pilotage avec rupture.</li>
-<li><b>Q57 — Freine la remorque sur ordre de la main directe, et en urgence si le flexible automatique casse..</b> Valve relais d’urgence (VRU).</li>
-<li><b>Q58 — Permet de desserrer et resserrer à la main les freins de la remorque..</b> Valve de desserrage.</li>
-<li><b>Q59 — Adapte l’effort de freinage arrière à la charge (relié mécaniquement à l’essieu)..</b> Correcteur de freinage à commande mécanique.</li>
-<li><b>Q60 — Régule automatiquement la pression délivrée et protège contre les surpressions..</b> Régulateur de pression.</li>
-<li><b>Q61 — Permet de brancher un manomètre pour contrôler la pression..</b> Raccord d’épreuve ou prise de pression.</li>
-<li><b>Q62 — Adapte l’effort de freinage à la charge (véhicule à suspension pneumatique)..</b> Correcteur de freinage à commande pneumatique.</li>
-<li><b>Q63 — Transforme la pression en force mécanique pour actionner les leviers cames..</b> Cylindre simple effet ou vase à diaphragme.</li>
-<li><b>Q64 — Alimente les circuits dans un ordre précis et isole un circuit défaillant..</b> Valve de protection.</li>
-<li><b>Q65 — Combine frein de service et frein de stationnement (freinage par le ressort, par absence d’air)..</b> Cylindre de frein à ressort ou « TRISTOP ».</li>
-<li><b>Q66 — Combine frein de service et frein de stationnement (verrouillage mécanique)..</b> Cylindre de frein à verrou.</li>
-<li><b>Q67 — Délivre une information de freinage proportionnelle à l’effort sur la pédale..</b> Robinet de frein de service, commande par pédale.</li>
-<li><b>Q68 — Alimente un circuit à partir de deux circuits indépendants..</b> Double valve d’arrêt.</li>
+<li><b>Q35 — Entraîné par le moteur thermique, il fournit l’air comprimé à l’installation.</b> Compresseur.</li>
+<li><b>Q36 — Commande le frein de parcage (et de secours).</b> Robinet de frein de parc.</li>
+<li><b>Q37 — Autorise le passage de l’air dans un seul sens.</b> Clapet anti-retour ou valve de retenue.</li>
+<li><b>Q38 — Protège les éléments du circuit contre le gel et la corrosion.</b> Dispositif antigel.</li>
+<li><b>Q39 — Commande le freinage de la remorque indépendamment du tracteur.</b> Robinet de frein d’alignement ou de remorque.</li>
+<li><b>Q40 — Maintient dans un circuit une pression inférieure à la pression de service.</b> Valve de limitation de pression ou détendeur.</li>
+<li><b>Q41 — Élimine les condensats et les particules solides.</b> Épurateur.</li>
+<li><b>Q42 — Facilite l’échappement de l’air pour accélérer le défreinage.</b> Valve de desserrage rapide.</li>
+<li><b>Q43 — Alimente un circuit quand la pression amont atteint la pression de barrage (priorité de remplissage).</b> Valve de barrage à retour total.</li>
+<li><b>Q44 — Réduit la pression délivrée dans un rapport constant.</b> Valve de réduction.</li>
+<li><b>Q45 — Priorité de remplissage, avec retour partiel de l’air.</b> Valve de barrage à retour partiel.</li>
+<li><b>Q47 — Stocke l’air comprimé.</b> Accumulateur d’air (réservoir).</li>
+<li><b>Q48 — Priorité de remplissage, sans retour de l’air.</b> Valve de barrage sans retour.</li>
+<li><b>Q49 — Diminue le temps de réponse et la consommation au freinage.</b> Valve relais simple pilotage (VRSP).</li>
+<li><b>Q50 — Commande le freinage de la remorque à partir des freins de service AV et AR.</b> Valve de commande de remorque à double pilotage sans rupture.</li>
+<li><b>Q51 — Évacue l’eau des réservoirs.</b> Valve de purge d’eau.</li>
+<li><b>Q52 — Valve relais qui délivre de la pression quand le pilotage chute.</b> Valve relais simple pilotage inversé.</li>
+<li><b>Q53 — Commande le freinage de la remorque et assure la fonction rupture.</b> Valve de commande de remorque à double pilotage avec rupture.</li>
+<li><b>Q54 — Entrée unique 1 : commande le freinage de la remorque (service AV, AR et parc), sans fonction rupture.</b> Valve de commande de remorque à triple pilotage sans rupture.</li>
+<li><b>Q55 — Pilotée par deux circuits ; la VNAE évite d’additionner frein de service et frein de parc.</b> Valve relais double pilotage ou VNAE.</li>
+<li><b>Q56 — Deux entrées 11 et 12 = avec rupture : commande le freinage de la remorque (service AV, AR, parc) et assure la fonction rupture.</b> Valve de commande de remorque à triple pilotage avec rupture.</li>
+<li><b>Q57 — Freine la remorque sur ordre de la main directe, et en urgence si le flexible automatique casse.</b> Valve relais d’urgence (VRU).</li>
+<li><b>Q58 — Permet de desserrer et resserrer à la main les freins de la remorque.</b> Valve de desserrage.</li>
+<li><b>Q59 — Adapte l’effort de freinage arrière à la charge (relié mécaniquement à l’essieu).</b> Correcteur de freinage à commande mécanique.</li>
+<li><b>Q60 — Régule automatiquement la pression délivrée et protège contre les surpressions.</b> Régulateur de pression.</li>
+<li><b>Q61 — Permet de brancher un manomètre pour contrôler la pression.</b> Raccord d’épreuve ou prise de pression.</li>
+<li><b>Q62 — Adapte l’effort de freinage à la charge (véhicule à suspension pneumatique).</b> Correcteur de freinage à commande pneumatique.</li>
+<li><b>Q63 — Transforme la pression en force mécanique pour actionner les leviers cames.</b> Cylindre simple effet ou vase à diaphragme.</li>
+<li><b>Q64 — Alimente les circuits dans un ordre précis et isole un circuit défaillant.</b> Valve de protection.</li>
+<li><b>Q65 — Combine frein de service et frein de stationnement (freinage par le ressort, par absence d’air).</b> Cylindre de frein à ressort ou « TRISTOP ».</li>
+<li><b>Q66 — Combine frein de service et frein de stationnement (verrouillage mécanique).</b> Cylindre de frein à verrou.</li>
+<li><b>Q67 — Délivre une information de freinage proportionnelle à l’effort sur la pédale.</b> Robinet de frein de service, commande par pédale.</li>
+<li><b>Q68 — Alimente un circuit à partir de deux circuits indépendants.</b> Double valve d’arrêt.</li>
 </ol>`,
       retenir: ['Reconnaître le symbole, puis dire son rôle.'],
       memo: { cle: 'SYMBOLE → NOM → RÔLE', points: ['Regarder les orifices, les flèches, les ressorts et les pilotages'], astuce: 'Un symbole se lit comme une phrase : entrée, sortie, commande.' }

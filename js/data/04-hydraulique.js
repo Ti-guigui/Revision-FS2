@@ -11,7 +11,7 @@ REV.add({
 <tr><td>Débit d’une pompe</td><td>Q = V × N / 1000</td><td>L/min, cm³/tr, tr/min</td></tr>
 <tr><td>Vitesse d’un vérin</td><td>v = Q / (6 × S)</td><td>m/s, L/min, cm²</td></tr>
 <tr><td>Vitesse d’un moteur</td><td>N = Q × 1000 / V</td><td>tr/min, L/min, cm³/tr</td></tr>
-<tr><td>Couple d’un moteur</td><td>C = P × V / 628</td><td>N·m, bar, cm³/tr</td></tr>
+<tr><td>Couple d’un moteur</td><td>C = P × V / 628</td><td>daN·m, bar, cm³/tr</td></tr>
 <tr><td>Puissance hydraulique</td><td>Pu = P × Q / 600</td><td>kW, bar, L/min</td></tr>
 <tr><td>Bernoulli (orifice)</td><td>Q = K × S × √ΔP</td><td>S = section de passage, ΔP = écart de pression</td></tr></table></div>
 <ul><li><b>Loi de Pascal</b> : circuit en équilibre = même pression partout, pas de circulation.</li>
@@ -24,7 +24,7 @@ REV.add({
 <li>Clapet freineur limitant la sortie côté tige (S = 5 cm²) à 30 L/min : v = 30 / (6 × 5) = <b>1 m/s</b>.</li></ul></div>`,
       retenir: ['Pression = force ; débit = vitesse.', 'Q = V × N / 1000 · v = Q / (6 × S) · Pu = P × Q / 600.', 'La vitesse d’un vérin dépend de la surface et du débit.'],
       pieges: ['La pompe ne crée pas la pression : elle crée le débit.', 'Toujours ramener à la bonne unité (cm², L/min, bar).'],
-      memo: { cle: 'PRESSION = FORCE · DÉBIT = VITESSE', points: ['Q = V × N / 1000', 'v = Q / (6 × S)', 'Pu = P × Q / 600', 'C = P × V / 628', 'Rouge pression · bleu retour · vert commande'], astuce: '« 1000, 6, 600, 628 » : les quatre diviseurs magiques de l’hydraulique.' }
+      memo: { cle: 'PRESSION = FORCE · DÉBIT = VITESSE', points: ['Q = V × N / 1000', 'v = Q / (6 × S)', 'Pu = P × Q / 600', 'C = P × V / 628 (daN·m)', 'Rouge pression · bleu retour · vert commande'], astuce: '« 1000, 6, 600, 628 » : les quatre diviseurs magiques de l’hydraulique.' }
     },
     {
       id: 'fluides', title: 'Fluides et phénomènes',
@@ -124,7 +124,7 @@ REV.add({
 <tr><td>30 b</td><td>Limiteur</td><td>Maxi du circuit de commande</td></tr>
 <tr><td>252 b</td><td>TAD</td><td>Pression maxi de service, annulation de débit</td></tr>
 <tr><td>280 / 340 b</td><td>LPSAC</td><td>Anti-choc, taré au-dessus du TAD (normal et voulu)</td></tr></table></div>
-<p>Exemple : ripper 150 b / 5 L/min + orientation 80 b / 15 L/min → LS max 150 b ; pompe 167 b ; entrée distributeur ripper 156 b ; orientation 86 b ; Pu = 167 × 21 / 600 ≈ 5,85 kW.</p>
+<p>Exemple : ripper 150 b / 5 L/min + orientation 80 b / 15 L/min → LS max 150 b ; pompe 167 b ; entrée distributeur ripper 156 b ; orientation 86 b ; débit pompe = 5 + 15 + 1 (fuite du gicleur) = 21 L/min ; Pu = 167 × 21 / 600 ≈ 5,85 kW.</p>
 <div class="tw"><table><tr><th>Symptôme</th><th>Déduction</th></tr>
 <tr><td>Moteur qui cale en butée (récepteurs sans LPSAC), baisse de régime sur les autres</td><td>TAD sur-taré ou grippé</td></tr>
 <tr><td>Descente OK (gravité), rien ne remonte, commande à 30 b au lieu de 25</td><td>Réducteur 2 voies bloqué ouvert</td></tr>

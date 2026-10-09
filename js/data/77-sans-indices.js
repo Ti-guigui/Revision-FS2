@@ -14,7 +14,8 @@
     q.c = q.c.map(function (c, i) {
       var m = String(c).match(re);
       if (!m) return c;
-      if (q.good.indexOf(i) >= 0 && (q.e || '').indexOf(m[1]) < 0) extra.push(m[1]);
+      // pas de « Précision : corrigé. » ni « ex. » : seulement un vrai complément
+      if (q.good.indexOf(i) >= 0 && (q.e || '').indexOf(m[1]) < 0 && !/^(corrigé|ex\.?)$/i.test(m[1].trim())) extra.push(m[1]);
       return String(c).replace(re, '');
     });
     if (extra.length) q.e = (q.e ? q.e.replace(/\s*$/, '') + (/[.!?]$/.test(q.e.trim()) ? ' ' : '. ') : '') + 'Précision : ' + extra.join(' ; ') + '.';

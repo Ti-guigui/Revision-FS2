@@ -144,7 +144,7 @@ REV.add({
 <div class="box explic"><b>+ Exemples</b><ul><li>ΣR = 9 330, EMT = 16 260 → S ≈ 74 % → trop : enlever 1 brin.</li><li>ΣR = 15 623, EMT = 16 240 → S ≈ 4 % → insuffisant : ajouter 1 brin.</li></ul></div>`,
       images: [{ src: 'mdf-emt-simple.png', cap: 'Mouflage simple : EMT = 1 000 + 900 + 810 = 2 710 daN' }, { src: 'mdf-emt-compose.png', cap: 'Mouflage composé : EMT = 1 900 + 1 710 + 1 539 = 5 149 daN' }],
       retenir: ['−10 % par poulie (× 0,9).', 'EMT = somme des brins actifs sur le fardeau.', 'Sécurité entre 15 et 70 % ; < 15 → +1 brin ; > 70 → −1 brin.', 'Sommet de pente : EMT − 10 %.'],
-      pieges: ['Traction renversée : le brin de manœuvre n’apporte rien à l’EMT.', 'Le cours écrit 6,4 % pour le premier exemple : le vrai calcul donne ≈ 4 %. La conclusion reste la même (+1 brin).'],
+      pieges: ['Traction renversée : le brin de manœuvre n’apporte rien à l’EMT.', 'Le cours écrit 6,4 % pour le deuxième exemple (ΣR 15 623 daN, EMT 16 240 daN) : le vrai calcul donne ≈ 4 %. La conclusion reste la même (+1 brin).'],
       memo: { cle: '× 0,9 À CHAQUE POULIE', flow: ['EMD sur le garant', '× 0,9 par poulie', 'Somme des brins actifs = EMT', 'S % = (EMT − ΣR) / ΣR', '15 % ≤ S ≤ 70 %'], points: ['1 000 + 900 + 810 = 2 710', 'Composé : 5 149', 'Renversé : 2 439'], astuce: 'Sécurité « 15–70 » : ni trop juste, ni gaspillage de brins.' }
     },
     {

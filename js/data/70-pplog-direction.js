@@ -58,7 +58,7 @@
           ['La pompe de secours est entraînée par la boîte de vitesses : à l’arrêt, elle ne tourne pas.', 'Pas de débit dans le régulateur de débit (18) → <b>témoin allumé</b> (normal à l’arrêt, même moteur tournant).', 'Le véhicule roule : la pompe débite, l’huile passe par la soupape 15 et pilote le régulateur de débit → <b>témoin éteint</b>.', 'S’il reste allumé en roulant : pompe de secours ou circuit secondaire HS.']) +
         bloc('Voyant de niveau d’huile (19)', null, null, ['Au contact, il s’allume <b>quelques secondes</b> (test), puis s’éteint.', 'Allumé ensuite = <b>niveau d’huile insuffisant</b>.']) +
         tab(['Situation', 'Normal', 'Principal en panne', 'Secondaire en panne'], [
-          ['Contact mis, moteur arrêté', '1 allumé · 2 allumé', '<b>1 éteint</b> (capteurs du boîtier HS) · 2 allumé', '1 allumé · 2 allumé'],
+          ['Contact mis, moteur arrêté', '1 allumé · 2 allumé', '1 allumé · 2 allumé', '1 allumé · 2 allumé'],
           ['Moteur tournant, véhicule arrêté', '1 éteint · 2 allumé', '<b>1 allumé</b> · 2 allumé', '1 éteint · 2 allumé'],
           ['Moteur tournant, véhicule en marche', '1 éteint · 2 éteint', '<b>1 allumé</b> · 2 éteint', '1 éteint · <b>2 allumé</b>']]) +
         '<h3>Le circuit étape par étape (schémas 1 à 5)</h3>' +
@@ -205,7 +205,7 @@
   ];
   // question qui cite un repère du circuit de direction → schéma numéroté (repères 1 à 20) au-dessus
   var REPQ = /\(\d+\)|Repères? \d|soupapes? \d|vérin \d|capteurs A et B/;
-  function qs(l) { return Q.map(function (q) { var o = { l: typeof l === 'function' ? l(q[0]) : l, q: q[1], c: q[2], src: 'Cours AGE 14 ind. g (PPLOG), chapitres 5 et 6' }; if (/^direction/.test(q[0]) && REPQ.test(q[1] + ' ' + q[2].join(' '))) o.img = I + 'di-schema-arret.jpg'; return o; }); }
+  function qs(l) { return Q.map(function (q) { var o = { l: typeof l === 'function' ? l(q[0]) : l, q: q[1], c: q[2], src: 'Cours AGE 14 ind. g (PPLOG), chapitres 5 et 6' }; if (/^direction/.test(q[0]) && REPQ.test(q[1] + ' ' + q[2].join(' '))) o.img = I + (/en panne/.test(q[1]) ? 'di-schema-panne.jpg' : 'di-schema-arret.jpg'); return o; }); }
   REV.addLessons('pplog', 'frein-pneumatique', L);
   REV.addExercises('pplog', { lessons: [], questions: qs(function (l) { return l; }) });
   REV.addLessons('uv3', 'pplog-freinage', [{ id: 'pplog-direction', title: 'PPLOG : direction, transmission, Intarder, blocages', images: [].concat.apply([], L.map(function (x) { return x.images; })), html: L.map(function (x) { return '<h2>' + x.title + '</h2>' + x.html; }).join(''), retenir: [].concat.apply([], L.map(function (x) { return x.retenir; })) }]);

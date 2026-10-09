@@ -66,7 +66,7 @@ REV.systemes = {
         ['Consommation d’huile', 'Joints de queue de soupape, joint de culasse, segmentation', 'Remplacer les pièces en cause', 'R']] },
     { t: 'Le refroidissement', img: [['gd21/m082_0.jpg', 'Circuit sous pression'], ['gd21/m079_1.jpg', 'Thermostat'], ['gd21/m084_0.jpg', 'Bouchon : clapets de pression et de dépression']],
       role: 'Évacuer les calories en trop tout en gardant la bonne température de fonctionnement.',
-      phases: [['À froid', 'Thermostat fermé : pas de circulation vers le radiateur (double effet : bloc ↔ culasse par le by-pass) → montée rapide en température.'], ['À chaud', 'Thermostat ouvert : le liquide passe dans le radiateur ; le vase d’expansion se remplit.'], ['Sous pression', '1,8 bar ≈ ébullition à 115 °C ; le bouchon limite la pression (0,8 à 1,2 bar).'], ['À l’arrêt', 'Le liquide retourne au radiateur ; le clapet de dépression (0,05 bar) laisse entrer l’air.']],
+      phases: [['À froid', 'Thermostat fermé : pas de circulation vers le radiateur (double effet : bloc ↔ culasse par le by-pass) → montée rapide en température.'], ['À chaud', 'Thermostat ouvert : le liquide passe dans le radiateur ; le vase d’expansion se remplit.'], ['Sous pression', '1,4 bar ≈ ébullition à 115 °C ; le bouchon limite la pression (0,8 à 1,2 bar).'], ['À l’arrêt', 'Le liquide retourne au radiateur ; le clapet de dépression (0,05 bar) laisse entrer l’air.']],
       pannes: [
         ['Consommation de liquide', 'Joint de culasse, joints de chemises humides, durites, pastilles de dessablage', 'Remplacer l’élément qui fuit', 'R']] },
     { t: 'Le common rail (moteur qui ne démarre pas)', img: [['gd22/g143_0.jpg', 'Common rail Bosch'], ['diag-delphi-dfp1.jpg', 'Logigramme Delphi DFP1'], ['diag-bosch-cp1.jpg', 'Logigramme Bosch CP1']],
@@ -178,7 +178,7 @@ REV.systemes = {
   pplog: [
     { t: 'Direction assistée et ASR', img: [],
       role: 'Assistance hydraulique à 2 circuits ; l’ASR limite le patinage des roues motrices.',
-      phases: [['ASR', 'Capteurs ABS → début de patinage → électrovanne ASR → pression de commande à la valve relais → vases de frein AR.'], ['Témoins, circuit principal défaillant', 'Contact mis : T1 éteint, T2 allumé · moteur à l’arrêt : T1 et T2 allumés · en roulant : T1 allumé, T2 éteint.']],
+      phases: [['ASR', 'Capteurs ABS → début de patinage → électrovanne ASR → pression de commande à la valve relais → vases de frein AR.'], ['Témoins, circuit principal défaillant', 'Contact mis, moteur arrêté : T1 et T2 allumés · moteur tournant, véhicule arrêté : T1 et T2 allumés · en roulant : T1 allumé, T2 éteint. (T1 éteint au contact = capteurs du boîtier HS.)']],
       pannes: [
         ['Témoin 6 allumé, 3 éteint, moteur tournant en roulant', 'Plus de pression sur le 1ᵉʳ circuit (pompe ou circuit HS) : direction dure', 'Réparer la pompe ou le circuit', 'P'],
         ['Contrôler le limiteur n° 14', 'Braquer à fond à droite avec une cale entre la butée mécanique et la barre', 'Régler le limiteur', 'G']] },

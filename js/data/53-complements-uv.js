@@ -43,7 +43,7 @@
 <ul><li>Les 4 phases en <b>2 courses de piston = 1 tour de vilebrequin</b>. Pas de soupapes : c’est le piston qui ouvre et ferme les <b>lumières</b> (admission, échappement, transfert). Carter étanche = <b>carter-pompe</b>.</li>
 <li><b>Montée</b> : compression au-dessus du piston ; dépression dans le carter → entrée des gaz frais. <b>Descente</b> : détente (temps moteur) puis échappement ; précompression dans le carter, puis transfert des gaz frais par le canal de transfert (balayage).</li>
 <li>Avantages : 2 fois plus de temps moteurs à vitesse égale, léger, simple, pas d’affolement de soupapes. Inconvénients : échauffement du piston (serrage), pertes de gaz frais à l’échappement, graissage par mélange (calamine, fumée).</li></ul>`,
-    retenir: ['4 temps : 2 tours de vilebrequin = 1 tour d’arbre à cames ; seul la combustion-détente est motrice.', 'Isobare = P constante · isochore = V constant · isotherme = T constante · adiabatique = sans échange de chaleur.', 'AOA / RFA / AOE / RFE : gagner du remplissage et de l’évacuation grâce à l’inertie des gaz.', '2 temps : 1 tour de vilebrequin, lumières, carter-pompe.'],
+    retenir: ['4 temps : 2 tours de vilebrequin = 1 tour d’arbre à cames ; seule la combustion-détente est motrice.', 'Isobare = P constante · isochore = V constant · isotherme = T constante · adiabatique = sans échange de chaleur.', 'AOA / RFA / AOE / RFE : gagner du remplissage et de l’évacuation grâce à l’inertie des gaz.', '2 temps : 1 tour de vilebrequin, lumières, carter-pompe.'],
     memo: { cle: 'ADMISSION · COMPRESSION · DÉTENTE · ÉCHAPPEMENT = 720°', flow: ['Admission : PMH → PMB, adm. ouverte', 'Compression : PMB → PMH, tout fermé', 'Détente : PMH → PMB, temps moteur', 'Échappement : PMB → PMH, éch. ouverte'], points: ['Isobare = adm./éch. · isochore = combustion · adiabatique = compression/détente', 'Balayage = croisement des soupapes autour du PMH'], astuce: 'ISObare = même preSSion, ISOchore = même vOlume.' }
   }]);
 
@@ -225,7 +225,7 @@
 <tr><td>13</td><td>Valve relais simple pilotage</td><td>Alimente vite les récepteurs, commandée par le robinet</td></tr>
 <tr><td>14</td><td>Valve relais simple pilotage inversé</td><td>Commande par absence d’air (frein de parc / secours)</td></tr>
 <tr><td>15</td><td>Robinet de frein de parc</td><td>Commande le frein de parc et de secours</td></tr>
-<tr><td>16</td><td>Connecteur de freinage + valve relais intégrée</td><td>Adapte l’effort de freinage arrière à la charge</td></tr>
+<tr><td>16</td><td>Correcteur de freinage + valve relais intégrée</td><td>Adapte l’effort de freinage arrière à la charge</td></tr>
 <tr><td>17</td><td>VCR avec rupture</td><td>Commande la remorque à partir de l’AV et de l’AR ; freine la remorque si la conduite directe fuit</td></tr>
 <tr><td>18</td><td>Vase à diaphragme</td><td>Transforme la pression en force de freinage</td></tr>
 <tr><td>19</td><td>VNAE</td><td>Évite d’additionner l’effort du service et celui du ressort sur les Tristop</td></tr>

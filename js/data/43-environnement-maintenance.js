@@ -39,10 +39,10 @@ REV.addLessons('mcot', 'reparation', [{
 <h3>COS — Contrôle des organes de sécurité</h3>
 <ul><li>Permet de se mettre en <b>conformité avec le code de la route</b>.</li>
 <li>Effectué par un <b>BM2 Mobter affecté au RDC</b>. Par un <b>FS2 Mobter</b> si besoin <b>urgent, ponctuel, local</b>.</li>
-<li>Suite à un retour de <b>RIP</b> (⚠ ne jamais repasser derrière).</li>
+<li>Retour de <b>RIP</b> : <b>pas de COS</b>, on ne repasse jamais derrière (le prestataire rend le véhicule apte et conforme).</li>
 <li><b>Sur ordre</b> ; <b>annuellement</b> (+ 3,5 t) ; <b>bus : tous les 6 mois</b> ; <b>stockage de plus de 6 mois</b> (sauf ENU).</li></ul>
 <h3>Documents</h3>
-<ul><li><b>MAT 10004</b> : carnet d’entretien du matériel en complément de SIMMT ; permet le travail en <b>mode dégradé</b> en format papier ; peut être rempli par la <b>CDM, le RDC, le chef d’atelier</b>. Directive relative aux opérations de contrôle des véhicules terrestres relevant du périmètre de la structure intégrée du maintien en condition opérationnelle des matériels terrestres.</li>
+<ul><li><b>MAT 10004</b> : carnet d’entretien du matériel en complément de SIMMT ; permet le travail en <b>mode dégradé</b> en format papier ; peut être rempli par la <b>CDM, le RDC, le chef d’atelier</b>.</li>
 <li><b>MAT 4486</b> : dossier d’intervention technique (<b>DIT</b>). Chapitre 4 — contrôle dans l’ordre : <b>éclairage → freinage → suspension → direction → réparation effectuée → essai dynamique</b>.</li>
 <li><b>BIMT</b> : bulletin d’information des matériels terrestres ; mis à jour <b>tous les 3 mois</b> ; à consulter régulièrement pour voir les nouveautés ou modifications.</li></ul>
 <h3>Les 7 étapes de la remise en condition opérationnelle</h3>
@@ -61,7 +61,7 @@ REV.addLessons('mcot', 'reparation', [{
 <li><b>Opération préventive</b> : si elle contient une vidange, elle s’écrit <b>en rouge</b> (⚠ attention au feuillet « OPÉRATIONS PRÉVENTIVES »).</li>
 <li><b>Opérations correctives</b> : renseignées par le <b>chef d’atelier</b> ; suivi détaillé des opérations effectuées (prioriser les plus importantes).</li>
 <li><b>Vérification périodique</b> : ESP, VGP, etc.</li>
-<li><b>Opération en industrie privée = RIP</b>.</li></ul>`,
+<li><b>RIP = réparation dans l’industrie privée</b>.</li></ul>`,
   retenir: ['CDM : pilote la maintenance, ouvre et clôture le MAT 4486.', 'RDC : ouvre l’AT, ouvre et remplit le MAT 4486, fait le COS, distribue les travaux aux ateliers.', 'COS : BM2 Mobter affecté au RDC (FS2 Mobter si urgent, ponctuel, local) ; tous les ans (bus 6 mois), lors d’une VP + OS, sur ordre, stockage > 6 mois sauf ENU. Sortie de RIP : on ne touche plus au véhicule.', 'MAT 4486 ch. 4 : éclairage, freinage, suspension, direction, réparation effectuée, essai dynamique.', 'Vidange = en rouge dans le MAT 10004 ; BIMT tous les 3 mois.'],
   pieges: ['Retour de RIP : pas de COS obligatoire, on ne repasse jamais derrière (le prestataire rend le véhicule apte et conforme au code de la route).', 'Le MAT 10004 peut être rempli par la CDM, le RDC et le chef d’atelier (pas seulement le RDC).'],
   memo: { cle: 'CDM PILOTE · RDC CONTRÔLE · STATION ENTRETIENT · ATELIER RÉPARE', flow: ['CDM ouvre le MAT 4486', 'RDC : réception, diagnostic', 'Atelier / station : travaux', 'RDC : contrôle de sortie + COS', 'CDM clôture'], points: ['COS : BM2 Mobter affecté au RDC', 'Bus : COS tous les 6 mois', 'BIMT : 3 mois', 'Vidange en rouge'], astuce: 'Éclairage, Freinage, Suspension, Direction, Réparation, Essai : « Et Freiner Sans Dévier, Réparer, Essayer ».' }
@@ -89,8 +89,8 @@ REV.addExercises('mcot', { lessons: [], questions: [
   { l: 'environnement', q: 'Dans quel cas un FS2 Mobter peut-il effectuer le COS ?', c: ['Si le besoin est urgent, ponctuel, local', 'Jamais', 'Uniquement pour les bus'], e: 'COS par un FS2 Mobter : besoin urgent, ponctuel, local.' },
   { l: 'environnement', q: 'Un bus doit passer le COS :', c: ['Tous les 6 mois', 'Tous les ans', 'Tous les 2 ans'], e: 'COS : annuellement (+ 3,5 t) ; bus tous les 6 mois.' },
   { l: 'environnement', q: 'Véhicule qui sort de stockage : quand faut-il un COS ?', c: ['Après plus de 6 mois de stockage (sauf ENU)', 'Après 1 mois de stockage', 'Jamais après un stockage'], e: 'Stockage de plus de 6 mois (sauf ENU).' },
-  { l: 'environnement', q: 'Véhicule qui revient de RIP : le RDC est-il obligé de faire un COS ?', c: ['Non : le prestataire doit rendre le véhicule apte et conforme au code de la route, on ne repasse jamais derrière', 'Oui, un COS est obligatoire après chaque RIP', 'Oui, et il refait les réparations de la RIP'], e: 'Suite à un retour de RIP : ⚠ ne jamais repasser derrière. C’est le prestataire qui rend le véhicule apte et conforme.' },
-  { l: 'environnement', q: 'Que signifie RIP ?', c: ['Opération en industrie privée', 'Réparation d’intervention prioritaire', 'Retour immédiat au parc'], e: 'Opération en industrie privée = RIP.' },
+  { l: 'environnement', q: 'Véhicule qui revient de RIP : le RDC est-il obligé de faire un COS ?', c: ['Non : le prestataire doit rendre le véhicule apte et conforme au code de la route, on ne repasse jamais derrière', 'Oui, un COS est obligatoire après chaque RIP', 'Oui, et il refait les réparations de la RIP'], e: 'Retour de RIP : pas de COS, on ne repasse jamais derrière. C’est le prestataire qui rend le véhicule apte et conforme.' },
+  { l: 'environnement', q: 'Que signifie RIP ?', c: ['Réparation dans l’industrie privée', 'Réparation d’intervention prioritaire', 'Retour immédiat au parc'], e: 'RIP = réparation dans l’industrie privée (le véhicule est débordé vers un prestataire).' },
   { l: 'environnement', q: 'Le MAT 10004 permet :', c: ['De travailler en mode dégradé, en format papier, en complément de SIMMT', 'De commander les pièces', 'D’ouvrir le DIT'], e: 'MAT 10004 = carnet d’entretien du matériel en complément de SIMMT ; mode dégradé papier.' },
   { l: 'environnement', q: 'Que signifie BIMT ?', c: ['Bulletin d’information des matériels terrestres', 'Bureau d’inspection des matériels techniques', 'Bilan d’intervention de maintenance terrestre'], e: 'BIMT : mis à jour tous les 3 mois, à consulter régulièrement (nouveautés, modifications).' },
   { l: 'environnement', q: 'MAT 4486, chapitre 4 : par quoi commence le contrôle ?', c: ['L’éclairage', 'L’essai dynamique', 'La direction'], e: 'Ordre : éclairage → freinage → suspension → direction → réparation effectuée → essai dynamique.' },

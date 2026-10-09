@@ -36,7 +36,7 @@
     html: `
 <h3>Notes de cours : capacités du PPLD</h3>
 <ul><li>Système de <b>levage</b> : <b>15 t</b>.</li><li>Système de <b>halage</b> : <b>18 t</b>.</li><li>Système de <b>remorquage</b> : cabestan.</li><li>Système de <b>stabilisation</b> : AV / AR.</li>
-<li>Remorquage : <b>12,5 t en tracté-levé</b>, <b>15 t en tracté-tiré</b>.</li>
+<li>Remorquage : <b>12,5 t en tracté-levé</b>, <b>50 t en tracté-tiré</b>.</li>
 <li>Commande : arrêt d’urgence et réarmement, sélecteur 3 positions, électrovannes by-pass.</li>
 <li><b>RSQ 240</b> = système débit / pression ; <b>stabs</b> = système débit (on maintient une ΔP constante).</li></ul>
 <h3>Notes de cours : pompe et régulation</h3>

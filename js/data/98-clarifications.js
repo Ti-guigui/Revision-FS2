@@ -63,7 +63,10 @@
       if (q.fixed) return;
       q.c = q.c.map(function (c, i) {
         if (!/retour partiel/i.test(c) || q.good.indexOf(i) >= 0) return c;
-        var alt = ['Valve de barrage sans retour', 'Clapet anti-retour ou valve de retenue', 'Double valve d’arrêt'].filter(function (x) { return q.c.indexOf(x) < 0; })[0];
+        // question de rôle : on remplace par un autre rôle, pas par un nom d’appareil
+        var alts = /rôle/i.test(q.q) ? ['Garde la pression en aval en cas de fuite en amont.', 'Isole un circuit défaillant et réalimente les autres.', 'Évacue l’eau du réservoir.']
+          : ['Valve de barrage sans retour', 'Clapet anti-retour ou valve de retenue', 'Double valve d’arrêt'];
+        var alt = alts.filter(function (x) { return q.c.indexOf(x) < 0; })[0];
         return alt || c;
       });
     });
@@ -87,12 +90,12 @@
   edit('tact', 'Portée maxi du CAESAR retenue dans tes tests', { q: 'Portée maxi du CAESAR ?' });
   edit('hydro', 'Q07 — Débit fourni par la pompe dans cette situation', { q: 'Q07 — Ripper (5 L/min) et orientation (15 L/min) en même temps, plus 1 L/min pour le pilotage LS. Débit fourni par la pompe ?' });
   edit('hydro', 'Q09 — Au neutre, ta fiche retient', { q: 'Q09 — Au neutre, la pompe LS reste à 50 b et débite 1 L/min. Puissance absorbée ?' });
-  edit('mcot', 'Q10 — Pour effectué un COS', { c: { 0: 'Être titulaire du BM2 / BSTAT Mobter ou FS1 NG, avoir 2 ans d’atelier, la FA RDC/COS et être inscrit sur le DUO' },
+  edit('mcot', 'Q10 — Pour effectuer un COS', { c: { 0: 'Être titulaire du BM2 / BSTAT Mobter ou FS1 NG, avoir 2 ans d’atelier, la FA RDC/COS et être inscrit sur le DUO' },
     e: 'Pour tenir le poste au RDC, un militaire doit être titulaire du BM2 / BSTAT Mobter ou du FS1 NG, avoir 2 ans d’atelier, la FA RDC/COS et être inscrit sur le DUO. Un FS2 Mobter peut faire le COS si le besoin est urgent, ponctuel, local.' });
-  edit('mcot', 'Q09 — Dans quelle circonstance je doit éffectuer un COS', {
+  edit('mcot', 'Q09 — Dans quelles circonstances dois-je effectuer un COS', {
     c: { 0: 'Tous les ans (bus : tous les 6 mois), lors d’une VP + OS, sur ordre, après un remisage de plus de 6 mois (sauf ENU)' }, e: 'COS : tous les ans (bus : 6 mois), lors d’une VP + OS, sur ordre, après un remisage de plus de 6 mois (sauf ENU). Sortie de RIP : on ne touche plus au véhicule.' });
-  edit('mcot', 'Q06 — Qui réparti les différents travaux', { e: 'Le RDC distribue les différents travaux aux ateliers (phase 2 du DIT).' });
-  edit('mcot', 'Q07 — Dans tous les cas qui validera la partie 4 du DIT', { e: 'La CDM (ECM, équipe de conduite de la maintenance) ouvre et clôture le DIT (MAT 4486) : c’est elle qui valide la partie 4 dans tous les cas, pas le RDC.' });
+  edit('mcot', 'Q06 — Qui répartit les différents travaux', { e: 'Le RDC distribue les différents travaux aux ateliers (phase 2 du DIT).' });
+  edit('mcot', 'Q07 — Dans tous les cas, qui validera la partie 4 du DIT', { e: 'La CDM (ECM, équipe de conduite de la maintenance) ouvre et clôture le DIT (MAT 4486) : c’est elle qui valide la partie 4 dans tous les cas, pas le RDC.' });
 
   /* ---------- Questions qui dépendaient de la question précédente ou d'un schéma absent ---------- */
   subj('hydro').questions.forEach(function (q) { if (q.l === 'circuit-ferme' && !q.img) q.img = 'exo-hydro-ferme-schema.jpg'; });
@@ -138,12 +141,17 @@
     // courtes phrases qui ne parlent que des sources
     t = t.replace(/(^|[.!?]\s+)([^.!?<>]{0,90}[.!?])(?=\s|$)/g, function (m, a, sent) { return REFS.test(sent) ? a : m; });
     t = t.replace(/\s{2,}/g, ' ').replace(/^\s*[.;:]\s*/, '').trim();
-    t = t.replace(/([.!?]\s+)([a-zàâçéèêëîïôûùüÿ])/g, function (m, a, b) { return a + b.toUpperCase(); });
-    return t.charAt(0).toUpperCase() + t.slice(1);
+    // majuscule en début de phrase, sauf variable d’une lettre (v, f, ρ…) et après une abréviation (ex., f.e.m., C.I.)
+    var src = t;
+    t = t.replace(/([.!?])(\s+)([a-zàâçéèêëîïôûùüÿ])/g, function (m, p, sp, b, off) {
+      if (b !== 'à' && !/[a-zà-ÿ]/i.test(src.charAt(off + m.length))) return m;
+      return p === '.' && /(?:^|[\s(])(?:[a-zà-ÿ]\.)*(?:[a-zà-ÿ]|ex|cf|env|vérif|réf|fig|pp?|art|mini?|maxi?)\.$/i.test(src.slice(0, off + 1)) ? m : p + sp + b.toUpperCase();
+    });
+    return /^([a-zàâçéèêëîïôûùüÿ]{2}|à\s)/.test(t) ? t.charAt(0).toUpperCase() + t.slice(1) : t;
   }
   each(function (q) {
-    var e = clean(q.e);
-    q.e = e || ('Réponse : ' + q.good.map(function (i) { return q.c[i]; }).join(' + ') + '.');
+    var e = clean(q.e), rep = q.good.map(function (i) { return q.c[i]; }).join(' + ');
+    q.e = e || ('Réponse : ' + rep + (/[.!?]$/.test(rep.replace(/<[^>]+>/g, '').trim()) ? '' : '.'));
     if (q.r) q.r = clean(q.r) || undefined;
     delete q.w;
   });

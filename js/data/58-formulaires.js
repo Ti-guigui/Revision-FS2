@@ -86,7 +86,7 @@ REV.formulaires = {
     { t: 'Valeurs à connaître', html: `
 <div class="tw"><table><tr><th>Élément</th><th>Valeur</th></tr>
 <tr><td>Pression d’huile (diesel)</td><td>4 à 8 bar</td></tr>
-<tr><td>Bouchon du vase d’expansion</td><td>Pression 0,8 à 1,2 bar · dépression 0,05 bar · 1,8 bar ≈ ébullition à 115 °C</td></tr>
+<tr><td>Bouchon du vase d’expansion</td><td>Pression 0,8 à 1,2 bar · dépression 0,05 bar · 1,4 bar ≈ ébullition à 115 °C</td></tr>
 <tr><td>Indice de cétane mini du gazole</td><td>51 (carburéacteur ≈ 42)</td></tr>
 <tr><td>Pré-injection</td><td>Supprimée au-delà de 2 000 tr/min</td></tr>
 <tr><td>Régénération du FAP</td><td>≈ 550 °C</td></tr>
@@ -110,7 +110,7 @@ REV.formulaires = {
 <tr><td>Débit d’une pompe</td><td>Q = Cyl × N / 1 000</td><td>L/min, cm³/tr, tr/min</td><td>30 cm³ à 2 800 tr/min → 84 L/min</td></tr>
 <tr><td>Vitesse d’un vérin</td><td>v = Q / (6 × S)</td><td>m/s, L/min, cm²</td><td>30 L/min sur 5 cm² → 1 m/s</td></tr>
 <tr><td>Vitesse d’un moteur</td><td>N = Q × 1 000 / Cyl</td><td>tr/min, L/min, cm³/tr</td><td></td></tr>
-<tr><td>Couple d’un moteur</td><td>C = P × Cyl / 628</td><td>N·m, bar, cm³/tr</td><td></td></tr>
+<tr><td>Couple d’un moteur</td><td>C = P × Cyl / 628</td><td>daN·m, bar, cm³/tr</td><td></td></tr>
 <tr><td>Puissance</td><td>Pu = P × Q / 600</td><td>kW, bar, L/min</td><td>200 bar × 60 L/min → 20 kW</td></tr>
 <tr><td>Débit dans un orifice</td><td>Q = K × S × √ΔP</td><td></td><td>ΔP constant = débit constant</td></tr></table></div>` },
     { t: 'Conversions de pression', html: `
@@ -191,9 +191,9 @@ REV.formulaires = {
     { t: 'Exemple complet', html: `
 <ol><li>ΣR : fardeau roulant 4 000 daN, sol meuble (fr 0,3) → 1 200 daN ; pente 25 % → +1 000 → <b>2 200 daN</b>.</li>
 <li>EMD : tracteur 4 100 daN, FT 2 250, boue (fa 0,3) → A = 1 230 &lt; FT → <b>EMD = 1 230 daN</b>.</li>
-<li>Nb : 10 400 / 2 000 = 5,2 → 6 → ≥ 4 donc +2 → <b>8 brins</b>.</li>
-<li>EMT (EMD 1 000, 3 brins simples) : 1 000 + 900 + 810 = <b>2 710 daN</b>.</li>
-<li>Sécurité : (EMT − ΣR) / ΣR × 100, à garder entre 15 et 70 %.</li></ol>` }
+<li>Nb : 2 200 / 1 230 = 1,79 → 2 → &lt; 4 donc +1 → <b>3 brins</b> (mouflage simple).</li>
+<li>EMT : 1 230 + 1 107 + 996 = <b>3 333 daN</b> (−10 % à chaque poulie).</li>
+<li>Sécurité : (3 333 − 2 200) / 2 200 × 100 = <b>51,5 %</b> → entre 15 et 70 % : correct.</li></ol>` }
   ],
   ppld: [
     { t: 'Pressions et puissances', html: `
